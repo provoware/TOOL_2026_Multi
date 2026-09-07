@@ -1,0 +1,22 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Laufzeit und Diagnose
+logs/
+berichte/
+tmp/
+*.log
+
+# Lokale Sicherungen und Ausgaben
+backups/
+release/
+*.zip
+*.sha256
+
+# Editoren / Betriebssystem
+.idea/
+.vscode/
+.DS_Store
+*~

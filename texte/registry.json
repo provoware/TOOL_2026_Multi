@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "text_version": "0.1.0",
+  "language": "de-DE",
+  "rules": {
+    "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
+    "fallback": "Wenn ein Schlüssel fehlt, sicherer deutscher Standardtext statt leerer Oberfläche."
+  },
+  "texts": {
+    "app.name": "TOOL_2026_Multi",
+    "status.ready": "Bereit",
+    "status.working": "Vorgang läuft …",
+    "status.error": "Der Vorgang konnte nicht abgeschlossen werden."
+  }
+}

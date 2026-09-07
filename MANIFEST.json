@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "tool": {
+    "name": "TOOL_2026_Multi",
+    "repository": "provoware/TOOL_2026_Multi",
+    "version": "0.1.0",
+    "status": "GRUNDLAGE",
+    "date": "2026-09-08"
+  },
+  "iteration": {
+    "number": 1,
+    "goal": "Verbindliche Entwicklungsgrundlage ohne Eingriff in noch nicht vorhandene Werkzeugfunktionen",
+    "completed": 8,
+    "open_next": 6
+  },
+  "runtime": {
+    "entrypoint": "app/main.py",
+    "launcher": "schnellstart.sh",
+    "requirements": "requirements.txt"
+  },
+  "separation": {
+    "source": "app/",
+    "base_data": "daten/",
+    "texts": "texte/",
+    "developer_docs": "docs/",
+    "tests": "tests/",
+    "runtime_logs": "logs/",
+    "local_reports": "berichte/",
+    "local_backups": "backups/"
+  },
+  "validation": {
+    "command": "bash scripts/pruefen.sh",
+    "bounded": true
+  }
+}
