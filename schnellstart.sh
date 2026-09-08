@@ -27,7 +27,7 @@ bash scripts/pruefen.sh || fehler "Die Vorprüfung meldet einen Fehler. Details 
 
 meldung "[4/4] Anwendung wird gestartet …"
 if [[ -f "$PROJEKTORDNER/app/main.py" ]]; then
-  exec "$UMGEBUNG/bin/python" "$PROJEKTORDNER/app/main.py"
+  exec "$UMGEBUNG/bin/python" -m app.main
 fi
 
 meldung "Noch keine Anwendung vorhanden. Die Entwicklungsgrundlage ist korrekt eingerichtet; app/main.py folgt in der nächsten Implementierungsiteration."

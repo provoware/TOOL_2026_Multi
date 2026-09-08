@@ -1,10 +1,10 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Entwicklungsgrundlage · **Version:** 0.1.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.2.0 · **Stand:** 2026-09-08
 
 ## Zweck
 
-Dieses Repository ist die saubere Entwicklungsgrundlage für **TOOL_2026_Multi**. Die eigentliche Werkzeugfunktion wird erst in klar abgegrenzten Iterationen ergänzt. Entwicklung, Prüfung, Sicherung und Fehlerbehandlung werden von Anfang an nachvollziehbar und laienfreundlich geführt.
+Dieses Repository enthält den ausführbaren Kern von **TOOL_2026_Multi**. Das Dashboard zeigt die letzten fünf Ereignisse. Der Menüpunkt **Debug/Log** erklärt Vorgänge und Fehler einfach; parallel entsteht ein maschinenlesbares Protokoll.
 
 ## Ampel
 
@@ -14,9 +14,10 @@ Dieses Repository ist die saubere Entwicklungsgrundlage für **TOOL_2026_Multi**
 | Ordnertrennung | 🟢 | Laufzeitdaten, Entwicklung und Protokolle getrennt |
 | Sicherungskonzept | 🟢 | Regeln und automatischer Sicherungsweg definiert |
 | Prüfablauf | 🟢 | lokaler Ein-Klick-Prüfer vorhanden |
-| Schnellstart | 🟡 | vorbereitet; startet die Anwendung sobald `app/main.py` vorhanden ist |
+| Schnellstart | 🟢 | richtet die Umgebung ein, prüft und startet die Anwendung |
 | Werkzeugfunktionen | 🔴 | noch nicht implementiert |
-| Fehlerbericht im Werkzeug | 🔴 | folgt mit der ersten ausführbaren Anwendung |
+| Fehlerbericht im Werkzeug | 🟢 | TXT-Bericht und JSON-Zeile mit eindeutiger Kennung |
+| Rückfallmanagement | 🟢 | erkennt wiederholte Fehlermuster datensparsam |
 
 ## Einfache Nutzung
 
@@ -24,7 +25,7 @@ Dieses Repository ist die saubere Entwicklungsgrundlage für **TOOL_2026_Multi**
 2. Das Skript richtet die abgeschirmte Python-Umgebung ein.
 3. Abhängigkeiten aus `requirements.txt` werden installiert.
 4. Vor dem Start wird einmal geprüft.
-5. Sobald die Anwendung vorhanden ist, startet sie automatisch.
+5. Die Anwendung startet und zeigt die letzten fünf Ereignisse.
 
 ```bash
 bash schnellstart.sh
@@ -49,3 +50,5 @@ bash schnellstart.sh
 **Planen → klein ändern → prüfen → Ergebnis sichern → dokumentieren → erst dann weiter.**
 
 Keine verdeckten Endlosschleifen, keine unnötigen Komplettumbauten und keine ungeprüften Änderungen an Nutzerdaten.
+
+Laufzeitprotokolle bleiben lokal in `logs/`; verständliche Einzelberichte liegen in `berichte/`. Beide Ordner werden nicht in Git oder Sicherungs-ZIPs übernommen.

@@ -1,6 +1,6 @@
 # Fehler- und Rückfallmanagement
 
-Version 1.0 · 2026-09-08
+Version 1.1 · 2026-09-08
 
 ## Vier Schutzschichten
 
@@ -48,8 +48,12 @@ Jeder relevante Bericht soll enthalten:
 - LÖSUNGSMÖGLICHKEITEN
 - TECHNISCHE DETAILS
 
-Zusätzlich wird dasselbe Ereignis maschinenlesbar als eine JSON-Zeile gespeichert.
+Zusätzlich wird dasselbe Ereignis maschinenlesbar als eine JSON-Zeile in `logs/ereignisse.jsonl` gespeichert. Die Anwendung ignoriert beim Lesen einzelne beschädigte Zeilen, damit ältere brauchbare Ereignisse sichtbar bleiben.
+
+## Mitlernende Rückfallerkennung
+
+`app/regression.py` bildet aus Bereich, Ausnahmeart und vereinfachter Ursache eine gekürzte Prüfsumme. Dadurch erkennt das Werkzeug wiederkehrende technische Muster, ohne den vollständigen Fehlertext in der Lernhistorie zu speichern. Zähler und letzter Zeitpunkt liegen atomar geschrieben in `logs/rueckfaelle.json`. Ab dem zweiten Auftreten ergänzt das Werkzeug einen Präventionshinweis. Das ist bewusst regelbasiert und nachvollziehbar; es verändert weder Programmcode noch Nutzerdaten selbstständig.
 
 ## Bericht beim Programmende
 
-Sobald die erste echte Anwendung vorhanden ist, wird ein zentraler Abschlusswächter eingebunden. Er erzeugt bei normalem Beenden, abgefangenen Fehlern und soweit technisch möglich bei erkannten harten Abbrüchen einen TXT-Bericht und versucht ihn nach Programmende zu öffnen. Ein harter Prozessabbruch kann nicht innerhalb desselben abgestürzten Prozesses garantiert behandelt werden; dafür ist bei Bedarf ein separater Wächterprozess vorgesehen.
+Der Programmeinstieg und die Tkinter-Oberfläche besitzen zentrale Ausnahmegrenzen. Abgefangene Fehler erzeugen JSONL- und TXT-Berichte und lassen nicht betroffene Oberflächenbereiche möglichst verfügbar. Ein harter Prozessabbruch kann nicht innerhalb desselben abgestürzten Prozesses garantiert behandelt werden; ein separater Wächterprozess bleibt deshalb eine spätere Erweiterung.
