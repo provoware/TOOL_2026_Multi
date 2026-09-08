@@ -5,11 +5,11 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
-    QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox,
-    QPushButton, QSizePolicy, QVBoxLayout, QWidget,
+    QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QMessageBox, QPushButton, QSizePolicy, QVBoxLayout, QWidget,
 )
 
 from app.event_log import EventLogger
@@ -40,6 +40,7 @@ class Dashboard(QWidget):
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
+        self._event_filter_installed = False
 
         self.setObjectName("dashboardShell")
         self.setWindowTitle("Provoware-Datenbank-Dashboard 2026")
@@ -48,6 +49,10 @@ class Dashboard(QWidget):
         self._build()
         self._bind_shortcuts()
         apply_global_style(self, self.zoom_percent)
+        app = QApplication.instance()
+        if app is not None:
+            app.installEventFilter(self)
+            self._event_filter_installed = True
         self.refresh()
         self.search_entry.setFocus()
 
@@ -319,6 +324,19 @@ class Dashboard(QWidget):
         self.quick_status.setObjectName("muted")
         layout.addWidget(self.quick_status)
         layout.addStretch(1)
+        smaller = QPushButton("A−")
+        smaller.setToolTip("Schrift und Oberfläche verkleinern (Strg + Mausrad nach unten)")
+        smaller.clicked.connect(lambda: self._step_zoom(-1))
+        layout.addWidget(smaller)
+        self.zoom_label = QLabel("100 %")
+        self.zoom_label.setObjectName("muted")
+        self.zoom_label.setMinimumWidth(52)
+        self.zoom_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.zoom_label)
+        larger = QPushButton("A+")
+        larger.setToolTip("Schrift und Oberfläche vergrößern (Strg + Mausrad nach oben)")
+        larger.clicked.connect(lambda: self._step_zoom(1))
+        layout.addWidget(larger)
         tech = QLabel("Linux · PySide6 · Dark Orange Industrial")
         tech.setObjectName("muted")
         layout.addWidget(tech)
@@ -330,6 +348,16 @@ class Dashboard(QWidget):
         QShortcut(QKeySequence("Ctrl+-"), self, activated=lambda: self._step_zoom(-1))
         QShortcut(QKeySequence("Ctrl+0"), self, activated=lambda: self.set_zoom(100))
         QShortcut(QKeySequence("Ctrl+R"), self, activated=self.open_recovery)
+
+    def eventFilter(self, watched: object, event: QEvent) -> bool:
+        if event.type() == QEvent.Type.Wheel and (event.modifiers() & Qt.KeyboardModifier.ControlModifier):
+            if watched is self or (isinstance(watched, QWidget) and self.isAncestorOf(watched)):
+                delta = event.angleDelta().y()
+                if delta:
+                    self._step_zoom(1 if delta > 0 else -1)
+                    event.accept()
+                    return True
+        return super().eventFilter(watched, event)
 
     def _planned(self, name: str) -> None:
         QMessageBox.information(self, "Geplanter Bereich", f"{name} ist im Dashboard vorgesehen, aber noch nicht als Fachfunktion freigegeben.")
@@ -439,8 +467,17 @@ class Dashboard(QWidget):
             editor.close_safely()
         self.close()
 
+    def _remove_event_filter(self) -> None:
+        if not self._event_filter_installed:
+            return
+        app = QApplication.instance()
+        if app is not None:
+            app.removeEventFilter(self)
+        self._event_filter_installed = False
+
     def closeEvent(self, event: QCloseEvent) -> None:
         if self._closing_after_save:
+            self._remove_event_filter()
             self.closed_cleanly.emit()
             event.accept()
             return
@@ -451,6 +488,7 @@ class Dashboard(QWidget):
         self._closing_after_save = True
         for editor in list(self._song_editors):
             editor.close_safely()
+        self._remove_event_filter()
         self.closed_cleanly.emit()
         event.accept()
 
@@ -470,6 +508,9 @@ class Dashboard(QWidget):
             return
         self.zoom_percent = percent
         apply_global_style(self, percent)
+        self.zoom_label.setText(f"{percent} %")
+        for editor in list(self._song_editors):
+            editor.set_zoom(percent)
         if self._song_library is not None:
             self._song_library.set_zoom(percent)
         if self._recovery_center is not None:
