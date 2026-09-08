@@ -20,13 +20,18 @@ class RegressionManager:
         signature = self._signature(area, exception_type, cause)
         state = self._read_state()
         entry = state.setdefault("patterns", {}).setdefault(signature, {
-            "area": area, "exception_type": exception_type, "count": 0
+            "area": area, "exception_type": exception_type, "count": 0,
+            "status": "OFFEN", "regression_test_id": None
         })
+        entry.setdefault("status", "OFFEN")
+        entry.setdefault("regression_test_id", None)
         entry["count"] += 1
         entry["last_seen"] = datetime.now(timezone.utc).isoformat()
+        if entry["count"] > 1 and entry.get("status") == "OFFEN":
+            entry["status"] = "BEOBACHTET"
         self._write_state(state)
-        return {"signature": signature, "count": entry["count"],
-                "repeated": entry["count"] > 1}
+        return {"signature": signature, "count": entry["count"], "repeated": entry["count"] > 1,
+                "status": entry["status"], "regression_test_id": entry.get("regression_test_id")}
 
     @staticmethod
     def prevention_hint(learned: dict[str, Any]) -> str:

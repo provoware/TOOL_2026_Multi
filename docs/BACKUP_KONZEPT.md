@@ -12,7 +12,7 @@ Der letzte brauchbare Stand muss aus mehreren voneinander unabhängigen Wegen re
 Quellcode und Entwicklungsdokumente werden in nachvollziehbaren Commits gesichert.
 
 ### B. lokaler Vorher-Sicherungspunkt
-Vor riskanten Änderungen wird ein ZIP erzeugt. Es enthält den Projektbestand, aber keine virtuellen Umgebungen, Protokolle, temporären Dateien oder ältere Sicherungen.
+Vor riskanten Änderungen wird ein ZIP erzeugt. Es enthält den Projektbestand, aber keine virtuellen Umgebungen, Protokolle, lokalen Nutzerdaten, Transferdaten, temporären Dateien oder ältere Sicherungen.
 
 ### C. Iterations-ZIP
 Nach erfolgreicher Iteration entsteht ein vollständiges ZIP mit Versions- und Statusangabe sowie SHA-256-Prüfsumme.
@@ -36,4 +36,4 @@ Jedes ZIP erhält eine `.sha256`-Datei. Vor Wiederherstellung:
 
 ## Wichtiger Unterschied
 
-Quellcode-Sicherung ersetzt keine Sicherung späterer Nutzerdaten. Sobald TOOL_2026_Multi Nutzerdaten erzeugt, erhält `daten/` eine eigene transaktionale Sicherungsstrategie mit Wiederherstellungsprüfung.
+Quellcode-Sicherung ersetzt keine Sicherung späterer Nutzerdaten. Sobald TOOL_2026_Multi Nutzerdaten erzeugt, erhält `nutzerdaten/` eine eigene transaktionale Sicherungsstrategie mit Wiederherstellungsprüfung.

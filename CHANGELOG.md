@@ -2,6 +2,18 @@
 
 Alle relevanten Änderungen werden hier in einfacher Sprache festgehalten.
 
+## 0.3.0 – 2026-09-08 – Verbindliche Qualitätsgrenzen
+
+### Hinzugefügt
+- maschinenlesbare Zeilengrenzen und getrennte Regeln für Toolkern, Einstellungen, Basisübertragung, Nutzerdaten, Protokolle und Entwicklerunterlagen,
+- zentral geladene Farben, Fenstergrößen und Abstände,
+- einheitliche Fehlerstatus und vorbereitete Rückfalltest-Kennung,
+- endliche Prüfung der Dateigrenzen und Verzeichnisstruktur.
+
+### Bereinigt
+- der mehrdeutige leere Ordner `daten/` wurde durch eindeutige Bereiche ersetzt,
+- im Repository vorhandene Dateien und Verweise wurden auf MCP-Reste geprüft; es waren keine vorhanden.
+
 ## 0.2.0 – 2026-09-08 – Debug/Log und Rückfallschutz
 
 ### Hinzugefügt

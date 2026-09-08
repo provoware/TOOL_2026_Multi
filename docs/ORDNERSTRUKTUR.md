@@ -1,11 +1,13 @@
 # Ordnerstruktur und Übertragungsregeln
 
-Version 1.0 · 2026-09-08
+Version 1.1 · 2026-09-08
 
 | Pfad | Zweck | Ins Nutzer-ZIP? | Git? |
 |---|---|---:|---:|
 | `app/` | Anwendung | ja | ja |
-| `daten/` | nötige Basisdaten | nur wenn für Betrieb nötig | ja, sofern keine privaten Laufzeitdaten |
+| `configs/` | versionierte Einstellungen | ja | ja |
+| `transfer/basisdaten/` | ausschließlich bewusst zu übertragende Basisdaten | separates Transferpaket | nein |
+| `nutzerdaten/` | lokale Nutzerdaten | nein | nein |
 | `texte/` | sichtbare Texte und Textregistrierung | ja | ja |
 | `scripts/` | Start-/Prüfhelfer | ja, soweit für Betrieb nötig | ja |
 | `tests/` | automatische Prüfungen | normalerweise nein | ja |
@@ -19,3 +21,5 @@ Version 1.0 · 2026-09-08
 ## Grundsatz
 
 Veröffentlichungen enthalten nur, was der Nutzer zum Starten und Benutzen braucht. Diagnosepakete werden separat erzeugt, damit keine Protokolle oder Entwicklerunterlagen versehentlich mit Basisdaten vermischt werden.
+
+Die Regeln sind zusätzlich im `separation`-Block des Manifests maschinenlesbar. Eine Datei darf nicht gleichzeitig Basisübertragung, Protokoll oder Entwicklerdokumentation sein.

@@ -38,8 +38,8 @@ Stand: 2026-09-08
 4. 🔴 Filter nach Schweregrad und Bereich im Debug/Log ergänzen.
 5. 🔴 Protokollrotation mit fester Größen- und Altersgrenze umsetzen.
 6. 🔴 Ereignisdetails direkt aus der Dashboard-Zeile öffnen.
-7. 🔴 Fehlerstatus „offen, beobachtet, behoben“ verwalten.
-8. 🔴 bestätigte Fehler mit einer Rückfalltest-Kennung verknüpfen.
+7. 🟡 Fehlerstatus erfassen; kontrolliertes Abschließen als „behoben“ noch umsetzen.
+8. 🟡 Rückfalltest-Kennung erfassen; Zuordnung erst bei einem bestätigten Fehler umsetzen.
 9. 🔴 Wiederholungszähler und ersten Zeitpunkt anzeigen.
 10. 🔴 sensible Werte vor dem Protokollieren automatisch ausblenden.
 11. 🔴 beschädigte Protokolle getrennt sichern und verständlich melden.

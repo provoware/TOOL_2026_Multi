@@ -1,6 +1,6 @@
 # AGENTS.md – verbindliche Entwicklungsregeln
 
-Version: 1.0 · Gültig ab: 2026-09-08
+Version: 1.1 · Gültig ab: 2026-09-08
 
 ## 1. Hauptziel
 
@@ -59,8 +59,8 @@ Offene Punkte aus einer Iteration werden mit Ursache, Priorität und Abhängigke
 - Wiederverwendbare Logik wird zentral gekapselt.
 - Oberflächentexte werden nicht mehrfach im Quellcode verteilt, sondern über eine versionierte Textregistrierung bezogen.
 - Einstellungen, Texte, Zustände und Programmlogik werden getrennt gehalten.
-- Funktionen sollen eine Aufgabe besitzen; als Richtwert höchstens 60 Zeilen.
-- Quellcodedateien sollen als Richtwert höchstens 500 Zeilen enthalten. Überschreitungen brauchen einen dokumentierten Grund oder eine Aufteilung.
+- Funktionen besitzen eine Aufgabe, bleiben möglichst unter 40 Zeilen und werden ab 60 Zeilen auf Teilbarkeit geprüft.
+- Die verbindlichen Grenzen je Dateiklasse stehen in `MANIFEST.json`: Hilfsdateien 150, normale Module 300 und Kernmodule 500 Zeilen. Ausnahmen brauchen dort Grund und Ablaufdatum.
 - Doppelte Logik wird vermieden.
 - Kommentare erklären **warum**, Randfälle und Schutzmechanismen; offensichtlichen Code beschreiben sie nicht erneut.
 
@@ -128,13 +128,23 @@ Kein „grün rechnen“: Nicht ausführbare Prüfungen werden als **nicht gepr�
 Laufzeitprotokolle: `logs/` und nicht im Git-Verlauf.
 Fehlerberichte: `berichte/` und standardmäßig nicht im Git-Verlauf.
 Entwicklerdokumentation: `docs/`.
-Basisdaten: `daten/`.
+Zur Übergabe bestimmte Basisdaten: `transfer/basisdaten/`, getrennt von allen lokalen Daten.
+Lokale Nutzerdaten: `nutzerdaten/` und niemals automatisch in Git, Diagnosepaketen oder Veröffentlichungen.
 Anwendungsquellcode: `app/`.
+Versionierte Einstellungen: `configs/`.
 Tests: `tests/`.
 Werkzeugscripte: `scripts/`.
 Nutzertexte: `texte/`.
 
 Nur für den Betrieb nötige Dateien werden in ein Veröffentlichungs-ZIP übernommen. Entwicklerberichte, Testdaten und lokale Protokolle bleiben draußen, außer sie werden ausdrücklich als Diagnosepaket angefordert.
+
+## 11a. Subagenten
+
+- Subagenten werden nur eingesetzt, wenn der Nutzer oder eine höherrangige Anweisung Delegation ausdrücklich erlaubt.
+- Jeder Auftrag nennt Ziel, erlaubte Dateien, Abnahmekriterium und bewusste Nicht-Änderungen.
+- Aufgabenbereiche überlappen nicht; ein Subagent delegiert nicht erneut, sofern das nicht ausdrücklich beauftragt wurde.
+- Subagenten committen, veröffentlichen und löschen keine Nutzerdaten. Sie melden Änderungen, Prüfungen, Risiken und offene Punkte an den Hauptagenten.
+- Der Hauptagent prüft den gemeinsamen Git-Stand, integriert widerspruchsfrei und führt die einmalige Endvalidierung aus.
 
 ## 12. Start und Abhängigkeiten
 

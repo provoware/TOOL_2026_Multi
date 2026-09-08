@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "window": {"width": 900, "height": 560, "min_width": 700, "min_height": 420},
+  "spacing": {"small": 6, "medium": 12, "large": 24},
+  "colors": {"background": "#F5F7FA", "surface": "#FFFFFF", "text": "#17202A", "primary": "#1F5A94", "danger": "#B42318"},
+  "table": {"rows": 5, "summary_width": 430}
+}

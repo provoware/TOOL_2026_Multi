@@ -1,6 +1,6 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.2.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.3.0 · **Stand:** 2026-09-08
 
 ## Zweck
 
@@ -18,6 +18,7 @@ Dieses Repository enthält den ausführbaren Kern von **TOOL_2026_Multi**. Das D
 | Werkzeugfunktionen | 🔴 | noch nicht implementiert |
 | Fehlerbericht im Werkzeug | 🟢 | TXT-Bericht und JSON-Zeile mit eindeutiger Kennung |
 | Rückfallmanagement | 🟢 | erkennt wiederholte Fehlermuster datensparsam |
+| Datei- und Datengrenzen | 🟢 | Manifest prüft getrennte Bereiche und Zeilengrenzen |
 
 ## Einfache Nutzung
 

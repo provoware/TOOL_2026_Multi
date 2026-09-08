@@ -34,6 +34,8 @@ class EventLogger:
             "next_step": next_step, "program_version": self.version,
             "exception_type": type(exception).__name__ if exception else None,
             "trace": self._trace(exception), "regression": learned,
+            "error_status": learned["status"] if learned else None,
+            "regression_test_id": learned["regression_test_id"] if learned else None,
         }
         self._persist(event)
         return event
@@ -75,6 +77,8 @@ class EventLogger:
                   ("WAHRSCHEINLICHER GRUND", "technical_cause"),
                   ("WAS WURDE GESCHÜTZT?", "safe_action"),
                   ("WAS KANN ICH JETZT TUN?", "next_step"),
+                  ("FEHLERSTATUS", "error_status"),
+                  ("RÜCKFALLTEST", "regression_test_id"),
                   ("PROGRAMMVERSION", "program_version"))
         return "\n\n".join(f"{title}\n{event.get(key) or 'Keine Angabe'}" for title, key in fields) + "\n"
 

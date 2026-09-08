@@ -15,7 +15,7 @@ from pathlib import Path
 import sys, zipfile
 root=Path(sys.argv[1]).resolve()
 out=Path(sys.argv[2]).resolve()
-ausschluss={'.git','.venv','backups','logs','berichte','tmp','release','__pycache__'}
+ausschluss={'.git','.venv','backups','logs','berichte','nutzerdaten','transfer','tmp','release','__pycache__'}
 with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
     for p in sorted(root.rglob('*')):
         rel=p.relative_to(root)

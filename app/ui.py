@@ -8,14 +8,19 @@ from typing import Callable
 
 from app.event_log import EventLogger
 from app.texts import TextRegistry
+from app.ui_style import load_ui_style
 
 
 class Dashboard:
     def __init__(self, root: tk.Tk, texts: TextRegistry, logger: EventLogger) -> None:
         self.root, self.texts, self.logger = root, texts, logger
+        self.style = load_ui_style(logger.jsonl_path.parents[1] / "configs" / "ui.json")
+        window, colors = self.style["window"], self.style["colors"]
         root.title(texts.get("app.name", "TOOL_2026_Multi"))
-        root.geometry("900x560")
-        root.minsize(700, 420)
+        root.geometry(f"{window['width']}x{window['height']}")
+        root.minsize(window["min_width"], window["min_height"])
+        root.configure(background=colors["background"])
+        ttk.Style(root).configure("TFrame", background=colors["background"])
         self._build_menu()
         self._build_content()
         self.refresh()
@@ -29,23 +34,25 @@ class Dashboard:
         self.root.config(menu=menu)
 
     def _build_content(self) -> None:
-        frame = ttk.Frame(self.root, padding=24)
+        spacing = self.style["spacing"]
+        frame = ttk.Frame(self.root, padding=spacing["large"])
         frame.pack(fill="both", expand=True)
         ttk.Label(frame, text=self.texts.get("dashboard.title", "Übersicht"),
                   font=("TkDefaultFont", 18, "bold")).pack(anchor="w")
         ttk.Label(frame, text=self.texts.get("dashboard.help", "Hier sehen Sie die letzten fünf Ereignisse."),
-                  wraplength=760).pack(anchor="w", pady=(6, 18))
+                  wraplength=760).pack(anchor="w", pady=(spacing["small"], spacing["medium"] + spacing["small"]))
         columns = ("time", "severity", "area", "summary")
-        self.table = ttk.Treeview(frame, columns=columns, show="headings", height=5)
+        self.table = ttk.Treeview(frame, columns=columns, show="headings", height=self.style["table"]["rows"])
         for key, title, width in (("time", "Zeit", 160), ("severity", "Schwere", 90),
-                                  ("area", "Bereich", 120), ("summary", "Einfache Erklärung", 430)):
+                                  ("area", "Bereich", 120),
+                                  ("summary", "Einfache Erklärung", self.style["table"]["summary_width"])):
             self.table.heading(key, text=title)
             self.table.column(key, width=width, stretch=key == "summary")
         self.table.pack(fill="x")
         ttk.Button(frame, text=self.texts.get("dashboard.open_log", "Debug/Log öffnen"),
-                   command=self.show_log).pack(anchor="e", pady=14)
+                   command=self.show_log).pack(anchor="e", pady=spacing["medium"])
         self.status = ttk.Label(frame, text="")
-        self.status.pack(anchor="w", pady=(12, 0))
+        self.status.pack(anchor="w", pady=(spacing["medium"], 0))
 
     def refresh(self) -> None:
         for item in self.table.get_children():

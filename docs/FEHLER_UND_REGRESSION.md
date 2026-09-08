@@ -57,3 +57,7 @@ Zusätzlich wird dasselbe Ereignis maschinenlesbar als eine JSON-Zeile in `logs/
 ## Bericht beim Programmende
 
 Der Programmeinstieg und die Tkinter-Oberfläche besitzen zentrale Ausnahmegrenzen. Abgefangene Fehler erzeugen JSONL- und TXT-Berichte und lassen nicht betroffene Oberflächenbereiche möglichst verfügbar. Ein harter Prozessabbruch kann nicht innerhalb desselben abgestürzten Prozesses garantiert behandelt werden; ein separater Wächterprozess bleibt deshalb eine spätere Erweiterung.
+
+### 8. Einheitlicher Lebenszyklus
+
+Ein erstmals erkanntes Fehlermuster ist `OFFEN`, ab der Wiederholung `BEOBACHTET`. `BEHOBEN` darf erst gesetzt werden, wenn eine dauerhafte Rückfalltest-Kennung im Format `REG-…` zugeordnet und die Prüfung erfolgreich ausgeführt wurde. Diese Iteration erfasst Status und Testkennung; das sichere Abschließen bestätigter Fehler bleibt offen, bis ein echter behobener Fehler vorliegt.

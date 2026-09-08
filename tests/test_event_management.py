@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 
 from app.event_log import EventLogger
+from app.ui_style import DEFAULT_STYLE, load_ui_style
 
 
 class EventManagementTests(unittest.TestCase):
@@ -37,7 +38,16 @@ class EventManagementTests(unittest.TestCase):
                 exception=FileNotFoundError("Datei fehlt"))
         self.assertTrue(event["regression"]["repeated"])
         self.assertEqual(event["regression"]["count"], 2)
+        self.assertEqual(event["error_status"], "BEOBACHTET")
+        self.assertIsNone(event["regression_test_id"])
         self.assertIn("erneut", event["next_step"])
+
+    def test_incomplete_ui_config_keeps_safe_defaults(self):
+        path = self.root / "ui.json"
+        path.write_text('{"schema_version": 1, "spacing": {"small": 8}}', encoding="utf-8")
+        style = load_ui_style(path)
+        self.assertEqual(style["spacing"]["small"], 8)
+        self.assertEqual(style["spacing"]["large"], DEFAULT_STYLE["spacing"]["large"])
 
 
 if __name__ == "__main__":

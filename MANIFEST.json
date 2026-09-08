@@ -3,15 +3,15 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 2,
-    "goal": "Verständliches Ereignisprotokoll und lernendes Rückfallmanagement im Dashboard",
-    "completed": 7,
-    "open_next": 20
+    "number": 3,
+    "goal": "Verbindliche Struktur-, Datei-, Oberflächen- und Rückfallstandards",
+    "completed": 8,
+    "open_next": 12
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -19,14 +19,23 @@
     "requirements": "requirements.txt"
   },
   "separation": {
-    "source": "app/",
-    "base_data": "daten/",
-    "texts": "texte/",
-    "developer_docs": "docs/",
-    "tests": "tests/",
-    "runtime_logs": "logs/",
-    "local_reports": "berichte/",
-    "local_backups": "backups/"
+    "tool_core": {"path": "app/", "git": true, "transfer": false, "release": true},
+    "configuration": {"path": "configs/", "git": true, "transfer": false, "release": true},
+    "tooling": {"path": "scripts/", "git": true, "transfer": false, "release": true},
+    "base_data_transfer": {"path": "transfer/basisdaten/", "git": false, "transfer": true, "release": false},
+    "user_data": {"path": "nutzerdaten/", "git": false, "transfer": false, "release": false},
+    "texts": {"path": "texte/", "git": true, "transfer": false, "release": true},
+    "developer_docs": {"path": "docs/", "git": true, "transfer": false, "release": false},
+    "tests": {"path": "tests/", "git": true, "transfer": false, "release": false},
+    "runtime_logs": {"path": "logs/", "git": false, "transfer": false, "release": false},
+    "local_reports": {"path": "berichte/", "git": false, "transfer": false, "release": false},
+    "local_backups": {"path": "backups/", "git": false, "transfer": false, "release": false},
+    "other_temporary": {"path": "tmp/", "git": false, "transfer": false, "release": false}
+  },
+  "line_limits": {
+    "helper_module": 150, "normal_module": 300, "core_module": 500,
+    "function_preferred": 40, "function_review": 60, "config_file": 150,
+    "test_file": 300, "documentation_file": 500, "exceptions": []
   },
   "validation": {
     "command": "bash scripts/pruefen.sh",
@@ -37,6 +46,11 @@
     "machine_log": "logs/ereignisse.jsonl",
     "human_reports": "berichte/",
     "regression_state": "logs/rueckfaelle.json",
-    "dashboard_limit": 5
+    "dashboard_limit": 5,
+    "statuses": ["OFFEN", "BEOBACHTET", "BEHOBEN"],
+    "regression_test_prefix": "REG-"
+  },
+  "ui_standard": {
+    "config": "configs/ui.json"
   }
 }
