@@ -39,11 +39,11 @@ def store_path(root: Path) -> Path:
 
 
 def _clean_profile_name(name: str) -> str:
+    if "\0" in name or any(ord(char) < 32 for char in name):
+        raise ValueError("Profilname enthält unzulässige Steuerzeichen.")
     value = " ".join(name.strip().split())
     if not value:
         raise ValueError("Profilname darf nicht leer sein.")
-    if any(char in value for char in "\\/\0"):
-        raise ValueError("Profilname enthält unzulässige Zeichen.")
     return value
 
 
