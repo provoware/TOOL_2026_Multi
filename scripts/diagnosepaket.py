@@ -6,12 +6,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 import tempfile
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+from app.atomic_io import atomic_publish_prepared, atomic_write_text, unique_temp_path
 from app.redaction import redact
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -54,40 +54,46 @@ def build_diagnostic(root: Path = ROOT, output_dir: Path | None = None) -> tuple
     archive = output_dir / f"TOOL_2026_Multi_{version}_DIAGNOSE_{stamp}.zip"
     checksum = archive.with_suffix(archive.suffix + ".sha256")
     collected: list[dict[str, object]] = []
-    with tempfile.TemporaryDirectory(dir=output_dir) as temp:
-        temp_root = Path(temp)
-        for source in source_files(root):
-            relative = source.relative_to(root)
-            try:
-                text = source.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError):
-                continue
-            cleaned = _privacy_clean(text)
-            target = temp_root / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(cleaned, encoding="utf-8")
-            collected.append({"path": relative.as_posix(), "bytes": len(cleaned.encode("utf-8"))})
-        info = {
-            "schema_version": 1,
-            "created_utc": datetime.now(timezone.utc).isoformat(),
-            "privacy_check": "OK",
-            "raw_files_included": False,
-            "file_count": len(collected),
-            "files": collected,
-        }
-        (temp_root / "DIAGNOSE_INFO.json").write_text(json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8")
-        temporary = archive.with_suffix(archive.suffix + ".tmp")
-        with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED) as handle:
-            for path in sorted(temp_root.rglob("*")):
-                if path.is_file():
-                    handle.write(path, path.relative_to(temp_root))
-        with zipfile.ZipFile(temporary) as handle:
-            for name in handle.namelist():
-                data = handle.read(name).decode("utf-8")
-                if redact(data) != data:
-                    raise ValueError(f"Datenschutzprüfung fehlgeschlagen: {name}")
-        os.replace(temporary, archive)
-    checksum.write_text(f"{_sha256(archive)}  {archive.name}\n", encoding="utf-8")
+    temporary = unique_temp_path(archive, suffix=".zip.tmp")
+    try:
+        with tempfile.TemporaryDirectory(dir=output_dir) as temp:
+            temp_root = Path(temp)
+            for source in source_files(root):
+                relative = source.relative_to(root)
+                try:
+                    text = source.read_text(encoding="utf-8")
+                except (OSError, UnicodeDecodeError):
+                    continue
+                cleaned = _privacy_clean(text)
+                target = temp_root / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(cleaned, encoding="utf-8")
+                collected.append({"path": relative.as_posix(), "bytes": len(cleaned.encode("utf-8"))})
+            info = {
+                "schema_version": 1,
+                "created_utc": datetime.now(timezone.utc).isoformat(),
+                "privacy_check": "OK",
+                "raw_files_included": False,
+                "file_count": len(collected),
+                "files": collected,
+            }
+            (temp_root / "DIAGNOSE_INFO.json").write_text(json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8")
+            with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED) as handle:
+                for path in sorted(temp_root.rglob("*")):
+                    if path.is_file():
+                        handle.write(path, path.relative_to(temp_root))
+            with zipfile.ZipFile(temporary) as handle:
+                bad = handle.testzip()
+                if bad is not None:
+                    raise RuntimeError(f"Beschädigter ZIP-Eintrag: {bad}")
+                for name in handle.namelist():
+                    data = handle.read(name).decode("utf-8")
+                    if redact(data) != data:
+                        raise ValueError(f"Datenschutzprüfung fehlgeschlagen: {name}")
+            atomic_publish_prepared(temporary, archive)
+    finally:
+        temporary.unlink(missing_ok=True)
+    atomic_write_text(checksum, f"{_sha256(archive)}  {archive.name}\n")
     return archive, checksum
 
 
@@ -97,7 +103,7 @@ def main() -> int:
     args = parser.parse_args()
     archive, checksum = build_diagnostic(output_dir=args.output_dir)
     print(f"🟢 Diagnosepaket: {archive}")
-    print(f"🟢 Datenschutzprüfung: OK")
+    print("🟢 Datenschutzprüfung: OK")
     print(f"🟢 SHA-256: {checksum}")
     return 0
 
