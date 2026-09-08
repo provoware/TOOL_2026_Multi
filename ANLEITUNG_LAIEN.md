@@ -2,7 +2,7 @@
 
 ## Was ist das hier?
 
-Dieses Projekt ist derzeit die vorbereitete Grundlage für das spätere Werkzeug **TOOL_2026_Multi**. Die Entwicklungsregeln, Sicherungen und Prüfungen sind bereits vorbereitet. Die eigentliche Werkzeugfunktion folgt in der nächsten Entwicklungsstufe.
+Dieses Projekt enthält den ersten ausführbaren Kern von **TOOL_2026_Multi**. Es erklärt Programmereignisse und Fehler, ohne Ihre Basisdaten zu verändern.
 
 ## Starten
 
@@ -12,7 +12,15 @@ Dieses Projekt ist derzeit die vorbereitete Grundlage für das spätere Werkzeug
 bash schnellstart.sh
 ```
 
-Das Skript erledigt die technische Vorbereitung selbst. Wenn die eigentliche Anwendung noch fehlt, zeigt es eine klare Meldung und beendet sich ohne etwas zu beschädigen.
+Das Skript erledigt die technische Vorbereitung selbst, prüft den Kern und öffnet das Dashboard.
+
+## Debug/Log verstehen
+
+- Im Dashboard stehen immer die letzten fünf Ereignisse.
+- Über **Debug/Log → Ereignisse und Fehler öffnen** sehen Sie ausführliche Erklärungen.
+- Jede Meldung nennt eine eindeutige Kennung, den Grund, die Schutzmaßnahme und den nächsten sicheren Schritt.
+- Wiederholt sich ein Fehlermuster, weist das Programm darauf hin. Es merkt sich dafür nur eine technische Prüfsumme, keine persönlichen Inhalte.
+- Maschinenlesbare JSON-Zeilen liegen lokal in `logs/ereignisse.jsonl`; einfache Einzelberichte liegen in `berichte/`.
 
 ## Prüfen
 

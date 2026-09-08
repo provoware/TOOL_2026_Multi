@@ -32,8 +32,11 @@ python3 -m json.tool MANIFEST.json >/dev/null || fehler=1
 python3 -m json.tool texte/registry.json >/dev/null || fehler=1
 
 if [[ -f app/main.py ]]; then
-  printf '\nPrüfe Python-Syntax der Anwendung …\n'
-  python3 -m py_compile app/main.py || fehler=1
+  printf '\nPrüfe Python-Syntax der geänderten Anwendungsmodule …\n'
+  python3 -m py_compile app/*.py tests/test_event_management.py || fehler=1
+
+  printf '\nPrüfe Ereignis- und Rückfallmanagement …\n'
+  python3 -m unittest tests.test_event_management || fehler=1
 fi
 
 if (( fehler != 0 )); then

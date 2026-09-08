@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.1.0",
+  "text_version": "0.2.0",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -10,6 +10,14 @@
     "app.name": "TOOL_2026_Multi",
     "status.ready": "Bereit",
     "status.working": "Vorgang läuft …",
-    "status.error": "Der Vorgang konnte nicht abgeschlossen werden."
+    "status.error": "Der Vorgang konnte nicht abgeschlossen werden.",
+    "menu.debug": "Debug/Log",
+    "menu.debug.open": "Ereignisse und Fehler öffnen",
+    "menu.debug.refresh": "Anzeige aktualisieren",
+    "dashboard.title": "Übersicht",
+    "dashboard.help": "Die letzten fünf Ereignisse zeigen verständlich, was das Programm getan hat. Details stehen unter Debug/Log.",
+    "dashboard.open_log": "Debug/Log öffnen",
+    "dashboard.empty": "Noch keine Ereignisse vorhanden.",
+    "log.title": "Debug/Log – Ereignisdetails"
   }
 }
