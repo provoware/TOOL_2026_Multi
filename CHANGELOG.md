@@ -1,5 +1,24 @@
 # Änderungsverlauf
 
+## 0.7.0 – 2026-09-08 – Dashboard-Schnellspeicher und Songtexteditor
+
+### Hinzugefügt
+- einzeilige Entwickler-Schnelleingabe im Dashboardheader mit Enter- und Schaltflächenbestätigung,
+- append-only Speicherung mit Zeitstempel in `Entwicklerinformation.txt`,
+- Songtexteditor mit Titel, optionalem Genre, optionalem Sonstiges und Live-Vorschau,
+- auswählbare Bereiche Intro, Strophe, Pre-Chorus, Refrain, Hook, Bridge, Outro, Spoken und Instrumental,
+- atomare Speicherung unter `daten/songtexte/<Titel>.txt`,
+- Autosave alle fünf Minuten sowie bei Fokusverlust und beim Schließen,
+- Logout-Schaltfläche mit Speichern aller offenen Songeditoren vor Sitzungsende,
+- gezielte Logik- und Tk-GUI-Tests für Schnelleingabe, Speicherpfad, Bereichswechsel, Autosave und Logout.
+
+### Schutz
+- Schnellinfos überschreiben vorhandene Informationen nicht,
+- Songdateien werden über eine temporäre Datei atomar ersetzt,
+- ein Titelwechsel löscht keinen vorherigen Songstand,
+- Logout wird gestoppt, wenn ein offener Songtext nicht gespeichert werden kann,
+- bestehende Recovery-, Diagnose-, Datenschutz-, Wächter- und Restore-Gates bleiben aktiv.
+
 ## 0.6.0 – 2026-09-08 – Debug- und Recovery-Zentrale
 
 ### Hinzugefügt
