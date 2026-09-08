@@ -265,6 +265,7 @@ class Dashboard(QWidget):
         grid.addWidget(workflow, 0, 0)
 
         db, d = self._card("▦  DB-Eingaben")
+        d.setSpacing(5)
         heading = d.takeAt(0).widget()
         profile_row = QHBoxLayout()
         if heading is not None:
