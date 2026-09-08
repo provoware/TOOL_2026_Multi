@@ -1,6 +1,16 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.12.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.13.0 · **Stand:** 2026-09-08
+
+## Iteration 16 – Kalender
+
+- 🟢 Tages-, Wochen-, Monats- und Jahresansicht mit echten Zeitbereichen.
+- 🟢 Termine mit Titel, optionaler Notiz, Beginn und Ende anlegen.
+- 🟢 Erinnerungen zum Beginn sowie 5/15/30/60 Minuten oder 1 Tag vorher.
+- 🟢 Erinnerungsprüfung alle 30 Sekunden, solange das Dashboard läuft – auch wenn das Kalenderfenster geschlossen ist.
+- 🟢 Erinnerung wird erst nach Anzeige als erledigt markiert und dadurch nicht wiederholt.
+- 🟢 atomare Speicherung unter `daten/kalender/termine.json`; keine destruktive Terminlöschung in dieser Iteration.
+- 🟢 Kalender folgt derselben zentralen Zoom-/Schriftsteuerung wie die übrigen Module.
 
 ## Iteration 15 – Todo-Liste
 
@@ -25,7 +35,7 @@
 - 🟢 `Strg + Mausrad` ändert Zoom und Schriftgröße zentral.
 - 🟢 `Strg++`, `Strg+-` und `Strg+0` bleiben verfügbar.
 - 🟢 die Statusleiste bietet zusätzlich `A−`, Prozentanzeige und `A+`.
-- 🟢 Dashboard, offene Songeditoren, Songbibliothek, Recovery, Profilverwaltung und Todo folgen derselben Zoomstufe.
+- 🟢 Dashboard, offene Songeditoren, Songbibliothek, Recovery, Profilverwaltung, Todo und Kalender folgen derselben Zoomstufe.
 - 🟢 keine parallele Schriftgrößenkonfiguration; alles läuft weiter über die zentralen PySide6-QSS-Standards.
 
 ## Iteration 12 – Kubuntu/X11-Endabnahme
@@ -87,7 +97,7 @@ Die Hauptansicht orientiert sich am Provoware-Referenzentwurf:
 - Entwickler-Schnellinfo,
 - letzte bearbeitete Songs,
 - 2×2-Hauptfläche mit **Workflow Übersicht**, **DB-Eingaben**, **Funktionen**, **Systemanwendungen**,
-- Planung mit **Todo-Liste** und vorbereitetem Kalenderpunkt,
+- Planung mit **Todo-Liste** und **Kalender**,
 - Recovery nur unter `Werkzeug → Recovery`.
 
 ### Zoom und Schrift
@@ -98,6 +108,43 @@ Die Hauptansicht orientiert sich am Provoware-Referenzentwurf:
 - verfügbare Stufen: 100, 125, 150, 175 und 200 %.
 
 Geplante, noch nicht freigegebene Module werden sichtbar dargestellt, führen aber nur zu einem verständlichen Hinweis und verändern keine Daten.
+
+## Kalender
+
+Aufruf über `Planung → Kalender`.
+
+Links wählen Sie ein Datum und legen Termine an. Rechts wechseln Sie zwischen:
+- **Tag**,
+- **Woche**,
+- **Monat**,
+- **Jahr**.
+
+Die Bereiche werden tatsächlich neu berechnet. Ein Termin über Mitternacht erscheint deshalb in beiden betroffenen Tagesbereichen.
+
+### Termin anlegen
+
+Pflicht:
+- Titel,
+- Beginn,
+- Ende.
+
+Optional:
+- Notiz,
+- Erinnerung.
+
+Das Ende muss nach dem Beginn liegen. Als Erinnerungsabstand stehen keine Erinnerung, Terminbeginn, 5/15/30/60 Minuten oder 1 Tag vorher zur Verfügung.
+
+Datenpfad:
+
+```text
+daten/kalender/termine.json
+```
+
+### Erinnerungen
+
+Solange das Provoware-Dashboard läuft, prüft es alle 30 Sekunden auf fällige Erinnerungen. Das funktioniert auch bei geschlossenem Kalenderfenster. Nach der angezeigten Erinnerung wird der Termin atomar als bereits erinnert markiert.
+
+Wenn das gesamte Dashboard geschlossen ist, läuft bewusst kein separater Linux-Hintergrunddienst. Erinnerungen bei vollständig geschlossenem Programm gehören nicht zum Umfang dieser Iteration.
 
 ## Todo-Liste
 
@@ -210,7 +257,7 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 - Speichern beim Schließen und vor Logout,
 - atomarer Dateiersatz,
 - automatische Versionsstände nur bei tatsächlichen Änderungen,
-- atomare Profil- und Todo-Datenspeicherung,
+- atomare Profil-, Todo- und Kalender-Datenspeicherung,
 - Recovery-/Diagnose-/Restore-Kette.
 
 ## Vollprüfung
@@ -219,4 +266,4 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 bash scripts/pruefen.sh --full
 ```
 
-Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests einschließlich Zoom-, Profil- und Todo-Regressionsprüfung, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
+Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests einschließlich Zoom-, Profil-, Todo- und Kalender-Regressionsprüfung, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
