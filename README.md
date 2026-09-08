@@ -1,18 +1,16 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.4.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.5.0 · **Stand:** 2026-09-08
 
-## Iteration 4 – Recovery-Härtung
-
-Der Entwicklungsunterbau besitzt jetzt vier zusätzliche Schutzschichten:
+## Iteration 5 – Diagnose- und Logging-Härtung
 
 | Bereich | Status | Nachweis |
 |---|---|---|
-| Vollprojekt-Restore | 🟢 | ZIP → SHA-256 → neuer Ordner → Manifest → Vollprüfung → Headless-Start |
-| Headless-Start | 🟢 | `python3 -m app.main --headless-check` ohne Fenster |
-| Prozesswache | 🟢 | separater Elternprozess erkennt fehlerhaften/harten Prozessabschluss |
-| Log-Datenschutz | 🟢 | Geheimnisse, Mailadressen und Benutzeranteile in Home-Pfaden werden vor Persistierung bereinigt |
-| Startführung | 🟢 | sechs echte Checkpoints inklusive Headless- und Wächterstufe |
+| Logrotation | 🟢 | Größenlimit 2 MiB, Alterslimit 30 Tage, maximal 5 Archive |
+| JSONL-Quarantäne | 🟢 | beschädigte Zeilen werden bereinigt gesichert und aus dem aktiven Log entfernt |
+| Diagnosepaket | 🟢 | nur bereinigte Textkopien; abschließende Datenschutzprüfung vor ZIP-Erstellung |
+| kontrolliertes Ende | 🟢 | normales Schließen erzeugt eigenes `ENDE`-Ereignis |
+| Restore/Headless/Wächter | 🟢 | Schutz aus Iteration 4 bleibt aktiv |
 
 ## Start
 
@@ -20,13 +18,23 @@ Der Entwicklungsunterbau besitzt jetzt vier zusätzliche Schutzschichten:
 bash schnellstart.sh
 ```
 
-Der Start prüft Python, Umgebung, Abhängigkeiten, Laufzeitkern und Headless-Start. Erst danach wird die Anwendung unter der separaten Prozesswache geöffnet.
-
 ## Vollprüfung
 
 ```bash
 bash scripts/pruefen.sh --full
 ```
+
+## Datenschutzgeprüftes Diagnosepaket
+
+```bash
+python3 scripts/diagnosepaket.py
+```
+
+Das Paket enthält keine unveränderten Rohprotokolle. Unterstützte Diagnose-Texte werden vor dem ZIP nochmals über `app/redaction.py` bereinigt und anschließend erneut auf verbliebene erkannte Geheimnisse geprüft. Zusätzlich entsteht eine SHA-256-Datei.
+
+## Logpflege
+
+`app/log_maintenance.py` führt begrenzte Rotation und Quarantäne aus. Beschädigte JSONL-Zeilen werden nicht mehr still übersprungen: Eine bereinigte Beweiskopie landet in `logs/quarantaene/`, während gültige Zeilen atomar im aktiven Log erhalten bleiben. Größen- oder altersbedingt rotierte Logs liegen in `logs/archiv/`.
 
 ## Verifizierte Iterationssicherung
 
@@ -34,14 +42,4 @@ bash scripts/pruefen.sh --full
 bash scripts/backup_erstellen.sh
 ```
 
-Das Sicherungsskript ruft den Restore-Prüfer auf. Ein Stand wird nur als `OK` bewertet, wenn die Prüfsumme stimmt, das ZIP sicher in einen neuen Ordner entpackt wurde, das Manifest identisch ist, die Vollprüfung besteht und der Headless-Start grün ist.
-
-Direkter Aufruf:
-
-```bash
-python3 scripts/iteration_restore.py
-```
-
-## Datenschutz im Log
-
-`app/redaction.py` bereinigt sensible Muster zentral **vor** JSONL-/TXT-Ausgabe und vor dem Rückfalllernen. Dazu gehören insbesondere Passwort-/Token-/Secret-/API-Key-Werte, Bearer-Tokens, Mailadressen und der Benutzername in `/home/<name>`.
+Restore, Headless-Start und Prozesswache aus Iteration 4 bleiben unverändert Teil der Sicherheitskette.
