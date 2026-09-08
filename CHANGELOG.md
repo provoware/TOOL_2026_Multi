@@ -1,5 +1,23 @@
 # Änderungsverlauf
 
+## 0.12.0 – 2026-09-08 – Todo-Liste mit Termin und Archiv
+
+### Hinzugefügt
+- eigenes PySide6-Todo-Modul unter `Planung → Todo-Liste`,
+- Aufgaben mit Pflicht-Titel, optionaler Notiz und optionalem Datum/Uhrzeit-Termin,
+- getrennte Ansichten für aktive Aufgaben und Archiv,
+- Abhaken verschiebt die vollständige Aufgabe ins Archiv und setzt einen Abschlusszeitpunkt,
+- zentrale Zoom-/Schriftsteuerung gilt auch im Todo-Fenster,
+- gezielte Logik- und GUI-Rückfalltests für Terminierung, Abhaken, Archiv und Zoom.
+
+### Schutz
+- aktive Aufgaben und Archiv liegen zusammen in `daten/todo/todo.json`, damit beim Abhaken kein Zwischenzustand zwischen zwei Dateien entstehen kann,
+- Speicherung erfolgt atomar über Tempdatei, `fsync` und `os.replace`,
+- ein simulierter Fehler beim atomaren Ersetzen erhält den vorherigen Bestand,
+- Abhaken löscht keine Aufgabe; der Eintrag wird vollständig ins Archiv verschoben,
+- ungültige Termine und leere Titel werden vor dem Schreiben abgewiesen,
+- bestehende Song-, Profil-, Recovery-, Zoom-, Kubuntu- und Restore-Gates bleiben aktiv.
+
 ## 0.11.0 – 2026-09-08 – profilbasierte DB-Eingaben
 
 ### Hinzugefügt
