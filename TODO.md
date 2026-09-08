@@ -32,7 +32,7 @@ Stand: 2026-09-08
 ## Iteration 13 – Zoom und Schriftgröße
 
 - 🟢 `Strg + Mausrad`, `Strg++`, `Strg+-`, `Strg+0` sowie A−/A+ umgesetzt.
-- 🟢 Zoom gilt gemeinsam für Dashboard, Songeditoren, Songbibliothek und Recovery.
+- 🟢 Zoom gilt gemeinsam für Dashboard, Songeditoren, Songbibliothek, Recovery, Profilverwaltung und Todo.
 
 ## Iteration 14 – profilbasierte DB-Eingaben
 
@@ -43,8 +43,17 @@ Stand: 2026-09-08
 - 🟢 neue Profile/Werte speicherbar; Duplikate werden verhindert; Entfernen verlangt Bestätigung.
 - 🟢 atomare JSON-Speicherung unter `daten/profile/db_profile.json`; Startprofile erzeugen ohne Änderung keine Nutzerdatendatei.
 
+## Iteration 15 – Todo-Liste
+
+- 🟢 Aufgabe mit Pflicht-Titel und optionaler Notiz anlegbar.
+- 🟢 optionaler Termin mit Datum und Uhrzeit.
+- 🟢 aktive Aufgaben nach Termin sortiert in eigener Ansicht.
+- 🟢 Abhaken verschiebt die vollständige Aufgabe in derselben atomaren Transaktion ins Archiv.
+- 🟢 Archiv ist getrennt sichtbar; beim Abhaken wird nichts gelöscht.
+- 🟢 gemeinsamer Bestand unter `daten/todo/todo.json`, atomar mit Tempdatei, `fsync` und `os.replace`.
+- 🟢 Todo ist unter `Planung → Todo-Liste` erreichbar und folgt der zentralen Zoomsteuerung.
+
 ## Nächste Fachiterationen
 
-1. 🔴 Todo-Liste mit Terminierung, Abhaken und Archiv.
-2. 🔴 Kalender mit Tag/Woche/Monat/Jahr, Terminen und Erinnerungen.
-3. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
+1. 🔴 Kalender mit Tag/Woche/Monat/Jahr, Terminen und Erinnerungen.
+2. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.

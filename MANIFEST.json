@@ -1,17 +1,17 @@
 {
-  "schema_version": 13,
+  "schema_version": 14,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.11.0",
+    "version": "0.12.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 14,
-    "goal": "Profilbasierte DB-Eingaben für Genres, Stimmungen, Stil, Stimme und Besonderheiten mit atomarer lokaler Speicherung und direkter Dashboard-Auswahl umsetzen",
-    "completed": 6,
-    "open_next": 3
+    "number": 15,
+    "goal": "Todo-Liste mit optionaler Terminierung, aktivem Bestand, sicherem Abhaken und getrenntem Archiv umsetzen",
+    "completed": 5,
+    "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -26,6 +26,7 @@
     "source": "app/",
     "base_data": "daten/",
     "profile_data": "daten/profile/db_profile.json",
+    "todo_data": "daten/todo/todo.json",
     "song_data": "daten/songtexte/",
     "song_versions": "daten/songtexte/.versionen/",
     "song_exports": "daten/songtexte/export/",
@@ -43,7 +44,7 @@
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
     "qt_platform_for_ci": "offscreen",
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_kubuntu_acceptance; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui",
+    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_kubuntu_acceptance; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py"
   },
   "ci": {
@@ -69,7 +70,7 @@
     "planned_navigation_visible_but_non_destructive": true,
     "zoom_levels_percent": [100, 125, 150, 175, 200],
     "zoom_controls": ["ctrl_mouse_wheel", "ctrl_plus", "ctrl_minus", "ctrl_0", "A_minus_button", "A_plus_button"],
-    "zoom_managed_windows": ["dashboard", "song_editor", "song_library", "recovery", "profile_editor"],
+    "zoom_managed_windows": ["dashboard", "song_editor", "song_library", "recovery", "profile_editor", "todo"],
     "font_size_follows_zoom": true
   },
   "profile_database": {
@@ -83,6 +84,19 @@
     "duplicate_rule": "Groß-/Kleinschreibung ignorierend keine doppelten Werte innerhalb Profil und Kategorie",
     "dashboard_profile_selector": true,
     "remove_requires_confirmation": true
+  },
+  "todo": {
+    "module": "app/todo_store.py",
+    "window": "app/todo_window.py",
+    "storage": "daten/todo/todo.json",
+    "schema_version": 1,
+    "fields": ["id", "title", "note_optional", "due_optional", "created_at", "completed_at"],
+    "active_and_archive_same_transaction": true,
+    "complete_rule": "Abhaken verschiebt den vollständigen Eintrag atomar aus active nach archive und setzt completed_at; es wird nichts gelöscht.",
+    "due_format": "ISO-8601 lokale Datum/Zeit ohne Zeitzonen-Erfindung",
+    "atomic_write": true,
+    "archive_separate_view": true,
+    "dashboard_location": "Planung -> Todo-Liste"
   },
   "kubuntu_acceptance": {
     "launcher": "kubuntu_abnahme.sh",
@@ -184,11 +198,13 @@
     {"path":"app/quick_note.py","release":true,"purpose":"Append-only Entwicklerinformation im Dashboard"},
     {"path":"app/profile_store.py","release":true,"purpose":"Atomarer lokaler Profilbestand für DB-Eingaben"},
     {"path":"app/profile_editor.py","release":true,"purpose":"PySide6-Verwaltung für Profile und Kategorie-Werte"},
+    {"path":"app/todo_store.py","release":true,"purpose":"Atomarer Todo-Bestand mit aktivem Bereich und Archiv"},
+    {"path":"app/todo_window.py","release":true,"purpose":"PySide6-Todo-Liste mit Terminierung, Abhaken und Archivansicht"},
     {"path":"app/song_document.py","release":true,"purpose":"Songmodell, Rückwärtslesen, Status/Favorit, Versionierung, Restore und Exporte"},
     {"path":"app/song_editor.py","release":true,"purpose":"PySide6-Songtexteditor mit Metadaten, Status/Favorit, Bereichen, Vorschau, Autosave und Export"},
     {"path":"app/song_library.py","release":true,"purpose":"PySide6-Songbibliothek mit Suche, Filtern, Sortierung/Gruppierung und geschütztem Restore"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
-    {"path":"app/ui.py","release":true,"purpose":"PySide6-Referenzdashboard, Profil-DB, Navigation, Zoom-/Schriftsteuerung und Logout"},
+    {"path":"app/ui.py","release":true,"purpose":"PySide6-Referenzdashboard, Profil-DB, Todo-Navigation, Zoom-/Schriftsteuerung und Logout"},
     {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale PySide6-QSS-, Farb-, Abstands- und Zoomstandards"},
     {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit-Vorprüfung und PySide6-GUI-Gates"},
     {"path":"scripts/start_status.py","release":true,"purpose":"PySide6-Startanzeige mit echten Checkpoints"},
@@ -223,6 +239,8 @@
     {"path":"tests/test_zoom_controls_gui.py","release":false,"purpose":"Ctrl-Mausrad, Zoomgrenzen, A−/A+-Steuerung und sichtbarer Prozentstatus"},
     {"path":"tests/test_profile_store.py","release":false,"purpose":"Profilisolation, Duplikatschutz und atomare Speicherfehler"},
     {"path":"tests/test_profile_gui.py","release":false,"purpose":"PySide6-Profilverwaltung und Dashboard-Befüllung"},
+    {"path":"tests/test_todo_store.py","release":false,"purpose":"Todo-Terminierung, Archivverschiebung und atomare Speicherfehler"},
+    {"path":"tests/test_todo_gui.py","release":false,"purpose":"PySide6-Todo-Eingabe, Termin, Abhaken, Archiv und Zoom"},
     {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
     {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
     {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"},
@@ -233,6 +251,7 @@
     {"path":"docs/ITERATION11_QT_DASHBOARD.md","release":false,"purpose":"PySide6-Migration und Referenzlayout-Abnahme"},
     {"path":"docs/ITERATION12_KUBUNTU_ABNAHME.md","release":false,"purpose":"Reale Kubuntu/KDE-X11-Endabnahme, Temp-Signaltest und Beweisregeln"},
     {"path":"docs/ITERATION13_ZOOM.md","release":false,"purpose":"Globale Zoom- und Schriftgrößenbedienung"},
-    {"path":"docs/ITERATION14_DB_PROFILE.md","release":false,"purpose":"Profilbasierte DB-Eingaben und Datensicherheitsregeln"}
+    {"path":"docs/ITERATION14_DB_PROFILE.md","release":false,"purpose":"Profilbasierte DB-Eingaben und Datensicherheitsregeln"},
+    {"path":"docs/ITERATION15_TODO.md","release":false,"purpose":"Todo-Datenmodell, Archivregel, UI und Abnahme"}
   ]
 }
