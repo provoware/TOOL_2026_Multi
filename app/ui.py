@@ -1,4 +1,4 @@
-"""Laienfreundliche Dashboard-, Recovery- und Schnellarbeitsoberfläche."""
+"""Referenznahes Multimodul-Dashboard mit ausgelagerter Recovery-Zentrale."""
 
 from __future__ import annotations
 
@@ -9,131 +9,230 @@ from typing import Callable
 
 from app.event_log import EventLogger
 from app.quick_note import append_developer_info
-from app.recovery_ui import ZOOM_LEVELS, available_areas, filter_events, repetition_summary, technical_details, zoom_font_size
+from app.recovery_center import RecoveryCenter
+from app.recovery_ui import ZOOM_LEVELS
 from app.song_document import list_songs, load_song
 from app.song_editor import SongEditor
 from app.song_library import SongLibrary
 from app.texts import TextRegistry
-from app.ui_standards import COLORS, FONTS, SPACING, configure_global_style, severity_display
+from app.ui_standards import COLORS, SPACING, configure_global_style
 
 
 class Dashboard:
+    """Kompaktes Dashboard nach dem Provoware-Referenzentwurf."""
+
     def __init__(self, root: tk.Tk, texts: TextRegistry, logger: EventLogger,
                  project_root: Path | None = None) -> None:
         self.root, self.texts, self.logger = root, texts, logger
         self.project_root = project_root or Path.cwd()
         self.zoom_percent = 100
-        self._event_by_item: dict[str, dict] = {}
-        self._all_events: list[dict] = []
         self._song_editors: list[SongEditor] = []
         self._song_library: SongLibrary | None = None
-        self.severity_var = tk.StringVar(value="ALLE")
-        self.area_var = tk.StringVar(value="ALLE")
-        self.zoom_var = tk.StringVar(value="100 %")
+        self._recovery_center: RecoveryCenter | None = None
         self.quick_info_var = tk.StringVar()
-        self.quick_status_var = tk.StringVar(value="")
-        root.title(texts.get("app.name", "TOOL_2026_Multi"))
-        root.geometry("1180x780")
-        root.minsize(900, 620)
+        self.quick_status_var = tk.StringVar(value="Bereit.")
+        self.search_var = tk.StringVar()
+        self.nav_collapsed = False
+
+        root.title("Provoware-Datenbank-Dashboard 2026")
+        root.geometry("1280x790")
+        root.minsize(1020, 650)
         configure_global_style(root, self.zoom_percent)
-        self._build_menu()
         self._build_content()
         self._bind_keyboard()
         root.protocol("WM_DELETE_WINDOW", self.logout)
         self.refresh()
-        self.quick_entry.focus_set()
-
-    def _build_menu(self) -> None:
-        menu = tk.Menu(self.root)
-        work = tk.Menu(menu, tearoff=False)
-        work.add_command(label="Neuen Song schreiben", command=self.open_song_editor)
-        work.add_command(label="Songbibliothek öffnen", command=self.open_song_library)
-        work.add_separator()
-        work.add_command(label="Logout / Sitzung beenden", command=self.logout)
-        menu.add_cascade(label="Arbeiten", menu=work)
-        debug = tk.Menu(menu, tearoff=False)
-        debug.add_command(label="Ausgewähltes Ereignis öffnen", command=self.open_selected_event, accelerator="Enter")
-        debug.add_command(label=self.texts.get("menu.debug.open", "Alle Debug/Log-Ereignisse öffnen"), command=self.show_log)
-        debug.add_command(label=self.texts.get("menu.debug.refresh", "Anzeige aktualisieren"), command=self.refresh, accelerator="F5")
-        menu.add_cascade(label=self.texts.get("menu.debug", "Debug/Log"), menu=debug)
-        self.root.config(menu=menu)
+        self.search_entry.focus_set()
 
     def _build_content(self) -> None:
-        frame = ttk.Frame(self.root, padding=SPACING["xl"])
-        frame.pack(fill="both", expand=True)
-        self.main_frame = frame
+        shell = ttk.Frame(self.root)
+        shell.pack(fill="both", expand=True)
 
-        header = ttk.Frame(frame)
-        header.pack(fill="x", pady=(0, SPACING["m"]))
-        ttk.Label(header, text="TOOL_2026_Multi", style="Title.TLabel").pack(side="left")
-        ttk.Button(header, text="Neuer Song", command=self.open_song_editor, takefocus=True).pack(side="right", padx=(SPACING["s"], 0))
-        ttk.Button(header, text="Songbibliothek", command=self.open_song_library, takefocus=True).pack(side="right", padx=(SPACING["s"], 0))
-        ttk.Button(header, text="Logout", command=self.logout, takefocus=True).pack(side="right")
+        self._build_header(shell)
+        self._build_tiles(shell)
 
-        quick = ttk.Frame(frame)
+        body = ttk.Frame(shell)
+        body.pack(fill="both", expand=True, padx=SPACING["s"], pady=(0, SPACING["s"]))
+        self.sidebar = ttk.Frame(body, style="Sidebar.TFrame", width=210)
+        self.sidebar.pack(side="left", fill="y", padx=(0, SPACING["s"]))
+        self.sidebar.pack_propagate(False)
+        self._build_sidebar(self.sidebar)
+
+        main = ttk.Frame(body)
+        main.pack(side="left", fill="both", expand=True)
+        self._build_quick_info(main)
+        self._build_dashboard_grid(main)
+
+        self._build_statusbar(shell)
+
+    def _build_header(self, parent: ttk.Frame) -> None:
+        header = ttk.Frame(parent, style="Toolbar.TFrame", padding=(SPACING["m"], SPACING["s"]))
+        header.pack(fill="x", padx=SPACING["s"], pady=SPACING["s"])
+
+        logo = tk.Label(header, text="▦", bg=COLORS["surface_soft"], fg=COLORS["accent"],
+                        font=("TkDefaultFont", 22, "bold"), padx=8)
+        logo.pack(side="left")
+        title_box = ttk.Frame(header, style="Toolbar.TFrame")
+        title_box.pack(side="left", fill="x", expand=True)
+        tk.Label(title_box, text="Provoware-Datenbank-Dashboard 2026",
+                 bg=COLORS["surface_soft"], fg=COLORS["text"],
+                 font=("TkDefaultFont", 14, "bold")).pack(anchor="w")
+        tk.Label(title_box, text="Linux · Python/Tkinter · Erweiterbares Multimodul-Dashboard",
+                 bg=COLORS["surface_soft"], fg=COLORS["muted"],
+                 font=("TkDefaultFont", 8)).pack(anchor="w")
+
+        search_box = ttk.Frame(header, style="Toolbar.TFrame")
+        search_box.pack(side="right")
+        ttk.Label(search_box, text="⌕", style="Accent.TLabel").pack(side="left", padx=(0, SPACING["xs"]))
+        self.search_entry = ttk.Entry(search_box, textvariable=self.search_var, width=24, takefocus=True)
+        self.search_entry.pack(side="left")
+        self.search_entry.bind("<Return>", lambda _event: self.open_song_library())
+        ttk.Button(search_box, text="Recovery", command=self.open_recovery, takefocus=True).pack(side="left", padx=SPACING["s"])
+        ttk.Button(search_box, text="Logout", command=self.logout, takefocus=True).pack(side="left")
+
+    def _build_tiles(self, parent: ttk.Frame) -> None:
+        strip = ttk.Frame(parent)
+        strip.pack(fill="x", padx=SPACING["s"], pady=(0, SPACING["s"]))
+        tiles = (
+            ("♫\nSongtexte", self.open_song_library, True),
+            ("▣\nHörspiele", lambda: self._planned("Hörspiele"), False),
+            ("▤\nBlogartikel", lambda: self._planned("Blogartikel"), False),
+            ("▥\nGenres", lambda: self._planned("Genres-Datenbank"), False),
+            ("?\nPrompts", lambda: self._planned("Prompts"), False),
+            ("⌕\nSuche", lambda: self._planned("Dateisuche"), False),
+            ("≡\nDuplikate", lambda: self._planned("Duplikatprüfer"), False),
+        )
+        for text, command, enabled in tiles:
+            button = ttk.Button(strip, text=text, command=command, style="Tile.TButton", takefocus=True)
+            button.pack(side="left", fill="x", expand=True, padx=(0, SPACING["xs"]))
+            if not enabled:
+                button.configure(state="normal")
+
+    def _build_sidebar(self, parent: ttk.Frame) -> None:
+        top = ttk.Frame(parent, style="Sidebar.TFrame")
+        top.pack(fill="x", padx=SPACING["s"], pady=(SPACING["s"], SPACING["m"]))
+        ttk.Button(top, text="☰", command=self.toggle_sidebar, style="Nav.TButton", takefocus=True).pack(side="left")
+        ttk.Label(top, text="Navigation", style="Sidebar.TLabel").pack(side="left", padx=SPACING["s"])
+
+        self.nav_labels: list[ttk.Widget] = []
+        self._nav_button(parent, "▦  Übersicht", None, active=True)
+        self._nav_button(parent, "◈  Modulauswahl", lambda: self._planned("Modulauswahl"))
+        self._nav_heading(parent, "Workflow Schreiben")
+        self._nav_button(parent, "  ♫  Songtexte", self.open_song_library)
+        self._nav_button(parent, "  ▣  Hörspiele", lambda: self._planned("Hörspiele"))
+        self._nav_button(parent, "  ▤  Blogartikel", lambda: self._planned("Blogartikel"))
+        self._nav_heading(parent, "DB-Eingaben")
+        for label in ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten", "GitHub-Repositories", "Prompts"):
+            self._nav_button(parent, f"  ·  {label}", lambda item=label: self._planned(item))
+        self._nav_heading(parent, "Funktionen")
+        self._nav_button(parent, "  ◉  Genreszufallsgenerator", lambda: self._planned("Genreszufallsgenerator"))
+        self._nav_button(parent, "  ✎  Reimfinder", lambda: self._planned("Reimfinder"))
+        self._nav_heading(parent, "Systemanwendungen")
+        self._nav_button(parent, "  ⌕  Datenbank-Suche", lambda: self._planned("Datenbank-Suche"))
+        self._nav_button(parent, "  ▤  Inhaltssuche Textdateien", lambda: self._planned("Inhaltssuche"))
+        self._nav_button(parent, "  ≡  Trefferliste", lambda: self._planned("Trefferliste"))
+        self._nav_button(parent, "  ◫  Duplikatprüfer", lambda: self._planned("Duplikatprüfer"))
+        self._nav_heading(parent, "Werkzeug")
+        self.recovery_nav_button = self._nav_button(parent, "  ⚕  Recovery", self.open_recovery)
+
+    def _nav_heading(self, parent: ttk.Frame, text: str) -> None:
+        label = ttk.Label(parent, text=f"⌄  {text}", style="Sidebar.TLabel")
+        label.pack(fill="x", padx=SPACING["m"], pady=(SPACING["s"], SPACING["xs"]))
+        self.nav_labels.append(label)
+
+    def _nav_button(self, parent: ttk.Frame, text: str, command: Callable[[], None] | None,
+                    active: bool = False) -> ttk.Button:
+        button = ttk.Button(parent, text=text, command=command or (lambda: None),
+                            style="ActiveNav.TButton" if active else "Nav.TButton", takefocus=True)
+        button.pack(fill="x", padx=SPACING["s"], pady=1)
+        self.nav_labels.append(button)
+        return button
+
+    def toggle_sidebar(self) -> None:
+        self.nav_collapsed = not self.nav_collapsed
+        self.sidebar.configure(width=58 if self.nav_collapsed else 210)
+        for widget in self.nav_labels:
+            if self.nav_collapsed:
+                widget.pack_forget()
+            else:
+                widget.pack(fill="x", padx=SPACING["s"], pady=1)
+
+    def _build_quick_info(self, parent: ttk.Frame) -> None:
+        quick = ttk.Frame(parent, style="Toolbar.TFrame", padding=(SPACING["m"], SPACING["s"]))
         quick.pack(fill="x", pady=(0, SPACING["s"]))
-        ttk.Label(quick, text="Entwickler-Schnellinfo:").pack(side="left")
+        ttk.Label(quick, text="Entwicklerinfo:", style="Section.TLabel").pack(side="left")
         self.quick_entry = ttk.Entry(quick, textvariable=self.quick_info_var, takefocus=True)
         self.quick_entry.pack(side="left", fill="x", expand=True, padx=SPACING["s"])
         self.quick_entry.bind("<Return>", self._quick_save_enter)
         ttk.Button(quick, text="Speichern", command=self.save_quick_info, takefocus=True).pack(side="left")
-        ttk.Label(frame, textvariable=self.quick_status_var, style="Muted.TLabel").pack(anchor="w", pady=(0, SPACING["m"]))
 
-        recent_header = ttk.Frame(frame)
-        recent_header.pack(fill="x")
-        ttk.Label(recent_header, text="Zuletzt bearbeitet", style="Title.TLabel").pack(side="left")
-        ttk.Button(recent_header, text="Alle Songs", command=self.open_song_library, takefocus=True).pack(side="right")
-        self.recent_songs_frame = ttk.Frame(frame)
-        self.recent_songs_frame.pack(fill="x", pady=(SPACING["s"], SPACING["m"]))
+    def _card(self, parent: tk.Misc, title: str) -> ttk.Frame:
+        border = tk.Frame(parent, bg=COLORS["accent"], padx=1, pady=1)
+        card = ttk.Frame(border, style="Card.TFrame", padding=SPACING["m"])
+        card.pack(fill="both", expand=True)
+        ttk.Label(card, text=title, style="Card.TLabel", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(0, SPACING["s"]))
+        return border
 
-        ttk.Label(frame, text="Debug- und Recovery-Zentrale", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(frame, text="Fehler filtern, Details öffnen und Wiederholungen erkennen. Technische Angaben bleiben zunächst verborgen.",
-                  style="Muted.TLabel", wraplength=1000).pack(anchor="w", pady=(SPACING["xs"], SPACING["s"]))
+    def _build_dashboard_grid(self, parent: ttk.Frame) -> None:
+        grid = ttk.Frame(parent)
+        grid.pack(fill="both", expand=True)
+        grid.columnconfigure(0, weight=1, uniform="cards")
+        grid.columnconfigure(1, weight=1, uniform="cards")
+        grid.rowconfigure(0, weight=1, uniform="rows")
+        grid.rowconfigure(1, weight=1, uniform="rows")
 
-        self.ready = tk.Label(frame, text=f"🟢 {self.texts.get('status.ready', 'System bereit')}", anchor="w",
-                              padx=12, pady=6, bg=COLORS["surface_alt"], fg=COLORS["green"],
-                              font=("TkDefaultFont", FONTS["body_size"], "bold"))
-        self.ready.pack(fill="x", pady=(0, SPACING["s"]))
+        workflow_border = self._card(grid, "🚀  Workflow Übersicht")
+        workflow_border.grid(row=0, column=0, sticky="nsew", padx=(0, SPACING["xs"]), pady=(0, SPACING["xs"]))
+        workflow = workflow_border.winfo_children()[0]
+        ttk.Label(workflow, text="Kreative Ideen.\nStrukturierte Workflows.\nStarke Ergebnisse.", style="Card.TLabel").pack(anchor="center", pady=SPACING["m"])
+        for step in ("①  Idee erfassen", "②  DB-Eingaben ergänzen", "③  Funktionen nutzen", "④  Ergebnisse speichern"):
+            ttk.Label(workflow, text=step, style="CardMuted.TLabel").pack(anchor="w", padx=SPACING["l"], pady=2)
 
-        controls = ttk.Frame(frame)
-        controls.pack(fill="x", pady=(0, SPACING["s"]))
-        ttk.Label(controls, text="Schweregrad:").pack(side="left")
-        self.severity_filter = ttk.Combobox(controls, textvariable=self.severity_var, state="readonly", width=13,
-                                            values=("ALLE", "INFO", "HINWEIS", "WARNUNG", "FEHLER", "KRITISCH", "SCHWER", "ABSTURZ"), takefocus=True)
-        self.severity_filter.pack(side="left", padx=(SPACING["s"], SPACING["m"]))
-        self.severity_filter.bind("<<ComboboxSelected>>", lambda _event: self._apply_filters())
-        ttk.Label(controls, text="Bereich:").pack(side="left")
-        self.area_filter = ttk.Combobox(controls, textvariable=self.area_var, state="readonly", width=18, takefocus=True)
-        self.area_filter.pack(side="left", padx=(SPACING["s"], SPACING["m"]))
-        self.area_filter.bind("<<ComboboxSelected>>", lambda _event: self._apply_filters())
-        ttk.Label(controls, text="Anzeigegröße:").pack(side="left")
-        self.zoom_filter = ttk.Combobox(controls, textvariable=self.zoom_var, state="readonly", width=8,
-                                        values=tuple(f"{level} %" for level in ZOOM_LEVELS), takefocus=True)
-        self.zoom_filter.pack(side="left", padx=(SPACING["s"], 0))
-        self.zoom_filter.bind("<<ComboboxSelected>>", self._zoom_changed)
+        db_border = self._card(grid, "▦  DB-Eingaben")
+        db_border.grid(row=0, column=1, sticky="nsew", padx=(SPACING["xs"], 0), pady=(0, SPACING["xs"]))
+        db = db_border.winfo_children()[0]
+        for label in ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten", "GitHub-Repositories", "Prompts"):
+            row = ttk.Frame(db, style="Card.TFrame")
+            row.pack(fill="x", pady=2)
+            ttk.Label(row, text=label, style="CardMuted.TLabel", width=20).pack(side="left")
+            combo = ttk.Combobox(row, values=("Bitte auswählen …",), state="readonly", width=24)
+            combo.set("Bitte auswählen …")
+            combo.pack(side="left", fill="x", expand=True)
 
-        columns = ("time", "severity", "area", "repeat", "summary")
-        self.table = ttk.Treeview(frame, columns=columns, show="headings", height=6, takefocus=True, selectmode="browse")
-        for key, title, width in (("time", "Zeit", 150), ("severity", "Ampel / Schwere", 135),
-                                  ("area", "Bereich", 110), ("repeat", "Wiederholung", 110),
-                                  ("summary", "Einfache Erklärung", 430)):
-            self.table.heading(key, text=title)
-            self.table.column(key, width=width, stretch=key == "summary")
-        for severity in ("INFO", "HINWEIS", "WARNUNG", "FEHLER", "KRITISCH", "SCHWER", "ABSTURZ"):
-            _, color = severity_display(severity)
-            self.table.tag_configure(severity, foreground=color)
-        self.table.pack(fill="both", expand=True)
-        self.table.bind("<Double-1>", lambda _event: self.open_selected_event())
-        self.table.bind("<Return>", lambda _event: self.open_selected_event())
+        functions_border = self._card(grid, "▣  Funktionen")
+        functions_border.grid(row=1, column=0, sticky="nsew", padx=(0, SPACING["xs"]), pady=(SPACING["xs"], 0))
+        functions = functions_border.winfo_children()[0]
+        cards = ttk.Frame(functions, style="Card.TFrame")
+        cards.pack(fill="both", expand=True)
+        for title, subtitle, command in (
+            ("◈\nGenreszufallsgenerator", "Zufällige Genres entdecken", lambda: self._planned("Genreszufallsgenerator")),
+            ("✎\nReimfinder", "Passende Reime finden", lambda: self._planned("Reimfinder")),
+        ):
+            ttk.Button(cards, text=f"{title}\n{subtitle}", command=command, style="Tile.TButton", takefocus=True).pack(side="left", fill="both", expand=True, padx=SPACING["xs"], pady=SPACING["xs"])
 
-        actions = ttk.Frame(frame)
-        actions.pack(fill="x", pady=SPACING["s"])
-        self.open_button = ttk.Button(actions, text="Ausgewähltes Ereignis öffnen", command=self.open_selected_event, takefocus=True)
-        self.open_button.pack(side="left")
-        ttk.Button(actions, text="Alle Ereignisse als Text", command=self.show_log, takefocus=True).pack(side="left", padx=SPACING["s"])
-        ttk.Button(actions, text="Aktualisieren", command=self.refresh, takefocus=True).pack(side="left")
-        self.status = ttk.Label(frame, text="", style="Muted.TLabel")
-        self.status.pack(anchor="w", pady=(SPACING["xs"], 0))
+        system_border = self._card(grid, "▤  Systemanwendungen")
+        system_border.grid(row=1, column=1, sticky="nsew", padx=(SPACING["xs"], 0), pady=(SPACING["xs"], 0))
+        system = system_border.winfo_children()[0]
+        for icon, title, subtitle in (
+            ("⌕", "Datenbank-Suche", "Nach Dateien im System suchen"),
+            ("▤", "Inhaltssuche Textdateien", "Inhalte in Textdateien durchsuchen"),
+            ("≡", "Trefferliste", "Suchergebnisse anzeigen"),
+            ("◫", "Duplikatprüfer", "Doppelte Dateien finden"),
+        ):
+            row = ttk.Frame(system, style="Card.TFrame")
+            row.pack(fill="x", pady=3)
+            ttk.Label(row, text=icon, style="Card.TLabel", width=3).pack(side="left")
+            text = ttk.Frame(row, style="Card.TFrame")
+            text.pack(side="left", fill="x", expand=True)
+            ttk.Label(text, text=title, style="Card.TLabel").pack(anchor="w")
+            ttk.Label(text, text=subtitle, style="CardMuted.TLabel").pack(anchor="w")
+
+    def _build_statusbar(self, parent: ttk.Frame) -> None:
+        bar = ttk.Frame(parent, style="Status.TFrame", padding=(SPACING["m"], SPACING["xs"]))
+        bar.pack(fill="x", padx=SPACING["s"], pady=(0, SPACING["s"]))
+        tk.Label(bar, text="●", bg=COLORS["surface_soft"], fg=COLORS["green"]).pack(side="left")
+        tk.Label(bar, textvariable=self.quick_status_var, bg=COLORS["surface_soft"], fg=COLORS["muted"]).pack(side="left", padx=SPACING["s"])
+        tk.Label(bar, text="Python/Tkinter  ·  Dark Orange Industrial", bg=COLORS["surface_soft"], fg=COLORS["muted"]).pack(side="right")
 
     def _bind_keyboard(self) -> None:
         self.root.bind("<F5>", lambda _event: self.refresh())
@@ -141,45 +240,34 @@ class Dashboard:
         self.root.bind("<Control-equal>", lambda _event: self._step_zoom(1))
         self.root.bind("<Control-minus>", lambda _event: self._step_zoom(-1))
         self.root.bind("<Control-0>", lambda _event: self.set_zoom(100))
+        self.root.bind("<Control-r>", lambda _event: self.open_recovery())
+
+    def _planned(self, name: str) -> None:
+        messagebox.showinfo("Geplanter Bereich", f"{name} ist im Dashboard bereits vorgesehen, aber noch nicht als Fachfunktion freigegeben.", parent=self.root)
 
     def _quick_save_enter(self, _event: object = None) -> str:
         self.save_quick_info()
         return "break"
 
     def save_quick_info(self) -> None:
-        text = self.quick_info_var.get()
         try:
-            target = append_developer_info(self.project_root, text)
+            target = append_developer_info(self.project_root, self.quick_info_var.get())
         except ValueError:
-            self.quick_status_var.set("🟡 Bitte zuerst eine kurze Information eingeben.")
+            self.quick_status_var.set("Bitte zuerst eine kurze Information eingeben.")
             return
         except Exception as error:
-            self.quick_status_var.set(f"🔴 Speichern fehlgeschlagen: {type(error).__name__}")
+            self.quick_status_var.set(f"Speichern fehlgeschlagen: {type(error).__name__}")
             return
         self.quick_info_var.set("")
-        self.quick_status_var.set(f"🟢 An {target.name} angehängt.")
+        self.quick_status_var.set(f"An {target.name} angehängt.")
         self.quick_entry.focus_set()
 
     def refresh_recent_songs(self) -> None:
-        for child in self.recent_songs_frame.winfo_children():
-            child.destroy()
-        paths = list_songs(self.project_root)[:5]
-        if not paths:
-            ttk.Label(self.recent_songs_frame, text="Noch keine Songs gespeichert.", style="Muted.TLabel").pack(side="left")
-            return
-        for path in paths:
-            try:
-                document = load_song(path)
-                subtitle = document.genre or "ohne Genre"
-                button = ttk.Button(self.recent_songs_frame, text=f"{document.title}\n{subtitle}",
-                                    command=lambda selected=path: self.open_song_path(selected), takefocus=True)
-                button.pack(side="left", fill="x", expand=True, padx=(0, SPACING["s"]))
-            except (OSError, UnicodeError, ValueError):
-                continue
+        # Die Referenz-Hauptfläche bleibt stabil; vorhandene Songs werden über Bibliothek/Suche geöffnet.
+        pass
 
     def open_song_editor(self) -> None:
-        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed,
-                            on_saved=self._song_saved)
+        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed, on_saved=self._song_saved)
         self._song_editors.append(editor)
 
     def open_song_path(self, path: Path) -> None:
@@ -188,8 +276,7 @@ class Dashboard:
         except Exception as error:
             messagebox.showerror("Song konnte nicht geöffnet werden", str(error), parent=self.root)
             return
-        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed,
-                            document=document, on_saved=self._song_saved)
+        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed, document=document, on_saved=self._song_saved)
         self._song_editors.append(editor)
 
     def open_song_library(self) -> None:
@@ -199,22 +286,23 @@ class Dashboard:
             return
         self._song_library = SongLibrary(self.root, self.project_root, self.zoom_percent, self.open_song_path)
 
+    def open_recovery(self) -> None:
+        if self._recovery_center is not None and self._recovery_center.window.winfo_exists():
+            self._recovery_center.window.lift()
+            self._recovery_center.refresh()
+            return
+        self._recovery_center = RecoveryCenter(self.root, self.texts, self.logger, self.zoom_percent)
+
     def _song_saved(self, _path: Path) -> None:
-        self.refresh_recent_songs()
         if self._song_library is not None and self._song_library.window.winfo_exists():
             self._song_library.refresh()
 
     def _song_editor_closed(self, editor: SongEditor) -> None:
         if editor in self._song_editors:
             self._song_editors.remove(editor)
-        self.refresh_recent_songs()
 
     def save_open_song_editors(self) -> bool:
-        success = True
-        for editor in list(self._song_editors):
-            if editor.save(reason="Sitzung gespeichert") is None:
-                success = False
-        return success
+        return all(editor.save(reason="Sitzung gespeichert") is not None for editor in list(self._song_editors))
 
     def logout(self) -> None:
         if not self.save_open_song_editors():
@@ -225,111 +313,9 @@ class Dashboard:
         self.root.destroy()
 
     def refresh(self) -> None:
-        self.refresh_recent_songs()
-        self._all_events = self.logger.recent(100)
-        areas = available_areas(self._all_events)
-        self.area_filter.configure(values=areas)
-        if self.area_var.get() not in areas:
-            self.area_var.set("ALLE")
-        self._apply_filters()
-
-    def _apply_filters(self) -> None:
-        for item in self.table.get_children():
-            self.table.delete(item)
-        self._event_by_item.clear()
-        events = filter_events(self._all_events, self.severity_var.get(), self.area_var.get())
-        for event in events:
-            severity = str(event.get("severity", "")).upper()
-            lamp, _ = severity_display(severity)
-            count, _first_seen = repetition_summary(event)
-            repeat_text = f"{count}×" if count > 1 else "einmalig"
-            item = self.table.insert("", "end", values=(str(event.get("time", ""))[:19].replace("T", " "),
-                              f"{lamp} {severity}", event.get("area", ""), repeat_text, event.get("summary", "")), tags=(severity,))
-            self._event_by_item[item] = event
-        if events:
-            first = self.table.get_children()[0]
-            self.table.selection_set(first)
-            self.table.focus(first)
-        self.status.config(text=f"{len(events)} Ereignis(se) passen zum Filter · insgesamt {len(self._all_events)} geladen.")
-
-    def selected_event(self) -> dict | None:
-        selection = self.table.selection()
-        return self._event_by_item.get(selection[0]) if selection else None
-
-    def open_selected_event(self) -> None:
-        event = self.selected_event()
-        if event is None:
-            messagebox.showinfo("Kein Ereignis ausgewählt", "Bitte zuerst eine Zeile auswählen.", parent=self.root)
-            return
-        self.show_event_details(event)
-
-    def show_event_details(self, event: dict) -> None:
-        window = tk.Toplevel(self.root)
-        window.title("Ereignisdetails")
-        window.geometry("760x610")
-        window.minsize(640, 480)
-        configure_global_style(window, self.zoom_percent)
-        window.transient(self.root)
-        body = ttk.Frame(window, padding=SPACING["l"])
-        body.pack(fill="both", expand=True)
-        severity = str(event.get("severity", "")).upper()
-        lamp, _color = severity_display(severity)
-        ttk.Label(body, text=f"{lamp} {severity} · {event.get('area', '')}", style="Title.TLabel").pack(anchor="w")
-        ttk.Label(body, text=str(event.get("summary") or "Keine Erklärung vorhanden."), wraplength=690).pack(anchor="w", pady=(SPACING["m"], SPACING["l"]))
-        count, first_seen = repetition_summary(event)
-        facts = (
-            ("Zeit", str(event.get("time") or "Unbekannt")[:19].replace("T", " ")),
-            ("Wiederholungen", str(count)),
-            ("Erstes Auftreten", first_seen[:19].replace("T", " ")),
-            ("Schutz", str(event.get("safe_action") or "Keine Angabe")),
-            ("Nächster Schritt", str(event.get("next_step") or "Keine Angabe")),
-        )
-        for title, value in facts:
-            row = ttk.Frame(body)
-            row.pack(fill="x", pady=SPACING["xs"])
-            ttk.Label(row, text=f"{title}:", width=19).pack(side="left", anchor="n")
-            ttk.Label(row, text=value, wraplength=520).pack(side="left", fill="x", expand=True)
-        tech_frame = ttk.Frame(body)
-        tech_text = tk.Text(tech_frame, height=9, wrap="word", padx=10, pady=10, bg=COLORS["surface"], fg=COLORS["text"],
-                            insertbackground=COLORS["text"], relief="flat", takefocus=True)
-        tech_text.insert("1.0", technical_details(event))
-        tech_text.config(state="disabled")
-        tech_text.pack(fill="both", expand=True)
-        state = {"open": False}
-
-        def toggle_technical() -> None:
-            state["open"] = not state["open"]
-            if state["open"]:
-                tech_frame.pack(fill="both", expand=True, pady=(SPACING["m"], 0))
-                toggle.config(text="Technische Details ausblenden")
-            else:
-                tech_frame.pack_forget()
-                toggle.config(text="Technische Details anzeigen")
-
-        toggle = ttk.Button(body, text="Technische Details anzeigen", command=toggle_technical, takefocus=True)
-        toggle.pack(anchor="w", pady=(SPACING["l"], SPACING["s"]))
-        close = ttk.Button(body, text="Schließen", command=window.destroy, takefocus=True)
-        close.pack(anchor="e")
-        window.bind("<Escape>", lambda _event: window.destroy())
-        toggle.focus_set()
-
-    def show_log(self) -> None:
-        window = tk.Toplevel(self.root)
-        window.title(self.texts.get("log.title", "Debug/Log – alle Ereignisse"))
-        window.geometry("840x540")
-        configure_global_style(window, self.zoom_percent)
-        text = tk.Text(window, wrap="word", padx=16, pady=16, bg=COLORS["surface"], fg=COLORS["text"],
-                       insertbackground=COLORS["text"], relief="flat", takefocus=True)
-        text.pack(fill="both", expand=True)
-        events = filter_events(self._all_events, self.severity_var.get(), self.area_var.get())
-        content = "\n\n".join(self.logger.human_report(event) for event in events)
-        text.insert("1.0", content or self.texts.get("dashboard.empty", "Keine passenden Ereignisse vorhanden."))
-        text.config(state="disabled")
-        window.bind("<Escape>", lambda _event: window.destroy())
-        text.focus_set()
-
-    def _zoom_changed(self, _event: object = None) -> None:
-        self.set_zoom(int(self.zoom_var.get().split()[0]))
+        self.quick_status_var.set("Bereit.")
+        if self._recovery_center is not None and self._recovery_center.window.winfo_exists():
+            self._recovery_center.refresh()
 
     def _step_zoom(self, direction: int) -> None:
         current = ZOOM_LEVELS.index(self.zoom_percent)
@@ -340,19 +326,21 @@ class Dashboard:
         if percent not in ZOOM_LEVELS:
             return
         self.zoom_percent = percent
-        self.zoom_var.set(f"{percent} %")
         configure_global_style(self.root, percent)
-        self.ready.configure(font=("TkDefaultFont", zoom_font_size(FONTS["body_size"], percent), "bold"))
+        if self._recovery_center is not None and self._recovery_center.window.winfo_exists():
+            self._recovery_center.set_zoom(percent)
         self.root.update_idletasks()
 
 
 def install_exception_handler(root: tk.Tk, logger: EventLogger, refresh: Callable[[], None]) -> None:
     def report(_kind: type[BaseException], error: BaseException, _trace: object) -> None:
         try:
-            event = logger.record(severity="FEHLER", area="OBERFLAECHE",
+            event = logger.record(
+                severity="FEHLER", area="OBERFLAECHE",
                 summary="Eine Aktion wurde sicher abgebrochen.", cause=str(error) or "Unbekannter Programmfehler",
                 protection="Die betroffene Aktion wurde beendet; andere Bereiche bleiben verfügbar.",
-                next_step="Öffnen Sie Debug/Log und folgen Sie dem dort genannten Schritt.", exception=error)
+                next_step="Öffnen Sie Recovery und folgen Sie dem dort genannten Schritt.", exception=error,
+            )
             refresh()
             messagebox.showerror("Aktion sicher beendet", f"{event['summary']}\n\n{event['next_step']}\n\nKennung: {event['event_id']}")
         except Exception as logging_error:
