@@ -31,6 +31,11 @@ class TodoStoreTests(unittest.TestCase):
         self.assertEqual(len(loaded), 1)
         self.assertEqual(loaded[0]["note"], "Notiz")
 
+    def test_due_rejects_timezone_to_match_calendar_local_time(self):
+        with self.assertRaises(ValueError):
+            add_task(self.root, "Test", due="2026-09-10T14:30+02:00")
+        self.assertFalse(store_path(self.root).exists())
+
     def test_complete_moves_task_to_archive_without_deleting_it(self):
         task = add_task(self.root, "Test")
         moved = complete_task(self.root, str(task["id"]))
@@ -57,11 +62,11 @@ class TodoStoreTests(unittest.TestCase):
             "id": "zweite", "title": "Zweite", "note": "", "due": None,
             "created_at": "2026-09-08T04:00:00+00:00", "completed_at": None,
         })
-        with patch("app.todo_store.os.replace", side_effect=OSError("simuliert")):
+        with patch("app.atomic_io.os.replace", side_effect=OSError("simuliert")):
             with self.assertRaises(OSError):
                 save_state(self.root, state)
         self.assertEqual(before, target.read_bytes())
-        self.assertFalse(target.with_suffix(target.suffix + ".tmp").exists())
+        self.assertEqual(list(target.parent.glob(f".{target.name}.*.tmp")), [])
 
     def test_saved_json_contains_both_lists(self):
         task = add_task(self.root, "Archivtest")
