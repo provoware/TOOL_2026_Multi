@@ -62,7 +62,8 @@ def signal_probe(root: Path = ROOT) -> CheckResult:
                                    text=True, timeout=20, check=False)
         reports = list((probe_root / "berichte").glob("WAECHTER-ABSTURZ-*.txt"))
         logs = probe_root / "logs" / "ereignisse.jsonl"
-        if completed.returncode == -signal.SIGTERM and len(reports) == 1 and logs.is_file():
+        expected_codes = {-signal.SIGTERM, 256 - signal.SIGTERM}
+        if completed.returncode in expected_codes and len(reports) == 1 and logs.is_file():
             text = reports[0].read_text(encoding="utf-8")
             if "SIGTERM" in text and "keine Nutzerdaten verändert" in text:
                 return CheckResult("signal", "Echter Signal-/Wächtertest", "OK",
@@ -121,7 +122,6 @@ def automatic_run(root: Path = ROOT) -> tuple[list[CheckResult], tuple[Path, Pat
 
 
 def gui(root: Path = ROOT) -> int:
-    from PySide6.QtCore import Qt
     from PySide6.QtWidgets import (QApplication, QCheckBox, QDialog, QHBoxLayout, QLabel, QMessageBox,
                                    QPushButton, QTextEdit, QVBoxLayout)
     from app.ui_standards import apply_global_style
@@ -213,7 +213,7 @@ def main() -> int:
         for item in results:
             print(f"{item.status}: {item.label} – {item.detail}")
         print(f"Bericht: {paths[0]}")
-        return 0 if all(item.status in {"OK", "HINWEIS", "BLOCKIERT"} for item in results) else 1
+        return 0 if all(item.status in {"OK", "HINWEIS"} for item in results) else 1
     return gui(ROOT)
 
 
