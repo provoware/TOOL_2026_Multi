@@ -1,5 +1,22 @@
 # Änderungsverlauf
 
+## 0.10.1 – 2026-09-08 – Kubuntu/X11-Endabnahme vorbereitet
+
+### Hinzugefügt
+- neuer Klickstart `kubuntu_abnahme.sh`,
+- neuer PySide6-Abnahmeassistent `scripts/kubuntu_abnahme.py`,
+- Vorprüfung auf Linux, echte X11-Sitzung und KDE/Plasma,
+- echter SIGTERM-/Prozesswächtertest ausschließlich in Tempdaten,
+- sichtbare Bestätigung für Referenzlayout, Tastaturfokus und Zoomstufen 100/125/150/175/200 %,
+- TXT- und JSON-Abnahmeberichte unter `berichte/`,
+- gezielte Tests für X11/KDE-Erkennung, Signalprobe und Berichtsstatus.
+
+### Schutz
+- Wayland oder fehlendes `DISPLAY` werden nicht still als X11 akzeptiert,
+- der Signaltest verändert keine Song-, Versions- oder sonstigen Nutzerdaten,
+- `OK` wird nur vergeben, wenn automatische Prüfungen und alle sichtbaren Bestätigungen erfolgreich sind,
+- Offscreen-CI wird ausdrücklich nicht als reale Kubuntu/KDE-X11-Sichtabnahme gewertet.
+
 ## 0.10.0 – 2026-09-08 – PySide6-Referenzdashboard
 
 ### Geändert
