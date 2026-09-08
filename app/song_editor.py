@@ -21,6 +21,8 @@ class SongEditor:
         self.on_closed = on_closed
         self._closed = False
         self._autosave_job: str | None = None
+        self._active_index: int | None = None
+        self._loading_section = False
         self.window = tk.Toplevel(parent)
         self.window.title("Songtexteditor")
         self.window.geometry("1120x720")
@@ -116,24 +118,33 @@ class SongEditor:
         return int(selection[0]) if selection else None
 
     def _store_current_section(self) -> None:
-        index = self._current_index()
+        index = self._active_index
         if index is not None and 0 <= index < len(self.document.sections):
             self.document.sections[index].text = self.section_text.get("1.0", "end-1c")
 
     def _load_section(self, index: int) -> None:
         if not self.document.sections:
+            self._active_index = None
             self.section_text.delete("1.0", "end")
             return
         index = max(0, min(index, len(self.document.sections) - 1))
-        self.section_list.selection_clear(0, "end")
-        self.section_list.selection_set(index)
-        self.section_list.activate(index)
-        self.section_text.delete("1.0", "end")
-        self.section_text.insert("1.0", self.document.sections[index].text)
+        self._loading_section = True
+        try:
+            self.section_list.selection_clear(0, "end")
+            self.section_list.selection_set(index)
+            self.section_list.activate(index)
+            self.section_text.delete("1.0", "end")
+            self.section_text.insert("1.0", self.document.sections[index].text)
+            self._active_index = index
+        finally:
+            self._loading_section = False
 
     def _section_changed(self, _event: object = None) -> None:
+        if self._loading_section:
+            return
         index = self._current_index()
-        if index is not None:
+        if index is not None and index != self._active_index:
+            self._store_current_section()
             self._load_section(index)
             self._update_preview()
 
@@ -150,9 +161,10 @@ class SongEditor:
         self.section_text.focus_set()
 
     def remove_section(self) -> None:
-        index = self._current_index()
+        index = self._active_index
         if index is None:
             return
+        self._store_current_section()
         del self.document.sections[index]
         if not self.document.sections:
             self.document.sections.append(SongSection("Strophe"))
@@ -198,7 +210,8 @@ class SongEditor:
     def close(self) -> None:
         if self._closed:
             return
-        self.save(reason="beim Schließen gespeichert")
+        if self.save(reason="beim Schließen gespeichert") is None:
+            return
         self._closed = True
         if self._autosave_job is not None:
             try:
