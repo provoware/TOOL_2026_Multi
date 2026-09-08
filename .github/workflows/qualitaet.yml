@@ -7,13 +7,14 @@ on:
 jobs:
   grundpruefung:
     runs-on: ubuntu-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
     steps:
       - name: Projekt holen
         uses: actions/checkout@v7.0.1
-      - name: Tk-Prüfumgebung bereitstellen
+      - name: PySide6-Prüfumgebung bereitstellen
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq python3-tk xvfb
+          python3 -m pip install --disable-pip-version-check -r requirements.txt
       - name: Vollständige Grundprüfung ausführen
         run: bash scripts/pruefen.sh --full
       - name: Vollprojekt wiederherstellen und prüfen
