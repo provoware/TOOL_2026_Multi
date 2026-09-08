@@ -1,5 +1,25 @@
 # Änderungsverlauf
 
+## 0.13.1 – 2026-09-08 – Prozess- und Schreibkonsistenz
+
+### Geändert
+- zentralen Produktions-Schreibweg `app/atomic_io.py` für Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien eingeführt,
+- feste `.tmp`-Dateinamen durch eindeutige Tempdateien im jeweiligen Zielordner ersetzt,
+- Datei-`fsync`, atomaren `os.replace` und bestmöglichen Verzeichnis-`fsync` vereinheitlicht,
+- pro Projektordner einen `QLockFile`-basierten Einzelinstanz-Schutz eingeführt,
+- Todo-Termine auf dieselbe lokale, zeitzonenlose ISO-8601-Semantik wie Kalendertermine vereinheitlicht,
+- ENOSPC-/EROFS-Simulation auf den echten Produktionsschreiber umgestellt,
+- gezielte Prozesskonsistenz-Regressionstests ergänzt.
+
+### Schutz / Fehlerbehebung
+- ein zweiter schreibender Dashboard-Prozess wird kontrolliert beendet, bevor er Nutzerdaten oder Laufzeitlogs öffnet,
+- der Prozesswächter behandelt den kontrollierten Mehrfachstart-Code 10 nicht als Absturz,
+- ein Replace-Fehler erhält den vorherigen Datenbestand und hinterlässt keine Tempdatei,
+- unterschiedliche Schreibversuche kollidieren nicht mehr über denselben Tempnamen,
+- nicht unterstützter Verzeichnis-`fsync` erzeugt nach bereits erfolgreichem Dateiersatz keinen falschen Speicherfehler,
+- beschädigte Profilbestände mit doppelten Werten werden nicht mehr still bereinigt, sondern klar abgewiesen,
+- die erste CI-Prüfung deckte drei Rückfälle in Testimport, Qt-Testdouble und direktem Simulationsstart auf; alle wurden ursächlich behoben und in der folgenden Vollprüfung verifiziert.
+
 ## 0.13.0 – 2026-09-08 – Kalender und Erinnerungen
 
 ### Hinzugefügt
@@ -93,7 +113,7 @@
 ### Geändert
 - gesamte produktive Oberfläche einheitlich auf **PySide6 6.11.2** migriert,
 - Dashboardtitel auf `Provoware-Datenbank-Dashboard 2026` gesetzt,
-- Dashboard nach dem bereitgestellten Dark-Orange-Referenzentwurf neu strukturiert: kompakter Header, Schnellkachelleiste, einklappbare linke Navigation, schmale Zeile „Zuletzt bearbeitet“, 2×2-Hauptkarten und Statusleiste,
+- Dashboard nach dem bereitgestellten Dark-Orange-Referenzentwurf neu strukturiert: kompakter Header, Schnellkachelleiste, einklappbare linke Navigation, schmale „Zuletzt bearbeitet“-Zeile, 2×2-Hauptkarten und Statusleiste,
 - zentrale Qt/QSS-Standards für Farben, Abstände, Schriftgrößen, Fokus und Zoom eingeführt,
 - Songeditor, Songbibliothek, Recovery-Zentrale und grafische Startanzeige auf PySide6 umgestellt,
 - Recovery aus der Dashboard-Hauptfläche entfernt und als einzelner Navigationspunkt `Werkzeug → Recovery` geführt,
