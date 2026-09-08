@@ -5,15 +5,16 @@ Stand: 2026-09-08
 ## Ampel
 🟢 erledigt und geprüft · 🟡 teilweise · 🔴 offen · ⚫ blockiert
 
-## Iteration 7 – Dashboard-Schnellspeicher und Songtexteditor
+## Iteration 8 – Songbibliothek und Versionsverwaltung
 
-- 🟢 einzeiliges Entwickler-Schnellinfofeld im Dashboardheader mit Enter/Schaltfläche und append-only Zeitstempeldatei.
-- 🟢 Songtexteditor mit Titel, optionalem Genre, optionalem Sonstiges, auswählbaren Songbereichen und Vorschau.
-- 🟢 Songtexte werden atomar unter `daten/songtexte/<Titel>.txt` gespeichert; Titelwechsel löscht keinen alten Stand.
-- 🟢 Autosave alle 5 Minuten sowie bei Fokusverlust und beim Schließen ergänzt.
-- 🟢 Logout speichert offene Songeditoren und beendet die Sitzung nur nach erfolgreicher Speicherung.
+- 🟢 Songbibliothek listet vorhandene Arbeitsdateien und öffnet sie im bestehenden Songtexteditor.
+- 🟢 bis zu fünf zuletzt bearbeitete Songs erscheinen als Schnellkacheln im Dashboard.
+- 🟢 Song-Metadaten um Stimmung, Stil, Stimme, Besonderheiten und Tags erweitert.
+- 🟢 geänderte Speicherstände erzeugen automatisch einen vorherigen Versionsschnappschuss; identische Saves nicht.
+- 🟢 Export nach TXT, Markdown, JSON und Nur-Songtext-TXT ergänzt.
+- 🟢 Songdateien aus 0.7.0 bleiben lesbar; internes Arbeitsformat bleibt die bestehende Textdatei.
 
 ## 2 verbleibende nächste Schritte
 
-1. 🟡 erster Fachworkflow „Songtexte“ vorhanden; weitere geplante Module/Arbeitsabläufe des Multitools noch ergänzen und priorisieren.
-2. 🔴 reale Kubuntu-Endprüfung einschließlich echtem Crash-/Signaltest, Songeditor-Endabnahme sowie sichtbarer Fokus-/Zoom-Prüfung dokumentieren.
+1. 🟡 Songworkflow ist als erster Fachbereich belastbar vorhanden; weitere geplante Module/Arbeitsabläufe des Multitools priorisieren und einzeln ergänzen.
+2. 🔴 reale Kubuntu-Endprüfung einschließlich echtem Crash-/Signaltest, Songbibliothek-/Editor-Endabnahme sowie sichtbarer Fokus-/Zoom-Prüfung dokumentieren.
