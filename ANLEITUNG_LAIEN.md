@@ -16,7 +16,7 @@ Die Oberfläche kann ohne Einstellungsdialog vergrößert oder verkleinert werde
 
 Verfügbare Stufen: **100 %, 125 %, 150 %, 175 % und 200 %**.
 
-Die Einstellung gilt gemeinsam für Dashboard, offene Songeditoren, Songbibliothek und Recovery. Dadurch gibt es nicht mehrere widersprüchliche Schriftgrößen.
+Die Einstellung gilt gemeinsam für Dashboard, offene Songeditoren, Songbibliothek, Recovery, Profilverwaltung und Todo-Liste. Dadurch gibt es nicht mehrere widersprüchliche Schriftgrößen.
 
 ## Reale Kubuntu/X11-Endabnahme
 Für die echte Endprüfung auf dem Zielrechner gibt es einen eigenen Assistenten:
@@ -61,7 +61,59 @@ Die Oberfläche ist in fünf leicht erkennbare Bereiche gegliedert:
 
 Die linke Navigation kann mit **☰** schmal und wieder breit geschaltet werden.
 
+Unter **Planung** finden Sie die Todo-Liste. Der Kalender ist dort bereits als nächster Bereich sichtbar, aber noch nicht freigegeben.
+
 Noch nicht freigegebene Bereiche wie Hörspiele oder Reimfinder sind bereits sichtbar. Beim Anklicken erscheint nur ein Hinweis. Sie verändern keine Dateien.
+
+## Profilbasierte DB-Eingaben
+In der Karte **DB-Eingaben** wählen Sie zuerst ein Profil, zum Beispiel:
+- HardTechno,
+- HipHop/Rap,
+- Hörspiele.
+
+Danach werden die passenden Werte für folgende Felder geladen:
+- Genres,
+- Stimmungen,
+- Stil,
+- Stimme,
+- Besonderheiten.
+
+Über **Bearbeiten …** oder die passenden Punkte in der linken Navigation öffnen Sie die Profilverwaltung. Dort können Sie eigene Profile und Werte ergänzen.
+
+Eigene Änderungen werden gespeichert unter:
+
+```text
+daten/profile/db_profile.json
+```
+
+Die eingebauten Startprofile erzeugen beim bloßen Programmstart noch keine Datei. Erst wenn Sie etwas ändern, wird gespeichert.
+
+## Todo-Liste
+Öffnen über:
+
+**Navigation → Planung → Todo-Liste**
+
+### Aufgabe anlegen
+1. Titel eingeben. Der Titel ist Pflicht.
+2. Optional eine Notiz eintragen.
+3. Wenn ein Termin gewünscht ist, **Termin verwenden** aktivieren.
+4. Datum und Uhrzeit wählen.
+5. **Aufgabe anlegen** anklicken.
+
+Aktive Aufgaben stehen in der Registerkarte **Aktiv**. Aufgaben mit Termin werden nach Termin einsortiert.
+
+### Aufgabe abhaken
+1. Eine aktive Aufgabe markieren.
+2. **Ausgewählte Aufgabe abhaken** anklicken.
+3. Die Aufgabe verschwindet aus **Aktiv** und erscheint vollständig unter **Archiv**.
+
+Beim Abhaken wird die Aufgabe **nicht gelöscht**. Aktive Aufgaben und Archiv befinden sich gemeinsam in:
+
+```text
+daten/todo/todo.json
+```
+
+Dadurch kann die Aufgabe nicht zwischen zwei getrennten Dateien verloren gehen. Die Datei wird über eine temporäre Datei geprüft und atomar ersetzt.
 
 ## Recovery
 Recovery befindet sich bewusst nur an einer Stelle:
@@ -209,10 +261,11 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
+Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, Profilverwaltung, Todo-Datenspeicherung und Todo-Oberfläche, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
 
 ## Bestehende Schutzfunktionen
 - atomare Songdatei-Speicherung,
+- atomare Profil- und Todo-Speicherung,
 - automatische Versionssicherung vor geänderten Überschreibungen,
 - Sicherung des aktuellen Songs vor einer Wiederherstellung,
 - Pfadprüfung für Versionsstände,
