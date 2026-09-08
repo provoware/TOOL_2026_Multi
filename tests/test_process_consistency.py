@@ -33,6 +33,23 @@ class ProcessConsistencyTests(unittest.TestCase):
             self.assertNotEqual(seen[0], seen[1])
             self.assertEqual(list(target.parent.glob(f".{target.name}.*.tmp")), [])
 
+    def test_unsupported_directory_fsync_does_not_report_false_save_failure(self):
+        with tempfile.TemporaryDirectory() as temp:
+            target = Path(temp) / "bestand.txt"
+            real_fsync = __import__("os").fsync
+            calls = 0
+
+            def fsync_file_then_fail_directory(descriptor):
+                nonlocal calls
+                calls += 1
+                if calls == 1:
+                    return real_fsync(descriptor)
+                raise OSError("Verzeichnis-fsync nicht unterstützt")
+
+            with patch("app.atomic_io.os.fsync", side_effect=fsync_file_then_fail_directory):
+                atomic_write_text(target, "gesichert\n")
+            self.assertEqual(target.read_text(encoding="utf-8"), "gesichert\n")
+
     def test_second_instance_guard_is_blocked_until_first_releases(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
