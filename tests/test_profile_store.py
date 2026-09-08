@@ -43,9 +43,13 @@ class ProfileStoreTests(unittest.TestCase):
         self.assertNotIn("Schranz", after["HardTechno"]["Genres"])
         self.assertEqual(before_moods, after["HardTechno"]["Stimmungen"])
 
-    def test_invalid_profile_name_is_rejected(self):
+    def test_control_characters_in_profile_name_are_rejected(self):
         with self.assertRaises(ValueError):
-            add_profile(self.root, "../falsch")
+            add_profile(self.root, "falsch\nzweite Zeile")
+
+    def test_slash_is_allowed_for_fachprofile(self):
+        profiles = load_profiles(self.root)
+        self.assertIn("HipHop/Rap", profiles)
 
     def test_atomic_replace_failure_preserves_existing_file(self):
         target = save_profiles(self.root, DEFAULT_PROFILES)
