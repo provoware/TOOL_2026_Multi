@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
@@ -12,6 +13,8 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QSizePolicy, QVBoxLayout, QWidget,
 )
 
+from app.calendar_reminders import CalendarReminderController
+from app.calendar_window import CalendarWindow
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
 from app.profile_store import CATEGORIES, load_profiles
@@ -42,6 +45,7 @@ class Dashboard(QWidget):
         self._recovery_center: RecoveryCenter | None = None
         self._profile_editor: ProfileEditor | None = None
         self._todo_window: TodoWindow | None = None
+        self._calendar_window: CalendarWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -54,6 +58,10 @@ class Dashboard(QWidget):
         self._build()
         self._bind_shortcuts()
         apply_global_style(self, self.zoom_percent)
+        self._calendar_reminders = CalendarReminderController(
+            self.project_root, self._show_calendar_reminder,
+            self._calendar_reminder_error, parent=self,
+        )
         app = QApplication.instance()
         if app is not None:
             app.installEventFilter(self)
@@ -179,7 +187,7 @@ class Dashboard(QWidget):
         self._add_nav(layout, "  ◫  Duplikatprüfer", lambda: self._planned("Duplikatprüfer"))
         self._add_heading(layout, "Planung")
         self.todo_nav_button = self._add_nav(layout, "  ✓  Todo-Liste", self.open_todo)
-        self._add_nav(layout, "  ▦  Kalender", lambda: self._planned("Kalender"))
+        self.calendar_nav_button = self._add_nav(layout, "  ▦  Kalender", self.open_calendar)
         self._add_heading(layout, "Werkzeug")
         self.recovery_nav_button = self._add_nav(layout, "  ⚕  Recovery", self.open_recovery)
         layout.addStretch(1)
@@ -390,6 +398,8 @@ class Dashboard(QWidget):
             managed.append(self._profile_editor)
         if self._todo_window is not None:
             managed.append(self._todo_window)
+        if self._calendar_window is not None:
+            managed.append(self._calendar_window)
         return window in managed
 
     def eventFilter(self, watched: object, event: QEvent) -> bool:
@@ -503,6 +513,36 @@ class Dashboard(QWidget):
         self._todo_window = TodoWindow(self.project_root, self.zoom_percent, parent=self)
         self._todo_window.show()
 
+    def open_calendar(self) -> None:
+        if self._calendar_window is not None and self._calendar_window.isVisible():
+            self._calendar_window.raise_()
+            self._calendar_window.activateWindow()
+            self._calendar_window.refresh()
+            return
+        if self._calendar_window is None:
+            self._calendar_window = CalendarWindow(
+                self.project_root, self.zoom_percent,
+                on_changed=self._calendar_changed, parent=self,
+            )
+        self._calendar_window.show()
+        self._calendar_window.refresh()
+
+    def _calendar_changed(self) -> None:
+        if self._calendar_window is not None:
+            self._calendar_window.refresh()
+        self._calendar_reminders.check_now()
+
+    def _show_calendar_reminder(self, event: dict[str, object]) -> None:
+        start = datetime.fromisoformat(str(event["start"])).strftime("%d.%m.%Y %H:%M")
+        note = str(event.get("note") or "").strip()
+        message = f"{event['title']}\nBeginn: {start}"
+        if note:
+            message += f"\n\n{note}"
+        QMessageBox.information(self, "Terminerinnerung", message)
+
+    def _calendar_reminder_error(self, error: Exception) -> None:
+        self.quick_status.setText(f"Kalender-Erinnerung konnte nicht geprüft werden: {type(error).__name__}")
+
     def open_song_editor(self) -> None:
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, on_saved=self._song_saved, parent=self)
@@ -570,6 +610,8 @@ class Dashboard(QWidget):
         self.close()
 
     def _remove_event_filter(self) -> None:
+        if hasattr(self, "_calendar_reminders"):
+            self._calendar_reminders.stop()
         if not self._event_filter_installed:
             return
         app = QApplication.instance()
@@ -602,6 +644,8 @@ class Dashboard(QWidget):
             self._recovery_center.refresh()
         if self._todo_window is not None and self._todo_window.isVisible():
             self._todo_window.refresh()
+        if self._calendar_window is not None and self._calendar_window.isVisible():
+            self._calendar_window.refresh()
 
     def _step_zoom(self, direction: int) -> None:
         current = ZOOM_LEVELS.index(self.zoom_percent)
@@ -625,6 +669,8 @@ class Dashboard(QWidget):
             self._profile_editor.set_zoom(percent)
         if self._todo_window is not None:
             self._todo_window.set_zoom(percent)
+        if self._calendar_window is not None:
+            self._calendar_window.set_zoom(percent)
 
 
 def install_exception_handler(app, logger: EventLogger, refresh: Callable[[], None], parent: QWidget) -> None:
