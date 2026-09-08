@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Begrenzte Simulation typischer Schreibfehler ohne echten Datenträgerverbrauch."""
+"""Begrenzte Simulation typischer Schreibfehler gegen den echten Produktions-Schreibweg."""
 
 from __future__ import annotations
 
@@ -8,26 +8,9 @@ import json
 import os
 import tempfile
 from pathlib import Path
-from typing import Callable
+from unittest.mock import patch
 
-Writer = Callable[[Path, str], None]
-
-
-def atomic_probe_write(target: Path, content: str, writer: Writer | None = None) -> None:
-    temporary = target.with_suffix(target.suffix + ".tmp")
-    writer = writer or (lambda path, text: path.write_text(text, encoding="utf-8"))
-    try:
-        writer(temporary, content)
-        os.replace(temporary, target)
-    except OSError:
-        temporary.unlink(missing_ok=True)
-        raise
-
-
-def _failing_writer(error_number: int) -> Writer:
-    def fail(_path: Path, _content: str) -> None:
-        raise OSError(error_number, os.strerror(error_number))
-    return fail
+from app.atomic_io import atomic_write_text
 
 
 def simulate(error_number: int) -> dict[str, object]:
@@ -35,16 +18,24 @@ def simulate(error_number: int) -> dict[str, object]:
         target = Path(temp) / "bestand.txt"
         target.write_text("BESTAND", encoding="utf-8")
         caught = None
+        failure = OSError(error_number, os.strerror(error_number))
         try:
-            atomic_probe_write(target, "NEUER STAND", _failing_writer(error_number))
+            with patch("app.atomic_io.tempfile.mkstemp", side_effect=failure):
+                atomic_write_text(target, "NEUER STAND")
         except OSError as error:
             caught = error.errno
-        safe = caught == error_number and target.read_text(encoding="utf-8") == "BESTAND" and not target.with_suffix(".txt.tmp").exists()
+        leftovers = list(target.parent.glob(f".{target.name}.*.tmp"))
+        safe = (
+            caught == error_number
+            and target.read_text(encoding="utf-8") == "BESTAND"
+            and leftovers == []
+        )
         return {
             "errno": error_number,
             "name": errno.errorcode.get(error_number, "UNBEKANNT"),
             "caught": caught,
             "bestand_unveraendert": safe,
+            "temp_reste": len(leftovers),
             "status": "OK" if safe else "FEHLER",
         }
 
@@ -55,7 +46,7 @@ def run_simulations() -> list[dict[str, object]]:
 
 def main() -> int:
     results = run_simulations()
-    print(json.dumps({"schema_version": 1, "results": results}, ensure_ascii=False, indent=2))
+    print(json.dumps({"schema_version": 2, "production_writer": "app.atomic_io.atomic_write_text", "results": results}, ensure_ascii=False, indent=2))
     return 0 if all(item["status"] == "OK" for item in results) else 1
 
 
