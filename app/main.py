@@ -31,7 +31,7 @@ def main() -> int:
     guard = None
     logger = None
     try:
-        from PySide6.QtWidgets import QApplication, QMessageBox
+        from PySide6.QtWidgets import QApplication
         from app.ui import Dashboard, install_exception_handler
         from app.ui_standards import configure_application
 
@@ -41,6 +41,7 @@ def main() -> int:
 
         guard = acquire_instance_guard(ROOT)
         if guard is None:
+            from PySide6.QtWidgets import QMessageBox
             QMessageBox.information(
                 None,
                 "Provoware läuft bereits",
