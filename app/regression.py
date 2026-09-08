@@ -19,14 +19,17 @@ class RegressionManager:
     def learn(self, area: str, exception_type: str, cause: str) -> dict[str, Any]:
         signature = self._signature(area, exception_type, cause)
         state = self._read_state()
+        now = datetime.now(timezone.utc).isoformat()
         entry = state.setdefault("patterns", {}).setdefault(signature, {
-            "area": area, "exception_type": exception_type, "count": 0
+            "area": area, "exception_type": exception_type, "count": 0, "first_seen": now
         })
+        entry.setdefault("first_seen", now)
         entry["count"] += 1
-        entry["last_seen"] = datetime.now(timezone.utc).isoformat()
+        entry["last_seen"] = now
         self._write_state(state)
         return {"signature": signature, "count": entry["count"],
-                "repeated": entry["count"] > 1}
+                "repeated": entry["count"] > 1, "first_seen": entry["first_seen"],
+                "last_seen": entry["last_seen"]}
 
     @staticmethod
     def prevention_hint(learned: dict[str, Any]) -> str:

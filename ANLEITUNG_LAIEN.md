@@ -5,35 +5,59 @@
 bash schnellstart.sh
 ```
 
-Die vorhandenen sechs Startschritte, die Headless-Prüfung und die Prozesswache bleiben aktiv.
+Die sechs Startschritte, die unsichtbare Startprüfung und die Prozesswache bleiben aktiv.
 
-## Was passiert beim normalen Beenden?
-Wenn das Programm regulär geschlossen wird, schreibt es jetzt ein eigenes `ENDE`-Ereignis. So lässt sich später unterscheiden, ob das Programm sauber beendet wurde oder unerwartet verschwunden ist.
+## Debug- und Recovery-Zentrale
+Oben können Sie Ereignisse einfach eingrenzen:
+- **Schweregrad** – zum Beispiel nur Fehler,
+- **Bereich** – zum Beispiel nur START oder IMPORT,
+- **Anzeigegröße** – 100, 125, 150, 175 oder 200 Prozent.
 
-## Was passiert mit zu großen oder alten Logs?
-Das Ereignislog wird automatisch begrenzt:
-- ab mehr als 2 MiB wird es archiviert,
-- nach mehr als 30 Tagen wird es archiviert,
-- höchstens 5 ältere Archive bleiben erhalten.
+Ein Ereignis öffnen Sie durch:
+- Doppelklick auf die Zeile,
+- `Enter`,
+- oder **Ausgewähltes Ereignis öffnen**.
 
-Die Archive liegen unter `logs/archiv/`.
+## Was zeigt die Detailansicht?
+Zuerst nur die verständlichen Angaben:
+- Was ist passiert?
+- Wann ist es passiert?
+- Wie oft trat es auf?
+- Wann trat es zum ersten Mal auf?
+- Was wurde geschützt?
+- Was ist der nächste Schritt?
 
-## Was passiert mit beschädigten Logzeilen?
-Eine ungültige JSONL-Zeile wird nicht mehr still ignoriert. Das Programm:
-1. sichert eine bereinigte Beweiskopie unter `logs/quarantaene/`,
-2. entfernt nur die beschädigte Zeile aus dem aktiven Log,
-3. erhält alle gültigen Zeilen atomar.
+Technische Angaben bleiben zuerst **eingeklappt**. Sie erscheinen nur nach **Technische Details anzeigen**.
 
-## Datenschutzgeprüftes Diagnosepaket
+## Tastatur
+- `Tab` – zum nächsten bedienbaren Element,
+- `Enter` – markiertes Ereignis öffnen,
+- `F5` – aktualisieren,
+- `Ctrl++` / `Ctrl+-` – Anzeige größer/kleiner,
+- `Ctrl+0` – zurück auf 100 Prozent,
+- `Escape` – Detailfenster schließen.
+
+## Schreibfehler sicher prüfen
 ```bash
-python3 scripts/diagnosepaket.py
+python3 scripts/schreibfehler_simulieren.py
 ```
 
-Das Diagnosepaket übernimmt keine unveränderten Rohprotokolle. Textdaten werden zuerst bereinigt und danach nochmals geprüft. Erkannte Passwörter, Tokens, API-Schlüssel, Bearer-Tokens, Mailadressen und Linux-Home-Benutzernamen werden ersetzt. Erst nach dieser zweiten Prüfung wird das ZIP fertiggestellt. Dazu entsteht eine SHA-256-Prüfsumme.
+Dabei wird **kein Datenträger gefüllt**. Das Projekt simuliert nur in einem temporären Testordner:
+- kein Speicherplatz mehr (`ENOSPC`),
+- Datenträger nur lesbar (`EROFS`).
 
-## Sicherung und echte Wiederherstellungsprüfung
+Der Test ist nur grün, wenn ein vorhandener Bestand unverändert bleibt und keine unvollständige Temp-Datei zurückbleibt.
+
+## Vollprüfung
 ```bash
-bash scripts/backup_erstellen.sh
+bash scripts/pruefen.sh --full
 ```
 
-Der bestehende Restore-Weg bleibt unverändert: ZIP, SHA-256, sicherer neuer Ordner, Manifestvergleich, Vollprüfung und Headless-Start müssen vollständig grün sein, bevor der Restore-Status `OK` lautet.
+Die Vollprüfung prüft zusätzlich eine echte Tk-Oberfläche für Tastatur, Fokus, Detailansicht und Zoom. Ohne virtuelle oder echte grafische Sitzung wird dieser Teil nicht als bestanden ausgegeben.
+
+## Bestehende Schutzfunktionen
+- Logrotation und Quarantäne beschädigter Zeilen,
+- Datenschutzbereinigung und Diagnosepaket,
+- Headless-Start,
+- Prozesswache,
+- vollständige ZIP-/SHA-/Restore-Prüfung.

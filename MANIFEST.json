@@ -1,17 +1,17 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 5,
-    "goal": "Logging und Diagnose mit Rotation, Quarantäne, Datenschutzprüfung und sauberem Programmende härten",
-    "completed": 4,
-    "open_next": 9
+    "number": 6,
+    "goal": "Debug- und Fehlerzentrale als tastaturbedienbare Recovery-Oberfläche mit Filtern, Details, Wiederholungen, Zoom und sicheren Schreibfehler-Simulationen ausbauen",
+    "completed": 7,
+    "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -36,14 +36,15 @@
     "runtime_command": "bash scripts/pruefen.sh --runtime",
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging"
+    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui",
+    "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py"
   },
   "diagnostics": {
     "machine_log": "logs/ereignisse.jsonl",
     "human_reports": "berichte/",
     "regression_state": "logs/rueckfaelle.json",
     "regression_registry": "tests/regression_registry.json",
-    "dashboard_limit": 5,
+    "dashboard_limit": 100,
     "redaction": "app/redaction.py",
     "watcher": "scripts/process_watch.py",
     "maintenance": "app/log_maintenance.py",
@@ -54,6 +55,15 @@
     "rotation_keep": 5,
     "package_builder": "scripts/diagnosepaket.py",
     "package_rule": "Nur bereinigte Textkopien; abschließende Datenschutzprüfung vor ZIP-Übernahme"
+  },
+  "recovery_ui": {
+    "filters": ["severity", "area"],
+    "detail_open": ["double_click", "enter", "button"],
+    "repeat_fields": ["count", "first_seen"],
+    "zoom_levels_percent": [100, 125, 150, 175, 200],
+    "technical_details_default": "collapsed",
+    "keyboard_shortcuts": ["Enter", "F5", "Ctrl++", "Ctrl+-", "Ctrl+0", "Escape"],
+    "gui_test": "tests/test_recovery_ui_gui.py"
   },
   "recovery": {
     "iteration_restore": "scripts/iteration_restore.py",
@@ -73,12 +83,13 @@
     {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
     {"path":"app/event_log.py","release":true,"purpose":"Ereignisprotokoll"},
     {"path":"app/main.py","release":true,"purpose":"Programmeinstieg, Headless-Prüfung und kontrolliertes Ende"},
-    {"path":"app/regression.py","release":true,"purpose":"Rückfalllernen"},
+    {"path":"app/regression.py","release":true,"purpose":"Rückfalllernen mit erstem und letztem Auftreten"},
     {"path":"app/redaction.py","release":true,"purpose":"Bereinigung sensibler Protokollwerte"},
     {"path":"app/log_maintenance.py","release":true,"purpose":"Logrotation und Quarantäne beschädigter JSONL-Zeilen"},
+    {"path":"app/recovery_ui.py","release":true,"purpose":"Filter-, Detail-, Wiederholungs- und Zoomlogik der Recovery-Oberfläche"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
-    {"path":"app/ui.py","release":true,"purpose":"Dashboard"},
-    {"path":"app/ui_standards.py","release":true,"purpose":"Globale Oberflächenstandards"},
+    {"path":"app/ui.py","release":true,"purpose":"Debug- und Recovery-Zentrale"},
+    {"path":"app/ui_standards.py","release":true,"purpose":"Globale Oberflächen- und Zoomstandards"},
     {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit-Vorprüfung"},
     {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Start-Checkpoints"},
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
@@ -92,13 +103,17 @@
     {"path":"scripts/veroeffentlichen.py","release":false,"purpose":"Release-Erstellung"},
     {"path":"scripts/iteration_restore.py","release":false,"purpose":"Iterations-ZIP und Restore-Prüfung"},
     {"path":"scripts/backup_erstellen.sh","release":false,"purpose":"Verifizierte Projektsicherung"},
+    {"path":"scripts/schreibfehler_simulieren.py","release":false,"purpose":"Gefahrlose ENOSPC- und EROFS-Simulation"},
     {"path":"tests/test_event_management.py","release":false,"purpose":"Ereignis- und Rückfalltests"},
     {"path":"tests/test_release_builder.py","release":false,"purpose":"Release-Tests"},
     {"path":"tests/test_security_watch.py","release":false,"purpose":"Redaktions- und Wächtertests"},
     {"path":"tests/test_restore.py","release":false,"purpose":"Restore-Sicherheitstests"},
     {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnose-, Rotations-, Quarantäne- und Endetests"},
+    {"path":"tests/test_recovery_ui_logic.py","release":false,"purpose":"Filter-, Wiederholungs-, Zoom- und Schreibfehler-Tests"},
+    {"path":"tests/test_recovery_ui_gui.py","release":false,"purpose":"Tk-Tastatur-, Fokus-, Detail- und Zoomtest"},
     {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
     {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
-    {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"}
+    {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"},
+    {"path":"docs/ITERATION6_RECOVERY_UI.md","release":false,"purpose":"Recovery-UI, Bedien- und Prüfkonzept"}
   ]
 }

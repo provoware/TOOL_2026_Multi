@@ -1,5 +1,29 @@
 # Änderungsverlauf
 
+## 0.6.0 – 2026-09-08 – Debug- und Recovery-Zentrale
+
+### Hinzugefügt
+- kombinierbare Filter nach Schweregrad und Bereich,
+- Ereignisdetails per Doppelklick, Enter oder Schaltfläche,
+- Wiederholungszähler und dauerhaft gespeichertes erstes Auftreten,
+- zentrale Zoomstufen 100/125/150/175/200 Prozent,
+- standardmäßig eingeklappte technische Details,
+- gefahrlose `ENOSPC`-/`EROFS`-Simulation ohne echten Datenträgerverbrauch,
+- automatisierte Tk-GUI-Prüfung für Tastatur, Fokus, Detailansicht und Zoom.
+
+### Bedienung
+- `F5` aktualisiert,
+- `Ctrl++` und `Ctrl+-` ändern die Anzeigegröße,
+- `Ctrl+0` setzt auf 100 Prozent,
+- `Escape` schließt Detailfenster,
+- interaktive Filter, Tabelle und Schaltflächen sind in der Fokusreihenfolge.
+
+### Schutz
+- Schreibfehlersimulation arbeitet ausschließlich in temporären Testpfaden,
+- vorhandener Bestand muss bei simuliertem Fehler unverändert bleiben,
+- ohne echte Tk-Sitzung wird die GUI-Prüfung nicht als bestanden gewertet,
+- vorhandene Restore-, Diagnose-, Redaktions- und Wächter-Gates bleiben aktiv.
+
 ## 0.5.0 – 2026-09-08 – Diagnose- und Logging-Härtung
 
 ### Hinzugefügt
