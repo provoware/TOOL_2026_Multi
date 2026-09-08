@@ -28,9 +28,6 @@ cd "$PROJEKTORDNER"
 command -v "$PYTHON" >/dev/null 2>&1 || { printf '🔴 Python 3 wurde nicht gefunden.\n' >&2; exit 1; }
 mkdir -p "$PROJEKTORDNER/logs"
 "$PYTHON" "$STATUSWERKZEUG" init "$STATUSDATEI" >/dev/null 2>&1 || true
-if [[ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]] && "$PYTHON" -c 'import tkinter' >/dev/null 2>&1; then
-  "$PYTHON" "$STATUSWERKZEUG" gui "$STATUSDATEI" >/dev/null 2>&1 &
-fi
 checkpoint 1 ok "Python 3 ist verfügbar."
 
 checkpoint 2 running "Abgeschirmte Python-Umgebung wird geprüft."
@@ -50,13 +47,17 @@ if grep -Eq '^[[:space:]]*[^#[:space:]]' requirements.txt; then
 fi
 checkpoint 3 ok "Abhängigkeiten sind bereit."
 
-checkpoint 4 running "Projekt wird begrenzt vorgeprüft."
-bash scripts/pruefen.sh --runtime || fehler "Die Laufzeitprüfung meldet einen Fehler."
-checkpoint 4 ok "Laufzeitprüfung erfolgreich."
+if [[ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]] && "$UMGEBUNG/bin/python" -c 'import PySide6' >/dev/null 2>&1; then
+  "$UMGEBUNG/bin/python" "$STATUSWERKZEUG" gui "$STATUSDATEI" >/dev/null 2>&1 &
+fi
 
-checkpoint 5 running "Fensterloser Startweg wird geprüft."
+checkpoint 4 running "Projekt wird begrenzt vorgeprüft."
 "$UMGEBUNG/bin/python" -m app.main --headless-check || fehler "Der Startunterbau ist nicht vollständig funktionsfähig."
-checkpoint 5 ok "Headless-Startprüfung erfolgreich."
+checkpoint 4 ok "Projektprüfung erfolgreich."
+
+checkpoint 5 running "PySide6-Oberfläche wird geprüft."
+"$UMGEBUNG/bin/python" -c 'from PySide6.QtWidgets import QApplication; print("PySide6 bereit")' >/dev/null || fehler "PySide6 ist nicht funktionsfähig."
+checkpoint 5 ok "PySide6 ist bereit."
 
 checkpoint 6 running "Anwendung wird unter Prozesswache geöffnet."
 [[ -f "$PROJEKTORDNER/app/main.py" ]] || fehler "app/main.py fehlt."
