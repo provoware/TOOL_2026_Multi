@@ -66,6 +66,18 @@ Stand: 2026-09-08
 - 🟢 Kalenderdaten atomar unter `daten/kalender/termine.json`; in dieser Iteration keine destruktive Terminlöschung.
 - 🟢 Kalender ist unter `Planung → Kalender` erreichbar und folgt der zentralen Zoomsteuerung.
 
-## Nächster Freigabepunkt
+## Iteration 17 – Prozess- und Schreibkonsistenz
+
+- 🟢 Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien verwenden denselben zentralen atomaren Schreibweg.
+- 🟢 eindeutige Tempdateien statt fester `.tmp`-Namen verhindern Kollisionen paralleler Schreibversuche.
+- 🟢 Dateiinhalt wird vor dem Ersetzen synchronisiert; Verzeichniseintrag wird auf unterstützten Dateisystemen zusätzlich synchronisiert.
+- 🟢 zweite schreibende Dashboard-Instanz pro Projektordner wird mit `QLockFile` kontrolliert blockiert.
+- 🟢 kontrollierter Mehrfachstart erzeugt keinen falschen Absturzbericht des Prozesswächters.
+- 🟢 Todo- und Kalendertermine verwenden dieselbe lokale, zeitzonenlose Datum/Zeit-Semantik.
+- 🟢 beschädigte Profilbestände mit doppelten Werten werden nicht mehr still verändert, sondern als Fehler gemeldet.
+- 🟢 ENOSPC-/EROFS-Simulation prüft den echten Produktionsschreiber.
+
+## Nächste Freigabepunkte
 
 1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
+2. 🔴 nächster Konsistenz-Slice: Diagnose-/Berichts-/Backup-Schreibwege auf dieselben Temp-/fsync-/Fehlerregeln prüfen, ohne Append-Logs fälschlich auf Dateiersatz umzustellen.

@@ -1,6 +1,16 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.13.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.13.1 · **Stand:** 2026-09-08
+
+## Iteration 17 – Prozess- und Schreibkonsistenz
+
+- 🟢 Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien verwenden denselben zentralen atomaren Schreibweg.
+- 🟢 eindeutige Tempdateien verhindern Kollisionen zwischen parallelen Schreibversuchen.
+- 🟢 Dateiinhalt wird vor dem Ersetzen synchronisiert; der Verzeichniseintrag wird auf unterstützten Dateisystemen zusätzlich synchronisiert.
+- 🟢 pro Projektordner ist nur eine schreibende Dashboard-Instanz erlaubt; ein zweiter Start wird verständlich und ohne falschen Absturzbericht beendet.
+- 🟢 Todo und Kalender verwenden dieselbe lokale, zeitzonenlose Datum/Zeit-Semantik.
+- 🟢 beschädigte Profilbestände mit doppelten Werten werden nicht still verändert, sondern als Fehler gemeldet.
+- 🟢 ENOSPC-/EROFS-Simulation prüft jetzt direkt den produktiven Schreibweg.
 
 ## Iteration 16 – Kalender
 
@@ -87,7 +97,7 @@ bash kubuntu_abnahme.sh
 bash schnellstart.sh
 ```
 
-Der Schnellstart legt bei Bedarf `.venv` an, installiert exakt `PySide6==6.11.2`, prüft den Startunterbau und öffnet anschließend die Anwendung unter Prozesswache.
+Der Schnellstart legt bei Bedarf `.venv` an, installiert exakt `PySide6==6.11.2`, prüft den Startunterbau und öffnet anschließend die Anwendung unter Prozesswache. Wird derselbe Projektordner versehentlich ein zweites Mal gestartet, verhindert der Einzelinstanz-Schutz den zweiten schreibenden Prozess.
 
 ## Dashboard
 
@@ -255,9 +265,9 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 - Speichern bei Fokusverlust,
 - `Ctrl+S`,
 - Speichern beim Schließen und vor Logout,
-- atomarer Dateiersatz,
+- zentraler atomarer Dateiersatz für Profil, Todo, Kalender, Songs, Versionen und Exporte,
+- eindeutige Tempdateien und Einzelinstanz-Schutz,
 - automatische Versionsstände nur bei tatsächlichen Änderungen,
-- atomare Profil-, Todo- und Kalender-Datenspeicherung,
 - Recovery-/Diagnose-/Restore-Kette.
 
 ## Vollprüfung
@@ -266,4 +276,4 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 bash scripts/pruefen.sh --full
 ```
 
-Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests einschließlich Zoom-, Profil-, Todo- und Kalender-Regressionsprüfung, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
+Sie umfasst Logiktests, Prozesskonsistenz- und Schreibfehlerprüfungen, echte PySide6-Offscreen-GUI-Tests einschließlich Zoom-, Profil-, Todo- und Kalender-Regressionsprüfung, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation gegen den Produktionsschreiber, Release-Manifest, Headless-Start und vollständigen Restore.

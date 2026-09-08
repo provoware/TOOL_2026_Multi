@@ -36,7 +36,7 @@ class CalendarStoreTests(unittest.TestCase):
             add_event(self.root, "Falsch", "2026-09-10T15:00", "2026-09-10T14:00")
 
     def test_day_week_month_year_ranges_have_correct_boundaries(self):
-        chosen = date(2026, 9, 10)  # Thursday
+        chosen = date(2026, 9, 10)
         self.assertEqual(day_range(chosen), (datetime(2026, 9, 10), datetime(2026, 9, 11)))
         self.assertEqual(week_range(chosen), (datetime(2026, 9, 7), datetime(2026, 9, 14)))
         self.assertEqual(month_range(chosen), (datetime(2026, 9, 1), datetime(2026, 10, 1)))
@@ -78,11 +78,11 @@ class CalendarStoreTests(unittest.TestCase):
             "reminder_minutes": None, "created_at": "2026-09-08T04:00:00+00:00",
             "reminded_at": None,
         })
-        with patch("app.calendar_store.os.replace", side_effect=OSError("simuliert")):
+        with patch("app.atomic_io.os.replace", side_effect=OSError("simuliert")):
             with self.assertRaises(OSError):
                 save_state(self.root, state)
         self.assertEqual(target.read_bytes(), before)
-        self.assertFalse(target.with_suffix(target.suffix + ".tmp").exists())
+        self.assertEqual(list(target.parent.glob(f".{target.name}.*.tmp")), [])
 
 
 if __name__ == "__main__":

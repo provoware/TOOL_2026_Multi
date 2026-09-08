@@ -5,7 +5,7 @@ from pathlib import Path
 
 from app.recovery_ui import available_areas, filter_events, repetition_summary, technical_details, zoom_font_size
 from app.regression import RegressionManager
-from scripts.schreibfehler_simulieren import atomic_probe_write, run_simulations
+from scripts.schreibfehler_simulieren import run_simulations
 
 
 class RecoveryUiLogicTests(unittest.TestCase):
@@ -49,18 +49,7 @@ class RecoveryUiLogicTests(unittest.TestCase):
         self.assertEqual({item["errno"] for item in results}, {errno.ENOSPC, errno.EROFS})
         self.assertTrue(all(item["status"] == "OK" for item in results))
         self.assertTrue(all(item["bestand_unveraendert"] for item in results))
-
-    def test_atomic_probe_removes_partial_temp_file_on_failure(self):
-        with tempfile.TemporaryDirectory() as temp:
-            target = Path(temp) / "bestand.txt"
-            target.write_text("ALT", encoding="utf-8")
-            def partial_then_fail(path: Path, _text: str) -> None:
-                path.write_text("TEIL", encoding="utf-8")
-                raise OSError(errno.ENOSPC, "voll")
-            with self.assertRaises(OSError):
-                atomic_probe_write(target, "NEU", partial_then_fail)
-            self.assertEqual(target.read_text(encoding="utf-8"), "ALT")
-            self.assertFalse(target.with_suffix(".txt.tmp").exists())
+        self.assertTrue(all(item["temp_reste"] == 0 for item in results))
 
 
 if __name__ == "__main__":

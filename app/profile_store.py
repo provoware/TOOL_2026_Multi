@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import copy
 import json
-import os
 from pathlib import Path
+
+from app.atomic_io import atomic_write_json
 
 CATEGORIES = ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten")
 
@@ -58,8 +59,13 @@ def _validate(data: object) -> dict[str, dict[str, list[str]]]:
     if not isinstance(data, dict):
         raise ValueError("Profildatei muss ein JSON-Objekt enthalten.")
     result: dict[str, dict[str, list[str]]] = {}
+    seen_profiles: set[str] = set()
     for raw_name, raw_categories in data.items():
         name = _clean_profile_name(str(raw_name))
+        profile_key = name.casefold()
+        if profile_key in seen_profiles:
+            raise ValueError("Profildatei enthält doppelte Profilnamen.")
+        seen_profiles.add(profile_key)
         if not isinstance(raw_categories, dict):
             raise ValueError(f"Profil {name} ist beschädigt.")
         result[name] = {}
@@ -72,9 +78,10 @@ def _validate(data: object) -> dict[str, dict[str, list[str]]]:
             for raw_value in values:
                 value = _normalize_value(str(raw_value))
                 key = value.casefold()
-                if key not in seen:
-                    clean_values.append(value)
-                    seen.add(key)
+                if key in seen:
+                    raise ValueError(f"Kategorie {category} in Profil {name} enthält doppelte Werte.")
+                clean_values.append(value)
+                seen.add(key)
             result[name][category] = clean_values
     return result
 
@@ -88,21 +95,8 @@ def load_profiles(root: Path) -> dict[str, dict[str, list[str]]]:
 
 
 def save_profiles(root: Path, profiles: dict[str, dict[str, list[str]]]) -> Path:
-    target = store_path(root)
     clean = _validate(profiles)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    temporary = target.with_suffix(target.suffix + ".tmp")
-    try:
-        with temporary.open("w", encoding="utf-8") as handle:
-            json.dump(clean, handle, ensure_ascii=False, indent=2, sort_keys=True)
-            handle.write("\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, target)
-    finally:
-        if temporary.exists():
-            temporary.unlink(missing_ok=True)
-    return target
+    return atomic_write_json(store_path(root), clean)
 
 
 def add_profile(root: Path, name: str) -> str:

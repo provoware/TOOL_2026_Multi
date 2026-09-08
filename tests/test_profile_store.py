@@ -35,6 +35,15 @@ class ProfileStoreTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             add_value(self.root, "Ambient", "Genres", "dark ambient")
 
+    def test_corrupt_duplicate_values_are_rejected_not_silently_removed(self):
+        target = store_path(self.root)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        broken = {"Test": {category: [] for category in CATEGORIES}}
+        broken["Test"]["Genres"] = ["Ambient", "ambient"]
+        target.write_text(json.dumps(broken), encoding="utf-8")
+        with self.assertRaises(ValueError):
+            load_profiles(self.root)
+
     def test_remove_value_persists_without_touching_other_categories(self):
         profiles = load_profiles(self.root)
         before_moods = list(profiles["HardTechno"]["Stimmungen"])
@@ -56,11 +65,11 @@ class ProfileStoreTests(unittest.TestCase):
         before = target.read_bytes()
         changed = load_profiles(self.root)
         changed["HardTechno"]["Genres"].append("Testgenre")
-        with patch("app.profile_store.os.replace", side_effect=OSError("simuliert")):
+        with patch("app.atomic_io.os.replace", side_effect=OSError("simuliert")):
             with self.assertRaises(OSError):
                 save_profiles(self.root, changed)
         self.assertEqual(before, target.read_bytes())
-        self.assertFalse(target.with_suffix(target.suffix + ".tmp").exists())
+        self.assertEqual(list(target.parent.glob(f".{target.name}.*.tmp")), [])
 
     def test_saved_json_is_valid(self):
         add_profile(self.root, "Eigene Sammlung")
