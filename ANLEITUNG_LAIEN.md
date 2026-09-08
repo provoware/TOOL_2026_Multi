@@ -22,36 +22,68 @@ Unter dem Dashboardheader erscheinen bis zu fünf zuletzt bearbeitete Songs als 
 Mit **Alle Songs** oder **Songbibliothek** öffnen Sie die vollständige Songliste.
 
 ## Songbibliothek
-Die Bibliothek zeigt:
+Oben in der Songbibliothek können Sie frei suchen. Durchsucht werden:
 - Titel,
 - Genre,
-- letzte Bearbeitungszeit,
-- Anzahl älterer Versionsstände.
+- Stimmung,
+- Stil,
+- Stimme,
+- Tags.
 
-Ein Song lässt sich per Doppelklick, `Enter` oder **Song öffnen** bearbeiten.
+Zusätzlich können Sie mehrere Filter gleichzeitig setzen:
+- Genre,
+- Stimmung,
+- Stil,
+- Stimme,
+- Tags,
+- Bearbeitungsstatus,
+- **nur Favoriten**.
 
-Mit **Versionsstände ansehen** öffnen Sie ältere Stände nur zur Ansicht. Der aktuelle Song wird dadurch nicht verändert.
+**Filter zurücksetzen** stellt wieder alle Songs dar.
+
+### Sortieren und gruppieren
+Sortierung ist möglich nach:
+- zuletzt bearbeitet,
+- Titel,
+- Genre,
+- Tags,
+- Status.
+
+Gruppierung ist möglich nach:
+- Genre,
+- Tags,
+- Status.
+
+Suchen, Filtern, Sortieren und Gruppieren verändern keine Songdatei.
+
+## Favoriten und Bearbeitungsstatus
+Im Songeditor gibt es:
+- **★ Favorit**,
+- **Bearbeitungsstatus** mit `Idee`, `Entwurf`, `Überarbeitung` oder `Fertig`.
+
+Beides wird mit dem Song gespeichert und erscheint anschließend in der Bibliothek.
 
 ## Songtexteditor
-Der Editor enthält:
-- **Titel** – bestimmt den Namen der Arbeitsdatei,
-- **Genre** – optional,
-- **Stimmung** – optional,
-- **Stil** – optional,
-- **Stimme** – optional,
-- **Besonderheiten** – optional,
-- **Tags** – optional, durch Kommas getrennt,
+Der Editor enthält weiterhin:
+- Titel,
+- Genre,
+- Stimmung,
+- Stil,
+- Stimme,
+- Besonderheiten,
+- Tags,
+- Favorit und Bearbeitungsstatus,
 - Songbereiche wie Intro, Strophe, Refrain oder Bridge,
-- **Vorschau** des vollständigen Songs,
-- **Sonstiges** für zusätzliche Hinweise.
+- Vorschau,
+- Sonstiges.
 
-Die Arbeitsdatei liegt weiterhin unter:
+Die Arbeitsdatei bleibt:
 
 ```text
 daten/songtexte/<Titel>.txt
 ```
 
-Alte Songdateien aus Version 0.7.0 können weiterhin geöffnet werden.
+Alte Songdateien ohne Favorit oder Status können weiterhin geöffnet werden. Sie starten sicher als **Idee** und **nicht favorisiert**.
 
 ## Automatisches Speichern und Versionsstände
 Gespeichert wird:
@@ -61,20 +93,31 @@ Gespeichert wird:
 - beim Schließen des Editors,
 - vor Logout.
 
-Wenn sich der Inhalt seit dem letzten Speichern geändert hat, wird der bisherige Stand vorher automatisch gesichert:
+Wenn sich der Inhalt geändert hat, wird der bisherige Stand vorher automatisch gesichert:
 
 ```text
 daten/songtexte/.versionen/<Titel>/<Zeitstempel>.txt
 ```
 
-Wenn sich nichts geändert hat, entsteht kein unnötiger Versionsstand.
+Identisches Speichern erzeugt keinen neuen Versionsstand.
+
+## Alte Version sicher wiederherstellen
+1. In der Songbibliothek einen Song markieren.
+2. **Versionsstände / Wiederherstellen** öffnen.
+3. Einen alten Stand anklicken.
+4. Den Inhalt zuerst in der Vorschau prüfen.
+5. Erst dann **Diese Version wiederherstellen** anklicken.
+
+Vor der Wiederherstellung sichert das Programm den aktuellen Song automatisch noch einmal als neuen Versionsstand. Erst danach wird die gewählte alte Version eingesetzt. So bleibt der vorherige aktuelle Inhalt erhalten und kann später wieder zurückgeholt werden.
+
+Eine Versionsdatei aus einem falschen Ordner wird abgewiesen.
 
 ## Export
 Über **Export** im Songeditor stehen bereit:
-- **TXT mit Metadaten**,
-- **Markdown**,
-- **JSON**,
-- **Nur Songtext (TXT)** ohne Titel-, Genre- oder andere Metadaten.
+- TXT mit Metadaten,
+- Markdown,
+- JSON,
+- Nur Songtext als TXT.
 
 Exporte landen unter:
 
@@ -88,12 +131,12 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 **Logout** speichert zuerst alle offenen Songeditoren. Wenn mindestens ein Song nicht gespeichert werden kann, bleibt das Programm geöffnet.
 
 ## Debug- und Recovery-Zentrale
-Ereignisse können weiterhin nach Schweregrad und Bereich gefiltert werden. Ereignisdetails lassen sich per Doppelklick, `Enter` oder Schaltfläche öffnen. Technische Angaben bleiben zunächst eingeklappt.
+Ereignisse können weiterhin nach Schweregrad und Bereich gefiltert werden. Technische Angaben bleiben zunächst eingeklappt.
 
 ## Tastatur
 - `Tab` – zum nächsten bedienbaren Element,
 - `Enter` – Schnellinfo speichern, Song öffnen oder Ereignis öffnen,
-- `F5` – Recovery-Anzeige aktualisieren,
+- `F5` – Bibliothek oder Recovery-Anzeige aktualisieren,
 - `Ctrl+S` – Song manuell speichern,
 - `Ctrl++` / `Ctrl+-` – Anzeige größer/kleiner,
 - `Ctrl+0` – zurück auf 100 Prozent,
@@ -104,12 +147,14 @@ Ereignisse können weiterhin nach Schweregrad und Bereich gefiltert werden. Erei
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft Recovery-Funktionen, Songbibliothek, Metadaten, Versionen, Exporte und echte Tk-Oberflächenwege. Ohne virtuelle oder echte grafische Sitzung wird der GUI-Teil nicht als bestanden ausgegeben.
+Die Vollprüfung prüft Recovery-Funktionen, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte und echte Tk-Oberflächenwege.
 
 ## Bestehende Schutzfunktionen
 - atomare Songdatei-Speicherung,
 - automatische Versionssicherung vor geänderten Überschreibungen,
-- Logrotation und Quarantäne beschädigter Zeilen,
+- Sicherung des aktuellen Songs vor einer Wiederherstellung,
+- Pfadprüfung für Versionsstände,
+- Logrotation und Quarantäne,
 - Datenschutzbereinigung und Diagnosepaket,
 - Headless-Start,
 - Prozesswache,

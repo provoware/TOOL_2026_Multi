@@ -7,7 +7,7 @@ from pathlib import Path
 from tkinter import messagebox, ttk
 from typing import Callable
 
-from app.song_document import SECTION_TYPES, SongDocument, SongSection, export_song, save_song
+from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, save_song
 from app.ui_standards import COLORS, SPACING, configure_global_style
 
 AUTOSAVE_MS = 5 * 60 * 1000
@@ -30,8 +30,8 @@ class SongEditor:
         self._loading_section = False
         self.window = tk.Toplevel(parent)
         self.window.title(f"Songtexteditor – {self.document.title or 'Unbenannt'}")
-        self.window.geometry("1180x780")
-        self.window.minsize(940, 620)
+        self.window.geometry("1180x810")
+        self.window.minsize(940, 650)
         configure_global_style(self.window, zoom_percent)
         self.title_var = tk.StringVar(value=self.document.title)
         self.genre_var = tk.StringVar(value=self.document.genre)
@@ -40,6 +40,8 @@ class SongEditor:
         self.voice_var = tk.StringVar(value=self.document.voice)
         self.special_var = tk.StringVar(value=self.document.special)
         self.tags_var = tk.StringVar(value=", ".join(self.document.tags))
+        self.status_song_var = tk.StringVar(value=self.document.status if self.document.status in SONG_STATUSES else "Idee")
+        self.favorite_var = tk.BooleanVar(value=self.document.favorite)
         self.section_type_var = tk.StringVar(value="Strophe")
         self.status_var = tk.StringVar(value="Bereit · Autosave alle 5 Minuten")
         self._build()
@@ -85,6 +87,16 @@ class SongEditor:
             entry.bind("<FocusOut>", lambda _event: self.save())
             entry.bind("<KeyRelease>", lambda _event: self._update_preview())
             self.meta_entries.append(entry)
+        status_row = ttk.Frame(meta)
+        status_row.grid(row=5, column=1, columnspan=2, sticky="ew", pady=(0, SPACING["s"]))
+        ttk.Label(status_row, text="Bearbeitungsstatus:").pack(side="left")
+        self.status_song = ttk.Combobox(status_row, textvariable=self.status_song_var, values=SONG_STATUSES,
+                                        state="readonly", width=18, takefocus=True)
+        self.status_song.pack(side="left", padx=SPACING["s"])
+        self.status_song.bind("<<ComboboxSelected>>", lambda _event: self.save(reason="Status gespeichert"))
+        self.favorite_check = ttk.Checkbutton(status_row, text="★ Favorit", variable=self.favorite_var,
+                                              command=lambda: self.save(reason="Favorit gespeichert"), takefocus=True)
+        self.favorite_check.pack(side="left", padx=SPACING["m"])
         for col in range(3):
             meta.columnconfigure(col, weight=1)
         self.title_entry = self.meta_entries[0]
@@ -208,6 +220,8 @@ class SongEditor:
         self.document.voice = self.voice_var.get().strip()
         self.document.special = self.special_var.get().strip()
         self.document.tags = [part.strip() for part in self.tags_var.get().split(",") if part.strip()]
+        self.document.status = self.status_song_var.get() if self.status_song_var.get() in SONG_STATUSES else "Idee"
+        self.document.favorite = bool(self.favorite_var.get())
         self.document.other = self.other_text.get("1.0", "end-1c")
         self.window.title(f"Songtexteditor – {self.document.title}")
 
