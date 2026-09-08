@@ -1,16 +1,16 @@
 {
-  "schema_version": 5,
+  "schema_version": 6,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 6,
-    "goal": "Debug- und Fehlerzentrale als tastaturbedienbare Recovery-Oberfläche mit Filtern, Details, Wiederholungen, Zoom und sicheren Schreibfehler-Simulationen ausbauen",
-    "completed": 7,
+    "number": 7,
+    "goal": "Dashboard-Schnellspeicher, Songtexteditor, Autosave und sicheren Logout als ersten fachlichen Workflow ergänzen",
+    "completed": 5,
     "open_next": 2
   },
   "runtime": {
@@ -24,6 +24,8 @@
   "separation": {
     "source": "app/",
     "base_data": "daten/",
+    "song_data": "daten/songtexte/",
+    "developer_quick_info": "Entwicklerinformation.txt",
     "texts": "texte/",
     "developer_docs": "docs/",
     "tests": "tests/",
@@ -36,8 +38,24 @@
     "runtime_command": "bash scripts/pruefen.sh --runtime",
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui",
+    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py"
+  },
+  "song_editor": {
+    "storage": "daten/songtexte/<Titel>.txt",
+    "autosave_seconds": 300,
+    "save_on_focus_out": true,
+    "save_on_close": true,
+    "fields": ["title", "genre_optional", "sections", "other_optional"],
+    "section_types": ["Intro", "Strophe", "Pre-Chorus", "Refrain", "Hook", "Bridge", "Outro", "Spoken", "Instrumental"],
+    "preview": true,
+    "atomic_write": true
+  },
+  "dashboard_quick_info": {
+    "target": "Entwicklerinformation.txt",
+    "mode": "append_only",
+    "timestamp": true,
+    "confirm": ["button", "enter"]
   },
   "diagnostics": {
     "machine_log": "logs/ereignisse.jsonl",
@@ -82,13 +100,16 @@
     {"path":"schnellstart.sh","release":true,"purpose":"Vollautomatischer Start"},
     {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
     {"path":"app/event_log.py","release":true,"purpose":"Ereignisprotokoll"},
-    {"path":"app/main.py","release":true,"purpose":"Programmeinstieg, Headless-Prüfung und kontrolliertes Ende"},
+    {"path":"app/main.py","release":true,"purpose":"Programmeinstieg, Projektpfad, Headless-Prüfung und kontrolliertes Ende"},
     {"path":"app/regression.py","release":true,"purpose":"Rückfalllernen mit erstem und letztem Auftreten"},
     {"path":"app/redaction.py","release":true,"purpose":"Bereinigung sensibler Protokollwerte"},
     {"path":"app/log_maintenance.py","release":true,"purpose":"Logrotation und Quarantäne beschädigter JSONL-Zeilen"},
     {"path":"app/recovery_ui.py","release":true,"purpose":"Filter-, Detail-, Wiederholungs- und Zoomlogik der Recovery-Oberfläche"},
+    {"path":"app/quick_note.py","release":true,"purpose":"Append-only Entwicklerinformation im Dashboardheader"},
+    {"path":"app/song_document.py","release":true,"purpose":"Songmodell, Vorschautext und atomare Titelspeicherung"},
+    {"path":"app/song_editor.py","release":true,"purpose":"Songtexteditor mit Bereichen, Vorschau und Autosave"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
-    {"path":"app/ui.py","release":true,"purpose":"Debug- und Recovery-Zentrale"},
+    {"path":"app/ui.py","release":true,"purpose":"Dashboard, Recovery-Zentrale, Schnelleingabe und Logout"},
     {"path":"app/ui_standards.py","release":true,"purpose":"Globale Oberflächen- und Zoomstandards"},
     {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit-Vorprüfung"},
     {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Start-Checkpoints"},
@@ -111,6 +132,8 @@
     {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnose-, Rotations-, Quarantäne- und Endetests"},
     {"path":"tests/test_recovery_ui_logic.py","release":false,"purpose":"Filter-, Wiederholungs-, Zoom- und Schreibfehler-Tests"},
     {"path":"tests/test_recovery_ui_gui.py","release":false,"purpose":"Tk-Tastatur-, Fokus-, Detail- und Zoomtest"},
+    {"path":"tests/test_song_logic.py","release":false,"purpose":"Schnelleingabe-, Songrender- und Speicherpfadtests"},
+    {"path":"tests/test_song_gui.py","release":false,"purpose":"Songeditor-, Autosave-, Fokus- und Dashboardheadertests"},
     {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
     {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
     {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"},
