@@ -7,10 +7,10 @@ MODE="${1:---full}"
 fehler=0
 pruefe_datei(){ [[ -f "$1" ]] && printf '🟢 vorhanden: %s\n' "$1" || { printf '🔴 fehlt: %s\n' "$1"; fehler=1; }; }
 
-runtime_dateien=(MANIFEST.json ANLEITUNG_LAIEN.md requirements.txt schnellstart.sh app/main.py app/event_log.py app/regression.py app/redaction.py app/log_maintenance.py app/recovery_ui.py app/quick_note.py app/song_document.py app/song_editor.py app/texts.py app/ui.py app/ui_standards.py scripts/pruefen.sh scripts/start_status.py scripts/process_watch.py scripts/diagnosepaket.py texte/registry.json)
+runtime_dateien=(MANIFEST.json ANLEITUNG_LAIEN.md requirements.txt schnellstart.sh app/main.py app/event_log.py app/regression.py app/redaction.py app/log_maintenance.py app/recovery_ui.py app/quick_note.py app/song_document.py app/song_editor.py app/song_library.py app/texts.py app/ui.py app/ui_standards.py scripts/pruefen.sh scripts/start_status.py scripts/process_watch.py scripts/diagnosepaket.py texte/registry.json)
 for datei in "${runtime_dateien[@]}"; do pruefe_datei "$datei"; done
 if [[ "$MODE" == "--full" ]]; then
-  entwickler_dateien=(README.md AGENTS.md TODO.md CHANGELOG.md scripts/veroeffentlichen.py scripts/iteration_restore.py scripts/backup_erstellen.sh scripts/schreibfehler_simulieren.py tests/test_event_management.py tests/test_release_builder.py tests/test_security_watch.py tests/test_restore.py tests/test_diagnostics_logging.py tests/test_recovery_ui_logic.py tests/test_recovery_ui_gui.py tests/test_song_logic.py tests/test_song_gui.py tests/regression_registry.json agents/INFO_DATEIEN_AGENT.md docs/ITERATION6_RECOVERY_UI.md docs/ITERATION7_SONG_WORKFLOW.md)
+  entwickler_dateien=(README.md AGENTS.md TODO.md CHANGELOG.md scripts/veroeffentlichen.py scripts/iteration_restore.py scripts/backup_erstellen.sh scripts/schreibfehler_simulieren.py tests/test_event_management.py tests/test_release_builder.py tests/test_security_watch.py tests/test_restore.py tests/test_diagnostics_logging.py tests/test_recovery_ui_logic.py tests/test_recovery_ui_gui.py tests/test_song_logic.py tests/test_song_gui.py tests/test_song_library.py tests/test_song_library_gui.py tests/regression_registry.json agents/INFO_DATEIEN_AGENT.md docs/ITERATION6_RECOVERY_UI.md docs/ITERATION7_SONG_WORKFLOW.md docs/ITERATION8_SONG_LIBRARY.md)
   for datei in "${entwickler_dateien[@]}"; do pruefe_datei "$datei"; done
 fi
 
@@ -29,14 +29,14 @@ python3 -m py_compile app/*.py scripts/start_status.py scripts/process_watch.py 
 if [[ "$MODE" == "--full" ]]; then
   python3 -m py_compile scripts/veroeffentlichen.py scripts/iteration_restore.py scripts/schreibfehler_simulieren.py tests/*.py || fehler=1
   printf '\nPrüfe Rückfall-, Release-, Sicherheits-, Restore-, Diagnose-, Recovery- und Songlogik …\n'
-  python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic || fehler=1
+  python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library || fehler=1
   printf '\nSimuliere vollen/geschützten Datenträger ohne echten Speicherverbrauch …\n'
   python3 scripts/schreibfehler_simulieren.py >/dev/null || fehler=1
-  printf '\nPrüfe Recovery-Oberfläche und Songeditor in echter Tk-Oberfläche …\n'
+  printf '\nPrüfe Recovery-Oberfläche, Songeditor und Songbibliothek in echter Tk-Oberfläche …\n'
   if command -v xvfb-run >/dev/null 2>&1; then
-    xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui || fehler=1
+    xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui || fehler=1
   elif [[ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]]; then
-    python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui || fehler=1
+    python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui || fehler=1
   else
     printf '🔴 GUI-Prüfung nicht ausführbar: weder xvfb-run noch grafische Sitzung verfügbar.\n'
     fehler=1
