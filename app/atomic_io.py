@@ -10,15 +10,18 @@ from typing import Any
 
 
 def _fsync_directory(directory: Path) -> None:
-    """Sichert auf POSIX auch den Verzeichniseintrag nach os.replace."""
+    """Sichert den Verzeichniseintrag, soweit das Dateisystem dies unterstützt."""
     flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
     try:
         descriptor = os.open(str(directory), flags)
     except OSError:
-        # Nicht jede Plattform erlaubt das Öffnen eines Verzeichnisses.
         return
     try:
-        os.fsync(descriptor)
+        try:
+            os.fsync(descriptor)
+        except OSError:
+            # Einige Dateisysteme/Plattformen unterstützen Verzeichnis-fsync nicht.
+            return
     finally:
         os.close(descriptor)
 
