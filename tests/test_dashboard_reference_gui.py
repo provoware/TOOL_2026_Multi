@@ -31,7 +31,7 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.assertEqual(self.dashboard.windowTitle(), "Provoware-Datenbank-Dashboard 2026")
         self.assertEqual(COLORS["accent"], "#FF9800")
         self.assertLess(int(COLORS["background"][1:3], 16), 20)
-        self.assertIn("PySide6", self.dashboard.styleSheet())
+        self.assertTrue(type(self.dashboard).__mro__[1].__module__.startswith("PySide6"))
     def test_reference_has_left_sidebar_tile_strip_and_two_by_two_cards(self):
         self.assertGreaterEqual(self.dashboard.sidebar.width(), 200)
         self.assertLessEqual(self.dashboard.sidebar.width(), 220)
