@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import signal
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from app.atomic_io import atomic_write_text
 from app.process_guard import CONTROLLED_ALREADY_RUNNING_EXIT
 from app.redaction import redact
 
@@ -36,15 +38,17 @@ def write_crash_report(root: Path, returncode: int, command: list[str]) -> Path:
     jsonl.parent.mkdir(parents=True, exist_ok=True)
     with jsonl.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
+        handle.flush()
+        os.fsync(handle.fileno())
     report = report_dir / f"{event_id}.txt"
-    report.write_text(
+    atomic_write_text(
+        report,
         "WAS IST PASSIERT?\n" + data["summary"] +
         "\n\nWIE WURDE ES ERKANNT?\nDer separate Wächter sah einen fehlerhaften Prozessabschluss." +
         "\n\nWO IST ES PASSIERT?\nAnwendungsprozess" +
         "\n\nWAS WURDE GESCHÜTZT?\n" + data["safe_action"] +
         "\n\nGRUND\n" + data["technical_cause"] +
         "\n\nNÄCHSTER SCHRITT\n" + data["next_step"] + "\n",
-        encoding="utf-8",
     )
     return report
 
