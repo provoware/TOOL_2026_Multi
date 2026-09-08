@@ -1,5 +1,26 @@
 # Änderungsverlauf
 
+## 0.9.0 – 2026-09-08 – Songbibliothek vervollständigt
+
+### Hinzugefügt
+- freie Suche über Titel, Genre, Stimmung, Stil, Stimme und Tags,
+- kombinierbare Filter nach Genre, Stimmung, Stil, Stimme, Tags, Status und Favoriten,
+- Favoritenkennzeichnung im Editor und Favoritenfilter in der Bibliothek,
+- Bearbeitungsstatus `Idee`, `Entwurf`, `Überarbeitung`, `Fertig`,
+- Sortierung nach letzter Bearbeitung, Titel, Genre, Tags und Status,
+- Gruppierung nach Genre, Tags und Status,
+- Versionswiederherstellung aus der schreibgeschützten Vorschau heraus,
+- gezielte Logik- und Tk-GUI-Tests für Suche, Filter, Gruppierung, Status/Favorit und Restore.
+
+### Schutz
+- ältere Songdateien ohne Status/Favorit bleiben lesbar und erhalten nur sichere Standardwerte,
+- Filtern, Sortieren und Gruppieren sind reine Ansichtsoperationen,
+- vor jeder tatsächlichen Versionswiederherstellung wird der aktuelle Song erneut als Versionsstand gesichert,
+- die Restore-Funktion akzeptiert nur die direkte Arbeitsdatei und den zugehörigen `.versionen/<Titel>/`-Pfad,
+- fremde Versionspfade werden vor Schreibzugriff abgewiesen,
+- Arbeitsdatei und Sicherungsstand werden atomar geschrieben,
+- bestehende Recovery-, Diagnose-, Datenschutz-, Wächter- und Restore-Gates bleiben aktiv.
+
 ## 0.8.0 – 2026-09-08 – Songbibliothek und Versionsverwaltung
 
 ### Hinzugefügt
