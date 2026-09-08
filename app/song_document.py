@@ -12,6 +12,7 @@ from pathlib import Path
 SECTION_TYPES = (
     "Intro", "Strophe", "Pre-Chorus", "Refrain", "Hook", "Bridge", "Outro", "Spoken", "Instrumental"
 )
+SONG_STATUSES = ("Idee", "Entwurf", "Überarbeitung", "Fertig")
 META_HEADERS = {
     "TITEL": "title",
     "GENRE": "genre",
@@ -20,6 +21,8 @@ META_HEADERS = {
     "STIMME": "voice",
     "BESONDERHEITEN": "special",
     "TAGS": "tags",
+    "STATUS": "status",
+    "FAVORIT": "favorite",
 }
 
 
@@ -38,6 +41,8 @@ class SongDocument:
     voice: str = ""
     special: str = ""
     tags: list[str] = field(default_factory=list)
+    status: str = "Idee"
+    favorite: bool = False
     other: str = ""
     sections: list[SongSection] = field(default_factory=list)
 
@@ -52,6 +57,8 @@ class SongDocument:
         tags = [tag.strip() for tag in self.tags if tag.strip()]
         if tags:
             lines.append(f"TAGS: {', '.join(tags)}")
+        lines.append(f"STATUS: {self.status if self.status in SONG_STATUSES else 'Idee'}")
+        lines.append(f"FAVORIT: {'Ja' if self.favorite else 'Nein'}")
         lines.append("")
         for section in self.sections:
             lines.append(f"[{section.kind}]")
@@ -72,13 +79,13 @@ class SongDocument:
         metadata = (
             ("Genre", self.genre), ("Stimmung", self.mood), ("Stil", self.style),
             ("Stimme", self.voice), ("Besonderheiten", self.special),
-            ("Tags", ", ".join(self.tags)),
+            ("Tags", ", ".join(self.tags)), ("Status", self.status),
+            ("Favorit", "Ja" if self.favorite else "Nein"),
         )
         for label, value in metadata:
             if value.strip():
                 lines.append(f"**{label}:** {value.strip()}")
-        if any(value.strip() for _label, value in metadata):
-            lines.append("")
+        lines.append("")
         for section in self.sections:
             lines.extend((f"## {section.kind}", "", section.text.rstrip(), ""))
         if self.other.strip():
@@ -107,8 +114,12 @@ def _atomic_write(target: Path, content: str) -> None:
     os.replace(temporary, target)
 
 
+def _version_folder(root: Path, title: str) -> Path:
+    return root / "daten" / "songtexte" / ".versionen" / safe_title(title)
+
+
 def _version_path(root: Path, title: str) -> Path:
-    folder = root / "daten" / "songtexte" / ".versionen" / safe_title(title)
+    folder = _version_folder(root, title)
     folder.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
     return folder / f"{stamp}.txt"
@@ -127,8 +138,29 @@ def save_song(root: Path, document: SongDocument) -> Path:
     return target
 
 
+def restore_version(root: Path, current_path: Path, version_path: Path) -> tuple[Path, Path | None]:
+    """Stellt eine Version wieder her und sichert davor den aktuellen Stand."""
+    song_folder = (root / "daten" / "songtexte").resolve()
+    current = current_path.resolve()
+    if current.parent != song_folder or current.suffix.lower() != ".txt" or not current.is_file():
+        raise ValueError("Die aktuelle Songdatei liegt nicht im erlaubten Songordner.")
+    current_document = load_song(current)
+    expected_version_folder = _version_folder(root, current_document.title).resolve()
+    version = version_path.resolve()
+    if version.parent != expected_version_folder or version.suffix.lower() != ".txt" or not version.is_file():
+        raise ValueError("Der gewählte Versionsstand gehört nicht zu diesem Song.")
+    current_text = current.read_text(encoding="utf-8")
+    old_text = version.read_text(encoding="utf-8")
+    if current_text == old_text:
+        return current, None
+    backup = _version_path(root, current_document.title)
+    _atomic_write(backup, current_text)
+    _atomic_write(current, old_text)
+    return current, backup
+
+
 def parse_song(text: str, fallback_title: str = "") -> SongDocument:
-    """Liest sowohl 0.7.0-Songs als auch die erweiterten 0.8.0-Kopfzeilen."""
+    """Liest 0.7.0/0.8.0-Songs sowie Status- und Favoritfelder ab 0.9.0."""
     document = SongDocument(title=fallback_title)
     current_kind: str | None = None
     current_lines: list[str] = []
@@ -156,10 +188,15 @@ def parse_song(text: str, fallback_title: str = "") -> SongDocument:
         if ":" in raw:
             label, value = raw.split(":", 1)
             attr = META_HEADERS.get(label.strip().upper())
+            cleaned = value.strip()
             if attr == "tags":
                 document.tags = [part.strip() for part in value.split(",") if part.strip()]
+            elif attr == "favorite":
+                document.favorite = cleaned.casefold() in {"ja", "yes", "true", "1", "favorit"}
+            elif attr == "status":
+                document.status = cleaned if cleaned in SONG_STATUSES else "Idee"
             elif attr:
-                setattr(document, attr, value.strip())
+                setattr(document, attr, cleaned)
     finish_section()
     if not document.title.strip():
         document.title = fallback_title or "Unbenannter Song"
@@ -181,7 +218,7 @@ def list_songs(root: Path) -> list[Path]:
 
 
 def list_versions(root: Path, title: str) -> list[Path]:
-    folder = root / "daten" / "songtexte" / ".versionen" / safe_title(title)
+    folder = _version_folder(root, title)
     if not folder.is_dir():
         return []
     return sorted((path for path in folder.glob("*.txt") if path.is_file()), reverse=True)
