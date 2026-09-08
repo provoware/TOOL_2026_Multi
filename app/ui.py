@@ -1,38 +1,52 @@
-"""Laienfreundliche Recovery- und Debug-Oberfläche."""
+"""Laienfreundliche Dashboard-, Recovery- und Schnellarbeitsoberfläche."""
 
 from __future__ import annotations
 
 import tkinter as tk
+from pathlib import Path
 from tkinter import messagebox, ttk
 from typing import Callable
 
 from app.event_log import EventLogger
+from app.quick_note import append_developer_info
 from app.recovery_ui import ZOOM_LEVELS, available_areas, filter_events, repetition_summary, technical_details, zoom_font_size
+from app.song_editor import SongEditor
 from app.texts import TextRegistry
 from app.ui_standards import COLORS, FONTS, SPACING, configure_global_style, severity_display
 
 
 class Dashboard:
-    def __init__(self, root: tk.Tk, texts: TextRegistry, logger: EventLogger) -> None:
+    def __init__(self, root: tk.Tk, texts: TextRegistry, logger: EventLogger,
+                 project_root: Path | None = None) -> None:
         self.root, self.texts, self.logger = root, texts, logger
+        self.project_root = project_root or Path.cwd()
         self.zoom_percent = 100
         self._event_by_item: dict[str, dict] = {}
         self._all_events: list[dict] = []
+        self._song_editors: list[SongEditor] = []
         self.severity_var = tk.StringVar(value="ALLE")
         self.area_var = tk.StringVar(value="ALLE")
         self.zoom_var = tk.StringVar(value="100 %")
+        self.quick_info_var = tk.StringVar()
+        self.quick_status_var = tk.StringVar(value="")
         root.title(texts.get("app.name", "TOOL_2026_Multi"))
-        root.geometry("1060x680")
-        root.minsize(820, 520)
+        root.geometry("1120x720")
+        root.minsize(860, 560)
         configure_global_style(root, self.zoom_percent)
         self._build_menu()
         self._build_content()
         self._bind_keyboard()
+        root.protocol("WM_DELETE_WINDOW", self.logout)
         self.refresh()
-        self.severity_filter.focus_set()
+        self.quick_entry.focus_set()
 
     def _build_menu(self) -> None:
         menu = tk.Menu(self.root)
+        work = tk.Menu(menu, tearoff=False)
+        work.add_command(label="Songtexteditor öffnen", command=self.open_song_editor)
+        work.add_separator()
+        work.add_command(label="Logout / Sitzung beenden", command=self.logout)
+        menu.add_cascade(label="Arbeiten", menu=work)
         debug = tk.Menu(menu, tearoff=False)
         debug.add_command(label="Ausgewähltes Ereignis öffnen", command=self.open_selected_event, accelerator="Enter")
         debug.add_command(label=self.texts.get("menu.debug.open", "Alle Debug/Log-Ereignisse öffnen"), command=self.show_log)
@@ -44,9 +58,25 @@ class Dashboard:
         frame = ttk.Frame(self.root, padding=SPACING["xl"])
         frame.pack(fill="both", expand=True)
         self.main_frame = frame
+
+        header = ttk.Frame(frame)
+        header.pack(fill="x", pady=(0, SPACING["m"]))
+        ttk.Label(header, text="TOOL_2026_Multi", style="Title.TLabel").pack(side="left")
+        ttk.Button(header, text="Songtexteditor", command=self.open_song_editor, takefocus=True).pack(side="right", padx=(SPACING["s"], 0))
+        ttk.Button(header, text="Logout", command=self.logout, takefocus=True).pack(side="right")
+
+        quick = ttk.Frame(frame)
+        quick.pack(fill="x", pady=(0, SPACING["m"]))
+        ttk.Label(quick, text="Entwickler-Schnellinfo:").pack(side="left")
+        self.quick_entry = ttk.Entry(quick, textvariable=self.quick_info_var, takefocus=True)
+        self.quick_entry.pack(side="left", fill="x", expand=True, padx=SPACING["s"])
+        self.quick_entry.bind("<Return>", self._quick_save_enter)
+        ttk.Button(quick, text="Speichern", command=self.save_quick_info, takefocus=True).pack(side="left")
+        ttk.Label(frame, textvariable=self.quick_status_var, style="Muted.TLabel").pack(anchor="w", pady=(0, SPACING["m"]))
+
         ttk.Label(frame, text="Debug- und Recovery-Zentrale", style="Title.TLabel").pack(anchor="w")
         ttk.Label(frame, text="Fehler filtern, Details öffnen und Wiederholungen erkennen. Technische Angaben bleiben zunächst verborgen.",
-                  style="Muted.TLabel", wraplength=920).pack(anchor="w", pady=(SPACING["s"], SPACING["m"]))
+                  style="Muted.TLabel", wraplength=960).pack(anchor="w", pady=(SPACING["s"], SPACING["m"]))
 
         self.ready = tk.Label(frame, text=f"🟢 {self.texts.get('status.ready', 'System bereit')}", anchor="w",
                               padx=12, pady=8, bg=COLORS["surface_alt"], fg=COLORS["green"],
@@ -73,7 +103,7 @@ class Dashboard:
         self.zoom_filter.bind("<<ComboboxSelected>>", self._zoom_changed)
 
         columns = ("time", "severity", "area", "repeat", "summary")
-        self.table = ttk.Treeview(frame, columns=columns, show="headings", height=10, takefocus=True, selectmode="browse")
+        self.table = ttk.Treeview(frame, columns=columns, show="headings", height=9, takefocus=True, selectmode="browse")
         for key, title, width in (("time", "Zeit", 150), ("severity", "Ampel / Schwere", 135),
                                   ("area", "Bereich", 110), ("repeat", "Wiederholung", 110),
                                   ("summary", "Einfache Erklärung", 430)):
@@ -101,6 +131,47 @@ class Dashboard:
         self.root.bind("<Control-equal>", lambda _event: self._step_zoom(1))
         self.root.bind("<Control-minus>", lambda _event: self._step_zoom(-1))
         self.root.bind("<Control-0>", lambda _event: self.set_zoom(100))
+
+    def _quick_save_enter(self, _event: object = None) -> str:
+        self.save_quick_info()
+        return "break"
+
+    def save_quick_info(self) -> None:
+        text = self.quick_info_var.get()
+        try:
+            target = append_developer_info(self.project_root, text)
+        except ValueError:
+            self.quick_status_var.set("🟡 Bitte zuerst eine kurze Information eingeben.")
+            return
+        except Exception as error:
+            self.quick_status_var.set(f"🔴 Speichern fehlgeschlagen: {type(error).__name__}")
+            return
+        self.quick_info_var.set("")
+        self.quick_status_var.set(f"🟢 An {target.name} angehängt.")
+        self.quick_entry.focus_set()
+
+    def open_song_editor(self) -> None:
+        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed)
+        self._song_editors.append(editor)
+
+    def _song_editor_closed(self, editor: SongEditor) -> None:
+        if editor in self._song_editors:
+            self._song_editors.remove(editor)
+
+    def save_open_song_editors(self) -> bool:
+        success = True
+        for editor in list(self._song_editors):
+            if editor.save(reason="Sitzung gespeichert") is None:
+                success = False
+        return success
+
+    def logout(self) -> None:
+        if not self.save_open_song_editors():
+            messagebox.showerror("Logout gestoppt", "Mindestens ein Songtext konnte nicht gespeichert werden. Die Sitzung bleibt geöffnet.", parent=self.root)
+            return
+        for editor in list(self._song_editors):
+            editor.close()
+        self.root.destroy()
 
     def refresh(self) -> None:
         self._all_events = self.logger.recent(100)
