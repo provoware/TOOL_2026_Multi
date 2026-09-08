@@ -1,5 +1,19 @@
 # Änderungsverlauf
 
+## 0.10.2 – 2026-09-08 – Zoom und Schriftgrößensteuerung
+
+### Hinzugefügt
+- `Strg + Mausrad` für zentrale Zoom-/Schriftgrößenänderung,
+- sichtbare `A−`-/`A+`-Schaltflächen mit Prozentanzeige in der Statusleiste,
+- Weitergabe der Zoomstufe an Dashboard, offene Songeditoren, Songbibliothek und Recovery,
+- gezielter PySide6-GUI-Rückfalltest für Mausrad, Zoomgrenzen und sichtbare Bedienung.
+
+### Schutz
+- bestehende Zoomstufen 100/125/150/175/200 % bleiben unverändert,
+- kein zweites Schriftgrößensystem eingeführt,
+- keine Nutzerdaten verändert,
+- globaler Ereignisfilter wird beim Schließen des Dashboards wieder entfernt.
+
 ## 0.10.1 – 2026-09-08 – Kubuntu/X11-Endabnahme vorbereitet
 
 ### Hinzugefügt

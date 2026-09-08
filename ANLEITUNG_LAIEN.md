@@ -7,6 +7,17 @@ bash schnellstart.sh
 
 Der Schnellstart richtet bei Bedarf die abgeschirmte Python-Umgebung ein, installiert die festgelegte PySide6-Version, prüft den Start und öffnet anschließend das Programm unter Prozesswache.
 
+## Zoom und Schriftgröße
+Die Oberfläche kann ohne Einstellungsdialog vergrößert oder verkleinert werden:
+- `Strg` gedrückt halten und das **Mausrad nach oben** drehen: größer.
+- `Strg` gedrückt halten und das **Mausrad nach unten** drehen: kleiner.
+- unten in der Statusleiste stehen zusätzlich **A−** und **A+**.
+- `Strg+0` setzt wieder auf 100 % zurück.
+
+Verfügbare Stufen: **100 %, 125 %, 150 %, 175 % und 200 %**.
+
+Die Einstellung gilt gemeinsam für Dashboard, offene Songeditoren, Songbibliothek und Recovery. Dadurch gibt es nicht mehrere widersprüchliche Schriftgrößen.
+
 ## Reale Kubuntu/X11-Endabnahme
 Für die echte Endprüfung auf dem Zielrechner gibt es einen eigenen Assistenten:
 
@@ -188,6 +199,7 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 - `F5` – Bibliothek oder Recovery aktualisieren,
 - `Ctrl+S` – Song manuell speichern,
 - `Ctrl++` / `Ctrl+-` – Anzeige größer/kleiner,
+- `Ctrl+Mausrad` – Anzeige größer/kleiner,
 - `Ctrl+0` – zurück auf 100 Prozent,
 - `Ctrl+R` – Recovery öffnen,
 - `Escape` – untergeordnete Fenster schließen.
@@ -197,7 +209,7 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, die echten PySide6-Oberflächenwege, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
+Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
 
 ## Bestehende Schutzfunktionen
 - atomare Songdatei-Speicherung,
