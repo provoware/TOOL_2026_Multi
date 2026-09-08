@@ -2,47 +2,62 @@
 
 ## Was ist das hier?
 
-Dieses Projekt enthält den ersten ausführbaren Kern von **TOOL_2026_Multi**. Es erklärt Programmereignisse und Fehler, ohne Ihre Basisdaten zu verändern.
+Dieses Projekt enthält den ausführbaren Kern von **TOOL_2026_Multi**. Es erklärt Programmereignisse und Fehler, ohne Ihre Basisdaten zu verändern.
 
 ## Starten
-
-Öffne im Projektordner ein Terminal und führe aus:
 
 ```bash
 bash schnellstart.sh
 ```
 
-Das Skript erledigt die technische Vorbereitung selbst, prüft den Kern und öffnet das Dashboard.
+Der Start erledigt die technische Vorbereitung selbst. Wenn eine grafische Oberfläche verfügbar ist, erscheint ein kleines Startfenster mit fünf echten Checkpoints:
 
-## Debug/Log verstehen
+- 🟡 Vorgang läuft,
+- 🟢 Schritt erfolgreich,
+- 🔴 sicher abgebrochen.
+
+Ohne grafische Oberfläche werden dieselben Zustände im Terminal angezeigt.
+
+Der Start prüft nacheinander Python, die abgeschirmte Umgebung, nötige Zusatzpakete, den Laufzeitkern und danach die Anwendung. Sind in `requirements.txt` keine externen Pakete eingetragen, wird kein unnötiger Paketdownload gestartet.
+
+## Dashboard verstehen
 
 - Im Dashboard stehen immer die letzten fünf Ereignisse.
+- Die Schweregrade erhalten zusätzlich ein Ampelsymbol.
 - Über **Debug/Log → Ereignisse und Fehler öffnen** sehen Sie ausführliche Erklärungen.
 - Jede Meldung nennt eine eindeutige Kennung, den Grund, die Schutzmaßnahme und den nächsten sicheren Schritt.
-- Wiederholt sich ein Fehlermuster, weist das Programm darauf hin. Es merkt sich dafür nur eine technische Prüfsumme, keine persönlichen Inhalte.
-- Maschinenlesbare JSON-Zeilen liegen lokal in `logs/ereignisse.jsonl`; einfache Einzelberichte liegen in `berichte/`.
+- Wiederholt sich ein Fehlermuster, weist das Programm darauf hin.
 
 ## Prüfen
 
-```bash
-bash scripts/pruefen.sh
-```
-
-Die Prüfung läuft einmal durch und endet. Es gibt keine versteckte Dauerschleife.
-
-## Sicherung erstellen
+Der Schnellstart nutzt automatisch die kurze Laufzeitprüfung:
 
 ```bash
-bash scripts/backup_erstellen.sh
+bash scripts/pruefen.sh --runtime
 ```
 
-Die Sicherung wird im Ordner `backups/` abgelegt. Dazu entsteht eine Prüfsumme, mit der später kontrolliert werden kann, ob die ZIP-Datei unverändert ist.
+Für Entwicklung und Veröffentlichung gibt es die vollständige Prüfung:
+
+```bash
+bash scripts/pruefen.sh --full
+```
+
+Beide Wege laufen einmal durch und enden. Es gibt keine versteckte Dauerschleife.
+
+## Nutzer-ZIP erzeugen
+
+Für Entwickler:
+
+```bash
+python3 scripts/veroeffentlichen.py
+```
+
+Das Veröffentlichungs-Skript übernimmt ausschließlich Dateien, die in `MANIFEST.json` mit `release: true` freigegeben wurden. Tests, interne Agent-Dateien und Entwicklerdokumentation bleiben draußen. Das ZIP wird anschließend geprüft und erhält eine SHA-256-Prüfsumme.
 
 ## Wichtig
 
-- `logs/` enthält spätere Laufzeitprotokolle.
+- `logs/` enthält Laufzeitprotokolle und Start-Checkpoints.
 - `backups/` enthält lokale Sicherungen.
 - `docs/` enthält Entwicklungsunterlagen.
 - `daten/` ist für tatsächliche Basisdaten der Anwendung reserviert.
-
-Diese Bereiche werden bewusst getrennt, damit beim Kopieren oder Veröffentlichen nicht unnötiger Ballast übertragen wird.
+- `release/` enthält lokale Veröffentlichungs-ZIPs und wird nicht in Git übernommen.

@@ -1,10 +1,10 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.2.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.3.0 · **Stand:** 2026-09-08
 
 ## Zweck
 
-Dieses Repository enthält den ausführbaren Kern von **TOOL_2026_Multi**. Das Dashboard zeigt die letzten fünf Ereignisse. Der Menüpunkt **Debug/Log** erklärt Vorgänge und Fehler einfach; parallel entsteht ein maschinenlesbares Protokoll.
+Dieses Repository enthält den ausführbaren Kern von **TOOL_2026_Multi**. Das Dashboard zeigt die letzten fünf Ereignisse, erklärt Fehler verständlich und führt Status zusätzlich über ein Ampelsystem. Die Entwicklungsgrundlage besitzt nun einen rückfallgesicherten Fehlerfall, globale Oberflächenstandards, einen grafisch unterstützten Startweg und einen strikt manifestgesteuerten Veröffentlichungsweg.
 
 ## Ampel
 
@@ -13,42 +13,67 @@ Dieses Repository enthält den ausführbaren Kern von **TOOL_2026_Multi**. Das D
 | Projektregeln | 🟢 | verbindlich definiert |
 | Ordnertrennung | 🟢 | Laufzeitdaten, Entwicklung und Protokolle getrennt |
 | Sicherungskonzept | 🟢 | Regeln und automatischer Sicherungsweg definiert |
-| Prüfablauf | 🟢 | lokaler Ein-Klick-Prüfer vorhanden |
-| Schnellstart | 🟢 | richtet die Umgebung ein, prüft und startet die Anwendung |
-| Werkzeugfunktionen | 🔴 | noch nicht implementiert |
+| Prüfablauf | 🟢 | getrennte Laufzeit- und Entwicklerprüfung vorhanden |
+| Schnellstart | 🟢 | fünf echte Checkpoints, grafische Ampelanzeige mit Konsolenfallback |
+| Paketabgleich | 🟢 | keine unnötigen Downloads, wenn keine externen Pakete benötigt werden |
+| Globale UI-Standards | 🟢 | Farben, Abstände, Schriftgrößen und Statusdarstellung zentral definiert |
 | Fehlerbericht im Werkzeug | 🟢 | TXT-Bericht und JSON-Zeile mit eindeutiger Kennung |
-| Rückfallmanagement | 🟢 | erkennt wiederholte Fehlermuster datensparsam |
+| Rückfallmanagement | 🟢 | `LOG-FEHLER-001` ist über `REG-LOG-001` als **BEHOBEN** abgesichert |
+| Veröffentlichung | 🟢 | nur Manifest-Dateien mit `release: true` gelangen ins Nutzer-ZIP |
+| Info-Dateien-Agent | 🟢 | aktualisiert Informationsdateien nur bei belegten Änderungen |
+| Werkzeugfunktionen | 🔴 | fachliche Hauptmodule noch nicht festgelegt |
 
 ## Einfache Nutzung
 
-1. Datei `schnellstart.sh` doppelklicken oder im Terminal starten.
-2. Das Skript richtet die abgeschirmte Python-Umgebung ein.
-3. Abhängigkeiten aus `requirements.txt` werden installiert.
-4. Vor dem Start wird einmal geprüft.
-5. Die Anwendung startet und zeigt die letzten fünf Ereignisse.
+1. `schnellstart.sh` doppelklicken oder im Terminal starten.
+2. Der Start prüft Python, die abgeschirmte Umgebung, Abhängigkeiten, Projektkern und Anwendung.
+3. Wenn eine grafische Oberfläche verfügbar ist, zeigt ein kleines Fenster den echten Stand mit 🟡/🟢/🔴 an.
+4. Sind keine externen Pakete nötig, wird der Paketdownload vollständig übersprungen.
+5. Erst nach grüner Laufzeitprüfung startet das Dashboard.
 
 ```bash
 bash schnellstart.sh
 ```
 
+## Prüfen
+
+Normale Laufzeitprüfung:
+
+```bash
+bash scripts/pruefen.sh --runtime
+```
+
+Vollständige Entwicklerprüfung:
+
+```bash
+bash scripts/pruefen.sh --full
+```
+
+## Veröffentlichung
+
+```bash
+python3 scripts/veroeffentlichen.py
+```
+
+Das Skript validiert alle freigegebenen Pfade, erzeugt das Nutzer-ZIP atomar, prüft dessen Inhalt und schreibt eine SHA-256-Prüfsumme. Dateien ohne `release: true` werden nicht übernommen.
+
 ## Wichtige Dateien
 
 - `AGENTS.md` – verbindliche Arbeitsregeln für Entwicklung.
+- `agents/INFO_DATEIEN_AGENT.md` – prüft nach Änderungen, welche Infodateien wirklich aktualisiert werden müssen.
 - `TODO.md` – offene Arbeit, Priorität und nächste Iteration.
 - `CHANGELOG.md` – nachvollziehbare Änderungen.
-- `MANIFEST.json` – maschinenlesbarer Projektstand.
+- `MANIFEST.json` – Projektstand und verbindliche Release-Freigaben.
 - `ANLEITUNG_LAIEN.md` – kurze Anleitung ohne unnötige Fachsprache.
-- `docs/ENTWICKLUNGSREGELN.md` – vollständiges Entwicklungsverfahren.
-- `docs/FEHLER_UND_REGRESSION.md` – Fehlervermeidung, Fehlerbehandlung und Rückfalltests.
-- `docs/BACKUP_KONZEPT.md` – Sicherung und Wiederherstellung.
-- `docs/ORDNERSTRUKTUR.md` – was wohin gehört und was nicht übertragen wird.
-- `scripts/pruefen.sh` – begrenzte, automatische Qualitätsprüfung.
+- `app/ui_standards.py` – zentrale Farben, Abstände, Schriften und Ampellogik.
+- `scripts/start_status.py` – grafische Start-Checkpoints.
+- `scripts/veroeffentlichen.py` – manifestgesteuerte Release-Erstellung.
+- `tests/regression_registry.json` – bestätigte Rückfallfälle mit Testkennung und Status.
+- `scripts/pruefen.sh` – begrenzte Qualitätsprüfung.
 - `scripts/backup_erstellen.sh` – lokaler Sicherungspunkt mit Prüfsumme.
 
 ## Grundsatz
 
-**Planen → klein ändern → prüfen → Ergebnis sichern → dokumentieren → erst dann weiter.**
+**Planen → klein ändern → gezielt prüfen → Ergebnis sichern → Infodateien abgleichen → erst dann weiter.**
 
 Keine verdeckten Endlosschleifen, keine unnötigen Komplettumbauten und keine ungeprüften Änderungen an Nutzerdaten.
-
-Laufzeitprotokolle bleiben lokal in `logs/`; verständliche Einzelberichte liegen in `berichte/`. Beide Ordner werden nicht in Git oder Sicherungs-ZIPs übernommen.

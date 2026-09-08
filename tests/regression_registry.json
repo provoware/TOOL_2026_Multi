@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "error_id": "LOG-FEHLER-001",
+      "regression_id": "REG-LOG-001",
+      "status_before": "OFFEN",
+      "status": "BEHOBEN",
+      "fixed_in": "0.3.0",
+      "cause": "EventLogger.recent(0) nutzte effektiv [-0:] und lieferte dadurch alle Ereignisse statt einer leeren Liste.",
+      "regression_test": "tests.test_event_management.EventManagementTests.test_REG_LOG_001_nonpositive_limit_returns_no_events",
+      "neighbor_test": "tests.test_event_management.EventManagementTests.test_REG_LOG_001_neighbor_positive_limit_still_returns_latest"
+    }
+  ]
+}
