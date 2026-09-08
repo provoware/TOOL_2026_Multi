@@ -32,7 +32,7 @@ Stand: 2026-09-08
 ## Iteration 13 – Zoom und Schriftgröße
 
 - 🟢 `Strg + Mausrad`, `Strg++`, `Strg+-`, `Strg+0` sowie A−/A+ umgesetzt.
-- 🟢 Zoom gilt gemeinsam für Dashboard, Songeditoren, Songbibliothek, Recovery, Profilverwaltung und Todo.
+- 🟢 Zoom gilt gemeinsam für Dashboard, Songeditoren, Songbibliothek, Recovery, Profilverwaltung, Todo und Kalender.
 
 ## Iteration 14 – profilbasierte DB-Eingaben
 
@@ -53,7 +53,19 @@ Stand: 2026-09-08
 - 🟢 gemeinsamer Bestand unter `daten/todo/todo.json`, atomar mit Tempdatei, `fsync` und `os.replace`.
 - 🟢 Todo ist unter `Planung → Todo-Liste` erreichbar und folgt der zentralen Zoomsteuerung.
 
-## Nächste Fachiterationen
+## Iteration 16 – Kalender
 
-1. 🔴 Kalender mit Tag/Woche/Monat/Jahr, Terminen und Erinnerungen.
-2. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
+- 🟢 echte Tagesansicht für den gewählten Kalendertag.
+- 🟢 Wochenansicht von Montag bis zum folgenden Montag.
+- 🟢 Monatsansicht vom ersten Tag bis zum ersten Tag des Folgemonats.
+- 🟢 Jahresansicht vom 1. Januar bis zum 1. Januar des Folgejahres.
+- 🟢 Termine mit Titel, optionaler Notiz, Beginn und Ende anlegbar; Ende muss nach Beginn liegen.
+- 🟢 optionale Erinnerungen: Terminbeginn, 5/15/30/60 Minuten oder 1 Tag vorher.
+- 🟢 Erinnerungsprüfung alle 30 Sekunden, solange das Dashboard läuft, auch bei geschlossenem Kalenderfenster.
+- 🟢 Erinnerung wird erst nach Anzeige atomar als erledigt markiert; keine Wiederholungsmeldung desselben Termins.
+- 🟢 Kalenderdaten atomar unter `daten/kalender/termine.json`; in dieser Iteration keine destruktive Terminlöschung.
+- 🟢 Kalender ist unter `Planung → Kalender` erreichbar und folgt der zentralen Zoomsteuerung.
+
+## Nächster Freigabepunkt
+
+1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
