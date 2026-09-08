@@ -21,12 +21,12 @@ Stand: 2026-09-08
 
 ## Iteration 11 – PySide6-Referenzdashboard
 
-- 🟡 gesamte produktive GUI von Tkinter auf **PySide6 6.11.2** migriert; finale CI-/Restore-Abnahme läuft noch.
-- 🟡 Dashboardstruktur an den Provoware-Referenzentwurf angeglichen: kompakter Header, Schnellkacheln, einklappbare Navigation, „Zuletzt bearbeitet“, 2×2-Karten, Statusleiste.
-- 🟡 Dark-Orange-Industrial-Farbwelt zentral umgesetzt; Proportionen werden automatisiert gegen Referenzmerkmale geprüft.
-- 🟡 Recovery aus der Hauptfläche entfernt und genau einmal unter `Werkzeug → Recovery` geführt.
-- 🟡 Songeditor, Songbibliothek, Recovery und Startanzeige auf PySide6 umgestellt; bestehende Datenlogik bleibt unverändert.
-- 🟡 Qt-Offscreen-GUI-Regressionen und zusätzlicher Referenzlayout-Test vorhanden; finale Grünstellung erst nach vollständigem Restore-Gate.
+- 🟢 gesamte produktive GUI von Tkinter auf **PySide6 6.11.2** migriert und durch vollständige CI-/Restore-Abnahme belegt.
+- 🟢 Dashboardstruktur an den Provoware-Referenzentwurf angeglichen: kompakter Header, Schnellkacheln, einklappbare Navigation, „Zuletzt bearbeitet“, 2×2-Karten, Statusleiste.
+- 🟢 Dark-Orange-Industrial-Farbwelt zentral umgesetzt; Kartenstruktur und Proportionen werden automatisiert gegen Referenzmerkmale geprüft.
+- 🟢 Recovery aus der Hauptfläche entfernt und genau einmal unter `Werkzeug → Recovery` geführt.
+- 🟢 Songeditor, Songbibliothek, Recovery und Startanzeige auf PySide6 umgestellt; bestehende Datenlogik bleibt unverändert.
+- 🟢 39 Logik-/Sicherheitstests, 20 PySide6-GUI-/Referenztests und vollständiges Restore-Gate erfolgreich.
 
 ## 2 nächste Schritte
 
