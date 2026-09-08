@@ -1,4 +1,4 @@
-"""Songtexteditor mit strukturierbaren Bereichen, Vorschau und Autosave."""
+"""Songtexteditor mit Bereichen, Vorschau, Metadaten, Autosave und Export."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 from tkinter import messagebox, ttk
 from typing import Callable
 
-from app.song_document import SECTION_TYPES, SongDocument, SongSection, save_song
+from app.song_document import SECTION_TYPES, SongDocument, SongSection, export_song, save_song
 from app.ui_standards import COLORS, SPACING, configure_global_style
 
 AUTOSAVE_MS = 5 * 60 * 1000
@@ -15,25 +15,36 @@ AUTOSAVE_MS = 5 * 60 * 1000
 
 class SongEditor:
     def __init__(self, parent: tk.Misc, project_root: Path, zoom_percent: int = 100,
-                 on_closed: Callable[["SongEditor"], None] | None = None) -> None:
+                 on_closed: Callable[["SongEditor"], None] | None = None,
+                 document: SongDocument | None = None,
+                 on_saved: Callable[[Path], None] | None = None) -> None:
         self.project_root = project_root
-        self.document = SongDocument(title="Unbenannter Song", sections=[SongSection("Strophe")])
+        self.document = document or SongDocument(title="Unbenannter Song", sections=[SongSection("Strophe")])
+        if not self.document.sections:
+            self.document.sections.append(SongSection("Strophe"))
         self.on_closed = on_closed
+        self.on_saved = on_saved
         self._closed = False
         self._autosave_job: str | None = None
         self._active_index: int | None = None
         self._loading_section = False
         self.window = tk.Toplevel(parent)
-        self.window.title("Songtexteditor")
-        self.window.geometry("1120x720")
-        self.window.minsize(900, 580)
+        self.window.title(f"Songtexteditor – {self.document.title or 'Unbenannt'}")
+        self.window.geometry("1180x780")
+        self.window.minsize(940, 620)
         configure_global_style(self.window, zoom_percent)
         self.title_var = tk.StringVar(value=self.document.title)
-        self.genre_var = tk.StringVar()
+        self.genre_var = tk.StringVar(value=self.document.genre)
+        self.mood_var = tk.StringVar(value=self.document.mood)
+        self.style_var = tk.StringVar(value=self.document.style)
+        self.voice_var = tk.StringVar(value=self.document.voice)
+        self.special_var = tk.StringVar(value=self.document.special)
+        self.tags_var = tk.StringVar(value=", ".join(self.document.tags))
         self.section_type_var = tk.StringVar(value="Strophe")
         self.status_var = tk.StringVar(value="Bereit · Autosave alle 5 Minuten")
         self._build()
         self._load_section(0)
+        self.other_text.insert("1.0", self.document.other)
         self._update_preview()
         self.window.protocol("WM_DELETE_WINDOW", self.close)
         self.window.bind("<Control-s>", lambda _event: self.save())
@@ -48,20 +59,36 @@ class SongEditor:
         header.pack(fill="x", pady=(0, SPACING["m"]))
         ttk.Label(header, text="Songtexteditor", style="Title.TLabel").pack(side="left")
         ttk.Button(header, text="Speichern", command=self.save).pack(side="right")
+        export_button = ttk.Menubutton(header, text="Export")
+        export_menu = tk.Menu(export_button, tearoff=False)
+        export_menu.add_command(label="TXT mit Metadaten", command=lambda: self.export("txt"))
+        export_menu.add_command(label="Markdown", command=lambda: self.export("md"))
+        export_menu.add_command(label="JSON", command=lambda: self.export("json"))
+        export_menu.add_separator()
+        export_menu.add_command(label="Nur Songtext (TXT)", command=lambda: self.export("txt", lyrics_only=True))
+        export_button.configure(menu=export_menu)
+        export_button.pack(side="right", padx=SPACING["s"])
 
-        meta = ttk.Frame(outer)
+        meta = ttk.LabelFrame(outer, text="Song-Metadaten", padding=SPACING["s"])
         meta.pack(fill="x", pady=(0, SPACING["m"]))
-        ttk.Label(meta, text="Titel:").grid(row=0, column=0, sticky="w")
-        self.title_entry = ttk.Entry(meta, textvariable=self.title_var, width=42)
-        self.title_entry.grid(row=0, column=1, sticky="ew", padx=(SPACING["s"], SPACING["l"]))
-        ttk.Label(meta, text="Genre (optional):").grid(row=0, column=2, sticky="w")
-        self.genre_entry = ttk.Entry(meta, textvariable=self.genre_var, width=28)
-        self.genre_entry.grid(row=0, column=3, sticky="ew", padx=(SPACING["s"], 0))
-        meta.columnconfigure(1, weight=2)
-        meta.columnconfigure(3, weight=1)
-        for widget in (self.title_entry, self.genre_entry):
-            widget.bind("<FocusOut>", lambda _event: self.save())
-            widget.bind("<KeyRelease>", lambda _event: self._update_preview())
+        fields = (
+            ("Titel", self.title_var), ("Genre", self.genre_var), ("Stimmung", self.mood_var),
+            ("Stil", self.style_var), ("Stimme", self.voice_var), ("Besonderheiten", self.special_var),
+            ("Tags (Komma getrennt)", self.tags_var),
+        )
+        self.meta_entries: list[ttk.Entry] = []
+        for index, (label, variable) in enumerate(fields):
+            row, col = divmod(index, 3)
+            ttk.Label(meta, text=f"{label}:").grid(row=row * 2, column=col, sticky="w", padx=(0, SPACING["s"]))
+            entry = ttk.Entry(meta, textvariable=variable)
+            entry.grid(row=row * 2 + 1, column=col, sticky="ew", padx=(0, SPACING["m"]), pady=(0, SPACING["s"]))
+            entry.bind("<FocusOut>", lambda _event: self.save())
+            entry.bind("<KeyRelease>", lambda _event: self._update_preview())
+            self.meta_entries.append(entry)
+        for col in range(3):
+            meta.columnconfigure(col, weight=1)
+        self.title_entry = self.meta_entries[0]
+        self.genre_entry = self.meta_entries[1]
 
         content = ttk.Panedwindow(outer, orient="horizontal")
         content.pack(fill="both", expand=True)
@@ -96,7 +123,7 @@ class SongEditor:
                                insertbackground=COLORS["text"], relief="flat")
         self.preview.pack(fill="both", expand=True, pady=(SPACING["s"], SPACING["m"]))
         ttk.Label(right, text="Sonstiges (optional):").pack(anchor="w")
-        self.other_text = tk.Text(right, height=6, wrap="word", padx=10, pady=10, bg=COLORS["surface"], fg=COLORS["text"],
+        self.other_text = tk.Text(right, height=5, wrap="word", padx=10, pady=10, bg=COLORS["surface"], fg=COLORS["text"],
                                   insertbackground=COLORS["text"], relief="flat")
         self.other_text.pack(fill="x", pady=(SPACING["s"], 0))
         self.other_text.bind("<FocusOut>", lambda _event: self.save())
@@ -176,7 +203,13 @@ class SongEditor:
         self._store_current_section()
         self.document.title = self.title_var.get().strip() or "Unbenannter Song"
         self.document.genre = self.genre_var.get().strip()
+        self.document.mood = self.mood_var.get().strip()
+        self.document.style = self.style_var.get().strip()
+        self.document.voice = self.voice_var.get().strip()
+        self.document.special = self.special_var.get().strip()
+        self.document.tags = [part.strip() for part in self.tags_var.get().split(",") if part.strip()]
         self.document.other = self.other_text.get("1.0", "end-1c")
+        self.window.title(f"Songtexteditor – {self.document.title}")
 
     def _update_preview(self) -> None:
         self._sync_document()
@@ -192,10 +225,23 @@ class SongEditor:
             self._sync_document()
             target = save_song(self.project_root, self.document)
             self.status_var.set(f"🟢 {reason}: {target.name}")
+            if self.on_saved is not None:
+                self.on_saved(target)
             return target
         except Exception as error:
             self.status_var.set(f"🔴 Speichern fehlgeschlagen: {type(error).__name__}")
             messagebox.showerror("Songtext nicht gespeichert", str(error), parent=self.window)
+            return None
+
+    def export(self, export_format: str, *, lyrics_only: bool = False) -> Path | None:
+        try:
+            self._sync_document()
+            target = export_song(self.project_root, self.document, export_format, lyrics_only=lyrics_only)
+            self.status_var.set(f"🟢 Export erstellt: {target.name}")
+            return target
+        except Exception as error:
+            self.status_var.set(f"🔴 Export fehlgeschlagen: {type(error).__name__}")
+            messagebox.showerror("Export fehlgeschlagen", str(error), parent=self.window)
             return None
 
     def _schedule_autosave(self) -> None:

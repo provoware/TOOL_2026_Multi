@@ -1,15 +1,15 @@
 {
-  "schema_version": 6,
+  "schema_version": 7,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 7,
-    "goal": "Dashboard-Schnellspeicher, Songtexteditor, Autosave und sicheren Logout als ersten fachlichen Workflow ergänzen",
+    "number": 8,
+    "goal": "Songbibliothek, vorhandene Songs bearbeiten, letzte Songs, Metadaten, Versionsstände und Exporte in den bestehenden Songworkflow integrieren",
     "completed": 5,
     "open_next": 2
   },
@@ -25,6 +25,8 @@
     "source": "app/",
     "base_data": "daten/",
     "song_data": "daten/songtexte/",
+    "song_versions": "daten/songtexte/.versionen/",
+    "song_exports": "daten/songtexte/export/",
     "developer_quick_info": "Entwicklerinformation.txt",
     "texts": "texte/",
     "developer_docs": "docs/",
@@ -38,18 +40,30 @@
     "runtime_command": "bash scripts/pruefen.sh --runtime",
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui",
+    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py"
   },
   "song_editor": {
     "storage": "daten/songtexte/<Titel>.txt",
+    "working_format": "parsebare UTF-8-Textdatei",
+    "backward_compatible_from": "0.7.0",
     "autosave_seconds": 300,
     "save_on_focus_out": true,
     "save_on_close": true,
-    "fields": ["title", "genre_optional", "sections", "other_optional"],
+    "fields": ["title", "genre_optional", "mood_optional", "style_optional", "voice_optional", "special_optional", "tags_optional", "sections", "other_optional"],
     "section_types": ["Intro", "Strophe", "Pre-Chorus", "Refrain", "Hook", "Bridge", "Outro", "Spoken", "Instrumental"],
     "preview": true,
-    "atomic_write": true
+    "atomic_write": true,
+    "version_rule": "Vor einem geänderten Überschreiben wird der vorherige Stand als unveränderter Schnappschuss gesichert; identische Saves erzeugen keine Version.",
+    "exports": ["txt", "markdown", "json", "lyrics_only_txt"]
+  },
+  "song_library": {
+    "module": "app/song_library.py",
+    "open_existing": true,
+    "recent_dashboard_limit": 5,
+    "sort": "modified_desc",
+    "version_preview": "read_only",
+    "working_files_glob": "daten/songtexte/*.txt"
   },
   "dashboard_quick_info": {
     "target": "Entwicklerinformation.txt",
@@ -106,10 +120,11 @@
     {"path":"app/log_maintenance.py","release":true,"purpose":"Logrotation und Quarantäne beschädigter JSONL-Zeilen"},
     {"path":"app/recovery_ui.py","release":true,"purpose":"Filter-, Detail-, Wiederholungs- und Zoomlogik der Recovery-Oberfläche"},
     {"path":"app/quick_note.py","release":true,"purpose":"Append-only Entwicklerinformation im Dashboardheader"},
-    {"path":"app/song_document.py","release":true,"purpose":"Songmodell, Vorschautext und atomare Titelspeicherung"},
-    {"path":"app/song_editor.py","release":true,"purpose":"Songtexteditor mit Bereichen, Vorschau und Autosave"},
+    {"path":"app/song_document.py","release":true,"purpose":"Songmodell, Rückwärtslesen, Versionierung und Exporte"},
+    {"path":"app/song_editor.py","release":true,"purpose":"Songtexteditor mit Metadaten, Bereichen, Vorschau, Autosave und Export"},
+    {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek und schreibgeschützte Versionsvorschau"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
-    {"path":"app/ui.py","release":true,"purpose":"Dashboard, Recovery-Zentrale, Schnelleingabe und Logout"},
+    {"path":"app/ui.py","release":true,"purpose":"Dashboard, letzte Songs, Recovery-Zentrale, Schnelleingabe und Logout"},
     {"path":"app/ui_standards.py","release":true,"purpose":"Globale Oberflächen- und Zoomstandards"},
     {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit-Vorprüfung"},
     {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Start-Checkpoints"},
@@ -134,10 +149,13 @@
     {"path":"tests/test_recovery_ui_gui.py","release":false,"purpose":"Tk-Tastatur-, Fokus-, Detail- und Zoomtest"},
     {"path":"tests/test_song_logic.py","release":false,"purpose":"Schnelleingabe-, Songrender- und Speicherpfadtests"},
     {"path":"tests/test_song_gui.py","release":false,"purpose":"Songeditor-, Autosave-, Fokus- und Dashboardheadertests"},
+    {"path":"tests/test_song_library.py","release":false,"purpose":"Bibliotheks-, Metadaten-, Versions- und Exporttests"},
+    {"path":"tests/test_song_library_gui.py","release":false,"purpose":"Songbibliothek-, Kachel- und Metadaten-GUI-Tests"},
     {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
     {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
     {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"},
     {"path":"docs/ITERATION6_RECOVERY_UI.md","release":false,"purpose":"Recovery-UI, Bedien- und Prüfkonzept"},
-    {"path":"docs/ITERATION7_SONG_WORKFLOW.md","release":false,"purpose":"Dashboard-Schnellspeicher, Songeditor-, Autosave- und Logout-Konzept"}
+    {"path":"docs/ITERATION7_SONG_WORKFLOW.md","release":false,"purpose":"Dashboard-Schnellspeicher, Songeditor-, Autosave- und Logout-Konzept"},
+    {"path":"docs/ITERATION8_SONG_LIBRARY.md","release":false,"purpose":"Songbibliothek, Metadaten, Versionen und Exportkonzept"}
   ]
 }

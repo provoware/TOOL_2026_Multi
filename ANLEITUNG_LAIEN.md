@@ -5,7 +5,7 @@
 bash schnellstart.sh
 ```
 
-Die sechs Startschritte, die unsichtbare Startprüfung und die Prozesswache bleiben aktiv.
+Die Startprüfung, Prozesswache und Recovery-Schutzwege bleiben aktiv.
 
 ## Schnellinfo im Dashboardheader
 Oben im Dashboard gibt es das Feld **Entwickler-Schnellinfo**.
@@ -16,58 +16,99 @@ Oben im Dashboard gibt es das Feld **Entwickler-Schnellinfo**.
 
 Vorhandene Einträge werden nicht überschrieben.
 
+## Zuletzt bearbeitete Songs
+Unter dem Dashboardheader erscheinen bis zu fünf zuletzt bearbeitete Songs als Schnellkacheln. Ein Klick öffnet den vorhandenen Song direkt im Songtexteditor.
+
+Mit **Alle Songs** oder **Songbibliothek** öffnen Sie die vollständige Songliste.
+
+## Songbibliothek
+Die Bibliothek zeigt:
+- Titel,
+- Genre,
+- letzte Bearbeitungszeit,
+- Anzahl älterer Versionsstände.
+
+Ein Song lässt sich per Doppelklick, `Enter` oder **Song öffnen** bearbeiten.
+
+Mit **Versionsstände ansehen** öffnen Sie ältere Stände nur zur Ansicht. Der aktuelle Song wird dadurch nicht verändert.
+
 ## Songtexteditor
-Klicken Sie oben auf **Songtexteditor**.
-
 Der Editor enthält:
-- **Titel** – unter diesem Namen wird der Song gespeichert,
+- **Titel** – bestimmt den Namen der Arbeitsdatei,
 - **Genre** – optional,
-- **Bereich** – zum Beispiel Intro, Strophe, Refrain oder Bridge,
-- **Bereich hinzufügen** – fügt einen weiteren Songabschnitt hinzu,
-- **Bereich entfernen** – entfernt den aktuell gewählten Abschnitt,
-- **Vorschau** – zeigt den gesamten Song fortlaufend,
-- **Sonstiges** – optional für zusätzliche Hinweise.
+- **Stimmung** – optional,
+- **Stil** – optional,
+- **Stimme** – optional,
+- **Besonderheiten** – optional,
+- **Tags** – optional, durch Kommas getrennt,
+- Songbereiche wie Intro, Strophe, Refrain oder Bridge,
+- **Vorschau** des vollständigen Songs,
+- **Sonstiges** für zusätzliche Hinweise.
 
-Die Songdatei liegt unter:
+Die Arbeitsdatei liegt weiterhin unter:
 
 ```text
 daten/songtexte/<Titel>.txt
 ```
 
-Wenn Sie den Titel ändern, entsteht beim nächsten Speichern ein Stand unter dem neuen Titel. Der alte Songstand wird nicht automatisch gelöscht.
+Alte Songdateien aus Version 0.7.0 können weiterhin geöffnet werden.
 
-## Automatisches Speichern
-Der Songtext wird automatisch gespeichert:
+## Automatisches Speichern und Versionsstände
+Gespeichert wird:
 - alle 5 Minuten,
-- wenn Sie Titel, Genre, Songtext oder Sonstiges verlassen,
-- wenn Sie den Songtexteditor schließen,
-- vor einem Logout.
+- beim Verlassen der Eingabefelder,
+- mit `Ctrl+S`,
+- beim Schließen des Editors,
+- vor Logout.
 
-Mit `Ctrl+S` können Sie zusätzlich jederzeit selbst speichern.
+Wenn sich der Inhalt seit dem letzten Speichern geändert hat, wird der bisherige Stand vorher automatisch gesichert:
+
+```text
+daten/songtexte/.versionen/<Titel>/<Zeitstempel>.txt
+```
+
+Wenn sich nichts geändert hat, entsteht kein unnötiger Versionsstand.
+
+## Export
+Über **Export** im Songeditor stehen bereit:
+- **TXT mit Metadaten**,
+- **Markdown**,
+- **JSON**,
+- **Nur Songtext (TXT)** ohne Titel-, Genre- oder andere Metadaten.
+
+Exporte landen unter:
+
+```text
+daten/songtexte/export/
+```
+
+Die Arbeitsdatei wird beim Export nicht verändert.
 
 ## Logout
-Die Schaltfläche **Logout** beendet die aktuelle Sitzung. Vorher werden alle offenen Songtexteditoren gespeichert. Wenn ein Songtext nicht gespeichert werden kann, wird der Logout gestoppt, damit kein ungesicherter Text verloren geht.
+**Logout** speichert zuerst alle offenen Songeditoren. Wenn mindestens ein Song nicht gespeichert werden kann, bleibt das Programm geöffnet.
 
 ## Debug- und Recovery-Zentrale
 Ereignisse können weiterhin nach Schweregrad und Bereich gefiltert werden. Ereignisdetails lassen sich per Doppelklick, `Enter` oder Schaltfläche öffnen. Technische Angaben bleiben zunächst eingeklappt.
 
 ## Tastatur
 - `Tab` – zum nächsten bedienbaren Element,
-- `Enter` – Schnellinfo speichern oder markiertes Ereignis öffnen,
+- `Enter` – Schnellinfo speichern, Song öffnen oder Ereignis öffnen,
 - `F5` – Recovery-Anzeige aktualisieren,
-- `Ctrl+S` – Songtext manuell speichern,
+- `Ctrl+S` – Song manuell speichern,
 - `Ctrl++` / `Ctrl+-` – Anzeige größer/kleiner,
 - `Ctrl+0` – zurück auf 100 Prozent,
-- `Escape` – Detail- oder Songeditorfenster schließen.
+- `Escape` – Detail-, Bibliothek- oder Songeditorfenster schließen.
 
 ## Vollprüfung
 ```bash
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft Recovery-Funktionen, Songtextlogik und echte Tk-Oberflächenwege. Ohne virtuelle oder echte grafische Sitzung wird der GUI-Teil nicht als bestanden ausgegeben.
+Die Vollprüfung prüft Recovery-Funktionen, Songbibliothek, Metadaten, Versionen, Exporte und echte Tk-Oberflächenwege. Ohne virtuelle oder echte grafische Sitzung wird der GUI-Teil nicht als bestanden ausgegeben.
 
 ## Bestehende Schutzfunktionen
+- atomare Songdatei-Speicherung,
+- automatische Versionssicherung vor geänderten Überschreibungen,
 - Logrotation und Quarantäne beschädigter Zeilen,
 - Datenschutzbereinigung und Diagnosepaket,
 - Headless-Start,
