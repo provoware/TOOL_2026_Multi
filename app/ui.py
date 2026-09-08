@@ -1,11 +1,16 @@
-"""Referenznahes Multimodul-Dashboard mit ausgelagerter Recovery-Zentrale."""
+"""PySide6-Multimodul-Dashboard nach dem Provoware-Referenzentwurf."""
 
 from __future__ import annotations
 
-import tkinter as tk
 from pathlib import Path
-from tkinter import messagebox, ttk
 from typing import Callable
+
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
+from PySide6.QtWidgets import (
+    QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QMessageBox,
+    QPushButton, QSizePolicy, QVBoxLayout, QWidget,
+)
 
 from app.event_log import EventLogger
 from app.quick_note import append_developer_info
@@ -15,306 +20,444 @@ from app.song_document import list_songs, load_song
 from app.song_editor import SongEditor
 from app.song_library import SongLibrary
 from app.texts import TextRegistry
-from app.ui_standards import COLORS, SPACING, configure_global_style
+from app.ui_standards import COLORS, SPACING, apply_global_style
 
 
-class Dashboard:
-    """Kompaktes Dashboard nach dem Provoware-Referenzentwurf."""
+class Dashboard(QWidget):
+    """Referenznahes Hauptfenster mit linker Navigation, Kachelleiste und 2×2-Arbeitsfläche."""
 
-    def __init__(self, root: tk.Tk, texts: TextRegistry, logger: EventLogger,
+    closed_cleanly = Signal()
+
+    def __init__(self, texts: TextRegistry, logger: EventLogger,
                  project_root: Path | None = None) -> None:
-        self.root, self.texts, self.logger = root, texts, logger
+        super().__init__()
+        self.texts, self.logger = texts, logger
         self.project_root = project_root or Path.cwd()
         self.zoom_percent = 100
         self._song_editors: list[SongEditor] = []
         self._song_library: SongLibrary | None = None
         self._recovery_center: RecoveryCenter | None = None
-        self.quick_info_var = tk.StringVar()
-        self.quick_status_var = tk.StringVar(value="Bereit.")
-        self.search_var = tk.StringVar()
         self.nav_collapsed = False
+        self._nav_entries: list[QWidget] = []
+        self._closing_after_save = False
 
-        root.title("Provoware-Datenbank-Dashboard 2026")
-        root.geometry("1280x790")
-        root.minsize(1020, 650)
-        configure_global_style(root, self.zoom_percent)
-        self._build_content()
-        self._bind_keyboard()
-        root.protocol("WM_DELETE_WINDOW", self.logout)
+        self.setObjectName("dashboardShell")
+        self.setWindowTitle("Provoware-Datenbank-Dashboard 2026")
+        self.resize(1280, 790)
+        self.setMinimumSize(1020, 650)
+        self._build()
+        self._bind_shortcuts()
+        apply_global_style(self, self.zoom_percent)
         self.refresh()
-        self.search_entry.focus_set()
+        self.search_entry.setFocus()
 
-    def _build_content(self) -> None:
-        shell = ttk.Frame(self.root)
-        shell.pack(fill="both", expand=True)
+    def _build(self) -> None:
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(SPACING["s"], SPACING["s"], SPACING["s"], SPACING["s"])
+        outer.setSpacing(SPACING["s"])
+        outer.addWidget(self._build_header())
+        outer.addLayout(self._build_tile_strip())
 
-        self._build_header(shell)
-        self._build_tiles(shell)
+        body = QHBoxLayout()
+        body.setSpacing(SPACING["s"])
+        self.sidebar = self._build_sidebar()
+        body.addWidget(self.sidebar)
 
-        body = ttk.Frame(shell)
-        body.pack(fill="both", expand=True, padx=SPACING["s"], pady=(0, SPACING["s"]))
-        self.sidebar = ttk.Frame(body, style="Sidebar.TFrame", width=210)
-        self.sidebar.pack(side="left", fill="y", padx=(0, SPACING["s"]))
-        self.sidebar.pack_propagate(False)
-        self._build_sidebar(self.sidebar)
+        main = QVBoxLayout()
+        main.setSpacing(SPACING["s"])
+        main.addWidget(self._build_quick_info())
+        main.addWidget(self._build_recent_strip())
+        main.addLayout(self._build_dashboard_grid(), 1)
+        body.addLayout(main, 1)
+        outer.addLayout(body, 1)
+        outer.addWidget(self._build_statusbar())
 
-        main = ttk.Frame(body)
-        main.pack(side="left", fill="both", expand=True)
-        self._build_quick_info(main)
-        self._build_dashboard_grid(main)
+    def _build_header(self) -> QFrame:
+        header = QFrame()
+        header.setObjectName("header")
+        layout = QHBoxLayout(header)
+        layout.setContentsMargins(12, 7, 10, 7)
+        layout.setSpacing(8)
 
-        self._build_statusbar(shell)
+        logo = QLabel("▦")
+        logo.setObjectName("accent")
+        logo.setStyleSheet(f"font-size: 23pt; color: {COLORS['accent']}; font-weight: 700;")
+        layout.addWidget(logo)
 
-    def _build_header(self, parent: ttk.Frame) -> None:
-        header = ttk.Frame(parent, style="Toolbar.TFrame", padding=(SPACING["m"], SPACING["s"]))
-        header.pack(fill="x", padx=SPACING["s"], pady=SPACING["s"])
+        title_box = QVBoxLayout()
+        title_box.setSpacing(0)
+        title = QLabel("Provoware-Datenbank-Dashboard 2026")
+        title.setObjectName("appTitle")
+        subtitle = QLabel("Linux · PySide6 · Erweiterbares Multimodul-Dashboard")
+        subtitle.setObjectName("subtitle")
+        title_box.addWidget(title)
+        title_box.addWidget(subtitle)
+        layout.addLayout(title_box)
+        layout.addStretch(1)
 
-        logo = tk.Label(header, text="▦", bg=COLORS["surface_soft"], fg=COLORS["accent"],
-                        font=("TkDefaultFont", 22, "bold"), padx=8)
-        logo.pack(side="left")
-        title_box = ttk.Frame(header, style="Toolbar.TFrame")
-        title_box.pack(side="left", fill="x", expand=True)
-        tk.Label(title_box, text="Provoware-Datenbank-Dashboard 2026",
-                 bg=COLORS["surface_soft"], fg=COLORS["text"],
-                 font=("TkDefaultFont", 14, "bold")).pack(anchor="w")
-        tk.Label(title_box, text="Linux · Python/Tkinter · Erweiterbares Multimodul-Dashboard",
-                 bg=COLORS["surface_soft"], fg=COLORS["muted"],
-                 font=("TkDefaultFont", 8)).pack(anchor="w")
+        search_icon = QLabel("⌕")
+        search_icon.setObjectName("accent")
+        layout.addWidget(search_icon)
+        self.search_entry = QLineEdit()
+        self.search_entry.setPlaceholderText("Suchen …")
+        self.search_entry.setFixedWidth(245)
+        self.search_entry.returnPressed.connect(self._header_search)
+        layout.addWidget(self.search_entry)
+        logout = QPushButton("Logout")
+        logout.clicked.connect(self.logout)
+        layout.addWidget(logout)
+        return header
 
-        search_box = ttk.Frame(header, style="Toolbar.TFrame")
-        search_box.pack(side="right")
-        ttk.Label(search_box, text="⌕", style="Accent.TLabel").pack(side="left", padx=(0, SPACING["xs"]))
-        self.search_entry = ttk.Entry(search_box, textvariable=self.search_var, width=24, takefocus=True)
-        self.search_entry.pack(side="left")
-        self.search_entry.bind("<Return>", lambda _event: self.open_song_library())
-        ttk.Button(search_box, text="Recovery", command=self.open_recovery, takefocus=True).pack(side="left", padx=SPACING["s"])
-        ttk.Button(search_box, text="Logout", command=self.logout, takefocus=True).pack(side="left")
-
-    def _build_tiles(self, parent: ttk.Frame) -> None:
-        strip = ttk.Frame(parent)
-        strip.pack(fill="x", padx=SPACING["s"], pady=(0, SPACING["s"]))
+    def _build_tile_strip(self) -> QHBoxLayout:
+        strip = QHBoxLayout()
+        strip.setSpacing(SPACING["xs"])
         tiles = (
-            ("♫\nSongtexte", self.open_song_library, True),
-            ("▣\nHörspiele", lambda: self._planned("Hörspiele"), False),
-            ("▤\nBlogartikel", lambda: self._planned("Blogartikel"), False),
-            ("▥\nGenres", lambda: self._planned("Genres-Datenbank"), False),
-            ("?\nPrompts", lambda: self._planned("Prompts"), False),
-            ("⌕\nSuche", lambda: self._planned("Dateisuche"), False),
-            ("≡\nDuplikate", lambda: self._planned("Duplikatprüfer"), False),
+            ("♫\nSongtexte", self.open_song_library),
+            ("▣\nHörspiele", lambda: self._planned("Hörspiele")),
+            ("▤\nBlogartikel", lambda: self._planned("Blogartikel")),
+            ("▥\nGenres", lambda: self._planned("Genres-Datenbank")),
+            ("?\nPrompts", lambda: self._planned("Prompts")),
+            ("⌕\nSuche", lambda: self._planned("Dateisuche")),
+            ("≡\nDuplikate", lambda: self._planned("Duplikatprüfer")),
         )
-        for text, command, enabled in tiles:
-            button = ttk.Button(strip, text=text, command=command, style="Tile.TButton", takefocus=True)
-            button.pack(side="left", fill="x", expand=True, padx=(0, SPACING["xs"]))
-            if not enabled:
-                button.configure(state="normal")
+        for text, command in tiles:
+            button = QPushButton(text)
+            button.setObjectName("tileButton")
+            button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+            button.clicked.connect(command)
+            strip.addWidget(button)
+        return strip
 
-    def _build_sidebar(self, parent: ttk.Frame) -> None:
-        top = ttk.Frame(parent, style="Sidebar.TFrame")
-        top.pack(fill="x", padx=SPACING["s"], pady=(SPACING["s"], SPACING["m"]))
-        ttk.Button(top, text="☰", command=self.toggle_sidebar, style="Nav.TButton", takefocus=True).pack(side="left")
-        ttk.Label(top, text="Navigation", style="Sidebar.TLabel").pack(side="left", padx=SPACING["s"])
+    def _build_sidebar(self) -> QFrame:
+        sidebar = QFrame()
+        sidebar.setObjectName("sidebar")
+        sidebar.setFixedWidth(214)
+        layout = QVBoxLayout(sidebar)
+        layout.setContentsMargins(7, 7, 7, 7)
+        layout.setSpacing(1)
 
-        self.nav_labels: list[ttk.Widget] = []
-        self._nav_button(parent, "▦  Übersicht", None, active=True)
-        self._nav_button(parent, "◈  Modulauswahl", lambda: self._planned("Modulauswahl"))
-        self._nav_heading(parent, "Workflow Schreiben")
-        self._nav_button(parent, "  ♫  Songtexte", self.open_song_library)
-        self._nav_button(parent, "  ▣  Hörspiele", lambda: self._planned("Hörspiele"))
-        self._nav_button(parent, "  ▤  Blogartikel", lambda: self._planned("Blogartikel"))
-        self._nav_heading(parent, "DB-Eingaben")
+        top = QHBoxLayout()
+        menu_button = QPushButton("☰")
+        menu_button.setObjectName("navButton")
+        menu_button.setFixedWidth(42)
+        menu_button.clicked.connect(self.toggle_sidebar)
+        top.addWidget(menu_button)
+        nav_title = QLabel("Navigation")
+        nav_title.setObjectName("muted")
+        top.addWidget(nav_title)
+        top.addStretch(1)
+        layout.addLayout(top)
+
+        self._add_nav(layout, "▦  Übersicht", lambda: None, active=True)
+        self._add_nav(layout, "◈  Modulauswahl", lambda: self._planned("Modulauswahl"))
+        self._add_heading(layout, "Workflow Schreiben")
+        self._add_nav(layout, "  ♫  Songtexte", self.open_song_library)
+        self._add_nav(layout, "  ▣  Hörspiele", lambda: self._planned("Hörspiele"))
+        self._add_nav(layout, "  ▤  Blogartikel", lambda: self._planned("Blogartikel"))
+        self._add_heading(layout, "DB-Eingaben")
         for label in ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten", "GitHub-Repositories", "Prompts"):
-            self._nav_button(parent, f"  ·  {label}", lambda item=label: self._planned(item))
-        self._nav_heading(parent, "Funktionen")
-        self._nav_button(parent, "  ◉  Genreszufallsgenerator", lambda: self._planned("Genreszufallsgenerator"))
-        self._nav_button(parent, "  ✎  Reimfinder", lambda: self._planned("Reimfinder"))
-        self._nav_heading(parent, "Systemanwendungen")
-        self._nav_button(parent, "  ⌕  Datenbank-Suche", lambda: self._planned("Datenbank-Suche"))
-        self._nav_button(parent, "  ▤  Inhaltssuche Textdateien", lambda: self._planned("Inhaltssuche"))
-        self._nav_button(parent, "  ≡  Trefferliste", lambda: self._planned("Trefferliste"))
-        self._nav_button(parent, "  ◫  Duplikatprüfer", lambda: self._planned("Duplikatprüfer"))
-        self._nav_heading(parent, "Werkzeug")
-        self.recovery_nav_button = self._nav_button(parent, "  ⚕  Recovery", self.open_recovery)
+            self._add_nav(layout, f"  ·  {label}", lambda _checked=False, item=label: self._planned(item))
+        self._add_heading(layout, "Funktionen")
+        self._add_nav(layout, "  ◉  Genreszufallsgenerator", lambda: self._planned("Genreszufallsgenerator"))
+        self._add_nav(layout, "  ✎  Reimfinder", lambda: self._planned("Reimfinder"))
+        self._add_heading(layout, "Systemanwendungen")
+        self._add_nav(layout, "  ⌕  Datenbank-Suche", lambda: self._planned("Datenbank-Suche"))
+        self._add_nav(layout, "  ▤  Inhaltssuche Textdateien", lambda: self._planned("Inhaltssuche Textdateien"))
+        self._add_nav(layout, "  ≡  Trefferliste", lambda: self._planned("Trefferliste"))
+        self._add_nav(layout, "  ◫  Duplikatprüfer", lambda: self._planned("Duplikatprüfer"))
+        self._add_heading(layout, "Werkzeug")
+        self.recovery_nav_button = self._add_nav(layout, "  ⚕  Recovery", self.open_recovery)
+        layout.addStretch(1)
+        return sidebar
 
-    def _nav_heading(self, parent: ttk.Frame, text: str) -> None:
-        label = ttk.Label(parent, text=f"⌄  {text}", style="Sidebar.TLabel")
-        label.pack(fill="x", padx=SPACING["m"], pady=(SPACING["s"], SPACING["xs"]))
-        self.nav_labels.append(label)
+    def _add_heading(self, layout: QVBoxLayout, text: str) -> None:
+        label = QLabel(f"⌄  {text}")
+        label.setObjectName("muted")
+        label.setContentsMargins(8, 6, 2, 2)
+        layout.addWidget(label)
+        self._nav_entries.append(label)
 
-    def _nav_button(self, parent: ttk.Frame, text: str, command: Callable[[], None] | None,
-                    active: bool = False) -> ttk.Button:
-        button = ttk.Button(parent, text=text, command=command or (lambda: None),
-                            style="ActiveNav.TButton" if active else "Nav.TButton", takefocus=True)
-        button.pack(fill="x", padx=SPACING["s"], pady=1)
-        self.nav_labels.append(button)
+    def _add_nav(self, layout: QVBoxLayout, text: str, command: Callable[[], None],
+                 active: bool = False) -> QPushButton:
+        button = QPushButton(text)
+        button.setObjectName("activeNav" if active else "navButton")
+        button.clicked.connect(command)
+        layout.addWidget(button)
+        self._nav_entries.append(button)
         return button
 
     def toggle_sidebar(self) -> None:
         self.nav_collapsed = not self.nav_collapsed
-        self.sidebar.configure(width=58 if self.nav_collapsed else 210)
-        for widget in self.nav_labels:
-            if self.nav_collapsed:
-                widget.pack_forget()
-            else:
-                widget.pack(fill="x", padx=SPACING["s"], pady=1)
+        self.sidebar.setFixedWidth(56 if self.nav_collapsed else 214)
+        for widget in self._nav_entries:
+            widget.setVisible(not self.nav_collapsed)
 
-    def _build_quick_info(self, parent: ttk.Frame) -> None:
-        quick = ttk.Frame(parent, style="Toolbar.TFrame", padding=(SPACING["m"], SPACING["s"]))
-        quick.pack(fill="x", pady=(0, SPACING["s"]))
-        ttk.Label(quick, text="Entwicklerinfo:", style="Section.TLabel").pack(side="left")
-        self.quick_entry = ttk.Entry(quick, textvariable=self.quick_info_var, takefocus=True)
-        self.quick_entry.pack(side="left", fill="x", expand=True, padx=SPACING["s"])
-        self.quick_entry.bind("<Return>", self._quick_save_enter)
-        ttk.Button(quick, text="Speichern", command=self.save_quick_info, takefocus=True).pack(side="left")
+    def _build_quick_info(self) -> QFrame:
+        frame = QFrame()
+        frame.setObjectName("toolbar")
+        layout = QHBoxLayout(frame)
+        layout.setContentsMargins(10, 5, 8, 5)
+        layout.addWidget(QLabel("Entwicklerinfo:"))
+        self.quick_entry = QLineEdit()
+        self.quick_entry.setPlaceholderText("Kurze Information an Entwicklerinformation.txt anhängen …")
+        self.quick_entry.returnPressed.connect(self.save_quick_info)
+        layout.addWidget(self.quick_entry, 1)
+        save = QPushButton("Speichern")
+        save.clicked.connect(self.save_quick_info)
+        layout.addWidget(save)
+        return frame
 
-    def _card(self, parent: tk.Misc, title: str) -> ttk.Frame:
-        border = tk.Frame(parent, bg=COLORS["accent"], padx=1, pady=1)
-        card = ttk.Frame(border, style="Card.TFrame", padding=SPACING["m"])
-        card.pack(fill="both", expand=True)
-        ttk.Label(card, text=title, style="Card.TLabel", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(0, SPACING["s"]))
-        return border
+    def _build_recent_strip(self) -> QFrame:
+        frame = QFrame()
+        frame.setObjectName("toolbar")
+        layout = QHBoxLayout(frame)
+        layout.setContentsMargins(10, 5, 8, 5)
+        label = QLabel("Zuletzt bearbeitet")
+        label.setObjectName("muted")
+        layout.addWidget(label)
+        self.recent_layout = QHBoxLayout()
+        self.recent_layout.setSpacing(4)
+        layout.addLayout(self.recent_layout, 1)
+        all_songs = QPushButton("Alle Songs")
+        all_songs.clicked.connect(self.open_song_library)
+        layout.addWidget(all_songs)
+        return frame
 
-    def _build_dashboard_grid(self, parent: ttk.Frame) -> None:
-        grid = ttk.Frame(parent)
-        grid.pack(fill="both", expand=True)
-        grid.columnconfigure(0, weight=1, uniform="cards")
-        grid.columnconfigure(1, weight=1, uniform="cards")
-        grid.rowconfigure(0, weight=1, uniform="rows")
-        grid.rowconfigure(1, weight=1, uniform="rows")
+    def _card(self, title: str) -> tuple[QFrame, QVBoxLayout]:
+        card = QFrame()
+        card.setObjectName("card")
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(10, 8, 10, 9)
+        layout.setSpacing(6)
+        heading = QLabel(title)
+        heading.setObjectName("cardTitle")
+        layout.addWidget(heading)
+        return card, layout
 
-        workflow_border = self._card(grid, "🚀  Workflow Übersicht")
-        workflow_border.grid(row=0, column=0, sticky="nsew", padx=(0, SPACING["xs"]), pady=(0, SPACING["xs"]))
-        workflow = workflow_border.winfo_children()[0]
-        ttk.Label(workflow, text="Kreative Ideen.\nStrukturierte Workflows.\nStarke Ergebnisse.", style="Card.TLabel").pack(anchor="center", pady=SPACING["m"])
+    def _build_dashboard_grid(self) -> QGridLayout:
+        grid = QGridLayout()
+        grid.setHorizontalSpacing(SPACING["s"])
+        grid.setVerticalSpacing(SPACING["s"])
+        grid.setColumnStretch(0, 1)
+        grid.setColumnStretch(1, 1)
+        grid.setRowStretch(0, 1)
+        grid.setRowStretch(1, 1)
+
+        workflow, w = self._card("🚀  Workflow Übersicht")
+        claim = QLabel("Kreative Ideen.\nStrukturierte Workflows.\nStarke Ergebnisse.")
+        claim.setAlignment(Qt.AlignCenter)
+        w.addWidget(claim)
         for step in ("①  Idee erfassen", "②  DB-Eingaben ergänzen", "③  Funktionen nutzen", "④  Ergebnisse speichern"):
-            ttk.Label(workflow, text=step, style="CardMuted.TLabel").pack(anchor="w", padx=SPACING["l"], pady=2)
+            hint = QLabel(step)
+            hint.setObjectName("cardHint")
+            w.addWidget(hint)
+        w.addStretch(1)
+        grid.addWidget(workflow, 0, 0)
 
-        db_border = self._card(grid, "▦  DB-Eingaben")
-        db_border.grid(row=0, column=1, sticky="nsew", padx=(SPACING["xs"], 0), pady=(0, SPACING["xs"]))
-        db = db_border.winfo_children()[0]
+        db, d = self._card("▦  DB-Eingaben")
+        self.db_boxes: dict[str, QComboBox] = {}
         for label in ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten", "GitHub-Repositories", "Prompts"):
-            row = ttk.Frame(db, style="Card.TFrame")
-            row.pack(fill="x", pady=2)
-            ttk.Label(row, text=label, style="CardMuted.TLabel", width=20).pack(side="left")
-            combo = ttk.Combobox(row, values=("Bitte auswählen …",), state="readonly", width=24)
-            combo.set("Bitte auswählen …")
-            combo.pack(side="left", fill="x", expand=True)
+            row = QHBoxLayout()
+            name = QLabel(label)
+            name.setObjectName("cardHint")
+            name.setFixedWidth(145)
+            row.addWidget(name)
+            combo = QComboBox()
+            combo.addItem("Bitte auswählen …")
+            row.addWidget(combo, 1)
+            d.addLayout(row)
+            self.db_boxes[label] = combo
+        d.addStretch(1)
+        grid.addWidget(db, 0, 1)
 
-        functions_border = self._card(grid, "▣  Funktionen")
-        functions_border.grid(row=1, column=0, sticky="nsew", padx=(0, SPACING["xs"]), pady=(SPACING["xs"], 0))
-        functions = functions_border.winfo_children()[0]
-        cards = ttk.Frame(functions, style="Card.TFrame")
-        cards.pack(fill="both", expand=True)
-        for title, subtitle, command in (
-            ("◈\nGenreszufallsgenerator", "Zufällige Genres entdecken", lambda: self._planned("Genreszufallsgenerator")),
-            ("✎\nReimfinder", "Passende Reime finden", lambda: self._planned("Reimfinder")),
+        functions, f = self._card("▣  Funktionen")
+        function_row = QHBoxLayout()
+        for text, command in (
+            ("◈\nGenreszufallsgenerator\nZufällige Genres entdecken", lambda: self._planned("Genreszufallsgenerator")),
+            ("✎\nReimfinder\nPassende Reime finden", lambda: self._planned("Reimfinder")),
         ):
-            ttk.Button(cards, text=f"{title}\n{subtitle}", command=command, style="Tile.TButton", takefocus=True).pack(side="left", fill="both", expand=True, padx=SPACING["xs"], pady=SPACING["xs"])
+            button = QPushButton(text)
+            button.setObjectName("featureButton")
+            button.clicked.connect(command)
+            function_row.addWidget(button)
+        f.addLayout(function_row)
+        grid.addWidget(functions, 1, 0)
 
-        system_border = self._card(grid, "▤  Systemanwendungen")
-        system_border.grid(row=1, column=1, sticky="nsew", padx=(SPACING["xs"], 0), pady=(SPACING["xs"], 0))
-        system = system_border.winfo_children()[0]
+        system, s = self._card("▤  Systemanwendungen")
         for icon, title, subtitle in (
             ("⌕", "Datenbank-Suche", "Nach Dateien im System suchen"),
             ("▤", "Inhaltssuche Textdateien", "Inhalte in Textdateien durchsuchen"),
             ("≡", "Trefferliste", "Suchergebnisse anzeigen"),
             ("◫", "Duplikatprüfer", "Doppelte Dateien finden"),
         ):
-            row = ttk.Frame(system, style="Card.TFrame")
-            row.pack(fill="x", pady=3)
-            ttk.Label(row, text=icon, style="Card.TLabel", width=3).pack(side="left")
-            text = ttk.Frame(row, style="Card.TFrame")
-            text.pack(side="left", fill="x", expand=True)
-            ttk.Label(text, text=title, style="Card.TLabel").pack(anchor="w")
-            ttk.Label(text, text=subtitle, style="CardMuted.TLabel").pack(anchor="w")
+            row = QHBoxLayout()
+            icon_label = QLabel(icon)
+            icon_label.setObjectName("accent")
+            icon_label.setFixedWidth(28)
+            row.addWidget(icon_label)
+            text_box = QVBoxLayout()
+            text_box.setSpacing(0)
+            text_box.addWidget(QLabel(title))
+            sub = QLabel(subtitle)
+            sub.setObjectName("cardHint")
+            text_box.addWidget(sub)
+            row.addLayout(text_box, 1)
+            s.addLayout(row)
+        s.addStretch(1)
+        grid.addWidget(system, 1, 1)
+        return grid
 
-    def _build_statusbar(self, parent: ttk.Frame) -> None:
-        bar = ttk.Frame(parent, style="Status.TFrame", padding=(SPACING["m"], SPACING["xs"]))
-        bar.pack(fill="x", padx=SPACING["s"], pady=(0, SPACING["s"]))
-        tk.Label(bar, text="●", bg=COLORS["surface_soft"], fg=COLORS["green"]).pack(side="left")
-        tk.Label(bar, textvariable=self.quick_status_var, bg=COLORS["surface_soft"], fg=COLORS["muted"]).pack(side="left", padx=SPACING["s"])
-        tk.Label(bar, text="Python/Tkinter  ·  Dark Orange Industrial", bg=COLORS["surface_soft"], fg=COLORS["muted"]).pack(side="right")
+    def _build_statusbar(self) -> QFrame:
+        frame = QFrame()
+        frame.setObjectName("statusBar")
+        layout = QHBoxLayout(frame)
+        layout.setContentsMargins(10, 4, 10, 4)
+        self.status_dot = QLabel("●")
+        self.status_dot.setObjectName("statusGood")
+        layout.addWidget(self.status_dot)
+        self.quick_status = QLabel("Bereit.")
+        self.quick_status.setObjectName("muted")
+        layout.addWidget(self.quick_status)
+        layout.addStretch(1)
+        tech = QLabel("Linux · PySide6 · Dark Orange Industrial")
+        tech.setObjectName("muted")
+        layout.addWidget(tech)
+        return frame
 
-    def _bind_keyboard(self) -> None:
-        self.root.bind("<F5>", lambda _event: self.refresh())
-        self.root.bind("<Control-plus>", lambda _event: self._step_zoom(1))
-        self.root.bind("<Control-equal>", lambda _event: self._step_zoom(1))
-        self.root.bind("<Control-minus>", lambda _event: self._step_zoom(-1))
-        self.root.bind("<Control-0>", lambda _event: self.set_zoom(100))
-        self.root.bind("<Control-r>", lambda _event: self.open_recovery())
+    def _bind_shortcuts(self) -> None:
+        QShortcut(QKeySequence("F5"), self, activated=self.refresh)
+        QShortcut(QKeySequence("Ctrl++"), self, activated=lambda: self._step_zoom(1))
+        QShortcut(QKeySequence("Ctrl+-"), self, activated=lambda: self._step_zoom(-1))
+        QShortcut(QKeySequence("Ctrl+0"), self, activated=lambda: self.set_zoom(100))
+        QShortcut(QKeySequence("Ctrl+R"), self, activated=self.open_recovery)
 
     def _planned(self, name: str) -> None:
-        messagebox.showinfo("Geplanter Bereich", f"{name} ist im Dashboard bereits vorgesehen, aber noch nicht als Fachfunktion freigegeben.", parent=self.root)
+        QMessageBox.information(self, "Geplanter Bereich", f"{name} ist im Dashboard vorgesehen, aber noch nicht als Fachfunktion freigegeben.")
 
-    def _quick_save_enter(self, _event: object = None) -> str:
-        self.save_quick_info()
-        return "break"
+    def _header_search(self) -> None:
+        self.open_song_library(initial_search=self.search_entry.text().strip())
 
     def save_quick_info(self) -> None:
         try:
-            target = append_developer_info(self.project_root, self.quick_info_var.get())
+            target = append_developer_info(self.project_root, self.quick_entry.text())
         except ValueError:
-            self.quick_status_var.set("Bitte zuerst eine kurze Information eingeben.")
+            self.quick_status.setText("Bitte zuerst eine kurze Information eingeben.")
             return
         except Exception as error:
-            self.quick_status_var.set(f"Speichern fehlgeschlagen: {type(error).__name__}")
+            self.quick_status.setText(f"Speichern fehlgeschlagen: {type(error).__name__}")
             return
-        self.quick_info_var.set("")
-        self.quick_status_var.set(f"An {target.name} angehängt.")
-        self.quick_entry.focus_set()
+        self.quick_entry.clear()
+        self.quick_status.setText(f"An {target.name} angehängt.")
+        self.quick_entry.setFocus()
 
     def refresh_recent_songs(self) -> None:
-        # Die Referenz-Hauptfläche bleibt stabil; vorhandene Songs werden über Bibliothek/Suche geöffnet.
-        pass
+        while self.recent_layout.count():
+            item = self.recent_layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
+        paths = list_songs(self.project_root)[:5]
+        if not paths:
+            empty = QLabel("Noch keine Songs gespeichert.")
+            empty.setObjectName("muted")
+            self.recent_layout.addWidget(empty)
+            return
+        for path in paths:
+            try:
+                document = load_song(path)
+            except (OSError, UnicodeError, ValueError):
+                continue
+            subtitle = document.genre or "ohne Genre"
+            button = QPushButton(f"{document.title}\n{subtitle}")
+            button.setToolTip(f"{document.title} öffnen")
+            button.clicked.connect(lambda _checked=False, selected=path: self.open_song_path(selected))
+            self.recent_layout.addWidget(button, 1)
 
     def open_song_editor(self) -> None:
-        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed, on_saved=self._song_saved)
+        editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
+                            on_closed=self._song_editor_closed, on_saved=self._song_saved, parent=self)
         self._song_editors.append(editor)
+        editor.show()
 
     def open_song_path(self, path: Path) -> None:
         try:
             document = load_song(path)
         except Exception as error:
-            messagebox.showerror("Song konnte nicht geöffnet werden", str(error), parent=self.root)
+            QMessageBox.critical(self, "Song konnte nicht geöffnet werden", str(error))
             return
-        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed, document=document, on_saved=self._song_saved)
+        editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
+                            on_closed=self._song_editor_closed, document=document,
+                            on_saved=self._song_saved, parent=self)
         self._song_editors.append(editor)
+        editor.show()
 
-    def open_song_library(self) -> None:
-        if self._song_library is not None and self._song_library.window.winfo_exists():
-            self._song_library.window.lift()
+    def open_song_library(self, initial_search: str = "") -> None:
+        if self._song_library is not None and self._song_library.isVisible():
+            if initial_search:
+                self._song_library.set_search(initial_search)
+            self._song_library.raise_()
+            self._song_library.activateWindow()
             self._song_library.refresh()
             return
-        self._song_library = SongLibrary(self.root, self.project_root, self.zoom_percent, self.open_song_path)
+        self._song_library = SongLibrary(self.project_root, self.zoom_percent, self.open_song_path, parent=self)
+        if initial_search:
+            self._song_library.set_search(initial_search)
+        self._song_library.show()
 
     def open_recovery(self) -> None:
-        if self._recovery_center is not None and self._recovery_center.window.winfo_exists():
-            self._recovery_center.window.lift()
+        if self._recovery_center is not None and self._recovery_center.isVisible():
+            self._recovery_center.raise_()
+            self._recovery_center.activateWindow()
             self._recovery_center.refresh()
             return
-        self._recovery_center = RecoveryCenter(self.root, self.texts, self.logger, self.zoom_percent)
+        self._recovery_center = RecoveryCenter(self.texts, self.logger, self.zoom_percent, parent=self)
+        self._recovery_center.show()
 
     def _song_saved(self, _path: Path) -> None:
-        if self._song_library is not None and self._song_library.window.winfo_exists():
+        self.refresh_recent_songs()
+        if self._song_library is not None:
             self._song_library.refresh()
 
     def _song_editor_closed(self, editor: SongEditor) -> None:
         if editor in self._song_editors:
             self._song_editors.remove(editor)
+        self.refresh_recent_songs()
 
     def save_open_song_editors(self) -> bool:
-        return all(editor.save(reason="Sitzung gespeichert") is not None for editor in list(self._song_editors))
+        success = True
+        for editor in list(self._song_editors):
+            if editor.save(reason="Sitzung gespeichert") is None:
+                success = False
+        return success
 
     def logout(self) -> None:
         if not self.save_open_song_editors():
-            messagebox.showerror("Logout gestoppt", "Mindestens ein Songtext konnte nicht gespeichert werden. Die Sitzung bleibt geöffnet.", parent=self.root)
+            QMessageBox.critical(self, "Logout gestoppt", "Mindestens ein Songtext konnte nicht gespeichert werden. Die Sitzung bleibt geöffnet.")
             return
+        self._closing_after_save = True
         for editor in list(self._song_editors):
-            editor.close()
-        self.root.destroy()
+            editor.close_safely()
+        self.close()
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        if self._closing_after_save:
+            self.closed_cleanly.emit()
+            event.accept()
+            return
+        if not self.save_open_song_editors():
+            QMessageBox.critical(self, "Schließen gestoppt", "Mindestens ein Songtext konnte nicht gespeichert werden.")
+            event.ignore()
+            return
+        self._closing_after_save = True
+        for editor in list(self._song_editors):
+            editor.close_safely()
+        self.closed_cleanly.emit()
+        event.accept()
 
     def refresh(self) -> None:
-        self.quick_status_var.set("Bereit.")
-        if self._recovery_center is not None and self._recovery_center.window.winfo_exists():
+        self.refresh_recent_songs()
+        self.quick_status.setText("Bereit.")
+        if self._recovery_center is not None and self._recovery_center.isVisible():
             self._recovery_center.refresh()
 
     def _step_zoom(self, direction: int) -> None:
@@ -326,14 +469,18 @@ class Dashboard:
         if percent not in ZOOM_LEVELS:
             return
         self.zoom_percent = percent
-        configure_global_style(self.root, percent)
-        if self._recovery_center is not None and self._recovery_center.window.winfo_exists():
+        apply_global_style(self, percent)
+        if self._song_library is not None:
+            self._song_library.set_zoom(percent)
+        if self._recovery_center is not None:
             self._recovery_center.set_zoom(percent)
-        self.root.update_idletasks()
 
 
-def install_exception_handler(root: tk.Tk, logger: EventLogger, refresh: Callable[[], None]) -> None:
-    def report(_kind: type[BaseException], error: BaseException, _trace: object) -> None:
+def install_exception_handler(app, logger: EventLogger, refresh: Callable[[], None], parent: QWidget) -> None:
+    """Qt-kompatibler zentraler Ausnahmehandler; wird von main über sys.excepthook verdrahtet."""
+    import sys
+
+    def report(kind: type[BaseException], error: BaseException, trace: object) -> None:
         try:
             event = logger.record(
                 severity="FEHLER", area="OBERFLAECHE",
@@ -342,7 +489,9 @@ def install_exception_handler(root: tk.Tk, logger: EventLogger, refresh: Callabl
                 next_step="Öffnen Sie Recovery und folgen Sie dem dort genannten Schritt.", exception=error,
             )
             refresh()
-            messagebox.showerror("Aktion sicher beendet", f"{event['summary']}\n\n{event['next_step']}\n\nKennung: {event['event_id']}")
+            QMessageBox.critical(parent, "Aktion sicher beendet", f"{event['summary']}\n\n{event['next_step']}\n\nKennung: {event['event_id']}")
         except Exception as logging_error:
-            messagebox.showerror("Sicherer Abbruch", f"Die Aktion wurde beendet. Das Protokoll konnte nicht geschrieben werden: {logging_error}")
-    root.report_callback_exception = report
+            QMessageBox.critical(parent, "Sicherer Abbruch", f"Die Aktion wurde beendet. Das Protokoll konnte nicht geschrieben werden: {logging_error}")
+        finally:
+            sys.__excepthook__(kind, error, trace)
+    sys.excepthook = report
