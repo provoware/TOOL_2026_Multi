@@ -8,6 +8,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+from app.atomic_io import atomic_write_text
 from app.redaction import redact
 
 DEFAULT_MAX_BYTES = 2 * 1024 * 1024
@@ -16,10 +17,7 @@ DEFAULT_KEEP = 5
 
 
 def _atomic_write(path: Path, text: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(text, encoding="utf-8")
-    os.replace(temporary, path)
+    atomic_write_text(path, text)
 
 
 def quarantine_corrupt_jsonl(path: Path, quarantine_dir: Path) -> int:
@@ -55,7 +53,7 @@ def quarantine_corrupt_jsonl(path: Path, quarantine_dir: Path) -> int:
         "corrupt_count": len(corrupt),
         "items": corrupt,
     }
-    _atomic_write(quarantine, json.dumps(payload, ensure_ascii=False, indent=2))
+    _atomic_write(quarantine, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
     _atomic_write(path, "\n".join(valid) + ("\n" if valid else ""))
     return len(corrupt)
 
