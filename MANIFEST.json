@@ -137,6 +137,7 @@
     {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
     {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
     {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"},
-    {"path":"docs/ITERATION6_RECOVERY_UI.md","release":false,"purpose":"Recovery-UI, Bedien- und Prüfkonzept"}
+    {"path":"docs/ITERATION6_RECOVERY_UI.md","release":false,"purpose":"Recovery-UI, Bedien- und Prüfkonzept"},
+    {"path":"docs/ITERATION7_SONG_WORKFLOW.md","release":false,"purpose":"Dashboard-Schnellspeicher, Songeditor-, Autosave- und Logout-Konzept"}
   ]
 }
