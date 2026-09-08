@@ -34,7 +34,7 @@ def main() -> int:
         import tkinter as tk
         from app.ui import Dashboard, install_exception_handler
         root = tk.Tk()
-        dashboard = Dashboard(root, TextRegistry(ROOT / "texte" / "registry.json"), logger)
+        dashboard = Dashboard(root, TextRegistry(ROOT / "texte" / "registry.json"), logger, ROOT)
         install_exception_handler(root, logger, dashboard.refresh)
         logger.record(severity="INFO", area="START", summary="Das Programm wurde sicher gestartet.",
                       cause="Normaler Programmstart", protection="Es waren keine Schutzmaßnahmen nötig.",
