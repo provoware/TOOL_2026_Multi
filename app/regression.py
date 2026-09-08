@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from app.atomic_io import atomic_write_json
 
 
 class RegressionManager:
@@ -55,7 +56,4 @@ class RegressionManager:
         return {"schema_version": 1, "patterns": {}}
 
     def _write_state(self, state: dict[str, Any]) -> None:
-        self.state_path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = self.state_path.with_suffix(".tmp")
-        temporary.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
-        os.replace(temporary, self.state_path)
+        atomic_write_json(self.state_path, state)
