@@ -39,7 +39,10 @@ class EventLogger:
         return event
 
     def recent(self, limit: int = 5) -> list[dict[str, Any]]:
-        if not self.jsonl_path.exists():
+        # REG-LOG-001: Python interpretiert [-0:] als "alles". Nichtpositive Grenzen
+        # müssen vor dem Slicing abgefangen werden, sonst werden unerwartet alle
+        # Ereignisse gelesen und angezeigt.
+        if limit <= 0 or not self.jsonl_path.exists():
             return []
         events: list[dict[str, Any]] = []
         try:
@@ -50,7 +53,7 @@ class EventLogger:
                     continue
         except OSError:
             return []
-        return events[-max(0, limit):][::-1]
+        return events[-limit:][::-1]
 
     def _persist(self, event: dict[str, Any]) -> None:
         self.jsonl_path.parent.mkdir(parents=True, exist_ok=True)
