@@ -1,21 +1,22 @@
 {
-  "schema_version": 10,
+  "schema_version": 11,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.10.0",
+    "version": "0.10.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 11,
-    "goal": "Gesamte produktive GUI auf PySide6 migrieren und Dashboardlayout, Hierarchie und Dark-Orange-Erscheinungsbild an den Provoware-Referenzentwurf angleichen; Recovery ausschließlich als einzelnen Navigationspunkt führen",
-    "completed": 6,
+    "number": 12,
+    "goal": "Reale Kubuntu/KDE-X11-Endabnahme sicher, laienfreundlich und nachweisbar vorbereiten; Signaltest isolieren und sichtbare Abnahme nicht durch Offscreen-CI vortäuschen",
+    "completed": 4,
     "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
     "launcher": "schnellstart.sh",
+    "kubuntu_acceptance_launcher": "kubuntu_abnahme.sh",
     "requirements": "requirements.txt",
     "headless_check": "python3 -m app.main --headless-check",
     "watcher": "scripts/process_watch.py",
@@ -41,7 +42,7 @@
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
     "qt_platform_for_ci": "offscreen",
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui",
+    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_kubuntu_acceptance; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py"
   },
   "ci": {
@@ -65,6 +66,20 @@
     "recovery_dashboard_occurrences": 1,
     "recovery_location": "single_left_navigation_item",
     "planned_navigation_visible_but_non_destructive": true
+  },
+  "kubuntu_acceptance": {
+    "launcher": "kubuntu_abnahme.sh",
+    "module": "scripts/kubuntu_abnahme.py",
+    "target": "Kubuntu/KDE Plasma X11",
+    "requires_x11": true,
+    "wayland_is_accepted_as_x11": false,
+    "automatic_checks": ["linux", "x11_display", "kde_plasma", "real_sigterm_watcher_probe"],
+    "visual_confirmations": ["reference_layout", "keyboard_focus", "zoom_100_125_150_175_200"],
+    "signal_probe_data_location": "temporary_directory_only",
+    "report_formats": ["txt", "json"],
+    "report_directory": "berichte/",
+    "ok_rule": "Nur automatische Prüfungen ohne Blocker/Fehler plus alle sichtbaren Bestätigungen ergeben OK.",
+    "ci_limitation": "Offscreen-CI ersetzt keine reale sichtbare Kubuntu/KDE-X11-Abnahme."
   },
   "song_editor": {
     "storage": "daten/songtexte/<Titel>.txt",
@@ -140,6 +155,7 @@
     {"path":"ANLEITUNG_LAIEN.md","release":true,"purpose":"Nutzeranleitung"},
     {"path":"requirements.txt","release":true,"purpose":"Fest gepinnte PySide6-Abhängigkeit"},
     {"path":"schnellstart.sh","release":true,"purpose":"Vollautomatischer PySide6-Start"},
+    {"path":"kubuntu_abnahme.sh","release":true,"purpose":"Klickstart für reale Kubuntu/KDE-X11-Endabnahme"},
     {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
     {"path":"app/event_log.py","release":true,"purpose":"Ereignisprotokoll"},
     {"path":"app/main.py","release":true,"purpose":"PySide6-Programmeinstieg, Projektpfad, Headless-Prüfung und kontrolliertes Ende"},
@@ -159,6 +175,7 @@
     {"path":"scripts/start_status.py","release":true,"purpose":"PySide6-Startanzeige mit echten Checkpoints"},
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
     {"path":"scripts/diagnosepaket.py","release":true,"purpose":"Datenschutzgeprüfter Diagnoseexport"},
+    {"path":"scripts/kubuntu_abnahme.py","release":true,"purpose":"PySide6-Assistent für reale X11-, Signal-, Fokus-, Zoom- und Referenzabnahme"},
     {"path":"texte/registry.json","release":true,"purpose":"Zentrale Nutzertexte"},
     {"path":"README.md","release":false,"purpose":"Entwicklerübersicht"},
     {"path":"AGENTS.md","release":false,"purpose":"Entwicklungsregeln"},
@@ -183,6 +200,7 @@
     {"path":"tests/test_song_library_controls.py","release":false,"purpose":"Such-, Filter-, Sortier-, Status/Favorit- und Restore-Tests"},
     {"path":"tests/test_song_library_controls_gui.py","release":false,"purpose":"PySide6-Tests für Bibliotheksfilter, Gruppierung, Status/Favorit und Restore"},
     {"path":"tests/test_dashboard_reference_gui.py","release":false,"purpose":"Referenzlayout, PySide6-only, 2x2-Karten, Sidebar und Recovery-Einzelpunkt"},
+    {"path":"tests/test_kubuntu_acceptance.py","release":false,"purpose":"X11/KDE-Erkennung, echter Temp-SIGTERM-Wächtertest und Abnahmebericht-Regeln"},
     {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
     {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
     {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"},
@@ -190,6 +208,7 @@
     {"path":"docs/ITERATION7_SONG_WORKFLOW.md","release":false,"purpose":"Dashboard-Schnellspeicher, Songeditor-, Autosave- und Logout-Konzept"},
     {"path":"docs/ITERATION8_SONG_LIBRARY.md","release":false,"purpose":"Songbibliothek, Metadaten, Versionen und Exportkonzept"},
     {"path":"docs/ITERATION9_SONG_LIBRARY_CONTROLS.md","release":false,"purpose":"Suche, Filter, Favoriten, Status, Sortierung/Gruppierung und Restore-Schutz"},
-    {"path":"docs/ITERATION11_QT_DASHBOARD.md","release":false,"purpose":"PySide6-Migration und Referenzlayout-Abnahme"}
+    {"path":"docs/ITERATION11_QT_DASHBOARD.md","release":false,"purpose":"PySide6-Migration und Referenzlayout-Abnahme"},
+    {"path":"docs/ITERATION12_KUBUNTU_ABNAHME.md","release":false,"purpose":"Reale Kubuntu/KDE-X11-Endabnahme, Temp-Signaltest und Beweisregeln"}
   ]
 }

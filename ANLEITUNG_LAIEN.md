@@ -7,6 +7,37 @@ bash schnellstart.sh
 
 Der Schnellstart richtet bei Bedarf die abgeschirmte Python-Umgebung ein, installiert die festgelegte PySide6-Version, prüft den Start und öffnet anschließend das Programm unter Prozesswache.
 
+## Reale Kubuntu/X11-Endabnahme
+Für die echte Endprüfung auf dem Zielrechner gibt es einen eigenen Assistenten:
+
+```bash
+bash kubuntu_abnahme.sh
+```
+
+Er prüft zuerst automatisch:
+- Linux,
+- eine echte X11-Sitzung,
+- KDE/Plasma,
+- den Prozesswächter mit einem echten `SIGTERM`-Signal.
+
+Der Signaltest läuft ausschließlich in einem temporären Ordner und verändert keine Song- oder Nutzerdaten.
+
+Danach öffnen Sie über den Assistenten das Dashboard und bestätigen drei sichtbare Punkte:
+1. Dark-Orange-Referenzlayout, linke Navigation, Schnellkacheln und 2×2-Hauptkarten sind korrekt sichtbar.
+2. Der Tastaturfokus ist beim Wechsel mit `Tab` deutlich sichtbar und logisch.
+3. Die Zoomstufen 100/125/150/175/200 % bleiben lesbar und schneiden die Hauptbedienung nicht ab.
+
+Ein Bericht wird nur dann als **OK** markiert, wenn sowohl die automatischen Prüfungen als auch alle drei sichtbaren Punkte bestanden sind. Andernfalls steht ausdrücklich `NICHT_VOLLSTAENDIG` im Bericht.
+
+Die Berichte liegen unter:
+
+```text
+berichte/KUBUNTU_X11_ABNAHME_*.txt
+berichte/KUBUNTU_X11_ABNAHME_*.json
+```
+
+Wenn beim Start gemeldet wird, dass keine X11-Sitzung aktiv ist, bei der Anmeldung **Plasma (X11)** wählen und die Prüfung erneut starten. Wayland wird nicht still als X11 akzeptiert.
+
 ## Das neue Dashboard
 Das Hauptfenster heißt **Provoware-Datenbank-Dashboard 2026**.
 
@@ -166,7 +197,7 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, die echten PySide6-Oberflächenwege und zusätzlich die Struktur des Referenzdashboards.
+Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, die echten PySide6-Oberflächenwege, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
 
 ## Bestehende Schutzfunktionen
 - atomare Songdatei-Speicherung,
@@ -177,5 +208,6 @@ Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Such
 - Datenschutzbereinigung und Diagnosepaket,
 - Headless-Start,
 - Prozesswache,
+- echter SIGTERM-Wächtertest nur in Tempdaten,
 - Schreibfehler-Simulation ohne echten Datenträgerverbrauch,
 - vollständige ZIP-/SHA-/Restore-Prüfung.
