@@ -22,6 +22,7 @@ from app.song_document import list_songs, load_song
 from app.song_editor import SongEditor
 from app.song_library import SongLibrary
 from app.texts import TextRegistry
+from app.todo_window import TodoWindow
 from app.ui_standards import COLORS, SPACING, apply_global_style
 
 
@@ -40,6 +41,7 @@ class Dashboard(QWidget):
         self._song_library: SongLibrary | None = None
         self._recovery_center: RecoveryCenter | None = None
         self._profile_editor: ProfileEditor | None = None
+        self._todo_window: TodoWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -175,6 +177,9 @@ class Dashboard(QWidget):
         self._add_nav(layout, "  ▤  Inhaltssuche Textdateien", lambda: self._planned("Inhaltssuche Textdateien"))
         self._add_nav(layout, "  ≡  Trefferliste", lambda: self._planned("Trefferliste"))
         self._add_nav(layout, "  ◫  Duplikatprüfer", lambda: self._planned("Duplikatprüfer"))
+        self._add_heading(layout, "Planung")
+        self.todo_nav_button = self._add_nav(layout, "  ✓  Todo-Liste", self.open_todo)
+        self._add_nav(layout, "  ▦  Kalender", lambda: self._planned("Kalender"))
         self._add_heading(layout, "Werkzeug")
         self.recovery_nav_button = self._add_nav(layout, "  ⚕  Recovery", self.open_recovery)
         layout.addStretch(1)
@@ -383,6 +388,8 @@ class Dashboard(QWidget):
             managed.append(self._recovery_center)
         if self._profile_editor is not None:
             managed.append(self._profile_editor)
+        if self._todo_window is not None:
+            managed.append(self._todo_window)
         return window in managed
 
     def eventFilter(self, watched: object, event: QEvent) -> bool:
@@ -487,6 +494,15 @@ class Dashboard(QWidget):
         )
         self._profile_editor.show()
 
+    def open_todo(self) -> None:
+        if self._todo_window is not None and self._todo_window.isVisible():
+            self._todo_window.raise_()
+            self._todo_window.activateWindow()
+            self._todo_window.refresh()
+            return
+        self._todo_window = TodoWindow(self.project_root, self.zoom_percent, parent=self)
+        self._todo_window.show()
+
     def open_song_editor(self) -> None:
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, on_saved=self._song_saved, parent=self)
@@ -584,6 +600,8 @@ class Dashboard(QWidget):
         self.quick_status.setText("Bereit.")
         if self._recovery_center is not None and self._recovery_center.isVisible():
             self._recovery_center.refresh()
+        if self._todo_window is not None and self._todo_window.isVisible():
+            self._todo_window.refresh()
 
     def _step_zoom(self, direction: int) -> None:
         current = ZOOM_LEVELS.index(self.zoom_percent)
@@ -605,6 +623,8 @@ class Dashboard(QWidget):
             self._recovery_center.set_zoom(percent)
         if self._profile_editor is not None:
             self._profile_editor.set_zoom(percent)
+        if self._todo_window is not None:
+            self._todo_window.set_zoom(percent)
 
 
 def install_exception_handler(app, logger: EventLogger, refresh: Callable[[], None], parent: QWidget) -> None:
