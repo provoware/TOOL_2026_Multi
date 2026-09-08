@@ -1,6 +1,6 @@
 # TODO – TOOL_2026_Multi
 
-Stand: 2026-09-08
+Stand: 2026-09-09
 
 ## Ampel
 🟢 erledigt und geprüft · 🟡 teilweise · 🔴 offen · ⚫ blockiert
@@ -77,7 +77,16 @@ Stand: 2026-09-08
 - 🟢 beschädigte Profilbestände mit doppelten Werten werden nicht mehr still verändert, sondern als Fehler gemeldet.
 - 🟢 ENOSPC-/EROFS-Simulation prüft den echten Produktionsschreiber.
 
+## Iteration 18 – Diagnose-I/O-Konsistenz
+
+- 🟡 Diagnose-ZIP verwendet eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync`.
+- 🟡 SHA-256-Begleitdatei nutzt den zentralen atomaren Textschreiber.
+- 🟡 schneller Mehrfachexport erhält durch Mikrosekunden eindeutige Zielnamen.
+- 🟡 Regression für eindeutige Dateinamen und Replace-Fehler ergänzt.
+- 🟡 Vollprüfung, Restore-Gate und CI müssen noch grün bestätigt werden, bevor Iteration 18 auf 🟢 gesetzt wird.
+
 ## Nächste Freigabepunkte
 
 1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
-2. 🔴 nächster Konsistenz-Slice: Diagnose-/Berichts-/Backup-Schreibwege auf dieselben Temp-/fsync-/Fehlerregeln prüfen, ohne Append-Logs fälschlich auf Dateiersatz umzustellen.
+2. 🟡 Iteration 18: CI/Vollprüfung/Restore für Diagnose-I/O abschließen.
+3. 🔴 danach getrennt Backup- und Berichtsschreiber auf dieselben Temp-/fsync-/Fehlerregeln prüfen; Append-Logs nicht fälschlich auf Dateiersatz umstellen.
