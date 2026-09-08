@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from app.log_maintenance import quarantine_corrupt_jsonl, rotate_log
 from app.redaction import redact
 from app.regression import RegressionManager
 
@@ -18,6 +19,7 @@ class EventLogger:
         self.version = version
         self.jsonl_path = root / "logs" / "ereignisse.jsonl"
         self.report_dir = root / "berichte"
+        self.quarantine_dir = root / "logs" / "quarantaene"
         self.regressions = RegressionManager(root / "logs" / "rueckfaelle.json")
 
     def record(self, *, severity: str, area: str, summary: str, cause: str,
@@ -33,9 +35,7 @@ class EventLogger:
         learned = None
         if exception is not None:
             learned = self.regressions.learn(area_clean, type(exception).__name__, cause_clean)
-            next_step_clean = redact(
-                f"{next_step_clean} {self.regressions.prevention_hint(learned)}", limit=1400
-            )
+            next_step_clean = redact(f"{next_step_clean} {self.regressions.prevention_hint(learned)}", limit=1400)
         event = {
             "schema_version": 1, "time": now.isoformat(), "event_id": event_id,
             "severity": redact(severity, limit=40), "area": area_clean, "summary": summary_clean,
@@ -47,23 +47,24 @@ class EventLogger:
         self._persist(event)
         return event
 
+    def _maintain_log(self) -> None:
+        quarantine_corrupt_jsonl(self.jsonl_path, self.quarantine_dir)
+        rotate_log(self.jsonl_path)
+
     def recent(self, limit: int = 5) -> list[dict[str, Any]]:
         if limit <= 0 or not self.jsonl_path.exists():
             return []
-        events: list[dict[str, Any]] = []
         try:
-            for line in self.jsonl_path.read_text(encoding="utf-8").splitlines():
-                try:
-                    events.append(json.loads(line))
-                except json.JSONDecodeError:
-                    continue
-        except OSError:
+            quarantine_corrupt_jsonl(self.jsonl_path, self.quarantine_dir)
+            events = [json.loads(line) for line in self.jsonl_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        except (OSError, json.JSONDecodeError):
             return []
         return events[-limit:][::-1]
 
     def _persist(self, event: dict[str, Any]) -> None:
         self.jsonl_path.parent.mkdir(parents=True, exist_ok=True)
         self.report_dir.mkdir(parents=True, exist_ok=True)
+        self._maintain_log()
         line = json.dumps(event, ensure_ascii=False, separators=(",", ":"))
         with self.jsonl_path.open("a", encoding="utf-8") as handle:
             handle.write(line + "\n")
