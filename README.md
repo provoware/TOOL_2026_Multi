@@ -1,6 +1,12 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit vervollständigtem Songbibliotheksworkflow · **Version:** 0.9.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit vervollständigtem Songbibliotheksworkflow · **Version:** 0.9.1 · **Stand:** 2026-09-08
+
+## Iteration 10 – CI-Wartung
+
+- 🟢 `actions/checkout` von `v4` auf **`v7.0.1`** aktualisiert.
+- 🟢 keine fachlichen Funktionen, Songdaten oder Laufzeitlogik verändert.
+- 🟢 vollständige Grundprüfung und Restore-Gate bleiben verbindliche Abnahme.
 
 ## Iteration 9 – Songbibliothek vervollständigen
 

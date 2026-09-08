@@ -15,8 +15,11 @@ Stand: 2026-09-08
 - 🟢 Versionswiederherstellung nur nach Vorschau; aktueller Stand wird unmittelbar davor automatisch als neuer Versionsstand gesichert.
 - 🟢 fremde Versionspfade werden abgewiesen; ältere 0.7.0/0.8.0-Songs bleiben lesbar.
 
-## 3 nächste Schritte
+## Iteration 10 – CI-Wartung
 
-1. 🔴 kleine separate Wartungsiteration: `actions/checkout@v4` wegen Node-20-Abkündigungswarnung auf aktuell unterstützte Version aktualisieren und CI/Restore erneut prüfen.
-2. 🟡 Songworkflow ist als erster Fachbereich belastbar vorhanden; weitere geplante Module/Arbeitsabläufe des Multitools priorisieren und einzeln ergänzen.
-3. 🔴 reale Kubuntu-Endprüfung einschließlich echtem Crash-/Signaltest, Songbibliothek-/Editor-Endabnahme sowie sichtbarer Fokus-/Zoom-Prüfung dokumentieren.
+- 🟢 `actions/checkout` von `v4` auf `v7.0.1` aktualisiert; keine fachliche Laufzeitfunktion verändert.
+
+## 2 nächste Schritte
+
+1. 🟡 Songworkflow ist als erster Fachbereich belastbar vorhanden; weitere geplante Module/Arbeitsabläufe des Multitools priorisieren und einzeln ergänzen.
+2. 🔴 reale Kubuntu-Endprüfung einschließlich echtem Crash-/Signaltest, Songbibliothek-/Editor-Endabnahme sowie sichtbarer Fokus-/Zoom-Prüfung dokumentieren.

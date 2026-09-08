@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+## 0.9.1 – 2026-09-08 – CI-Wartung
+
+### Geändert
+- GitHub Actions Checkout von `actions/checkout@v4` auf `actions/checkout@v7.0.1` aktualisiert.
+
+### Schutz
+- keine fachliche Funktion, Songdatei oder Laufzeitlogik verändert,
+- vollständige bestehende Logik-, Tk-GUI-, ENOSPC-/EROFS-, Release-, Headless- und Restore-Prüfung bleibt unverändert verbindlich.
+
 ## 0.9.0 – 2026-09-08 – Songbibliothek vervollständigt
 
 ### Hinzugefügt
