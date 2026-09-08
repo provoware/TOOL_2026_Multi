@@ -1,6 +1,14 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.10.1 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.10.2 · **Stand:** 2026-09-08
+
+## Iteration 13 – Zoom und Schriftgröße
+
+- 🟢 `Strg + Mausrad` ändert Zoom und Schriftgröße zentral.
+- 🟢 `Strg++`, `Strg+-` und `Strg+0` bleiben verfügbar.
+- 🟢 die Statusleiste bietet zusätzlich `A−`, Prozentanzeige und `A+`.
+- 🟢 Dashboard, offene Songeditoren, Songbibliothek und Recovery folgen derselben Zoomstufe.
+- 🟢 keine parallele Schriftgrößenkonfiguration; alles läuft weiter über die zentralen PySide6-QSS-Standards.
 
 ## Iteration 12 – Kubuntu/X11-Endabnahme
 
@@ -62,6 +70,13 @@ Die Hauptansicht orientiert sich am Provoware-Referenzentwurf:
 - letzte bearbeitete Songs,
 - 2×2-Hauptfläche mit **Workflow Übersicht**, **DB-Eingaben**, **Funktionen**, **Systemanwendungen**,
 - Recovery nur unter `Werkzeug → Recovery`.
+
+### Zoom und Schrift
+
+- `Strg + Mausrad hoch/runter` vergrößert/verkleinert.
+- `A−` und `A+` in der Statusleiste machen dasselbe per Klick.
+- `Strg+0` setzt auf 100 % zurück.
+- verfügbare Stufen: 100, 125, 150, 175 und 200 %.
 
 Geplante, noch nicht freigegebene Module werden sichtbar dargestellt, führen aber nur zu einem verständlichen Hinweis und verändern keine Daten.
 
@@ -158,4 +173,4 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 bash scripts/pruefen.sh --full
 ```
 
-Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
+Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests einschließlich Zoom-Regressionsprüfung, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
