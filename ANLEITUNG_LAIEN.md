@@ -16,7 +16,7 @@ Die Oberfläche kann ohne Einstellungsdialog vergrößert oder verkleinert werde
 
 Verfügbare Stufen: **100 %, 125 %, 150 %, 175 % und 200 %**.
 
-Die Einstellung gilt gemeinsam für Dashboard, offene Songeditoren, Songbibliothek, Recovery, Profilverwaltung und Todo-Liste. Dadurch gibt es nicht mehrere widersprüchliche Schriftgrößen.
+Die Einstellung gilt gemeinsam für Dashboard, offene Songeditoren, Songbibliothek, Recovery, Profilverwaltung, Todo-Liste und Kalender. Dadurch gibt es nicht mehrere widersprüchliche Schriftgrößen.
 
 ## Reale Kubuntu/X11-Endabnahme
 Für die echte Endprüfung auf dem Zielrechner gibt es einen eigenen Assistenten:
@@ -61,9 +61,54 @@ Die Oberfläche ist in fünf leicht erkennbare Bereiche gegliedert:
 
 Die linke Navigation kann mit **☰** schmal und wieder breit geschaltet werden.
 
-Unter **Planung** finden Sie die Todo-Liste. Der Kalender ist dort bereits als nächster Bereich sichtbar, aber noch nicht freigegeben.
+Unter **Planung** finden Sie jetzt **Todo-Liste** und **Kalender**.
 
 Noch nicht freigegebene Bereiche wie Hörspiele oder Reimfinder sind bereits sichtbar. Beim Anklicken erscheint nur ein Hinweis. Sie verändern keine Dateien.
+
+## Kalender
+Öffnen über:
+
+**Navigation → Planung → Kalender**
+
+Links sehen Sie einen Kalender zum Auswählen des Bezugsdatums und darunter die Eingabe für neue Termine. Rechts stehen vier Ansichten:
+- **Tag** – nur der gewählte Tag,
+- **Woche** – Montag bis zum folgenden Montag,
+- **Monat** – der vollständige gewählte Monat,
+- **Jahr** – das vollständige gewählte Jahr.
+
+Ein Termin über Mitternacht erscheint in allen Zeitbereichen, die er tatsächlich berührt.
+
+### Termin anlegen
+1. Titel eingeben. Der Titel ist Pflicht.
+2. Optional eine Notiz eintragen.
+3. Beginn mit Datum und Uhrzeit wählen.
+4. Ende mit Datum und Uhrzeit wählen. Das Ende muss nach dem Beginn liegen.
+5. Optional eine Erinnerung wählen.
+6. **Termin anlegen** anklicken.
+
+Zur Auswahl stehen:
+- keine Erinnerung,
+- zum Terminbeginn,
+- 5 Minuten vorher,
+- 15 Minuten vorher,
+- 30 Minuten vorher,
+- 1 Stunde vorher,
+- 1 Tag vorher.
+
+Kalenderdaten liegen unter:
+
+```text
+daten/kalender/termine.json
+```
+
+### Erinnerungen
+Solange das Provoware-Dashboard läuft, prüft es etwa alle 30 Sekunden auf fällige Erinnerungen. Das funktioniert auch, wenn das Kalenderfenster gerade geschlossen ist.
+
+Nach dem Anzeigen wird die Erinnerung im Kalenderbestand als bereits angezeigt markiert. Dadurch erscheint derselbe Hinweis nicht immer wieder.
+
+Wichtig: Wenn das **gesamte Dashboard geschlossen** ist, läuft kein versteckter Linux-Hintergrunddienst. Erinnerungen bei vollständig geschlossenem Programm sind in dieser Version bewusst nicht enthalten.
+
+In dieser Iteration gibt es außerdem keine Terminlöschung. Dadurch wird kein destruktiver Weg eingeführt, der nicht verlangt wurde.
 
 ## Profilbasierte DB-Eingaben
 In der Karte **DB-Eingaben** wählen Sie zuerst ein Profil, zum Beispiel:
@@ -261,14 +306,15 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, Profilverwaltung, Todo-Datenspeicherung und Todo-Oberfläche, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
+Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, Profilverwaltung, Todo, Kalender und Erinnerungen, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
 
 ## Bestehende Schutzfunktionen
 - atomare Songdatei-Speicherung,
-- atomare Profil- und Todo-Speicherung,
+- atomare Profil-, Todo- und Kalender-Speicherung,
 - automatische Versionssicherung vor geänderten Überschreibungen,
 - Sicherung des aktuellen Songs vor einer Wiederherstellung,
 - Pfadprüfung für Versionsstände,
+- einmalige Kalender-Erinnerungsmarkierung erst nach Anzeige,
 - Logrotation und Quarantäne,
 - Datenschutzbereinigung und Diagnosepaket,
 - Headless-Start,
