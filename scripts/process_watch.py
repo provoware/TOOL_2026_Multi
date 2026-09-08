@@ -10,6 +10,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from app.process_guard import CONTROLLED_ALREADY_RUNNING_EXIT
 from app.redaction import redact
 
 
@@ -51,6 +52,9 @@ def write_crash_report(root: Path, returncode: int, command: list[str]) -> Path:
 def run(root: Path, command: list[str]) -> int:
     process = subprocess.Popen(command, cwd=root)
     returncode = process.wait()
+    if returncode == CONTROLLED_ALREADY_RUNNING_EXIT:
+        print("🟡 Dashboard läuft bereits; zweiter Start wurde kontrolliert beendet.", file=sys.stderr)
+        return returncode
     if returncode != 0:
         report = write_crash_report(root, returncode, command)
         print(f"🔴 Wächterbericht: {report}", file=sys.stderr)
