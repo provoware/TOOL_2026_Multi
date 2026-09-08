@@ -1,5 +1,26 @@
 # Änderungsverlauf
 
+## 0.8.0 – 2026-09-08 – Songbibliothek und Versionsverwaltung
+
+### Hinzugefügt
+- Songbibliothek mit Titel, Genre, letzter Bearbeitung und Versionsanzahl,
+- direktes Öffnen vorhandener Songs per Doppelklick, Enter oder Schaltfläche,
+- bis zu fünf zuletzt bearbeitete Songs als Schnellkacheln im Dashboard,
+- Song-Metadaten Stimmung, Stil, Stimme, Besonderheiten und Tags,
+- automatische Versionsschnappschüsse vor geänderten Überschreibungen,
+- schreibgeschützte Vorschau älterer Versionsstände,
+- Exporte als TXT, Markdown, JSON und Nur-Songtext-TXT,
+- Rückwärtslesen der bisherigen 0.7.0-Textdateien,
+- gezielte Logik- und Tk-GUI-Tests für Bibliothek, Metadaten, Versionen, Kacheln und Exporte.
+
+### Schutz
+- das bestehende `.txt`-Arbeitsformat bleibt kanonisch; kein paralleles internes Songformat,
+- identische Speicherungen erzeugen keinen Versionsmüll,
+- Versionsstände werden getrennt unter `.versionen/` gesichert und nicht still überschrieben,
+- Versionsansicht ist zunächst schreibgeschützt,
+- Exporte verändern weder Arbeitsdatei noch Versionshistorie,
+- bestehende Recovery-, Diagnose-, Datenschutz-, Wächter- und Restore-Gates bleiben aktiv.
+
 ## 0.7.0 – 2026-09-08 – Dashboard-Schnellspeicher und Songtexteditor
 
 ### Hinzugefügt
