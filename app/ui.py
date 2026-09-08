@@ -10,7 +10,9 @@ from typing import Callable
 from app.event_log import EventLogger
 from app.quick_note import append_developer_info
 from app.recovery_ui import ZOOM_LEVELS, available_areas, filter_events, repetition_summary, technical_details, zoom_font_size
+from app.song_document import list_songs, load_song
 from app.song_editor import SongEditor
+from app.song_library import SongLibrary
 from app.texts import TextRegistry
 from app.ui_standards import COLORS, FONTS, SPACING, configure_global_style, severity_display
 
@@ -24,14 +26,15 @@ class Dashboard:
         self._event_by_item: dict[str, dict] = {}
         self._all_events: list[dict] = []
         self._song_editors: list[SongEditor] = []
+        self._song_library: SongLibrary | None = None
         self.severity_var = tk.StringVar(value="ALLE")
         self.area_var = tk.StringVar(value="ALLE")
         self.zoom_var = tk.StringVar(value="100 %")
         self.quick_info_var = tk.StringVar()
         self.quick_status_var = tk.StringVar(value="")
         root.title(texts.get("app.name", "TOOL_2026_Multi"))
-        root.geometry("1120x720")
-        root.minsize(860, 560)
+        root.geometry("1180x780")
+        root.minsize(900, 620)
         configure_global_style(root, self.zoom_percent)
         self._build_menu()
         self._build_content()
@@ -43,7 +46,8 @@ class Dashboard:
     def _build_menu(self) -> None:
         menu = tk.Menu(self.root)
         work = tk.Menu(menu, tearoff=False)
-        work.add_command(label="Songtexteditor öffnen", command=self.open_song_editor)
+        work.add_command(label="Neuen Song schreiben", command=self.open_song_editor)
+        work.add_command(label="Songbibliothek öffnen", command=self.open_song_library)
         work.add_separator()
         work.add_command(label="Logout / Sitzung beenden", command=self.logout)
         menu.add_cascade(label="Arbeiten", menu=work)
@@ -62,11 +66,12 @@ class Dashboard:
         header = ttk.Frame(frame)
         header.pack(fill="x", pady=(0, SPACING["m"]))
         ttk.Label(header, text="TOOL_2026_Multi", style="Title.TLabel").pack(side="left")
-        ttk.Button(header, text="Songtexteditor", command=self.open_song_editor, takefocus=True).pack(side="right", padx=(SPACING["s"], 0))
+        ttk.Button(header, text="Neuer Song", command=self.open_song_editor, takefocus=True).pack(side="right", padx=(SPACING["s"], 0))
+        ttk.Button(header, text="Songbibliothek", command=self.open_song_library, takefocus=True).pack(side="right", padx=(SPACING["s"], 0))
         ttk.Button(header, text="Logout", command=self.logout, takefocus=True).pack(side="right")
 
         quick = ttk.Frame(frame)
-        quick.pack(fill="x", pady=(0, SPACING["m"]))
+        quick.pack(fill="x", pady=(0, SPACING["s"]))
         ttk.Label(quick, text="Entwickler-Schnellinfo:").pack(side="left")
         self.quick_entry = ttk.Entry(quick, textvariable=self.quick_info_var, takefocus=True)
         self.quick_entry.pack(side="left", fill="x", expand=True, padx=SPACING["s"])
@@ -74,28 +79,33 @@ class Dashboard:
         ttk.Button(quick, text="Speichern", command=self.save_quick_info, takefocus=True).pack(side="left")
         ttk.Label(frame, textvariable=self.quick_status_var, style="Muted.TLabel").pack(anchor="w", pady=(0, SPACING["m"]))
 
+        recent_header = ttk.Frame(frame)
+        recent_header.pack(fill="x")
+        ttk.Label(recent_header, text="Zuletzt bearbeitet", style="Title.TLabel").pack(side="left")
+        ttk.Button(recent_header, text="Alle Songs", command=self.open_song_library, takefocus=True).pack(side="right")
+        self.recent_songs_frame = ttk.Frame(frame)
+        self.recent_songs_frame.pack(fill="x", pady=(SPACING["s"], SPACING["m"]))
+
         ttk.Label(frame, text="Debug- und Recovery-Zentrale", style="Title.TLabel").pack(anchor="w")
         ttk.Label(frame, text="Fehler filtern, Details öffnen und Wiederholungen erkennen. Technische Angaben bleiben zunächst verborgen.",
-                  style="Muted.TLabel", wraplength=960).pack(anchor="w", pady=(SPACING["s"], SPACING["m"]))
+                  style="Muted.TLabel", wraplength=1000).pack(anchor="w", pady=(SPACING["xs"], SPACING["s"]))
 
         self.ready = tk.Label(frame, text=f"🟢 {self.texts.get('status.ready', 'System bereit')}", anchor="w",
-                              padx=12, pady=8, bg=COLORS["surface_alt"], fg=COLORS["green"],
+                              padx=12, pady=6, bg=COLORS["surface_alt"], fg=COLORS["green"],
                               font=("TkDefaultFont", FONTS["body_size"], "bold"))
-        self.ready.pack(fill="x", pady=(0, SPACING["m"]))
+        self.ready.pack(fill="x", pady=(0, SPACING["s"]))
 
         controls = ttk.Frame(frame)
-        controls.pack(fill="x", pady=(0, SPACING["m"]))
+        controls.pack(fill="x", pady=(0, SPACING["s"]))
         ttk.Label(controls, text="Schweregrad:").pack(side="left")
         self.severity_filter = ttk.Combobox(controls, textvariable=self.severity_var, state="readonly", width=13,
                                             values=("ALLE", "INFO", "HINWEIS", "WARNUNG", "FEHLER", "KRITISCH", "SCHWER", "ABSTURZ"), takefocus=True)
         self.severity_filter.pack(side="left", padx=(SPACING["s"], SPACING["m"]))
         self.severity_filter.bind("<<ComboboxSelected>>", lambda _event: self._apply_filters())
-
         ttk.Label(controls, text="Bereich:").pack(side="left")
         self.area_filter = ttk.Combobox(controls, textvariable=self.area_var, state="readonly", width=18, takefocus=True)
         self.area_filter.pack(side="left", padx=(SPACING["s"], SPACING["m"]))
         self.area_filter.bind("<<ComboboxSelected>>", lambda _event: self._apply_filters())
-
         ttk.Label(controls, text="Anzeigegröße:").pack(side="left")
         self.zoom_filter = ttk.Combobox(controls, textvariable=self.zoom_var, state="readonly", width=8,
                                         values=tuple(f"{level} %" for level in ZOOM_LEVELS), takefocus=True)
@@ -103,7 +113,7 @@ class Dashboard:
         self.zoom_filter.bind("<<ComboboxSelected>>", self._zoom_changed)
 
         columns = ("time", "severity", "area", "repeat", "summary")
-        self.table = ttk.Treeview(frame, columns=columns, show="headings", height=9, takefocus=True, selectmode="browse")
+        self.table = ttk.Treeview(frame, columns=columns, show="headings", height=6, takefocus=True, selectmode="browse")
         for key, title, width in (("time", "Zeit", 150), ("severity", "Ampel / Schwere", 135),
                                   ("area", "Bereich", 110), ("repeat", "Wiederholung", 110),
                                   ("summary", "Einfache Erklärung", 430)):
@@ -117,13 +127,13 @@ class Dashboard:
         self.table.bind("<Return>", lambda _event: self.open_selected_event())
 
         actions = ttk.Frame(frame)
-        actions.pack(fill="x", pady=SPACING["m"])
+        actions.pack(fill="x", pady=SPACING["s"])
         self.open_button = ttk.Button(actions, text="Ausgewähltes Ereignis öffnen", command=self.open_selected_event, takefocus=True)
         self.open_button.pack(side="left")
         ttk.Button(actions, text="Alle Ereignisse als Text", command=self.show_log, takefocus=True).pack(side="left", padx=SPACING["s"])
         ttk.Button(actions, text="Aktualisieren", command=self.refresh, takefocus=True).pack(side="left")
         self.status = ttk.Label(frame, text="", style="Muted.TLabel")
-        self.status.pack(anchor="w", pady=(SPACING["s"], 0))
+        self.status.pack(anchor="w", pady=(SPACING["xs"], 0))
 
     def _bind_keyboard(self) -> None:
         self.root.bind("<F5>", lambda _event: self.refresh())
@@ -150,13 +160,54 @@ class Dashboard:
         self.quick_status_var.set(f"🟢 An {target.name} angehängt.")
         self.quick_entry.focus_set()
 
+    def refresh_recent_songs(self) -> None:
+        for child in self.recent_songs_frame.winfo_children():
+            child.destroy()
+        paths = list_songs(self.project_root)[:5]
+        if not paths:
+            ttk.Label(self.recent_songs_frame, text="Noch keine Songs gespeichert.", style="Muted.TLabel").pack(side="left")
+            return
+        for path in paths:
+            try:
+                document = load_song(path)
+                subtitle = document.genre or "ohne Genre"
+                button = ttk.Button(self.recent_songs_frame, text=f"{document.title}\n{subtitle}",
+                                    command=lambda selected=path: self.open_song_path(selected), takefocus=True)
+                button.pack(side="left", fill="x", expand=True, padx=(0, SPACING["s"]))
+            except (OSError, UnicodeError, ValueError):
+                continue
+
     def open_song_editor(self) -> None:
-        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed)
+        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed,
+                            on_saved=self._song_saved)
         self._song_editors.append(editor)
+
+    def open_song_path(self, path: Path) -> None:
+        try:
+            document = load_song(path)
+        except Exception as error:
+            messagebox.showerror("Song konnte nicht geöffnet werden", str(error), parent=self.root)
+            return
+        editor = SongEditor(self.root, self.project_root, self.zoom_percent, self._song_editor_closed,
+                            document=document, on_saved=self._song_saved)
+        self._song_editors.append(editor)
+
+    def open_song_library(self) -> None:
+        if self._song_library is not None and self._song_library.window.winfo_exists():
+            self._song_library.window.lift()
+            self._song_library.refresh()
+            return
+        self._song_library = SongLibrary(self.root, self.project_root, self.zoom_percent, self.open_song_path)
+
+    def _song_saved(self, _path: Path) -> None:
+        self.refresh_recent_songs()
+        if self._song_library is not None and self._song_library.window.winfo_exists():
+            self._song_library.refresh()
 
     def _song_editor_closed(self, editor: SongEditor) -> None:
         if editor in self._song_editors:
             self._song_editors.remove(editor)
+        self.refresh_recent_songs()
 
     def save_open_song_editors(self) -> bool:
         success = True
@@ -174,6 +225,7 @@ class Dashboard:
         self.root.destroy()
 
     def refresh(self) -> None:
+        self.refresh_recent_songs()
         self._all_events = self.logger.recent(100)
         areas = available_areas(self._all_events)
         self.area_filter.configure(values=areas)
@@ -224,7 +276,6 @@ class Dashboard:
         lamp, _color = severity_display(severity)
         ttk.Label(body, text=f"{lamp} {severity} · {event.get('area', '')}", style="Title.TLabel").pack(anchor="w")
         ttk.Label(body, text=str(event.get("summary") or "Keine Erklärung vorhanden."), wraplength=690).pack(anchor="w", pady=(SPACING["m"], SPACING["l"]))
-
         count, first_seen = repetition_summary(event)
         facts = (
             ("Zeit", str(event.get("time") or "Unbekannt")[:19].replace("T", " ")),
@@ -238,7 +289,6 @@ class Dashboard:
             row.pack(fill="x", pady=SPACING["xs"])
             ttk.Label(row, text=f"{title}:", width=19).pack(side="left", anchor="n")
             ttk.Label(row, text=value, wraplength=520).pack(side="left", fill="x", expand=True)
-
         tech_frame = ttk.Frame(body)
         tech_text = tk.Text(tech_frame, height=9, wrap="word", padx=10, pady=10, bg=COLORS["surface"], fg=COLORS["text"],
                             insertbackground=COLORS["text"], relief="flat", takefocus=True)
