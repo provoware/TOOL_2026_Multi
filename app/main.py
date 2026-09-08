@@ -41,12 +41,16 @@ def main() -> int:
                       next_step="Sie können das Werkzeug jetzt verwenden.")
         dashboard.refresh()
         root.mainloop()
+        logger.record(severity="INFO", area="ENDE", summary="Das Programm wurde kontrolliert beendet.",
+                      cause="Normales Schließen der Anwendung",
+                      protection="Alle laufenden Oberflächenaktionen waren beendet.",
+                      next_step="Keine weitere Aktion nötig.")
         return 0
     except Exception as error:
         try:
-            logger.record(severity="KRITISCH", area="START", summary="Das Programm konnte nicht gestartet werden.",
-                          cause=str(error) or "Unbekannter Startfehler",
-                          protection="Der Start wurde beendet; vorhandene Daten wurden nicht verändert.",
+            logger.record(severity="KRITISCH", area="START", summary="Das Programm konnte nicht gestartet oder sauber beendet werden.",
+                          cause=str(error) or "Unbekannter Start- oder Laufzeitfehler",
+                          protection="Der betroffene Ablauf wurde beendet; vorhandene Daten wurden nicht verändert.",
                           next_step="Prüfen Sie den Bericht im Ordner berichte und starten Sie danach erneut.", exception=error)
         except Exception:
             print(emergency_message(error))
