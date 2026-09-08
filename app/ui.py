@@ -265,18 +265,22 @@ class Dashboard(QWidget):
         grid.addWidget(workflow, 0, 0)
 
         db, d = self._card("▦  DB-Eingaben")
+        heading = d.takeAt(0).widget()
         profile_row = QHBoxLayout()
-        profile_label = QLabel("Profil")
+        if heading is not None:
+            profile_row.addWidget(heading)
+        profile_row.addStretch(1)
+        profile_label = QLabel("Profil:")
         profile_label.setObjectName("cardHint")
-        profile_label.setFixedWidth(145)
         profile_row.addWidget(profile_label)
         self.db_profile_combo = QComboBox()
+        self.db_profile_combo.setMinimumWidth(150)
         self.db_profile_combo.currentTextChanged.connect(self._load_profile_values)
-        profile_row.addWidget(self.db_profile_combo, 1)
+        profile_row.addWidget(self.db_profile_combo)
         edit_profiles = QPushButton("Bearbeiten …")
         edit_profiles.clicked.connect(self.open_profile_editor)
         profile_row.addWidget(edit_profiles)
-        d.addLayout(profile_row)
+        d.insertLayout(0, profile_row)
 
         self.db_boxes: dict[str, QComboBox] = {}
         for label in (*CATEGORIES, "GitHub-Repositories", "Prompts"):
