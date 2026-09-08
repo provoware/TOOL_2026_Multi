@@ -1,17 +1,17 @@
 {
-  "schema_version": 8,
+  "schema_version": 9,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 9,
-    "goal": "Songbibliothek mit kombinierbarer Suche und Filtern, Favoriten, Bearbeitungsstatus, Sortierung/Gruppierung und geschützter Versionswiederherstellung vervollständigen",
-    "completed": 5,
-    "open_next": 3
+    "number": 10,
+    "goal": "GitHub-Actions-Checkout auf die aktuell unterstützte Version aktualisieren, ohne fachliche Änderungen",
+    "completed": 1,
+    "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -42,6 +42,12 @@
     "bounded": true,
     "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py"
+  },
+  "ci": {
+    "workflow": ".github/workflows/qualitaet.yml",
+    "checkout_action": "actions/checkout@v7.0.1",
+    "checkout_runtime": "Node 24",
+    "maintenance_scope": "Nur Checkout-Action und Versions-/Dokumentationsstand; keine fachliche Änderung"
   },
   "song_editor": {
     "storage": "daten/songtexte/<Titel>.txt",
@@ -140,7 +146,7 @@
     {"path":"AGENTS.md","release":false,"purpose":"Entwicklungsregeln"},
     {"path":"TODO.md","release":false,"purpose":"Entwicklungsplanung"},
     {"path":"CHANGELOG.md","release":false,"purpose":"Entwicklungsverlauf"},
-    {"path":".github/workflows/qualitaet.yml","release":false,"purpose":"CI-Prüfung und Restore-Gate"},
+    {"path":".github/workflows/qualitaet.yml","release":false,"purpose":"CI-Prüfung und Restore-Gate mit actions/checkout@v7.0.1"},
     {"path":"scripts/veroeffentlichen.py","release":false,"purpose":"Release-Erstellung"},
     {"path":"scripts/iteration_restore.py","release":false,"purpose":"Iterations-ZIP und Restore-Prüfung"},
     {"path":"scripts/backup_erstellen.sh","release":false,"purpose":"Verifizierte Projektsicherung"},
