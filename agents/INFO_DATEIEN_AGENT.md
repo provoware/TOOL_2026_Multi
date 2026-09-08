@@ -1,27 +1,20 @@
 # INFO-DATEIEN-AGENT
 
 ## Zweck
-Dieser Agent hält Informationsdateien nur dann aktuell, wenn sich belegte Projektdaten tatsächlich geändert haben.
-
-## Auslöser
-Nach jeder geprüften Code-, Struktur-, Start-, Test-, Release-, Versions- oder Bedienänderung prüfen, ob Informationen veraltet wurden.
+Informationsdateien werden nur nach belegten Projektänderungen aktualisiert.
 
 ## Prüfreihenfolge
-1. `MANIFEST.json`: Version, Status, Dateien, Prüfkommandos, Release-Markierungen.
-2. `CHANGELOG.md`: nur tatsächlich umgesetzte und geprüfte Änderungen.
-3. `TODO.md`: Status nur mit Nachweis auf 🟢/BEHOBEN setzen; neue offene Punkte mit Ursache übernehmen.
-4. `README.md`: Zweck, Startweg, Status und zentrale Funktionen.
-5. `ANLEITUNG_LAIEN.md`: nur Änderungen, die die Bedienung betreffen.
-6. `docs/`: nur fachlich betroffene Vertiefungen.
-7. `texte/registry.json`: sichtbare Standardtexte nur bei tatsächlicher Textänderung.
+1. `MANIFEST.json` – Version, Prüfwege, Runtime-/Recovery-/Release-Dateien.
+2. `CHANGELOG.md` – ausschließlich implementierte und geprüfte Änderungen.
+3. `TODO.md` – Status nur mit Nachweis auf 🟢/BEHOBEN.
+4. `README.md` – realer Start-, Prüf-, Sicherungs- und Recovery-Weg.
+5. `ANLEITUNG_LAIEN.md` – nur nutzerrelevante Bedienänderungen.
+6. `docs/` – nur fachlich betroffene Konzepte.
+7. `texte/registry.json` – nur sichtbare Textänderungen.
 
-## Regeln
-- Keine Datei allein wegen Datumswechsel verändern.
-- Keine erfundenen Erfolge, Tests oder Versionsstände eintragen.
-- Nicht betroffene Infodateien unangetastet lassen.
-- Widersprüche zwischen Manifest, TODO, Changelog und README gelten als Fehler.
-- Release-Markierungen nie automatisch auf `true` setzen, wenn der Betriebsbedarf nicht belegt ist.
-- Änderungen klein halten und zusammen mit der verursachenden Iteration prüfen.
-
-## Abschluss
-Der Agent meldet: aktualisierte Dateien, unveränderte geprüfte Dateien, offene Widersprüche und den Nachweis, auf dem jede Statusänderung beruht.
+## Zusätzliche Konsistenzprüfungen
+- Neue Runtime-Dateien müssen im Manifest stehen und ihre `release`-Entscheidung begründen.
+- Neue Restore-/Wächter-/Datenschutzfunktionen dürfen erst als 🟢 dokumentiert werden, wenn der passende automatisierte Test bestanden hat.
+- Ein Restore-Status `OK` ist nur zulässig nach SHA-256, neuem Restore-Ordner, Manifestvergleich, Vollprüfung und Headless-Start.
+- Keine Datei nur wegen Datumswechsel ändern.
+- Keine erfundenen Erfolge oder nicht ausgeführten Tests eintragen.

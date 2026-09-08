@@ -13,9 +13,9 @@ checkpoint() {
   AKTUELLER_SCHRITT="$1"
   "$PYTHON" "$STATUSWERKZEUG" set "$STATUSDATEI" "$1" "$2" "$3" >/dev/null 2>&1 || true
   case "$2" in
-    ok) farbe "32" "🟢 [$1/5] $3" ;;
-    running) farbe "33" "🟡 [$1/5] $3" ;;
-    failed) farbe "31" "🔴 [$1/5] $3" ;;
+    ok) farbe "32" "🟢 [$1/6] $3" ;;
+    running) farbe "33" "🟡 [$1/6] $3" ;;
+    failed) farbe "31" "🔴 [$1/6] $3" ;;
   esac
 }
 fehler() {
@@ -25,7 +25,7 @@ fehler() {
 }
 
 cd "$PROJEKTORDNER"
-command -v "$PYTHON" >/dev/null 2>&1 || { printf '🔴 Python 3 wurde nicht gefunden. Bitte Python 3 über die Paketverwaltung installieren.\n' >&2; exit 1; }
+command -v "$PYTHON" >/dev/null 2>&1 || { printf '🔴 Python 3 wurde nicht gefunden.\n' >&2; exit 1; }
 mkdir -p "$PROJEKTORDNER/logs"
 "$PYTHON" "$STATUSWERKZEUG" init "$STATUSDATEI" >/dev/null 2>&1 || true
 if [[ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]] && "$PYTHON" -c 'import tkinter' >/dev/null 2>&1; then
@@ -47,17 +47,19 @@ if grep -Eq '^[[:space:]]*[^#[:space:]]' requirements.txt; then
     "$UMGEBUNG/bin/python" -m pip install --disable-pip-version-check -r requirements.txt >/dev/null || fehler "Benötigte Pakete konnten nicht eingerichtet werden."
     printf '%s' "$ANFORDERUNGS_HASH" > "$HASH_DATEI"
   fi
-  checkpoint 3 ok "Pakete stimmen mit requirements.txt überein."
-else
-  checkpoint 3 ok "Keine externen Zusatzpakete nötig; Paketdownload übersprungen."
 fi
+checkpoint 3 ok "Abhängigkeiten sind bereit."
 
 checkpoint 4 running "Projekt wird begrenzt vorgeprüft."
-bash scripts/pruefen.sh --runtime || fehler "Die Vorprüfung meldet einen Fehler. Details stehen direkt oberhalb dieser Meldung."
+bash scripts/pruefen.sh --runtime || fehler "Die Laufzeitprüfung meldet einen Fehler."
 checkpoint 4 ok "Laufzeitprüfung erfolgreich."
 
-checkpoint 5 running "Anwendung wird geöffnet."
-[[ -f "$PROJEKTORDNER/app/main.py" ]] || fehler "app/main.py fehlt. Der Start wurde sicher beendet."
-checkpoint 5 ok "Alle Start-Checkpoints sind grün."
+checkpoint 5 running "Fensterloser Startweg wird geprüft."
+"$UMGEBUNG/bin/python" -m app.main --headless-check || fehler "Der Startunterbau ist nicht vollständig funktionsfähig."
+checkpoint 5 ok "Headless-Startprüfung erfolgreich."
+
+checkpoint 6 running "Anwendung wird unter Prozesswache geöffnet."
+[[ -f "$PROJEKTORDNER/app/main.py" ]] || fehler "app/main.py fehlt."
+checkpoint 6 ok "Alle Start-Checkpoints sind grün."
 "$PYTHON" "$STATUSWERKZEUG" finish "$STATUSDATEI" "🟢 Start vollständig geprüft. Anwendung wird geöffnet." >/dev/null 2>&1 || true
-exec "$UMGEBUNG/bin/python" -m app.main
+exec "$UMGEBUNG/bin/python" -m scripts.process_watch --root "$PROJEKTORDNER" -- "$UMGEBUNG/bin/python" -m app.main

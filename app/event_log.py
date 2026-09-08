@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from app.redaction import redact
 from app.regression import RegressionManager
 
 
@@ -22,16 +23,24 @@ class EventLogger:
     def record(self, *, severity: str, area: str, summary: str, cause: str,
                protection: str, next_step: str, exception: BaseException | None = None) -> dict[str, Any]:
         now = datetime.now(timezone.utc)
-        event_id = f"{area.upper()}-EREIGNIS-{now:%Y%m%d%H%M%S}-{uuid.uuid4().hex[:6].upper()}"
+        area_clean = redact(area, limit=80).upper() or "UNBEKANNT"
+        area_id = "".join(ch if ch.isalnum() else "_" for ch in area_clean)[:60] or "UNBEKANNT"
+        event_id = f"{area_id}-EREIGNIS-{now:%Y%m%d%H%M%S}-{uuid.uuid4().hex[:6].upper()}"
+        summary_clean = redact(summary, limit=1000)
+        cause_clean = redact(cause, limit=2000)
+        protection_clean = redact(protection, limit=1000)
+        next_step_clean = redact(next_step, limit=1000)
         learned = None
         if exception is not None:
-            learned = self.regressions.learn(area, type(exception).__name__, cause)
-            next_step = f"{next_step} {self.regressions.prevention_hint(learned)}"
+            learned = self.regressions.learn(area_clean, type(exception).__name__, cause_clean)
+            next_step_clean = redact(
+                f"{next_step_clean} {self.regressions.prevention_hint(learned)}", limit=1400
+            )
         event = {
             "schema_version": 1, "time": now.isoformat(), "event_id": event_id,
-            "severity": severity, "area": area, "summary": summary,
-            "technical_cause": cause, "safe_action": protection,
-            "next_step": next_step, "program_version": self.version,
+            "severity": redact(severity, limit=40), "area": area_clean, "summary": summary_clean,
+            "technical_cause": cause_clean, "safe_action": protection_clean,
+            "next_step": next_step_clean, "program_version": self.version,
             "exception_type": type(exception).__name__ if exception else None,
             "trace": self._trace(exception), "regression": learned,
         }
@@ -39,9 +48,6 @@ class EventLogger:
         return event
 
     def recent(self, limit: int = 5) -> list[dict[str, Any]]:
-        # REG-LOG-001: Python interpretiert [-0:] als "alles". Nichtpositive Grenzen
-        # müssen vor dem Slicing abgefangen werden, sonst werden unerwartet alle
-        # Ereignisse gelesen und angezeigt.
         if limit <= 0 or not self.jsonl_path.exists():
             return []
         events: list[dict[str, Any]] = []
@@ -69,7 +75,7 @@ class EventLogger:
     def _trace(exception: BaseException | None) -> str | None:
         if exception is None:
             return None
-        return "".join(traceback.format_exception(exception))[-4000:]
+        return redact("".join(traceback.format_exception(exception)), limit=4000)
 
     @staticmethod
     def human_report(event: dict[str, Any]) -> str:

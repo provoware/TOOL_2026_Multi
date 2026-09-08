@@ -1,79 +1,47 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.3.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.4.0 · **Stand:** 2026-09-08
 
-## Zweck
+## Iteration 4 – Recovery-Härtung
 
-Dieses Repository enthält den ausführbaren Kern von **TOOL_2026_Multi**. Das Dashboard zeigt die letzten fünf Ereignisse, erklärt Fehler verständlich und führt Status zusätzlich über ein Ampelsystem. Die Entwicklungsgrundlage besitzt nun einen rückfallgesicherten Fehlerfall, globale Oberflächenstandards, einen grafisch unterstützten Startweg und einen strikt manifestgesteuerten Veröffentlichungsweg.
+Der Entwicklungsunterbau besitzt jetzt vier zusätzliche Schutzschichten:
 
-## Ampel
-
-| Bereich | Status | Bedeutung |
+| Bereich | Status | Nachweis |
 |---|---|---|
-| Projektregeln | 🟢 | verbindlich definiert |
-| Ordnertrennung | 🟢 | Laufzeitdaten, Entwicklung und Protokolle getrennt |
-| Sicherungskonzept | 🟢 | Regeln und automatischer Sicherungsweg definiert |
-| Prüfablauf | 🟢 | getrennte Laufzeit- und Entwicklerprüfung vorhanden |
-| Schnellstart | 🟢 | fünf echte Checkpoints, grafische Ampelanzeige mit Konsolenfallback |
-| Paketabgleich | 🟢 | keine unnötigen Downloads, wenn keine externen Pakete benötigt werden |
-| Globale UI-Standards | 🟢 | Farben, Abstände, Schriftgrößen und Statusdarstellung zentral definiert |
-| Fehlerbericht im Werkzeug | 🟢 | TXT-Bericht und JSON-Zeile mit eindeutiger Kennung |
-| Rückfallmanagement | 🟢 | `LOG-FEHLER-001` ist über `REG-LOG-001` als **BEHOBEN** abgesichert |
-| Veröffentlichung | 🟢 | nur Manifest-Dateien mit `release: true` gelangen ins Nutzer-ZIP |
-| Info-Dateien-Agent | 🟢 | aktualisiert Informationsdateien nur bei belegten Änderungen |
-| Werkzeugfunktionen | 🔴 | fachliche Hauptmodule noch nicht festgelegt |
+| Vollprojekt-Restore | 🟢 | ZIP → SHA-256 → neuer Ordner → Manifest → Vollprüfung → Headless-Start |
+| Headless-Start | 🟢 | `python3 -m app.main --headless-check` ohne Fenster |
+| Prozesswache | 🟢 | separater Elternprozess erkennt fehlerhaften/harten Prozessabschluss |
+| Log-Datenschutz | 🟢 | Geheimnisse, Mailadressen und Benutzeranteile in Home-Pfaden werden vor Persistierung bereinigt |
+| Startführung | 🟢 | sechs echte Checkpoints inklusive Headless- und Wächterstufe |
 
-## Einfache Nutzung
-
-1. `schnellstart.sh` doppelklicken oder im Terminal starten.
-2. Der Start prüft Python, die abgeschirmte Umgebung, Abhängigkeiten, Projektkern und Anwendung.
-3. Wenn eine grafische Oberfläche verfügbar ist, zeigt ein kleines Fenster den echten Stand mit 🟡/🟢/🔴 an.
-4. Sind keine externen Pakete nötig, wird der Paketdownload vollständig übersprungen.
-5. Erst nach grüner Laufzeitprüfung startet das Dashboard.
+## Start
 
 ```bash
 bash schnellstart.sh
 ```
 
-## Prüfen
+Der Start prüft Python, Umgebung, Abhängigkeiten, Laufzeitkern und Headless-Start. Erst danach wird die Anwendung unter der separaten Prozesswache geöffnet.
 
-Normale Laufzeitprüfung:
-
-```bash
-bash scripts/pruefen.sh --runtime
-```
-
-Vollständige Entwicklerprüfung:
+## Vollprüfung
 
 ```bash
 bash scripts/pruefen.sh --full
 ```
 
-## Veröffentlichung
+## Verifizierte Iterationssicherung
 
 ```bash
-python3 scripts/veroeffentlichen.py
+bash scripts/backup_erstellen.sh
 ```
 
-Das Skript validiert alle freigegebenen Pfade, erzeugt das Nutzer-ZIP atomar, prüft dessen Inhalt und schreibt eine SHA-256-Prüfsumme. Dateien ohne `release: true` werden nicht übernommen.
+Das Sicherungsskript ruft den Restore-Prüfer auf. Ein Stand wird nur als `OK` bewertet, wenn die Prüfsumme stimmt, das ZIP sicher in einen neuen Ordner entpackt wurde, das Manifest identisch ist, die Vollprüfung besteht und der Headless-Start grün ist.
 
-## Wichtige Dateien
+Direkter Aufruf:
 
-- `AGENTS.md` – verbindliche Arbeitsregeln für Entwicklung.
-- `agents/INFO_DATEIEN_AGENT.md` – prüft nach Änderungen, welche Infodateien wirklich aktualisiert werden müssen.
-- `TODO.md` – offene Arbeit, Priorität und nächste Iteration.
-- `CHANGELOG.md` – nachvollziehbare Änderungen.
-- `MANIFEST.json` – Projektstand und verbindliche Release-Freigaben.
-- `ANLEITUNG_LAIEN.md` – kurze Anleitung ohne unnötige Fachsprache.
-- `app/ui_standards.py` – zentrale Farben, Abstände, Schriften und Ampellogik.
-- `scripts/start_status.py` – grafische Start-Checkpoints.
-- `scripts/veroeffentlichen.py` – manifestgesteuerte Release-Erstellung.
-- `tests/regression_registry.json` – bestätigte Rückfallfälle mit Testkennung und Status.
-- `scripts/pruefen.sh` – begrenzte Qualitätsprüfung.
-- `scripts/backup_erstellen.sh` – lokaler Sicherungspunkt mit Prüfsumme.
+```bash
+python3 scripts/iteration_restore.py
+```
 
-## Grundsatz
+## Datenschutz im Log
 
-**Planen → klein ändern → gezielt prüfen → Ergebnis sichern → Infodateien abgleichen → erst dann weiter.**
-
-Keine verdeckten Endlosschleifen, keine unnötigen Komplettumbauten und keine ungeprüften Änderungen an Nutzerdaten.
+`app/redaction.py` bereinigt sensible Muster zentral **vor** JSONL-/TXT-Ausgabe und vor dem Rückfalllernen. Dazu gehören insbesondere Passwort-/Token-/Secret-/API-Key-Werte, Bearer-Tokens, Mailadressen und der Benutzername in `/home/<name>`.

@@ -1,23 +1,38 @@
-"""Sicherer Programmeinstieg."""
+"""Sicherer Programmeinstieg mit prüfbarem Headless-Modus."""
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
-import tkinter as tk
 
 from app.event_log import EventLogger, emergency_message
 from app.texts import TextRegistry
-from app.ui import Dashboard, install_exception_handler
-
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def headless_check() -> int:
+    """Prüft den echten Startunterbau ohne Fenster und ohne dauerhafte Laufzeitdaten."""
+    try:
+        manifest = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
+        version = manifest["tool"]["version"]
+        registry = TextRegistry(ROOT / "texte" / "registry.json")
+        registry.get("app.name", "TOOL_2026_Multi")
+        if not version or not (ROOT / manifest["runtime"]["entrypoint"]).is_file():
+            raise ValueError("Manifest enthält keinen gültigen Programmeinstieg.")
+        return 0
+    except Exception as error:
+        print(f"HEADLESS-START-FEHLER: {type(error).__name__}: {error}")
+        return 1
 
 
 def main() -> int:
     version = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))["tool"]["version"]
     logger = EventLogger(ROOT, version)
     try:
+        import tkinter as tk
+        from app.ui import Dashboard, install_exception_handler
         root = tk.Tk()
         dashboard = Dashboard(root, TextRegistry(ROOT / "texte" / "registry.json"), logger)
         install_exception_handler(root, logger, dashboard.refresh)
@@ -38,5 +53,12 @@ def main() -> int:
         return 1
 
 
+def cli() -> int:
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--headless-check", action="store_true")
+    args, _unknown = parser.parse_known_args()
+    return headless_check() if args.headless_check else main()
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(cli())

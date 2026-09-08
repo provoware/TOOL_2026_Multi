@@ -1,22 +1,24 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 3,
-    "goal": "Echten Fehler rückfallgesichert beheben, globale Standards und sicheren Release-/Startweg etablieren",
-    "completed": 9,
-    "open_next": 17
+    "number": 4,
+    "goal": "Restore, Headless-Start, Prozesswache und Log-Redaktion vollständig absichern",
+    "completed": 8,
+    "open_next": 13
   },
   "runtime": {
     "entrypoint": "app/main.py",
     "launcher": "schnellstart.sh",
-    "requirements": "requirements.txt"
+    "requirements": "requirements.txt",
+    "headless_check": "python3 -m app.main --headless-check",
+    "watcher": "scripts/process_watch.py"
   },
   "separation": {
     "source": "app/",
@@ -31,15 +33,23 @@
   "validation": {
     "command": "bash scripts/pruefen.sh --full",
     "runtime_command": "bash scripts/pruefen.sh --runtime",
+    "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder"
+    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore"
   },
   "diagnostics": {
     "machine_log": "logs/ereignisse.jsonl",
     "human_reports": "berichte/",
     "regression_state": "logs/rueckfaelle.json",
     "regression_registry": "tests/regression_registry.json",
-    "dashboard_limit": 5
+    "dashboard_limit": 5,
+    "redaction": "app/redaction.py",
+    "watcher": "scripts/process_watch.py"
+  },
+  "recovery": {
+    "iteration_restore": "scripts/iteration_restore.py",
+    "backup_entrypoint": "scripts/backup_erstellen.sh",
+    "status_rule": "OK nur nach ZIP-Prüfung, SHA-256, neuem Restore-Ordner, Manifestvergleich, Vollprüfung und Headless-Start"
   },
   "release_build": {
     "builder": "scripts/veroeffentlichen.py",
@@ -47,29 +57,36 @@
     "rule": "Nur Dateien mit release=true"
   },
   "files": [
-    {"path": "MANIFEST.json", "release": true, "purpose": "Laufzeit- und Versionsdaten"},
-    {"path": "ANLEITUNG_LAIEN.md", "release": true, "purpose": "Nutzeranleitung"},
-    {"path": "requirements.txt", "release": true, "purpose": "Abhängigkeiten"},
-    {"path": "schnellstart.sh", "release": true, "purpose": "Vollautomatischer Start"},
-    {"path": "app/__init__.py", "release": true, "purpose": "Anwendungspaket"},
-    {"path": "app/event_log.py", "release": true, "purpose": "Ereignisprotokoll"},
-    {"path": "app/main.py", "release": true, "purpose": "Programmeinstieg"},
-    {"path": "app/regression.py", "release": true, "purpose": "Rückfalllernen"},
-    {"path": "app/texts.py", "release": true, "purpose": "Textregistrierung"},
-    {"path": "app/ui.py", "release": true, "purpose": "Dashboard"},
-    {"path": "app/ui_standards.py", "release": true, "purpose": "Globale Oberflächenstandards"},
-    {"path": "scripts/pruefen.sh", "release": true, "purpose": "Laufzeit-Vorprüfung"},
-    {"path": "scripts/start_status.py", "release": true, "purpose": "Grafische Start-Checkpoints"},
-    {"path": "texte/registry.json", "release": true, "purpose": "Zentrale Nutzertexte"},
-    {"path": "README.md", "release": false, "purpose": "Entwicklerübersicht"},
-    {"path": "AGENTS.md", "release": false, "purpose": "Entwicklungsregeln"},
-    {"path": "TODO.md", "release": false, "purpose": "Entwicklungsplanung"},
-    {"path": "CHANGELOG.md", "release": false, "purpose": "Entwicklungsverlauf"},
-    {"path": ".github/workflows/qualitaet.yml", "release": false, "purpose": "CI-Prüfung"},
-    {"path": "scripts/veroeffentlichen.py", "release": false, "purpose": "Release-Erstellung"},
-    {"path": "tests/test_event_management.py", "release": false, "purpose": "Ereignis- und Rückfalltests"},
-    {"path": "tests/test_release_builder.py", "release": false, "purpose": "Release-Tests"},
-    {"path": "tests/regression_registry.json", "release": false, "purpose": "Rückfallregister"},
-    {"path": "agents/INFO_DATEIEN_AGENT.md", "release": false, "purpose": "Info-Dateien-Agent"}
+    {"path":"MANIFEST.json","release":true,"purpose":"Laufzeit- und Versionsdaten"},
+    {"path":"ANLEITUNG_LAIEN.md","release":true,"purpose":"Nutzeranleitung"},
+    {"path":"requirements.txt","release":true,"purpose":"Abhängigkeiten"},
+    {"path":"schnellstart.sh","release":true,"purpose":"Vollautomatischer Start"},
+    {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
+    {"path":"app/event_log.py","release":true,"purpose":"Ereignisprotokoll"},
+    {"path":"app/main.py","release":true,"purpose":"Programmeinstieg und Headless-Prüfung"},
+    {"path":"app/regression.py","release":true,"purpose":"Rückfalllernen"},
+    {"path":"app/redaction.py","release":true,"purpose":"Bereinigung sensibler Protokollwerte"},
+    {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
+    {"path":"app/ui.py","release":true,"purpose":"Dashboard"},
+    {"path":"app/ui_standards.py","release":true,"purpose":"Globale Oberflächenstandards"},
+    {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit-Vorprüfung"},
+    {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Start-Checkpoints"},
+    {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
+    {"path":"texte/registry.json","release":true,"purpose":"Zentrale Nutzertexte"},
+    {"path":"README.md","release":false,"purpose":"Entwicklerübersicht"},
+    {"path":"AGENTS.md","release":false,"purpose":"Entwicklungsregeln"},
+    {"path":"TODO.md","release":false,"purpose":"Entwicklungsplanung"},
+    {"path":"CHANGELOG.md","release":false,"purpose":"Entwicklungsverlauf"},
+    {"path":".github/workflows/qualitaet.yml","release":false,"purpose":"CI-Prüfung und Restore-Gate"},
+    {"path":"scripts/veroeffentlichen.py","release":false,"purpose":"Release-Erstellung"},
+    {"path":"scripts/iteration_restore.py","release":false,"purpose":"Iterations-ZIP und Restore-Prüfung"},
+    {"path":"scripts/backup_erstellen.sh","release":false,"purpose":"Verifizierte Projektsicherung"},
+    {"path":"tests/test_event_management.py","release":false,"purpose":"Ereignis- und Rückfalltests"},
+    {"path":"tests/test_release_builder.py","release":false,"purpose":"Release-Tests"},
+    {"path":"tests/test_security_watch.py","release":false,"purpose":"Redaktions- und Wächtertests"},
+    {"path":"tests/test_restore.py","release":false,"purpose":"Restore-Sicherheitstests"},
+    {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
+    {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
+    {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"}
   ]
 }
