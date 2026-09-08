@@ -5,27 +5,35 @@
 bash schnellstart.sh
 ```
 
-Das Startfenster besitzt jetzt sechs echte Schritte. Neu sind die unsichtbare Startprüfung ohne Fenster und die Prozesswache. Erst wenn alles grün ist, öffnet das Dashboard.
+Die vorhandenen sechs Startschritte, die Headless-Prüfung und die Prozesswache bleiben aktiv.
 
-## Was schützt die Prozesswache?
-Die eigentliche Anwendung läuft unter einem getrennten Wächter. Endet sie fehlerhaft oder durch ein hartes Signal, legt der Wächter einen verständlichen Bericht unter `berichte/` an. Er verändert dabei keine Nutzerdaten.
+## Was passiert beim normalen Beenden?
+Wenn das Programm regulär geschlossen wird, schreibt es jetzt ein eigenes `ENDE`-Ereignis. So lässt sich später unterscheiden, ob das Programm sauber beendet wurde oder unerwartet verschwunden ist.
 
-## Was steht nicht im Protokoll?
-Typische Passwörter, Tokens, API-Schlüssel, Bearer-Tokens, Mailadressen und der Benutzername in Linux-Home-Pfaden werden vor dem Schreiben ersetzt.
+## Was passiert mit zu großen oder alten Logs?
+Das Ereignislog wird automatisch begrenzt:
+- ab mehr als 2 MiB wird es archiviert,
+- nach mehr als 30 Tagen wird es archiviert,
+- höchstens 5 ältere Archive bleiben erhalten.
+
+Die Archive liegen unter `logs/archiv/`.
+
+## Was passiert mit beschädigten Logzeilen?
+Eine ungültige JSONL-Zeile wird nicht mehr still ignoriert. Das Programm:
+1. sichert eine bereinigte Beweiskopie unter `logs/quarantaene/`,
+2. entfernt nur die beschädigte Zeile aus dem aktiven Log,
+3. erhält alle gültigen Zeilen atomar.
+
+## Datenschutzgeprüftes Diagnosepaket
+```bash
+python3 scripts/diagnosepaket.py
+```
+
+Das Diagnosepaket übernimmt keine unveränderten Rohprotokolle. Textdaten werden zuerst bereinigt und danach nochmals geprüft. Erkannte Passwörter, Tokens, API-Schlüssel, Bearer-Tokens, Mailadressen und Linux-Home-Benutzernamen werden ersetzt. Erst nach dieser zweiten Prüfung wird das ZIP fertiggestellt. Dazu entsteht eine SHA-256-Prüfsumme.
 
 ## Sicherung und echte Wiederherstellungsprüfung
 ```bash
 bash scripts/backup_erstellen.sh
 ```
 
-Dabei passiert automatisch:
-1. vollständiges Projekt-ZIP erstellen,
-2. SHA-256 berechnen und erneut vergleichen,
-3. ZIP auf unsichere Pfade prüfen,
-4. in einen neuen Ordner entpacken,
-5. Manifest vergleichen,
-6. vollständige Projektprüfung ausführen,
-7. Start ohne Fenster prüfen,
-8. nur dann Restore-Status `OK` melden.
-
-Ein fehlgeschlagener Schritt wird niemals als erfolgreiche Wiederherstellung ausgegeben.
+Der bestehende Restore-Weg bleibt unverändert: ZIP, SHA-256, sicherer neuer Ordner, Manifestvergleich, Vollprüfung und Headless-Start müssen vollständig grün sein, bevor der Restore-Status `OK` lautet.
