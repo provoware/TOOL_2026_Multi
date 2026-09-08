@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
-import os
 from copy import deepcopy
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from uuid import uuid4
+
+from app.atomic_io import atomic_write_json
 
 SCHEMA_VERSION = 1
 REMINDER_OPTIONS = (None, 0, 5, 15, 30, 60, 1440)
@@ -40,7 +41,7 @@ def _local_datetime(value: object, *, field: str) -> datetime:
         raise ValueError(f"{field} hat kein gültiges Datum/Zeit-Format.") from error
     if parsed.tzinfo is not None:
         raise ValueError(f"{field} muss lokale Datum/Zeit ohne Zeitzone enthalten.")
-    return parsed.replace(microsecond=0)
+    return parsed.replace(second=0, microsecond=0)
 
 
 def _validate_timestamp(value: object, *, field: str, optional: bool = False) -> str | None:
@@ -118,20 +119,7 @@ def load_state(root: Path) -> dict[str, object]:
 
 def save_state(root: Path, state: dict[str, object]) -> Path:
     clean = validate_state(state)
-    target = store_path(root)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    temporary = target.with_suffix(target.suffix + ".tmp")
-    try:
-        with temporary.open("w", encoding="utf-8") as handle:
-            json.dump(clean, handle, ensure_ascii=False, indent=2, sort_keys=True)
-            handle.write("\n")
-            handle.flush()
-            os.fsync(handle.fileno())
-        os.replace(temporary, target)
-    finally:
-        if temporary.exists():
-            temporary.unlink(missing_ok=True)
-    return target
+    return atomic_write_json(store_path(root), clean)
 
 
 def add_event(root: Path, title: str, start: str, end: str, note: str = "",
