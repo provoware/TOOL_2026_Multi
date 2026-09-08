@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+
+from app.atomic_io import atomic_write_text
 
 SECTION_TYPES = (
     "Intro", "Strophe", "Pre-Chorus", "Refrain", "Hook", "Bridge", "Outro", "Spoken", "Instrumental"
@@ -105,13 +106,7 @@ def song_path(root: Path, title: str) -> Path:
 
 
 def _atomic_write(target: Path, content: str) -> None:
-    target.parent.mkdir(parents=True, exist_ok=True)
-    temporary = target.with_suffix(target.suffix + ".tmp")
-    with temporary.open("w", encoding="utf-8") as handle:
-        handle.write(content)
-        handle.flush()
-        os.fsync(handle.fileno())
-    os.replace(temporary, target)
+    atomic_write_text(target, content)
 
 
 def _version_folder(root: Path, title: str) -> Path:
