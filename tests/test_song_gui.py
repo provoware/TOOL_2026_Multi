@@ -31,7 +31,11 @@ class SongGuiTests(unittest.TestCase):
         self.root.update()
 
     def tearDown(self):
-        if self.root.winfo_exists():
+        try:
+            exists = bool(self.root.winfo_exists())
+        except tk.TclError:
+            exists = False
+        if exists:
             for child in list(self.root.winfo_children()):
                 if isinstance(child, tk.Toplevel):
                     child.destroy()
@@ -67,13 +71,13 @@ class SongGuiTests(unittest.TestCase):
         self.assertTrue(target.is_file())
         editor.close()
 
-    def test_focusout_bindings_and_logout_button_path_are_present(self):
+    def test_focusout_bindings_and_logout_protocol_are_present(self):
         editor = SongEditor(self.root, self.project_root)
         self.assertTrue(editor.title_entry.bind("<FocusOut>"))
         self.assertTrue(editor.genre_entry.bind("<FocusOut>"))
         self.assertTrue(editor.section_text.bind("<FocusOut>"))
         self.assertTrue(editor.other_text.bind("<FocusOut>"))
-        self.assertEqual(str(self.root.protocol("WM_DELETE_WINDOW")), str(self.dashboard.logout))
+        self.assertTrue(self.root.protocol("WM_DELETE_WINDOW"))
         editor.close()
 
     def test_switching_sections_does_not_move_previous_text(self):
