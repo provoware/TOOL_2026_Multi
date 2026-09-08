@@ -1,17 +1,17 @@
 {
-  "schema_version": 7,
+  "schema_version": 8,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.8.0",
+    "version": "0.9.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-08"
   },
   "iteration": {
-    "number": 8,
-    "goal": "Songbibliothek, vorhandene Songs bearbeiten, letzte Songs, Metadaten, Versionsstände und Exporte in den bestehenden Songworkflow integrieren",
+    "number": 9,
+    "goal": "Songbibliothek mit kombinierbarer Suche und Filtern, Favoriten, Bearbeitungsstatus, Sortierung/Gruppierung und geschützter Versionswiederherstellung vervollständigen",
     "completed": 5,
-    "open_next": 2
+    "open_next": 3
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -40,7 +40,7 @@
     "runtime_command": "bash scripts/pruefen.sh --runtime",
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui",
+    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls; xvfb-run -a python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py"
   },
   "song_editor": {
@@ -50,7 +50,8 @@
     "autosave_seconds": 300,
     "save_on_focus_out": true,
     "save_on_close": true,
-    "fields": ["title", "genre_optional", "mood_optional", "style_optional", "voice_optional", "special_optional", "tags_optional", "sections", "other_optional"],
+    "fields": ["title", "genre_optional", "mood_optional", "style_optional", "voice_optional", "special_optional", "tags_optional", "status", "favorite", "sections", "other_optional"],
+    "statuses": ["Idee", "Entwurf", "Überarbeitung", "Fertig"],
     "section_types": ["Intro", "Strophe", "Pre-Chorus", "Refrain", "Hook", "Bridge", "Outro", "Spoken", "Instrumental"],
     "preview": true,
     "atomic_write": true,
@@ -61,8 +62,12 @@
     "module": "app/song_library.py",
     "open_existing": true,
     "recent_dashboard_limit": 5,
-    "sort": "modified_desc",
-    "version_preview": "read_only",
+    "search_fields": ["title", "genre", "mood", "style", "voice", "tags"],
+    "filters": ["genre", "mood", "style", "voice", "tags", "status", "favorites_only"],
+    "sort_options": ["modified", "title", "genre", "tags", "status"],
+    "group_options": ["none", "genre", "tags", "status"],
+    "version_preview": "read_only_before_restore",
+    "restore_rule": "Nur explizit gewählte Version; aktueller Stand wird unmittelbar davor als neuer Versionsstand gesichert; fremde Versionspfade werden abgewiesen.",
     "working_files_glob": "daten/songtexte/*.txt"
   },
   "dashboard_quick_info": {
@@ -120,9 +125,9 @@
     {"path":"app/log_maintenance.py","release":true,"purpose":"Logrotation und Quarantäne beschädigter JSONL-Zeilen"},
     {"path":"app/recovery_ui.py","release":true,"purpose":"Filter-, Detail-, Wiederholungs- und Zoomlogik der Recovery-Oberfläche"},
     {"path":"app/quick_note.py","release":true,"purpose":"Append-only Entwicklerinformation im Dashboardheader"},
-    {"path":"app/song_document.py","release":true,"purpose":"Songmodell, Rückwärtslesen, Versionierung und Exporte"},
-    {"path":"app/song_editor.py","release":true,"purpose":"Songtexteditor mit Metadaten, Bereichen, Vorschau, Autosave und Export"},
-    {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek und schreibgeschützte Versionsvorschau"},
+    {"path":"app/song_document.py","release":true,"purpose":"Songmodell, Rückwärtslesen, Status/Favorit, Versionierung, Restore und Exporte"},
+    {"path":"app/song_editor.py","release":true,"purpose":"Songtexteditor mit Metadaten, Status/Favorit, Bereichen, Vorschau, Autosave und Export"},
+    {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek mit Suche, Filtern, Sortierung/Gruppierung und geschütztem Restore"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
     {"path":"app/ui.py","release":true,"purpose":"Dashboard, letzte Songs, Recovery-Zentrale, Schnelleingabe und Logout"},
     {"path":"app/ui_standards.py","release":true,"purpose":"Globale Oberflächen- und Zoomstandards"},
@@ -151,11 +156,14 @@
     {"path":"tests/test_song_gui.py","release":false,"purpose":"Songeditor-, Autosave-, Fokus- und Dashboardheadertests"},
     {"path":"tests/test_song_library.py","release":false,"purpose":"Bibliotheks-, Metadaten-, Versions- und Exporttests"},
     {"path":"tests/test_song_library_gui.py","release":false,"purpose":"Songbibliothek-, Kachel- und Metadaten-GUI-Tests"},
+    {"path":"tests/test_song_library_controls.py","release":false,"purpose":"Such-, Filter-, Sortier-, Status/Favorit- und Restore-Tests"},
+    {"path":"tests/test_song_library_controls_gui.py","release":false,"purpose":"Tk-Tests für Bibliotheksfilter, Gruppierung, Status/Favorit und Restore-Vorschau"},
     {"path":"tests/regression_registry.json","release":false,"purpose":"Rückfallregister"},
     {"path":"agents/INFO_DATEIEN_AGENT.md","release":false,"purpose":"Info-Dateien-Agent"},
     {"path":"docs/ITERATION4_RECOVERY.md","release":false,"purpose":"Restore-, Wächter- und Datenschutzkonzept"},
     {"path":"docs/ITERATION6_RECOVERY_UI.md","release":false,"purpose":"Recovery-UI, Bedien- und Prüfkonzept"},
     {"path":"docs/ITERATION7_SONG_WORKFLOW.md","release":false,"purpose":"Dashboard-Schnellspeicher, Songeditor-, Autosave- und Logout-Konzept"},
-    {"path":"docs/ITERATION8_SONG_LIBRARY.md","release":false,"purpose":"Songbibliothek, Metadaten, Versionen und Exportkonzept"}
+    {"path":"docs/ITERATION8_SONG_LIBRARY.md","release":false,"purpose":"Songbibliothek, Metadaten, Versionen und Exportkonzept"},
+    {"path":"docs/ITERATION9_SONG_LIBRARY_CONTROLS.md","release":false,"purpose":"Suche, Filter, Favoriten, Status, Sortierung/Gruppierung und Restore-Schutz"}
   ]
 }
