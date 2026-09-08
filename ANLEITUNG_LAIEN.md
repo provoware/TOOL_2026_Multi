@@ -7,6 +7,12 @@ bash schnellstart.sh
 
 Der Schnellstart richtet bei Bedarf die abgeschirmte Python-Umgebung ein, installiert die festgelegte PySide6-Version, prüft den Start und öffnet anschließend das Programm unter Prozesswache.
 
+### Wenn Provoware schon läuft
+Pro Projektordner darf nur ein schreibendes Dashboard gleichzeitig laufen. Wird Provoware versehentlich ein zweites Mal gestartet, erscheint ein verständlicher Hinweis und der zweite Start wird beendet. Der bereits geöffnete Stand läuft unverändert weiter. Dadurch können zwei Prozesse nicht gegenseitig neuere Änderungen überschreiben.
+
+### Einheitlicher Speicherschutz
+Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien verwenden denselben geschützten Schreibweg. Neue Daten werden zuerst vollständig in eine eindeutige temporäre Datei geschrieben und geprüft. Erst danach ersetzt das Programm den bisherigen Stand atomar. Ein Fehler vor diesem letzten Schritt lässt den vorherigen Bestand erhalten. Temporäre Reste werden entfernt.
+
 ## Zoom und Schriftgröße
 Die Oberfläche kann ohne Einstellungsdialog vergrößert oder verkleinert werden:
 - `Strg` gedrückt halten und das **Mausrad nach oben** drehen: größer.
@@ -131,7 +137,7 @@ Eigene Änderungen werden gespeichert unter:
 daten/profile/db_profile.json
 ```
 
-Die eingebauten Startprofile erzeugen beim bloßen Programmstart noch keine Datei. Erst wenn Sie etwas ändern, wird gespeichert.
+Die eingebauten Startprofile erzeugen beim bloßen Programmstart noch keine Datei. Erst wenn Sie etwas ändern, wird gespeichert. Wenn eine vorhandene Profildatei widersprüchliche doppelte Werte enthält, wird sie nicht still verändert. Das Programm meldet den Fehler stattdessen.
 
 ## Todo-Liste
 Öffnen über:
@@ -145,7 +151,7 @@ Die eingebauten Startprofile erzeugen beim bloßen Programmstart noch keine Date
 4. Datum und Uhrzeit wählen.
 5. **Aufgabe anlegen** anklicken.
 
-Aktive Aufgaben stehen in der Registerkarte **Aktiv**. Aufgaben mit Termin werden nach Termin einsortiert.
+Aktive Aufgaben stehen in der Registerkarte **Aktiv**. Aufgaben mit Termin werden nach Termin einsortiert. Todo- und Kalenderzeiten verwenden einheitlich die lokale Rechnerzeit, ohne stille Umrechnung in eine andere Zeitzone.
 
 ### Aufgabe abhaken
 1. Eine aktive Aufgabe markieren.
@@ -158,7 +164,7 @@ Beim Abhaken wird die Aufgabe **nicht gelöscht**. Aktive Aufgaben und Archiv be
 daten/todo/todo.json
 ```
 
-Dadurch kann die Aufgabe nicht zwischen zwei getrennten Dateien verloren gehen. Die Datei wird über eine temporäre Datei geprüft und atomar ersetzt.
+Dadurch kann die Aufgabe nicht zwischen zwei getrennten Dateien verloren gehen. Die Datei wird über den gemeinsamen geschützten Schreibweg atomar ersetzt.
 
 ## Recovery
 Recovery befindet sich bewusst nur an einer Stelle:
@@ -306,11 +312,12 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, Profilverwaltung, Todo, Kalender und Erinnerungen, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
+Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, Profilverwaltung, Todo, Kalender und Erinnerungen, den gemeinsamen Produktions-Schreibweg, Mehrfachstart-Schutz, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
 
 ## Bestehende Schutzfunktionen
-- atomare Songdatei-Speicherung,
-- atomare Profil-, Todo- und Kalender-Speicherung,
+- gemeinsamer atomarer Schreibweg für Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien,
+- eindeutige temporäre Dateien statt kollisionsanfälliger fester `.tmp`-Namen,
+- Einzelinstanz-Schutz pro Projektordner,
 - automatische Versionssicherung vor geänderten Überschreibungen,
 - Sicherung des aktuellen Songs vor einer Wiederherstellung,
 - Pfadprüfung für Versionsstände,
@@ -320,5 +327,5 @@ Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Such
 - Headless-Start,
 - Prozesswache,
 - echter SIGTERM-Wächtertest nur in Tempdaten,
-- Schreibfehler-Simulation ohne echten Datenträgerverbrauch,
+- ENOSPC-/EROFS-Simulation gegen den echten Produktionsschreiber ohne echten Datenträgerverbrauch,
 - vollständige ZIP-/SHA-/Restore-Prüfung.
