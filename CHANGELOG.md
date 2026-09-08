@@ -1,5 +1,23 @@
 # Änderungsverlauf
 
+## 0.11.0 – 2026-09-08 – profilbasierte DB-Eingaben
+
+### Hinzugefügt
+- Profile `HardTechno`, `HipHop/Rap` und `Hörspiele` mit Startwerten,
+- getrennte Kategorien Genres, Stimmungen, Stil, Stimme und Besonderheiten,
+- PySide6-Profilverwaltung zum Anlegen von Profilen und Werten,
+- Profilauswahl direkt in der Dashboard-Karte `DB-Eingaben`,
+- sofortige Aktualisierung der Dashboard-Auswahlfelder nach Profiländerungen,
+- gezielte Logik- und GUI-Rückfalltests für Profilisolation, Duplikate und Dashboardbefüllung.
+
+### Schutz
+- Startprofile liegen bis zur ersten eigenen Änderung nur im Programmbestand und schreiben nicht beim Start,
+- eigene Profildaten werden atomar unter `daten/profile/db_profile.json` gespeichert,
+- ein simulierter Fehler beim atomaren Ersetzen lässt die vorherige Datei unverändert,
+- doppelte Werte werden ohne Beachtung der Groß-/Kleinschreibung abgewiesen,
+- Entfernen eines Werts verlangt eine ausdrückliche Bestätigung,
+- bestehende Song-, Recovery-, Zoom-, Kubuntu- und Restore-Gates bleiben aktiv.
+
 ## 0.10.2 – 2026-09-08 – Zoom und Schriftgrößensteuerung
 
 ### Hinzugefügt
