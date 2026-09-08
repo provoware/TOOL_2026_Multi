@@ -10,7 +10,7 @@ pruefe_datei(){ [[ -f "$1" ]] && printf '🟢 vorhanden: %s\n' "$1" || { printf 
 runtime_dateien=(MANIFEST.json ANLEITUNG_LAIEN.md requirements.txt schnellstart.sh app/main.py app/event_log.py app/regression.py app/redaction.py app/log_maintenance.py app/recovery_ui.py app/texts.py app/ui.py app/ui_standards.py scripts/pruefen.sh scripts/start_status.py scripts/process_watch.py scripts/diagnosepaket.py texte/registry.json)
 for datei in "${runtime_dateien[@]}"; do pruefe_datei "$datei"; done
 if [[ "$MODE" == "--full" ]]; then
-  entwickler_dateien=(README.md AGENTS.md TODO.md CHANGELOG.md scripts/veroeffentlichen.py scripts/iteration_restore.py scripts/backup_erstellen.sh scripts/schreibfehler_simulieren.py tests/test_event_management.py tests/test_release_builder.py tests/test_security_watch.py tests/test_restore.py tests/test_diagnostics_logging.py tests/test_recovery_ui_logic.py tests/test_recovery_ui_gui.py tests/regression_registry.json agents/INFO_DATEIEN_AGENT.md)
+  entwickler_dateien=(README.md AGENTS.md TODO.md CHANGELOG.md scripts/veroeffentlichen.py scripts/iteration_restore.py scripts/backup_erstellen.sh scripts/schreibfehler_simulieren.py tests/test_event_management.py tests/test_release_builder.py tests/test_security_watch.py tests/test_restore.py tests/test_diagnostics_logging.py tests/test_recovery_ui_logic.py tests/test_recovery_ui_gui.py tests/regression_registry.json agents/INFO_DATEIEN_AGENT.md docs/ITERATION6_RECOVERY_UI.md)
   for datei in "${entwickler_dateien[@]}"; do pruefe_datei "$datei"; done
 fi
 
