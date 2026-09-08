@@ -36,7 +36,16 @@ Stand: 2026-09-08
 - 🟢 TXT-/JSON-Abnahmebericht bleibt ohne sichtbare Bestätigung ausdrücklich `NICHT_VOLLSTAENDIG`.
 - 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner steht noch aus; sie kann durch GitHub-Offscreen-CI nicht ersetzt werden.
 
-## 2 nächste Schritte
+## Iteration 13 – Zoom und Schriftgröße
 
-1. 🔴 `bash kubuntu_abnahme.sh` auf dem realen Kubuntu/KDE-X11-Zielrechner ausführen und Layout, Fokus und Zoom sichtbar bestätigen.
-2. 🟡 nach dieser realen Abnahme das nächste Fachmodul des Multitools einzeln priorisieren und auf dem einheitlichen PySide6-Dashboard ergänzen.
+- 🟢 `Strg + Mausrad` ändert die zentrale Zoom-/Schriftgröße.
+- 🟢 vorhandene `Strg++`, `Strg+-` und `Strg+0` bleiben aktiv.
+- 🟢 sichtbare `A−`-/`A+`-Schaltflächen und Prozentanzeige in der Statusleiste ergänzt.
+- 🟢 Zoom wird auf Dashboard, offene Songeditoren, Songbibliothek und Recovery weitergegeben.
+
+## Nächste Fachiterationen
+
+1. 🔴 DB-Eingaben mit Profilen für Genre, Stimmung, Stil, Stimme und Besonderheiten.
+2. 🔴 Todo-Liste mit Terminierung, Abhaken und Archiv.
+3. 🔴 Kalender mit Tag/Woche/Monat/Jahr, Terminen und Erinnerungen.
+4. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
