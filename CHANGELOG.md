@@ -1,5 +1,26 @@
 # Änderungsverlauf
 
+## 0.13.0 – 2026-09-08 – Kalender und Erinnerungen
+
+### Hinzugefügt
+- eigenes PySide6-Kalendermodul unter `Planung → Kalender`,
+- echte Tages-, Wochen-, Monats- und Jahresbereiche für den gewählten Kalendertag,
+- Termine mit Titel, optionaler Notiz, Beginn und Ende,
+- Erinnerungen zum Terminbeginn sowie 5/15/30/60 Minuten oder 1 Tag vorher,
+- 30-Sekunden-Erinnerungsprüfung als Kind des laufenden Dashboards, auch bei geschlossenem Kalenderfenster,
+- gezielte Logik- und GUI-Rückfalltests für Bereichsgrenzen, Mehrtagestermine, Termineingabe, Einmal-Erinnerung, Dashboardbetrieb und Zoom.
+
+### Schutz
+- Beginn und Ende verwenden lokale Rechnerzeit ohne erfundene Zeitzonenumrechnung,
+- Ende muss nach Beginn liegen; ungültige Termine werden vor dem Schreiben abgewiesen,
+- Kalenderdaten werden atomar unter `daten/kalender/termine.json` gespeichert,
+- ein simulierter Fehler beim atomaren Ersetzen erhält den vorherigen Bestand,
+- eine Erinnerung wird erst nach erfolgreicher Anzeige atomar als erinnert markiert,
+- Wiedereintritt während einer geöffneten Erinnerung wird blockiert,
+- bei vollständig beendetem Dashboard wird bewusst kein separater Hintergrunddienst gestartet,
+- keine destruktive Terminlöschung in dieser Iteration,
+- bestehende Todo-, Profil-, Song-, Recovery-, Referenz-, Kubuntu- und Restore-Gates bleiben aktiv.
+
 ## 0.12.0 – 2026-09-08 – Todo-Liste mit Termin und Archiv
 
 ### Hinzugefügt
