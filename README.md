@@ -1,6 +1,21 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vervollständigtem Songbibliotheksworkflow · **Version:** 0.10.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.10.1 · **Stand:** 2026-09-08
+
+## Iteration 12 – Kubuntu/X11-Endabnahme
+
+- 🟢 `kubuntu_abnahme.sh` startet einen eigenen PySide6-Abnahmeassistenten.
+- 🟢 echte X11-Sitzung und KDE/Plasma werden vorgeprüft; Wayland wird nicht als X11 durchgewunken.
+- 🟢 echter SIGTERM-/Prozesswächtertest läuft ausschließlich in einem temporären Verzeichnis.
+- 🟢 TXT- und JSON-Bericht werden unter `berichte/` erstellt.
+- 🟢 ein Bericht erhält nur dann `OK`, wenn automatische Prüfungen und alle sichtbaren Bestätigungen für Referenzlayout, Tastaturfokus und Zoom grün sind.
+- 🟡 die tatsächliche sichtbare Abnahme muss weiterhin auf dem realen Kubuntu/KDE-X11-Zielrechner erfolgen; Offscreen-CI ersetzt sie bewusst nicht.
+
+Start der realen Endabnahme:
+
+```bash
+bash kubuntu_abnahme.sh
+```
 
 ## Iteration 11 – PySide6-Referenzdashboard
 
@@ -143,4 +158,4 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 bash scripts/pruefen.sh --full
 ```
 
-Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests, Referenzlayoutprüfung, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
+Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
