@@ -1,63 +1,31 @@
 # Anleitung für Laien
 
-## Was ist das hier?
-
-Dieses Projekt enthält den ausführbaren Kern von **TOOL_2026_Multi**. Es erklärt Programmereignisse und Fehler, ohne Ihre Basisdaten zu verändern.
-
 ## Starten
-
 ```bash
 bash schnellstart.sh
 ```
 
-Der Start erledigt die technische Vorbereitung selbst. Wenn eine grafische Oberfläche verfügbar ist, erscheint ein kleines Startfenster mit fünf echten Checkpoints:
+Das Startfenster besitzt jetzt sechs echte Schritte. Neu sind die unsichtbare Startprüfung ohne Fenster und die Prozesswache. Erst wenn alles grün ist, öffnet das Dashboard.
 
-- 🟡 Vorgang läuft,
-- 🟢 Schritt erfolgreich,
-- 🔴 sicher abgebrochen.
+## Was schützt die Prozesswache?
+Die eigentliche Anwendung läuft unter einem getrennten Wächter. Endet sie fehlerhaft oder durch ein hartes Signal, legt der Wächter einen verständlichen Bericht unter `berichte/` an. Er verändert dabei keine Nutzerdaten.
 
-Ohne grafische Oberfläche werden dieselben Zustände im Terminal angezeigt.
+## Was steht nicht im Protokoll?
+Typische Passwörter, Tokens, API-Schlüssel, Bearer-Tokens, Mailadressen und der Benutzername in Linux-Home-Pfaden werden vor dem Schreiben ersetzt.
 
-Der Start prüft nacheinander Python, die abgeschirmte Umgebung, nötige Zusatzpakete, den Laufzeitkern und danach die Anwendung. Sind in `requirements.txt` keine externen Pakete eingetragen, wird kein unnötiger Paketdownload gestartet.
-
-## Dashboard verstehen
-
-- Im Dashboard stehen immer die letzten fünf Ereignisse.
-- Die Schweregrade erhalten zusätzlich ein Ampelsymbol.
-- Über **Debug/Log → Ereignisse und Fehler öffnen** sehen Sie ausführliche Erklärungen.
-- Jede Meldung nennt eine eindeutige Kennung, den Grund, die Schutzmaßnahme und den nächsten sicheren Schritt.
-- Wiederholt sich ein Fehlermuster, weist das Programm darauf hin.
-
-## Prüfen
-
-Der Schnellstart nutzt automatisch die kurze Laufzeitprüfung:
-
+## Sicherung und echte Wiederherstellungsprüfung
 ```bash
-bash scripts/pruefen.sh --runtime
+bash scripts/backup_erstellen.sh
 ```
 
-Für Entwicklung und Veröffentlichung gibt es die vollständige Prüfung:
+Dabei passiert automatisch:
+1. vollständiges Projekt-ZIP erstellen,
+2. SHA-256 berechnen und erneut vergleichen,
+3. ZIP auf unsichere Pfade prüfen,
+4. in einen neuen Ordner entpacken,
+5. Manifest vergleichen,
+6. vollständige Projektprüfung ausführen,
+7. Start ohne Fenster prüfen,
+8. nur dann Restore-Status `OK` melden.
 
-```bash
-bash scripts/pruefen.sh --full
-```
-
-Beide Wege laufen einmal durch und enden. Es gibt keine versteckte Dauerschleife.
-
-## Nutzer-ZIP erzeugen
-
-Für Entwickler:
-
-```bash
-python3 scripts/veroeffentlichen.py
-```
-
-Das Veröffentlichungs-Skript übernimmt ausschließlich Dateien, die in `MANIFEST.json` mit `release: true` freigegeben wurden. Tests, interne Agent-Dateien und Entwicklerdokumentation bleiben draußen. Das ZIP wird anschließend geprüft und erhält eine SHA-256-Prüfsumme.
-
-## Wichtig
-
-- `logs/` enthält Laufzeitprotokolle und Start-Checkpoints.
-- `backups/` enthält lokale Sicherungen.
-- `docs/` enthält Entwicklungsunterlagen.
-- `daten/` ist für tatsächliche Basisdaten der Anwendung reserviert.
-- `release/` enthält lokale Veröffentlichungs-ZIPs und wird nicht in Git übernommen.
+Ein fehlgeschlagener Schritt wird niemals als erfolgreiche Wiederherstellung ausgegeben.

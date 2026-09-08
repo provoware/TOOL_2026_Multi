@@ -12,3 +12,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Vollständige Grundprüfung ausführen
         run: bash scripts/pruefen.sh --full
+      - name: Vollprojekt wiederherstellen und prüfen
+        run: python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"
