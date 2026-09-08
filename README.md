@@ -1,6 +1,12 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit vervollständigtem Songbibliotheksworkflow · **Version:** 0.9.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit vervollständigtem Songbibliotheksworkflow · **Version:** 0.9.1 · **Stand:** 2026-09-08
+
+## Iteration 10 – CI-Wartung
+
+- 🟢 `actions/checkout` von `v4` auf **`v7.0.1`** aktualisiert.
+- 🟢 keine fachlichen Funktionen, Songdaten oder Laufzeitlogik verändert.
+- 🟢 vollständige Grundprüfung und Restore-Gate bleiben verbindliche Abnahme.
 
 ## Iteration 9 – Songbibliothek vervollständigen
 
@@ -32,82 +38,25 @@ daten/songtexte/*.txt
 
 ### Suchen und filtern
 
-Die freie Suche durchsucht:
-- Titel,
-- Genre,
-- Stimmung,
-- Stil,
-- Stimme,
-- Tags.
-
-Zusätzlich lassen sich Filter kombinieren für:
-- Genre,
-- Stimmung,
-- Stil,
-- Stimme,
-- Tags,
-- Bearbeitungsstatus,
-- nur Favoriten.
+Die freie Suche durchsucht Titel, Genre, Stimmung, Stil, Stimme und Tags. Zusätzlich lassen sich Filter für Genre, Stimmung, Stil, Stimme, Tags, Bearbeitungsstatus und nur Favoriten kombinieren.
 
 Filtern, Sortieren und Gruppieren verändern keine Songdatei.
 
 ### Sortierung und Gruppierung
 
-Sortierung:
-- zuletzt bearbeitet,
-- Titel,
-- Genre,
-- Tags,
-- Status.
-
-Gruppierung:
-- keine,
-- Genre,
-- Tags,
-- Status.
+Sortierung: zuletzt bearbeitet, Titel, Genre, Tags oder Status. Gruppierung: keine, Genre, Tags oder Status.
 
 ## Favoriten und Status
 
-Im Songeditor gibt es:
-- **★ Favorit**,
-- **Bearbeitungsstatus:** Idee, Entwurf, Überarbeitung oder Fertig.
-
-Beides wird in derselben parsebaren UTF-8-Songdatei gespeichert. Es wurde kein zweites internes Format eingeführt.
+Im Songeditor gibt es **★ Favorit** sowie **Bearbeitungsstatus**: Idee, Entwurf, Überarbeitung oder Fertig. Beides bleibt Teil derselben parsebaren UTF-8-Songdatei.
 
 ## Versionsstände sicher wiederherstellen
 
-Ältere Stände liegen unter:
-
-```text
-daten/songtexte/.versionen/<Titel>/<Zeitstempel>.txt
-```
-
-Wiederherstellung erfolgt nur aus der Versionsansicht:
-1. Version auswählen.
-2. Inhalt in der Vorschau prüfen.
-3. **Diese Version wiederherstellen** wählen.
-4. Der aktuelle Song wird unmittelbar davor automatisch als neuer Versionsstand gesichert.
-5. Erst danach wird die gewählte Version atomar als aktueller Song eingesetzt.
-
-Fremde oder nicht zum Song gehörende Versionspfade werden abgewiesen.
+Ältere Stände liegen unter `daten/songtexte/.versionen/<Titel>/<Zeitstempel>.txt`. Vor einer Wiederherstellung wird der aktuelle Song automatisch als neuer Versionsstand gesichert. Fremde Versionspfade werden abgewiesen.
 
 ## Exporte
 
-Weiterhin verfügbar unter `daten/songtexte/export/`:
-- TXT mit Metadaten,
-- Markdown,
-- JSON,
-- Nur-Songtext-TXT.
-
-## Bestehende Schutzwege
-
-- Autosave alle 5 Minuten,
-- Speichern bei Fokusverlust,
-- `Ctrl+S`,
-- Speichern beim Schließen und vor Logout,
-- atomarer Dateiersatz,
-- automatische Versionsstände nur bei tatsächlichen Änderungen,
-- Recovery-/Diagnose-/Restore-Kette.
+Weiterhin verfügbar unter `daten/songtexte/export/`: TXT mit Metadaten, Markdown, JSON und Nur-Songtext-TXT.
 
 ## Vollprüfung
 
