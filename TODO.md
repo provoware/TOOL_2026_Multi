@@ -21,31 +21,30 @@ Stand: 2026-09-08
 
 ## Iteration 11 – PySide6-Referenzdashboard
 
-- 🟢 gesamte produktive GUI von Tkinter auf **PySide6 6.11.2** migriert und durch vollständige CI-/Restore-Abnahme belegt.
-- 🟢 Dashboardstruktur an den Provoware-Referenzentwurf angeglichen: kompakter Header, Schnellkacheln, einklappbare Navigation, „Zuletzt bearbeitet“, 2×2-Karten, Statusleiste.
-- 🟢 Dark-Orange-Industrial-Farbwelt zentral umgesetzt; Kartenstruktur und Proportionen werden automatisiert gegen Referenzmerkmale geprüft.
-- 🟢 Recovery aus der Hauptfläche entfernt und genau einmal unter `Werkzeug → Recovery` geführt.
-- 🟢 Songeditor, Songbibliothek, Recovery und Startanzeige auf PySide6 umgestellt; bestehende Datenlogik bleibt unverändert.
-- 🟢 39 Logik-/Sicherheitstests, 20 PySide6-GUI-/Referenztests und vollständiges Restore-Gate erfolgreich.
+- 🟢 gesamte produktive GUI auf PySide6 6.11.2 migriert.
+- 🟢 Referenzdashboard, einzelne Recovery-Navigation und vollständige CI-/Restore-Abnahme.
 
 ## Iteration 12 – reale Kubuntu/X11-Endabnahme vorbereiten
 
-- 🟢 eigener PySide6-Abnahmeassistent mit Klickstart angelegt.
-- 🟢 echte X11-Erkennung; Wayland oder fehlendes `DISPLAY` werden nicht still akzeptiert.
-- 🟢 echter SIGTERM-/Prozesswächtertest läuft ausschließlich in Tempdaten.
-- 🟢 TXT-/JSON-Abnahmebericht bleibt ohne sichtbare Bestätigung ausdrücklich `NICHT_VOLLSTAENDIG`.
-- 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner steht noch aus; sie kann durch GitHub-Offscreen-CI nicht ersetzt werden.
+- 🟢 eigener PySide6-Abnahmeassistent mit Klickstart, X11-Erkennung und isoliertem SIGTERM-Test.
+- 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner steht weiterhin aus.
 
 ## Iteration 13 – Zoom und Schriftgröße
 
-- 🟢 `Strg + Mausrad` ändert die zentrale Zoom-/Schriftgröße.
-- 🟢 vorhandene `Strg++`, `Strg+-` und `Strg+0` bleiben aktiv.
-- 🟢 sichtbare `A−`-/`A+`-Schaltflächen und Prozentanzeige in der Statusleiste ergänzt.
-- 🟢 Zoom wird auf Dashboard, offene Songeditoren, Songbibliothek und Recovery weitergegeben.
+- 🟢 `Strg + Mausrad`, `Strg++`, `Strg+-`, `Strg+0` sowie A−/A+ umgesetzt.
+- 🟢 Zoom gilt gemeinsam für Dashboard, Songeditoren, Songbibliothek und Recovery.
+
+## Iteration 14 – profilbasierte DB-Eingaben
+
+- 🟢 Profile HardTechno, HipHop/Rap und Hörspiele als sofort nutzbare Startprofile.
+- 🟢 getrennte Werte für Genres, Stimmungen, Stil, Stimme und Besonderheiten.
+- 🟢 Profil- und Kategorienverwaltung in eigener PySide6-Oberfläche.
+- 🟢 Profilauswahl direkt in der DB-Karte des Dashboards; Auswahlfelder werden passend befüllt.
+- 🟢 neue Profile/Werte speicherbar; Duplikate werden verhindert; Entfernen verlangt Bestätigung.
+- 🟢 atomare JSON-Speicherung unter `daten/profile/db_profile.json`; Startprofile erzeugen ohne Änderung keine Nutzerdatendatei.
 
 ## Nächste Fachiterationen
 
-1. 🔴 DB-Eingaben mit Profilen für Genre, Stimmung, Stil, Stimme und Besonderheiten.
-2. 🔴 Todo-Liste mit Terminierung, Abhaken und Archiv.
-3. 🔴 Kalender mit Tag/Woche/Monat/Jahr, Terminen und Erinnerungen.
-4. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
+1. 🔴 Todo-Liste mit Terminierung, Abhaken und Archiv.
+2. 🔴 Kalender mit Tag/Woche/Monat/Jahr, Terminen und Erinnerungen.
+3. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
