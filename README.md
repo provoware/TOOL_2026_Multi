@@ -1,18 +1,18 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit Songworkflow · **Version:** 0.8.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit vervollständigtem Songbibliotheksworkflow · **Version:** 0.9.0 · **Stand:** 2026-09-08
 
-## Iteration 8 – Songbibliothek und Versionsverwaltung
+## Iteration 9 – Songbibliothek vervollständigen
 
 | Bereich | Status | Nachweis |
 |---|---|---|
-| Songbibliothek | 🟢 | vorhandene Songs werden nach letzter Bearbeitung gelistet und direkt geöffnet |
-| Zuletzt bearbeitet | 🟢 | bis zu fünf Songs als Schnellkacheln im Dashboard |
-| Song-Metadaten | 🟢 | Genre, Stimmung, Stil, Stimme, Besonderheiten und Tags |
-| Versionsstände | 🟢 | vorheriger abweichender Stand wird vor Überschreiben automatisch gesichert |
-| Exporte | 🟢 | TXT, Markdown, JSON und Nur-Songtext-TXT |
-| Rückwärtskompatibilität | 🟢 | Songdateien aus 0.7.0 bleiben lesbar |
-| Recovery/Diagnose | 🟢 | bestehende Schutzketten bleiben aktiv |
+| Suche | 🟢 | freie Suche über Titel, Genre, Stimmung, Stil, Stimme und Tags |
+| Filter | 🟢 | kombinierbar nach Genre, Stimmung, Stil, Stimme, Tags, Status und Favoriten |
+| Favoriten | 🟢 | im Editor setzbar; in der Bibliothek sichtbar und filterbar |
+| Bearbeitungsstatus | 🟢 | Idee, Entwurf, Überarbeitung, Fertig |
+| Sortierung/Gruppierung | 🟢 | zuletzt bearbeitet, Titel, Genre, Tags, Status; Gruppen nach Genre, Tags oder Status |
+| Versionswiederherstellung | 🟢 | Vorschau zuerst; aktueller Stand wird vor Restore automatisch neu gesichert |
+| Rückwärtskompatibilität | 🟢 | ältere 0.7.0/0.8.0-Songs bleiben lesbar |
 
 ## Start
 
@@ -24,62 +24,90 @@ Im Dashboard stehen **Neuer Song**, **Songbibliothek**, die letzten bearbeiteten
 
 ## Songbibliothek
 
-Die Bibliothek liest ausschließlich die Arbeitsdateien unter:
+Die Bibliothek arbeitet ausschließlich mit den Arbeitsdateien unter:
 
 ```text
 daten/songtexte/*.txt
 ```
 
-Sie zeigt Titel, Genre, letzte Bearbeitungszeit und Anzahl vorhandener Versionsstände. Doppelklick oder `Enter` öffnet den Song im bestehenden Songtexteditor.
+### Suchen und filtern
 
-## Song-Metadaten
-
-Optional stehen jetzt zur Verfügung:
+Die freie Suche durchsucht:
+- Titel,
 - Genre,
 - Stimmung,
 - Stil,
 - Stimme,
-- Besonderheiten,
 - Tags.
 
-Das interne Arbeitsformat bleibt eine parsebare UTF-8-Textdatei. Es wurde kein zweites internes Songformat eingeführt.
+Zusätzlich lassen sich Filter kombinieren für:
+- Genre,
+- Stimmung,
+- Stil,
+- Stimme,
+- Tags,
+- Bearbeitungsstatus,
+- nur Favoriten.
 
-## Versionsstände
+Filtern, Sortieren und Gruppieren verändern keine Songdatei.
 
-Vor einem geänderten Überschreiben wird der bisherige Stand automatisch gesichert:
+### Sortierung und Gruppierung
+
+Sortierung:
+- zuletzt bearbeitet,
+- Titel,
+- Genre,
+- Tags,
+- Status.
+
+Gruppierung:
+- keine,
+- Genre,
+- Tags,
+- Status.
+
+## Favoriten und Status
+
+Im Songeditor gibt es:
+- **★ Favorit**,
+- **Bearbeitungsstatus:** Idee, Entwurf, Überarbeitung oder Fertig.
+
+Beides wird in derselben parsebaren UTF-8-Songdatei gespeichert. Es wurde kein zweites internes Format eingeführt.
+
+## Versionsstände sicher wiederherstellen
+
+Ältere Stände liegen unter:
 
 ```text
 daten/songtexte/.versionen/<Titel>/<Zeitstempel>.txt
 ```
 
-Identische Speicherungen erzeugen keinen neuen Versionsstand. Die Bibliothek zeigt ältere Stände zunächst nur schreibgeschützt an.
+Wiederherstellung erfolgt nur aus der Versionsansicht:
+1. Version auswählen.
+2. Inhalt in der Vorschau prüfen.
+3. **Diese Version wiederherstellen** wählen.
+4. Der aktuelle Song wird unmittelbar davor automatisch als neuer Versionsstand gesichert.
+5. Erst danach wird die gewählte Version atomar als aktueller Song eingesetzt.
+
+Fremde oder nicht zum Song gehörende Versionspfade werden abgewiesen.
 
 ## Exporte
 
-Exporte werden getrennt von der Arbeitsdatei erstellt:
-
-```text
-daten/songtexte/export/
-```
-
-Unterstützt werden:
+Weiterhin verfügbar unter `daten/songtexte/export/`:
 - TXT mit Metadaten,
 - Markdown,
 - JSON,
-- Nur Songtext als TXT ohne Metadaten.
+- Nur-Songtext-TXT.
 
-## Bestehende Speicherwege
+## Bestehende Schutzwege
 
 - Autosave alle 5 Minuten,
 - Speichern bei Fokusverlust,
 - `Ctrl+S`,
-- Speichern beim Schließen,
-- Speichern vor Logout,
-- atomarer Dateiersatz.
-
-## Recovery-Zentrale
-
-Filter nach Schweregrad/Bereich, Ereignisdetails, Wiederholungsinformationen, Zoom 100–200 Prozent, Diagnosepaket, Logquarantäne und Restore-Gates bleiben erhalten.
+- Speichern beim Schließen und vor Logout,
+- atomarer Dateiersatz,
+- automatische Versionsstände nur bei tatsächlichen Änderungen,
+- Recovery-/Diagnose-/Restore-Kette.
 
 ## Vollprüfung
 
@@ -87,4 +115,4 @@ Filter nach Schweregrad/Bereich, Ereignisdetails, Wiederholungsinformationen, Zo
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung umfasst Logiktests, echte Tk-GUI-Tests, Schreibfehler-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
+Sie umfasst Logiktests, echte Tk-GUI-Tests, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
