@@ -19,7 +19,16 @@ Stand: 2026-09-08
 
 - 🟢 `actions/checkout` von `v4` auf `v7.0.1` aktualisiert; keine fachliche Laufzeitfunktion verändert.
 
+## Iteration 11 – PySide6-Referenzdashboard
+
+- 🟢 gesamte produktive GUI von Tkinter auf **PySide6 6.11.2** migriert und durch vollständige CI-/Restore-Abnahme belegt.
+- 🟢 Dashboardstruktur an den Provoware-Referenzentwurf angeglichen: kompakter Header, Schnellkacheln, einklappbare Navigation, „Zuletzt bearbeitet“, 2×2-Karten, Statusleiste.
+- 🟢 Dark-Orange-Industrial-Farbwelt zentral umgesetzt; Kartenstruktur und Proportionen werden automatisiert gegen Referenzmerkmale geprüft.
+- 🟢 Recovery aus der Hauptfläche entfernt und genau einmal unter `Werkzeug → Recovery` geführt.
+- 🟢 Songeditor, Songbibliothek, Recovery und Startanzeige auf PySide6 umgestellt; bestehende Datenlogik bleibt unverändert.
+- 🟢 39 Logik-/Sicherheitstests, 20 PySide6-GUI-/Referenztests und vollständiges Restore-Gate erfolgreich.
+
 ## 2 nächste Schritte
 
-1. 🟡 Songworkflow ist als erster Fachbereich belastbar vorhanden; weitere geplante Module/Arbeitsabläufe des Multitools priorisieren und einzeln ergänzen.
-2. 🔴 reale Kubuntu-Endprüfung einschließlich echtem Crash-/Signaltest, Songbibliothek-/Editor-Endabnahme sowie sichtbarer Fokus-/Zoom-Prüfung dokumentieren.
+1. 🔴 reale Kubuntu/X11-Endprüfung einschließlich sichtbarer Referenzabnahme, Fokus-/Zoom-Prüfung und echtem Crash-/Signaltest dokumentieren.
+2. 🟡 danach weitere Fachmodule des Multitools einzeln priorisieren und auf dem einheitlichen PySide6-Dashboard ergänzen.

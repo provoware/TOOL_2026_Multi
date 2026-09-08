@@ -5,10 +5,31 @@
 bash schnellstart.sh
 ```
 
-Die Startprüfung, Prozesswache und Recovery-Schutzwege bleiben aktiv.
+Der Schnellstart richtet bei Bedarf die abgeschirmte Python-Umgebung ein, installiert die festgelegte PySide6-Version, prüft den Start und öffnet anschließend das Programm unter Prozesswache.
 
-## Schnellinfo im Dashboardheader
-Oben im Dashboard gibt es das Feld **Entwickler-Schnellinfo**.
+## Das neue Dashboard
+Das Hauptfenster heißt **Provoware-Datenbank-Dashboard 2026**.
+
+Die Oberfläche ist in fünf leicht erkennbare Bereiche gegliedert:
+1. oben der kompakte Kopfbereich mit Suche und Logout,
+2. darunter die Schnellkacheln,
+3. links die Navigation,
+4. in der Mitte vier große Arbeitskarten,
+5. unten die Statusleiste.
+
+Die linke Navigation kann mit **☰** schmal und wieder breit geschaltet werden.
+
+Noch nicht freigegebene Bereiche wie Hörspiele oder Reimfinder sind bereits sichtbar. Beim Anklicken erscheint nur ein Hinweis. Sie verändern keine Dateien.
+
+## Recovery
+Recovery befindet sich bewusst nur an einer Stelle:
+
+**Navigation → Werkzeug → Recovery**
+
+Dort können Ereignisse nach Schweregrad und Bereich gefiltert werden. Technische Angaben bleiben zunächst eingeklappt.
+
+## Schnellinfo
+Im Dashboard gibt es das Feld **Entwicklerinfo**.
 
 1. Kurze Information eingeben.
 2. `Enter` drücken oder **Speichern** anklicken.
@@ -17,9 +38,9 @@ Oben im Dashboard gibt es das Feld **Entwickler-Schnellinfo**.
 Vorhandene Einträge werden nicht überschrieben.
 
 ## Zuletzt bearbeitete Songs
-Unter dem Dashboardheader erscheinen bis zu fünf zuletzt bearbeitete Songs als Schnellkacheln. Ein Klick öffnet den vorhandenen Song direkt im Songtexteditor.
+Unter der Entwicklerinfo erscheinen bis zu fünf zuletzt bearbeitete Songs als kleine Schnellkacheln. Ein Klick öffnet den vorhandenen Song direkt im Songtexteditor.
 
-Mit **Alle Songs** oder **Songbibliothek** öffnen Sie die vollständige Songliste.
+Mit **Alle Songs** oder der Kachel **Songtexte** öffnen Sie die vollständige Songbibliothek.
 
 ## Songbibliothek
 Oben in der Songbibliothek können Sie frei suchen. Durchsucht werden:
@@ -64,7 +85,7 @@ Im Songeditor gibt es:
 Beides wird mit dem Song gespeichert und erscheint anschließend in der Bibliothek.
 
 ## Songtexteditor
-Der Editor enthält weiterhin:
+Der Editor enthält:
 - Titel,
 - Genre,
 - Stimmung,
@@ -108,7 +129,7 @@ Identisches Speichern erzeugt keinen neuen Versionsstand.
 4. Den Inhalt zuerst in der Vorschau prüfen.
 5. Erst dann **Diese Version wiederherstellen** anklicken.
 
-Vor der Wiederherstellung sichert das Programm den aktuellen Song automatisch noch einmal als neuen Versionsstand. Erst danach wird die gewählte alte Version eingesetzt. So bleibt der vorherige aktuelle Inhalt erhalten und kann später wieder zurückgeholt werden.
+Vor der Wiederherstellung sichert das Programm den aktuellen Song automatisch noch einmal als neuen Versionsstand. Erst danach wird die gewählte alte Version eingesetzt.
 
 Eine Versionsdatei aus einem falschen Ordner wird abgewiesen.
 
@@ -130,24 +151,22 @@ Die Arbeitsdatei wird beim Export nicht verändert.
 ## Logout
 **Logout** speichert zuerst alle offenen Songeditoren. Wenn mindestens ein Song nicht gespeichert werden kann, bleibt das Programm geöffnet.
 
-## Debug- und Recovery-Zentrale
-Ereignisse können weiterhin nach Schweregrad und Bereich gefiltert werden. Technische Angaben bleiben zunächst eingeklappt.
-
 ## Tastatur
 - `Tab` – zum nächsten bedienbaren Element,
-- `Enter` – Schnellinfo speichern, Song öffnen oder Ereignis öffnen,
-- `F5` – Bibliothek oder Recovery-Anzeige aktualisieren,
+- `Enter` – Eingabe bestätigen oder ausgewählten Eintrag öffnen,
+- `F5` – Bibliothek oder Recovery aktualisieren,
 - `Ctrl+S` – Song manuell speichern,
 - `Ctrl++` / `Ctrl+-` – Anzeige größer/kleiner,
 - `Ctrl+0` – zurück auf 100 Prozent,
-- `Escape` – Detail-, Bibliothek- oder Songeditorfenster schließen.
+- `Ctrl+R` – Recovery öffnen,
+- `Escape` – untergeordnete Fenster schließen.
 
 ## Vollprüfung
 ```bash
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft Recovery-Funktionen, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte und echte Tk-Oberflächenwege.
+Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, die echten PySide6-Oberflächenwege und zusätzlich die Struktur des Referenzdashboards.
 
 ## Bestehende Schutzfunktionen
 - atomare Songdatei-Speicherung,

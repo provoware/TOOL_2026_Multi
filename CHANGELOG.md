@@ -1,5 +1,24 @@
 # Änderungsverlauf
 
+## 0.10.0 – 2026-09-08 – PySide6-Referenzdashboard
+
+### Geändert
+- gesamte produktive Oberfläche einheitlich auf **PySide6 6.11.2** migriert,
+- Dashboardtitel auf `Provoware-Datenbank-Dashboard 2026` gesetzt,
+- Dashboard nach dem bereitgestellten Dark-Orange-Referenzentwurf neu strukturiert: kompakter Header, Schnellkachelleiste, einklappbare linke Navigation, schmale Zeile „Zuletzt bearbeitet“, 2×2-Hauptkarten und Statusleiste,
+- zentrale Qt/QSS-Standards für Farben, Abstände, Schriftgrößen, Fokus und Zoom eingeführt,
+- Songeditor, Songbibliothek, Recovery-Zentrale und grafische Startanzeige auf PySide6 umgestellt,
+- Recovery aus der Dashboard-Hauptfläche entfernt und als einzelner Navigationspunkt `Werkzeug → Recovery` geführt,
+- GitHub-CI auf Qt-Offscreen-Prüfung und die für PySide6 benötigte `libegl1`-Systembibliothek umgestellt.
+
+### Schutz
+- bestehendes Song-Textformat und alle Nutzerdatenpfade bleiben unverändert,
+- Autosave, Fokusverlust-Speicherung, Versionierung, Restore-Sicherung, Favoriten/Status, Metadaten und Exporte bleiben erhalten,
+- geplante noch nicht freigegebene Dashboardbereiche verändern keine Daten,
+- zusätzlicher Referenzlayout-Test prüft Kartenstruktur/-proportionen, Sidebarbreiten, Schnellkacheln, Dark-Orange-Akzent und exakt einen Recovery-Eintrag,
+- produktive GUI-Dateien werden auf unerlaubte Tkinter-Reste geprüft,
+- bestehende Logik-, Sicherheits-, ENOSPC-/EROFS-, Release-, Headless- und Restore-Gates bleiben verbindlich.
+
 ## 0.9.1 – 2026-09-08 – CI-Wartung
 
 ### Geändert

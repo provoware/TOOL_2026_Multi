@@ -1,3 +1,1 @@
-# Derzeit keine externen Python-Pakete erforderlich.
-# Neue Pakete werden erst ergänzt, wenn die Anwendung sie tatsächlich benutzt.
-# Dann Version exakt festlegen, z. B. paketname==1.2.3
+PySide6==6.11.2

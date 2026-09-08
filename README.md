@@ -1,6 +1,16 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit vervollständigtem Songbibliotheksworkflow · **Version:** 0.9.1 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vervollständigtem Songbibliotheksworkflow · **Version:** 0.10.0 · **Stand:** 2026-09-08
+
+## Iteration 11 – PySide6-Referenzdashboard
+
+- 🟢 gesamte produktive GUI auf **PySide6 6.11.2** umgestellt; PyQt6/PySide6 werden nicht gemischt.
+- 🟢 Dashboardtitel: **Provoware-Datenbank-Dashboard 2026**.
+- 🟢 Layout an den Referenzentwurf angeglichen: kompakter Header, Schnellkacheln, einklappbare linke Navigation, schmale „Zuletzt bearbeitet“-Zeile, 2×2-Hauptkarten, Statusleiste.
+- 🟢 **Dark Orange Industrial** mit dunklem Blau/Schwarz, Orange `#FF9800`, feinen Konturen und kompakten Abständen zentral definiert.
+- 🟢 Recovery aus der Startfläche entfernt und **genau einmal** als linker Navigationspunkt geführt.
+- 🟢 Songeditor, Songbibliothek, Recovery und Startanzeige ebenfalls auf PySide6 migriert.
+- 🟢 Referenzlayout wird zusätzlich mit Qt-Offscreen-GUI-Tests auf Struktur, Proportionen und „kein Tkinter in produktiver GUI“ geprüft.
 
 ## Iteration 10 – CI-Wartung
 
@@ -26,7 +36,19 @@
 bash schnellstart.sh
 ```
 
-Im Dashboard stehen **Neuer Song**, **Songbibliothek**, die letzten bearbeiteten Songs als Schnellkacheln, Entwickler-Schnellinfo und Logout bereit.
+Der Schnellstart legt bei Bedarf `.venv` an, installiert exakt `PySide6==6.11.2`, prüft den Startunterbau und öffnet anschließend die Anwendung unter Prozesswache.
+
+## Dashboard
+
+Die Hauptansicht orientiert sich am Provoware-Referenzentwurf:
+- Schnellkacheln für Songtexte und geplante Module,
+- einklappbare linke Navigation,
+- Entwickler-Schnellinfo,
+- letzte bearbeitete Songs,
+- 2×2-Hauptfläche mit **Workflow Übersicht**, **DB-Eingaben**, **Funktionen**, **Systemanwendungen**,
+- Recovery nur unter `Werkzeug → Recovery`.
+
+Geplante, noch nicht freigegebene Module werden sichtbar dargestellt, führen aber nur zu einem verständlichen Hinweis und verändern keine Daten.
 
 ## Songbibliothek
 
@@ -121,4 +143,4 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 bash scripts/pruefen.sh --full
 ```
 
-Sie umfasst Logiktests, echte Tk-GUI-Tests, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
+Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests, Referenzlayoutprüfung, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.

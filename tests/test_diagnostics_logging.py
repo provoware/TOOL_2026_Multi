@@ -57,20 +57,27 @@ class DiagnosticsLoggingTests(unittest.TestCase):
         class FakeLogger:
             def __init__(self, *_args): pass
             def record(self, **kwargs): events.append(kwargs); return kwargs
-        class FakeRoot:
-            def mainloop(self): return None
-        fake_tk = types.SimpleNamespace(Tk=lambda: FakeRoot())
-        fake_ui = types.SimpleNamespace(
-            Dashboard=lambda *_args: types.SimpleNamespace(refresh=lambda: None),
-            install_exception_handler=lambda *_args: None,
-        )
+        class FakeApplication:
+            _instance = None
+            def __init__(self, _args): FakeApplication._instance = self
+            @classmethod
+            def instance(cls): return cls._instance
+            def setApplicationName(self, _name): pass
+            def exec(self): return 0
+        class FakeDashboard:
+            def __init__(self, *_args): pass
+            def refresh(self): pass
+            def show(self): pass
+        fake_widgets = types.SimpleNamespace(QApplication=FakeApplication)
+        fake_ui = types.SimpleNamespace(Dashboard=FakeDashboard, install_exception_handler=lambda *_args: None)
+        fake_standards = types.SimpleNamespace(configure_application=lambda *_args: None)
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             (root / "texte").mkdir()
-            (root / "MANIFEST.json").write_text(json.dumps({"tool":{"version":"0.5.0"}}), encoding="utf-8")
+            (root / "MANIFEST.json").write_text(json.dumps({"tool":{"version":"0.10.0"}}), encoding="utf-8")
             (root / "texte" / "registry.json").write_text(json.dumps({"texts":{}}), encoding="utf-8")
             with patch.object(main_module, "ROOT", root), patch.object(main_module, "EventLogger", FakeLogger), \
-                 patch.dict(sys.modules, {"tkinter": fake_tk, "app.ui": fake_ui}):
+                 patch.dict(sys.modules, {"PySide6.QtWidgets": fake_widgets, "app.ui": fake_ui, "app.ui_standards": fake_standards}):
                 self.assertEqual(main_module.main(), 0)
         self.assertEqual(events[-1]["area"], "ENDE")
         self.assertIn("kontrolliert beendet", events[-1]["summary"])
