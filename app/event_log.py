@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+import os
 import traceback
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from app.atomic_io import atomic_write_text
 from app.log_maintenance import quarantine_corrupt_jsonl, rotate_log
 from app.redaction import redact
 from app.regression import RegressionManager
@@ -66,11 +68,13 @@ class EventLogger:
         self.report_dir.mkdir(parents=True, exist_ok=True)
         self._maintain_log()
         line = json.dumps(event, ensure_ascii=False, separators=(",", ":"))
+        # JSONL bleibt absichtlich append-only. Vollständiger Dateiersatz wäre hier semantisch falsch.
         with self.jsonl_path.open("a", encoding="utf-8") as handle:
             handle.write(line + "\n")
             handle.flush()
+            os.fsync(handle.fileno())
         report = self.report_dir / f"{event['event_id']}.txt"
-        report.write_text(self.human_report(event), encoding="utf-8")
+        atomic_write_text(report, self.human_report(event))
 
     @staticmethod
     def _trace(exception: BaseException | None) -> str | None:
