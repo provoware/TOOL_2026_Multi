@@ -1,16 +1,19 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.5.0 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern · **Version:** 0.6.0 · **Stand:** 2026-09-08
 
-## Iteration 5 – Diagnose- und Logging-Härtung
+## Iteration 6 – Debug- und Recovery-Zentrale
 
 | Bereich | Status | Nachweis |
 |---|---|---|
-| Logrotation | 🟢 | Größenlimit 2 MiB, Alterslimit 30 Tage, maximal 5 Archive |
-| JSONL-Quarantäne | 🟢 | beschädigte Zeilen werden bereinigt gesichert und aus dem aktiven Log entfernt |
-| Diagnosepaket | 🟢 | nur bereinigte Textkopien; abschließende Datenschutzprüfung vor ZIP-Erstellung |
-| kontrolliertes Ende | 🟢 | normales Schließen erzeugt eigenes `ENDE`-Ereignis |
-| Restore/Headless/Wächter | 🟢 | Schutz aus Iteration 4 bleibt aktiv |
+| Filter | 🟢 | Schweregrad und Bereich kombinierbar |
+| Ereignisdetails | 🟢 | Doppelklick, Enter oder Schaltfläche |
+| Wiederholungen | 🟢 | Zähler plus erstes Auftreten aus dem Rückfallmanager |
+| Schreibfehler | 🟢 | gefahrlose ENOSPC-/EROFS-Simulation im temporären Testpfad |
+| Tastatur/Fokus | 🟢 | Tk-GUI-Test mit Fokusreihenfolge und Tastaturbindungen |
+| Zoom/Schrift | 🟢 | 100, 125, 150, 175 und 200 Prozent zentral |
+| technische Details | 🟢 | standardmäßig eingeklappt; gezielt ein-/ausblendbar |
+| Restore/Diagnose/Wächter | 🟢 | Schutzketten aus Iteration 4/5 bleiben aktiv |
 
 ## Start
 
@@ -18,28 +21,38 @@
 bash schnellstart.sh
 ```
 
+Die Hauptansicht öffnet als Debug- und Recovery-Zentrale. Filter und Anzeigegröße stehen oberhalb der Ereignistabelle. Ein markiertes Ereignis lässt sich mit **Enter** oder Doppelklick öffnen.
+
+## Tastatur
+
+- `Enter` – markiertes Ereignis öffnen
+- `F5` – aktualisieren
+- `Ctrl++` / `Ctrl+-` – Anzeige vergrößern/verkleinern
+- `Ctrl+0` – 100 Prozent
+- `Escape` – Detailfenster schließen
+- `Tab` – durch Filter, Tabelle und Schaltflächen wechseln
+
 ## Vollprüfung
 
 ```bash
 bash scripts/pruefen.sh --full
 ```
 
-## Datenschutzgeprüftes Diagnosepaket
+Die Vollprüfung führt zusätzlich zur bisherigen Sicherheitskette eine echte Tk-Oberflächenprüfung aus. Ohne `xvfb-run` oder eine vorhandene grafische Sitzung wird dieser Schritt nicht fälschlich als bestanden markiert.
+
+## Schreibfehler sicher simulieren
+
+```bash
+python3 scripts/schreibfehler_simulieren.py
+```
+
+Die Simulation füllt keinen Datenträger. Sie erzeugt kontrolliert `ENOSPC` und `EROFS` in einem temporären Testordner und prüft, dass der vorhandene Bestand unverändert bleibt.
+
+## Bestehende Schutzwege
 
 ```bash
 python3 scripts/diagnosepaket.py
-```
-
-Das Paket enthält keine unveränderten Rohprotokolle. Unterstützte Diagnose-Texte werden vor dem ZIP nochmals über `app/redaction.py` bereinigt und anschließend erneut auf verbliebene erkannte Geheimnisse geprüft. Zusätzlich entsteht eine SHA-256-Datei.
-
-## Logpflege
-
-`app/log_maintenance.py` führt begrenzte Rotation und Quarantäne aus. Beschädigte JSONL-Zeilen werden nicht mehr still übersprungen: Eine bereinigte Beweiskopie landet in `logs/quarantaene/`, während gültige Zeilen atomar im aktiven Log erhalten bleiben. Größen- oder altersbedingt rotierte Logs liegen in `logs/archiv/`.
-
-## Verifizierte Iterationssicherung
-
-```bash
 bash scripts/backup_erstellen.sh
 ```
 
-Restore, Headless-Start und Prozesswache aus Iteration 4 bleiben unverändert Teil der Sicherheitskette.
+Datenschutzprüfung, Logrotation/Quarantäne, Headless-Start, Prozesswache und vollständiger Restore bleiben unverändert aktiv.
