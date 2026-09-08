@@ -13,6 +13,8 @@ from PySide6.QtWidgets import (
 )
 
 from app.event_log import EventLogger
+from app.profile_editor import ProfileEditor
+from app.profile_store import CATEGORIES, load_profiles
 from app.quick_note import append_developer_info
 from app.recovery_center import RecoveryCenter
 from app.recovery_ui import ZOOM_LEVELS
@@ -37,6 +39,7 @@ class Dashboard(QWidget):
         self._song_editors: list[SongEditor] = []
         self._song_library: SongLibrary | None = None
         self._recovery_center: RecoveryCenter | None = None
+        self._profile_editor: ProfileEditor | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -120,7 +123,7 @@ class Dashboard(QWidget):
             ("♫\nSongtexte", self.open_song_library),
             ("▣\nHörspiele", lambda: self._planned("Hörspiele")),
             ("▤\nBlogartikel", lambda: self._planned("Blogartikel")),
-            ("▥\nGenres", lambda: self._planned("Genres-Datenbank")),
+            ("▥\nGenres", lambda: self.open_profile_editor("Genres")),
             ("?\nPrompts", lambda: self._planned("Prompts")),
             ("⌕\nSuche", lambda: self._planned("Dateisuche")),
             ("≡\nDuplikate", lambda: self._planned("Duplikatprüfer")),
@@ -160,8 +163,10 @@ class Dashboard(QWidget):
         self._add_nav(layout, "  ▣  Hörspiele", lambda: self._planned("Hörspiele"))
         self._add_nav(layout, "  ▤  Blogartikel", lambda: self._planned("Blogartikel"))
         self._add_heading(layout, "DB-Eingaben")
-        for label in ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten", "GitHub-Repositories", "Prompts"):
-            self._add_nav(layout, f"  ·  {label}", lambda _checked=False, item=label: self._planned(item))
+        for label in CATEGORIES:
+            self._add_nav(layout, f"  ·  {label}", lambda _checked=False, item=label: self.open_profile_editor(item))
+        self._add_nav(layout, "  ·  GitHub-Repositories", lambda: self._planned("GitHub-Repositories"))
+        self._add_nav(layout, "  ·  Prompts", lambda: self._planned("Prompts"))
         self._add_heading(layout, "Funktionen")
         self._add_nav(layout, "  ◉  Genreszufallsgenerator", lambda: self._planned("Genreszufallsgenerator"))
         self._add_nav(layout, "  ✎  Reimfinder", lambda: self._planned("Reimfinder"))
@@ -260,8 +265,21 @@ class Dashboard(QWidget):
         grid.addWidget(workflow, 0, 0)
 
         db, d = self._card("▦  DB-Eingaben")
+        profile_row = QHBoxLayout()
+        profile_label = QLabel("Profil")
+        profile_label.setObjectName("cardHint")
+        profile_label.setFixedWidth(145)
+        profile_row.addWidget(profile_label)
+        self.db_profile_combo = QComboBox()
+        self.db_profile_combo.currentTextChanged.connect(self._load_profile_values)
+        profile_row.addWidget(self.db_profile_combo, 1)
+        edit_profiles = QPushButton("Bearbeiten …")
+        edit_profiles.clicked.connect(self.open_profile_editor)
+        profile_row.addWidget(edit_profiles)
+        d.addLayout(profile_row)
+
         self.db_boxes: dict[str, QComboBox] = {}
-        for label in ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten", "GitHub-Repositories", "Prompts"):
+        for label in (*CATEGORIES, "GitHub-Repositories", "Prompts"):
             row = QHBoxLayout()
             name = QLabel(label)
             name.setObjectName("cardHint")
@@ -358,6 +376,8 @@ class Dashboard(QWidget):
             managed.append(self._song_library)
         if self._recovery_center is not None:
             managed.append(self._recovery_center)
+        if self._profile_editor is not None:
+            managed.append(self._profile_editor)
         return window in managed
 
     def eventFilter(self, watched: object, event: QEvent) -> bool:
@@ -412,6 +432,55 @@ class Dashboard(QWidget):
             button.setToolTip(f"{document.title} öffnen")
             button.clicked.connect(lambda _checked=False, selected=path: self.open_song_path(selected))
             self.recent_layout.addWidget(button, 1)
+
+    def refresh_db_profiles(self) -> None:
+        current = self.db_profile_combo.currentText()
+        try:
+            profiles = load_profiles(self.project_root)
+        except Exception as error:
+            self.quick_status.setText(f"Profildaten nicht lesbar: {type(error).__name__}")
+            return
+        self.db_profile_combo.blockSignals(True)
+        self.db_profile_combo.clear()
+        self.db_profile_combo.addItems(sorted(profiles, key=str.casefold))
+        if current in profiles:
+            self.db_profile_combo.setCurrentText(current)
+        elif "HardTechno" in profiles:
+            self.db_profile_combo.setCurrentText("HardTechno")
+        self.db_profile_combo.blockSignals(False)
+        self._load_profile_values()
+
+    def _load_profile_values(self, *_args: object) -> None:
+        profile = self.db_profile_combo.currentText()
+        if not profile:
+            return
+        try:
+            data = load_profiles(self.project_root).get(profile, {})
+        except Exception as error:
+            self.quick_status.setText(f"Profildaten nicht lesbar: {type(error).__name__}")
+            return
+        for category in CATEGORIES:
+            combo = self.db_boxes[category]
+            selected = combo.currentText()
+            combo.clear()
+            combo.addItem("Bitte auswählen …")
+            combo.addItems(data.get(category, []))
+            if selected and selected != "Bitte auswählen …" and combo.findText(selected) >= 0:
+                combo.setCurrentText(selected)
+
+    def open_profile_editor(self, initial_category: str | None = None) -> None:
+        if self._profile_editor is not None and self._profile_editor.isVisible():
+            if initial_category in CATEGORIES:
+                self._profile_editor.category_combo.setCurrentText(initial_category)
+            self._profile_editor.raise_()
+            self._profile_editor.activateWindow()
+            self._profile_editor.refresh()
+            return
+        self._profile_editor = ProfileEditor(
+            self.project_root, self.zoom_percent, initial_category,
+            on_changed=self.refresh_db_profiles, parent=self,
+        )
+        self._profile_editor.show()
 
     def open_song_editor(self) -> None:
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
@@ -506,6 +575,7 @@ class Dashboard(QWidget):
 
     def refresh(self) -> None:
         self.refresh_recent_songs()
+        self.refresh_db_profiles()
         self.quick_status.setText("Bereit.")
         if self._recovery_center is not None and self._recovery_center.isVisible():
             self._recovery_center.refresh()
@@ -528,6 +598,8 @@ class Dashboard(QWidget):
             self._song_library.set_zoom(percent)
         if self._recovery_center is not None:
             self._recovery_center.set_zoom(percent)
+        if self._profile_editor is not None:
+            self._profile_editor.set_zoom(percent)
 
 
 def install_exception_handler(app, logger: EventLogger, refresh: Callable[[], None], parent: QWidget) -> None:
