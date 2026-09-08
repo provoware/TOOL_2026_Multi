@@ -1,96 +1,134 @@
-"""Globale Oberflächenstandards für Farben, Abstände, Zoom und Statusdarstellung."""
+"""Globale PySide6-Oberflächenstandards nach dem Dashboard-Referenzentwurf."""
 
 from __future__ import annotations
 
-import tkinter as tk
-from tkinter import ttk
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QApplication, QWidget
 
-from app.recovery_ui import zoom_font_size
-
-# Referenz: Dark Orange Industrial – dunkle Flächen, feine Konturen, ein Akzent.
 COLORS = {
-    "background": "#08131F",
-    "surface": "#0E1D2B",
-    "surface_alt": "#14283A",
-    "surface_soft": "#102332",
-    "sidebar": "#0A1723",
-    "text": "#F4F7FB",
-    "muted": "#9AAEC2",
+    "background": "#06111D",
+    "surface": "#0B1A28",
+    "surface_alt": "#102538",
+    "surface_soft": "#0C1D2B",
+    "sidebar": "#071522",
+    "text": "#F4F8FC",
+    "muted": "#9DB0C4",
     "accent": "#FF9800",
-    "accent_soft": "#6B4308",
-    "cyan": "#16D8FF",
-    "green": "#40E58C",
+    "accent_hover": "#FFAE2B",
+    "accent_soft": "#39270E",
+    "cyan": "#18D9FF",
+    "green": "#3DE783",
     "yellow": "#FFD166",
-    "red": "#FF6B7A",
-    "blocked": "#708396",
-    "border": "#294157",
+    "red": "#FF6475",
+    "blocked": "#6F8398",
+    "border": "#27425A",
 }
 
-SPACING = {"xs": 4, "s": 7, "m": 10, "l": 16, "xl": 22}
-FONTS = {"body_size": 10, "small_size": 9, "title_size": 18, "hero_size": 20}
+SPACING = {"xs": 4, "s": 7, "m": 10, "l": 15, "xl": 20}
+FONTS = {"body_size": 10, "small_size": 8, "section_size": 10, "title_size": 14, "hero_size": 18}
 
 SEVERITY_STATUS = {
-    "INFO": ("🟢", COLORS["green"]),
-    "HINWEIS": ("🟢", COLORS["green"]),
-    "WARNUNG": ("🟡", COLORS["yellow"]),
-    "FEHLER": ("🔴", COLORS["red"]),
-    "KRITISCH": ("🔴", COLORS["red"]),
-    "SCHWER": ("🔴", COLORS["red"]),
-    "ABSTURZ": ("🔴", COLORS["red"]),
+    "INFO": ("●", COLORS["green"]),
+    "HINWEIS": ("●", COLORS["green"]),
+    "WARNUNG": ("●", COLORS["yellow"]),
+    "FEHLER": ("●", COLORS["red"]),
+    "KRITISCH": ("●", COLORS["red"]),
+    "SCHWER": ("●", COLORS["red"]),
+    "ABSTURZ": ("●", COLORS["red"]),
 }
 
 
-def configure_global_style(root: tk.Misc, zoom_percent: int = 100) -> ttk.Style:
-    """Wendet die referenznahe, kompakte Oberflächenhierarchie zentral an."""
-    style = ttk.Style(root)
-    if "clam" in style.theme_names():
-        style.theme_use("clam")
-    body = zoom_font_size(FONTS["body_size"], zoom_percent)
-    small = zoom_font_size(FONTS["small_size"], zoom_percent)
-    title = zoom_font_size(FONTS["title_size"], zoom_percent)
-    hero = zoom_font_size(FONTS["hero_size"], zoom_percent)
-    root.configure(background=COLORS["background"])
+def scaled(value: int, zoom_percent: int) -> int:
+    return max(1, round(value * zoom_percent / 100))
 
-    style.configure(".", font=("TkDefaultFont", body), background=COLORS["background"], foreground=COLORS["text"])
-    style.configure("TFrame", background=COLORS["background"])
-    style.configure("Sidebar.TFrame", background=COLORS["sidebar"])
-    style.configure("Card.TFrame", background=COLORS["surface"], relief="flat")
-    style.configure("Toolbar.TFrame", background=COLORS["surface_soft"])
-    style.configure("Status.TFrame", background=COLORS["surface_soft"])
 
-    style.configure("TLabel", background=COLORS["background"], foreground=COLORS["text"])
-    style.configure("Sidebar.TLabel", background=COLORS["sidebar"], foreground=COLORS["text"])
-    style.configure("Card.TLabel", background=COLORS["surface"], foreground=COLORS["text"])
-    style.configure("CardMuted.TLabel", background=COLORS["surface"], foreground=COLORS["muted"])
-    style.configure("Title.TLabel", font=("TkDefaultFont", title, "bold"), foreground=COLORS["text"])
-    style.configure("Hero.TLabel", font=("TkDefaultFont", hero, "bold"), foreground=COLORS["text"])
-    style.configure("Section.TLabel", font=("TkDefaultFont", body, "bold"), foreground=COLORS["text"])
-    style.configure("Muted.TLabel", foreground=COLORS["muted"])
-    style.configure("Accent.TLabel", foreground=COLORS["accent"])
+def app_stylesheet(zoom_percent: int = 100) -> str:
+    body = scaled(FONTS["body_size"], zoom_percent)
+    small = scaled(FONTS["small_size"], zoom_percent)
+    title = scaled(FONTS["title_size"], zoom_percent)
+    hero = scaled(FONTS["hero_size"], zoom_percent)
+    radius = scaled(5, zoom_percent)
+    pad = scaled(7, zoom_percent)
+    return f"""
+    QWidget {{
+        background: {COLORS['background']};
+        color: {COLORS['text']};
+        font-size: {body}pt;
+    }}
+    QWidget#dashboardShell {{ background: {COLORS['background']}; }}
+    QFrame#header, QFrame#toolbar, QFrame#statusBar {{
+        background: {COLORS['surface_soft']};
+        border: 1px solid {COLORS['border']};
+        border-radius: {radius}px;
+    }}
+    QFrame#sidebar {{
+        background: {COLORS['sidebar']};
+        border: 1px solid {COLORS['border']};
+        border-radius: {radius}px;
+    }}
+    QFrame#card {{
+        background: {COLORS['surface']};
+        border: 1px solid {COLORS['accent']};
+        border-radius: {radius}px;
+    }}
+    QFrame#innerCard {{
+        background: {COLORS['surface_alt']};
+        border: 1px solid {COLORS['border']};
+        border-radius: {radius}px;
+    }}
+    QLabel {{ background: transparent; border: none; }}
+    QLabel#appTitle {{ font-size: {hero}pt; font-weight: 700; }}
+    QLabel#subtitle, QLabel#muted, QLabel#cardHint {{ color: {COLORS['muted']}; font-size: {small}pt; }}
+    QLabel#sectionTitle, QLabel#cardTitle {{ font-size: {title}pt; font-weight: 700; }}
+    QLabel#accent {{ color: {COLORS['accent']}; font-weight: 700; }}
+    QLabel#statusGood {{ color: {COLORS['green']}; font-weight: 700; }}
+    QPushButton {{
+        background: {COLORS['surface_alt']};
+        border: 1px solid {COLORS['border']};
+        border-radius: {radius}px;
+        padding: {pad}px {scaled(10, zoom_percent)}px;
+        text-align: center;
+    }}
+    QPushButton:hover {{ border-color: {COLORS['accent']}; background: {COLORS['accent_soft']}; }}
+    QPushButton:pressed {{ background: {COLORS['accent']}; color: #07111A; }}
+    QPushButton#navButton {{ text-align: left; border: none; background: transparent; padding: {scaled(5, zoom_percent)}px {scaled(8, zoom_percent)}px; }}
+    QPushButton#navButton:hover {{ background: {COLORS['surface_alt']}; }}
+    QPushButton#activeNav {{ text-align: left; border: none; background: {COLORS['accent']}; color: #07111A; font-weight: 700; }}
+    QPushButton#tileButton {{ min-height: {scaled(48, zoom_percent)}px; font-weight: 600; }}
+    QPushButton#featureButton {{ min-height: {scaled(92, zoom_percent)}px; font-weight: 600; }}
+    QLineEdit, QComboBox, QTextEdit, QPlainTextEdit, QListWidget, QTreeWidget, QTableWidget {{
+        background: {COLORS['surface']};
+        color: {COLORS['text']};
+        border: 1px solid {COLORS['border']};
+        border-radius: {radius}px;
+        padding: {scaled(4, zoom_percent)}px;
+        selection-background-color: {COLORS['accent_soft']};
+        selection-color: {COLORS['text']};
+    }}
+    QLineEdit:focus, QComboBox:focus, QTextEdit:focus, QPlainTextEdit:focus, QListWidget:focus, QTreeWidget:focus {{ border: 1px solid {COLORS['accent']}; }}
+    QComboBox::drop-down {{ border: none; width: {scaled(22, zoom_percent)}px; }}
+    QHeaderView::section {{ background: {COLORS['surface_alt']}; color: {COLORS['text']}; border: none; border-right: 1px solid {COLORS['border']}; padding: {scaled(6, zoom_percent)}px; font-weight: 700; }}
+    QTreeWidget {{ alternate-background-color: {COLORS['surface_soft']}; }}
+    QCheckBox {{ spacing: {scaled(6, zoom_percent)}px; }}
+    QSplitter::handle {{ background: {COLORS['border']}; width: 1px; }}
+    QMenu {{ background: {COLORS['surface']}; color: {COLORS['text']}; border: 1px solid {COLORS['border']}; }}
+    QMenu::item:selected {{ background: {COLORS['accent_soft']}; }}
+    QToolTip {{ background: {COLORS['surface_alt']}; color: {COLORS['text']}; border: 1px solid {COLORS['accent']}; }}
+    """
 
-    style.configure("TButton", padding=(SPACING["m"], SPACING["s"]), background=COLORS["surface_alt"], foreground=COLORS["text"], borderwidth=1)
-    style.map("TButton",
-              background=[("active", COLORS["accent_soft"]), ("pressed", COLORS["accent_soft"])],
-              foreground=[("disabled", COLORS["blocked"]), ("active", COLORS["text"])])
-    style.configure("Nav.TButton", anchor="w", padding=(SPACING["m"], SPACING["s"]), background=COLORS["sidebar"], borderwidth=0)
-    style.map("Nav.TButton", background=[("active", COLORS["surface_alt"]), ("pressed", COLORS["accent_soft"])])
-    style.configure("ActiveNav.TButton", anchor="w", padding=(SPACING["m"], SPACING["s"]), background=COLORS["accent"], foreground="#08131F", borderwidth=0)
-    style.map("ActiveNav.TButton", background=[("active", "#FFAA2B")], foreground=[("active", "#08131F")])
-    style.configure("Tile.TButton", padding=(SPACING["m"], SPACING["m"]), background=COLORS["surface"], borderwidth=1)
 
-    style.configure("TEntry", fieldbackground=COLORS["surface"], foreground=COLORS["text"], insertcolor=COLORS["text"], bordercolor=COLORS["border"])
-    style.configure("TCombobox", padding=SPACING["xs"], fieldbackground=COLORS["surface"], foreground=COLORS["text"])
-    style.map("TCombobox", fieldbackground=[("readonly", COLORS["surface"])], foreground=[("readonly", COLORS["text"])])
+def apply_global_style(widget: QWidget, zoom_percent: int = 100) -> None:
+    """Wendet den zentralen Qt-Stil auf ein Fenster und seine Kinder an."""
+    widget.setStyleSheet(app_stylesheet(zoom_percent))
+    font = QFont(widget.font())
+    font.setPointSize(scaled(FONTS["body_size"], zoom_percent))
+    widget.setFont(font)
 
-    style.configure("Treeview", font=("TkDefaultFont", body), rowheight=zoom_font_size(28, zoom_percent),
-                    background=COLORS["surface"], fieldbackground=COLORS["surface"],
-                    foreground=COLORS["text"], borderwidth=0)
-    style.configure("Treeview.Heading", background=COLORS["surface_alt"], foreground=COLORS["text"],
-                    font=("TkDefaultFont", small, "bold"))
-    style.map("Treeview", background=[("selected", COLORS["accent_soft"])])
-    return style
+
+def configure_application(app: QApplication, zoom_percent: int = 100) -> None:
+    app.setStyle("Fusion")
+    app.setStyleSheet(app_stylesheet(zoom_percent))
 
 
 def severity_display(severity: str) -> tuple[str, str]:
-    """Liefert Ampelsymbol und Textfarbe für einen Schweregrad."""
-    return SEVERITY_STATUS.get(severity.upper(), ("⚫", COLORS["blocked"]))
+    return SEVERITY_STATUS.get(severity.upper(), ("●", COLORS["blocked"]))
