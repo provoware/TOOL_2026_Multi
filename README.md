@@ -1,13 +1,31 @@
 # TOOL_2026_Multi
 
-> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.10.2 · **Stand:** 2026-09-08
+> **Status:** 🟡 Ausführbarer Kern mit PySide6-Referenzdashboard und vorbereiteter realer Kubuntu/X11-Endabnahme · **Version:** 0.12.0 · **Stand:** 2026-09-08
+
+## Iteration 15 – Todo-Liste
+
+- 🟢 Aufgaben mit Titel und optionaler Notiz anlegen.
+- 🟢 optionalen Termin mit Datum und Uhrzeit speichern.
+- 🟢 aktive Aufgaben nach Termin sortiert anzeigen.
+- 🟢 Abhaken verschiebt die vollständige Aufgabe atomar ins getrennte Archiv; nichts wird gelöscht.
+- 🟢 aktive und archivierte Aufgaben liegen zusammen unter `daten/todo/todo.json`, damit beim Verschieben kein Zwischenzustand zwischen zwei Dateien entstehen kann.
+- 🟢 Todo folgt derselben zentralen Zoom-/Schriftsteuerung wie das restliche Dashboard.
+
+## Iteration 14 – profilbasierte DB-Eingaben
+
+- 🟢 Profile **HardTechno**, **HipHop/Rap** und **Hörspiele** als Startbestand.
+- 🟢 profilweise Werte für Genres, Stimmungen, Stil, Stimme und Besonderheiten.
+- 🟢 eigene Profile und Werte anlegbar, Duplikate werden abgefangen.
+- 🟢 Werte werden erst nach Bestätigung entfernt.
+- 🟢 Dashboard-Auswahl wird nach Profilwechsel direkt neu befüllt.
+- 🟢 Speicherung atomar unter `daten/profile/db_profile.json`; Startprofile bleiben bis zur ersten Änderung nur im Speicher.
 
 ## Iteration 13 – Zoom und Schriftgröße
 
 - 🟢 `Strg + Mausrad` ändert Zoom und Schriftgröße zentral.
 - 🟢 `Strg++`, `Strg+-` und `Strg+0` bleiben verfügbar.
 - 🟢 die Statusleiste bietet zusätzlich `A−`, Prozentanzeige und `A+`.
-- 🟢 Dashboard, offene Songeditoren, Songbibliothek und Recovery folgen derselben Zoomstufe.
+- 🟢 Dashboard, offene Songeditoren, Songbibliothek, Recovery, Profilverwaltung und Todo folgen derselben Zoomstufe.
 - 🟢 keine parallele Schriftgrößenkonfiguration; alles läuft weiter über die zentralen PySide6-QSS-Standards.
 
 ## Iteration 12 – Kubuntu/X11-Endabnahme
@@ -69,6 +87,7 @@ Die Hauptansicht orientiert sich am Provoware-Referenzentwurf:
 - Entwickler-Schnellinfo,
 - letzte bearbeitete Songs,
 - 2×2-Hauptfläche mit **Workflow Übersicht**, **DB-Eingaben**, **Funktionen**, **Systemanwendungen**,
+- Planung mit **Todo-Liste** und vorbereitetem Kalenderpunkt,
 - Recovery nur unter `Werkzeug → Recovery`.
 
 ### Zoom und Schrift
@@ -79,6 +98,32 @@ Die Hauptansicht orientiert sich am Provoware-Referenzentwurf:
 - verfügbare Stufen: 100, 125, 150, 175 und 200 %.
 
 Geplante, noch nicht freigegebene Module werden sichtbar dargestellt, führen aber nur zu einem verständlichen Hinweis und verändern keine Daten.
+
+## Todo-Liste
+
+Aufruf über `Planung → Todo-Liste`.
+
+- Titel ist Pflicht.
+- Notiz ist optional.
+- Termin kann über „Termin verwenden“ zugeschaltet werden.
+- Aktive Aufgaben werden getrennt vom Archiv angezeigt.
+- Beim Abhaken wird die Aufgabe nicht gelöscht, sondern vollständig in den Archivbereich derselben atomar geschriebenen JSON-Datei verschoben.
+
+Datenpfad:
+
+```text
+daten/todo/todo.json
+```
+
+## Profil-DB
+
+Aufruf über die DB-Navigation oder die Genres-Kachel. Die Dashboard-Karte besitzt eine Profilauswahl; profilabhängig werden Genres, Stimmungen, Stil, Stimme und Besonderheiten geladen.
+
+Datenpfad:
+
+```text
+daten/profile/db_profile.json
+```
 
 ## Songbibliothek
 
@@ -165,6 +210,7 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 - Speichern beim Schließen und vor Logout,
 - atomarer Dateiersatz,
 - automatische Versionsstände nur bei tatsächlichen Änderungen,
+- atomare Profil- und Todo-Datenspeicherung,
 - Recovery-/Diagnose-/Restore-Kette.
 
 ## Vollprüfung
@@ -173,4 +219,4 @@ Weiterhin verfügbar unter `daten/songtexte/export/`:
 bash scripts/pruefen.sh --full
 ```
 
-Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests einschließlich Zoom-Regressionsprüfung, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
+Sie umfasst Logiktests, echte PySide6-Offscreen-GUI-Tests einschließlich Zoom-, Profil- und Todo-Regressionsprüfung, Referenzlayoutprüfung, Kubuntu-Abnahmelogik einschließlich echtem Temp-SIGTERM-Wächtertest, ENOSPC-/EROFS-Simulation, Release-Manifest, Headless-Start und vollständigen Restore.
