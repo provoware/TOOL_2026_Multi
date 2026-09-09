@@ -21,3 +21,41 @@ jobs:
         run: bash scripts/pruefen.sh --full
       - name: Vollprojekt wiederherstellen und prüfen
         run: python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"
+      - name: Exaktes Vollprojekt-ZIP aus freigegebenem Main-Commit erzeugen
+        run: |
+          FINAL_SHA="db54720967f93168b4cce3c8e494882c0f322264"
+          ZIP_NAME="TOOL_2026_Multi_0.15.2_FINAL_FULL.zip"
+          ZIP_PATH="$RUNNER_TEMP/$ZIP_NAME"
+          git fetch --no-tags --depth=1 origin "$FINAL_SHA"
+          git archive --format=zip --prefix=TOOL_2026_Multi_0.15.2/ -o "$ZIP_PATH" "$FINAL_SHA"
+          python3 - "$ZIP_PATH" <<'PY'
+          import json
+          import sys
+          import zipfile
+          from pathlib import Path
+
+          archive = Path(sys.argv[1])
+          manifest_name = "TOOL_2026_Multi_0.15.2/MANIFEST.json"
+          with zipfile.ZipFile(archive) as zipped:
+              bad = zipped.testzip()
+              if bad is not None:
+                  raise SystemExit(f"Beschädigter ZIP-Eintrag: {bad}")
+              names = zipped.namelist()
+              if manifest_name not in names:
+                  raise SystemExit("MANIFEST.json fehlt im Vollprojekt-ZIP")
+              manifest = json.loads(zipped.read(manifest_name).decode("utf-8"))
+              if manifest.get("tool", {}).get("version") != "0.15.2":
+                  raise SystemExit("Unerwartete Version im Vollprojekt-ZIP")
+          print(f"Vollprojekt-ZIP geprüft: {archive.name}")
+          PY
+          cd "$RUNNER_TEMP"
+          sha256sum "$ZIP_NAME" > "$ZIP_NAME.sha256"
+      - name: Vollprojekt-ZIP als temporäres Artefakt bereitstellen
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: TOOL_2026_Multi_0.15.2_FINAL_FULL
+          path: |
+            ${{ runner.temp }}/TOOL_2026_Multi_0.15.2_FINAL_FULL.zip
+            ${{ runner.temp }}/TOOL_2026_Multi_0.15.2_FINAL_FULL.zip.sha256
+          if-no-files-found: error
+          compression-level: 0
