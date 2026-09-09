@@ -9,18 +9,21 @@
 - Schrift-Hierarchie, Innenabstände, Rundungen, Eingabehöhen, Fokusrahmen, Tabs, Scrollleisten und Splitter vereinheitlicht,
 - aktive Navigation auf dunkle Auswahlfläche mit linker Akzentlinie umgestellt,
 - responsive Breitenstufen für kompakte, normale und breite Fenster eingeführt,
-- Sidebar, Dashboard-Suche, Profilfelder und Songbereichsliste passen sich abhängig von der Fensterbreite an,
+- Sidebar, Dashboard-Suche, Profilfelder und Songbereichsliste passen sich abhängig von Fensterbreite und Zoom an,
 - Songeditor-Splitter verteilt Arbeitsbereich und Gesamtvorschau dynamisch,
 - Songbibliothek verteilt Tabellenbreite gezielt auf Titel und Tags und hält kurze Spalten inhaltsbezogen,
 - drei GUI-Rückfälle aus Grundprüfung #368 korrigiert: Suchplatzhalter-Erwartung, alte Recovery-Beschriftung und zu starre Kartenbreitenannahme,
-- Responsive-Regressionen für Dashboardbreiten und Tabellen-Spaltenmodi ergänzt.
+- Responsive-Regressionen für Dashboardbreiten, Zoom-Breitenreserve und Tabellen-Spaltenmodi ergänzt.
 
 ### Schutz / Abnahme
 - keine Datenmigration und keine Änderung an Song-, Todo-, Kalender- oder Profildaten,
 - atomarer Schreibweg, Backup- und Restore-Fachlogik bleiben unverändert,
 - keine externe Schriftart und keine neue Abhängigkeit eingeführt,
 - Grundprüfung #368 hatte bereits 75 Logiktests erfolgreich abgeschlossen; das Restore-Gate wurde nur wegen der drei GUI-Rückfälle übersprungen,
-- finale Vollprüfung und Vollprojekt-Restore stehen für Iteration 22 noch aus.
+- GitHub-Grundprüfung **#385** vollständig erfolgreich: 75 Logik-/Regressionstests und 46 PySide6-GUI-Tests grün,
+- Schreibfehler-Simulation, Headless-Start und Release-Manifest mit 36 Betriebsdateien erfolgreich,
+- Vollprojekt-Restore erfolgreich mit Status `OK` und SHA-256 `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`,
+- nach diesem reinen Evidence-Sync bleibt die Safe-Merge-Regel bestehen: der aktuelle PR-Head muss ebenfalls grün sein.
 
 ## 0.14.0 – 2026-09-09 – Laien-UX-Konsistenz
 
@@ -219,7 +222,7 @@
 ### Schutz
 - bestehendes Song-Textformat und alle Nutzerdatenpfade bleiben unverändert,
 - Autosave, Fokusverlust-Speicherung, Versionierung, Restore-Sicherung, Favoriten/Status, Metadaten und Exporte bleiben erhalten,
-- geplante noch nicht freigegebene Dashboardbereiche verändern keine Daten,
+- geplante noch nicht freigegebenen Dashboardbereiche verändern keine Daten,
 - zusätzlicher Referenzlayout-Test prüft Kartenstruktur/-proportionen, Sidebarbreiten, Schnellkacheln, Dark-Orange-Akzent und exakt einen Recovery-Eintrag,
 - produktive GUI-Dateien werden auf unerlaubte Tkinter-Reste geprüft,
 - bestehende Logik-, Sicherheits-, ENOSPC-/EROFS-, Release-, Headless- und Restore-Gates bleiben verbindlich.
