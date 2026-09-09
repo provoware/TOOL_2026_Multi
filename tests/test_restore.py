@@ -1,3 +1,5 @@
+import subprocess
+import sys
 import tempfile
 import unittest
 import zipfile
@@ -8,6 +10,17 @@ from scripts.iteration_restore import build_zip, safe_members, sha256
 
 
 class RestoreTests(unittest.TestCase):
+    def test_restore_script_direct_invocation_can_import_project_modules(self):
+        root = Path(__file__).resolve().parent.parent
+        result = subprocess.run(
+            [sys.executable, "scripts/iteration_restore.py", "--help"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+
     def test_sha256_is_stable(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / "a.bin"
