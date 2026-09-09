@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.15.0 · **Stand:** 09.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore-Prüfung aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
+> **Version:** 0.15.1 · **Stand:** 09.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore-Prüfung aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -44,6 +44,8 @@ Die Oberfläche verwendet zentrale wiederverwendbare UI-Standards statt einzelne
 - Accessible Names und Beschreibungen für zentrale interaktive Elemente,
 - `Qt.StrongFocus` für Buttons, Eingaben, Auswahlfelder, Listen und Tabellen,
 - Zustände werden zusätzlich durch Text, Symbole und Konturen vermittelt – nicht nur durch Farbe.
+
+Die normale Responsive-Logik unterscheidet zwischen kompakter, normaler und breiter Fensterdarstellung. Auf typischen kleinen Laptop-Bildschirmen wie **1366×768** wird bei **125/150 %** zusätzlich ein reversibler Laptop-Kompaktmodus verwendet: redundante reine Planungselemente verschwinden vorübergehend, während Songtexte, Vorgaben, Todo, Kalender, Fehlerhilfe, Zoom und Farbtheme erreichbar bleiben. Ab **1450 px Breite** wird automatisch wieder die vollständige große Darstellung verwendet.
 
 ### Farbthemes
 
@@ -225,6 +227,7 @@ Sie prüft unter anderem:
 - Fehlerhilfe
 - PySide6-Bedienwege im Offscreen-Test
 - Zoom, Fokus und Hochzoom
+- Laptop-Kompaktmodus und Rückkehr zur großen Ansicht
 - Farbthemes und Screenreader-Grundwerte
 - Kontraste aller Theme-Kernfarben mit mindestens 4,5:1
 - Laienführung und Nicht-Silent-Fail-Verhalten
@@ -245,7 +248,7 @@ Automatische Offscreen-CI ersetzt keine echte sichtbare Prüfung auf dem Zielrec
 bash kubuntu_abnahme.sh
 ```
 
-Besonders zu prüfen sind 150/175/200 %, normales und maximiertes Fenster sowie das Theme **Kontrast**.
+Besonders zu prüfen sind **1366×768 bei 125/150 %**, zusätzlich 175/200 %, normales und maximiertes Fenster sowie das Theme **Kontrast**.
 
 ## Projektstruktur
 
@@ -272,10 +275,11 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION22_RESPONSIVE_DESIGN.md` – Responsive Design und Abnahme
 - `docs/ITERATION23_ZOOM_HAERTUNG.md` – Hochzoom-Härtung
 - `docs/ITERATION24_ACCESSIBILITY_THEMES.md` – Barrierefreiheit, Farbthemes und Kontrastprüfung
+- `docs/ITERATION25_LAPTOP_LAYOUT.md` – Laptop-Kompaktmodus und Regression
 
 ## Noch offen
 
-1. Iteration 24 nur nach grüner Vollprüfung und grünem Restore-Gate des finalen PR-Heads in `main` übernehmen.
+1. Iteration 25 nur nach grüner Vollprüfung und grünem Restore-Gate in `main` übernehmen.
 2. Danach reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner durchführen.
 3. Anschließend verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs nicht unnötig auf Dateiersatz umstellen.
 
