@@ -1,5 +1,21 @@
 # Änderungsverlauf
 
+## 0.13.3 – 2026-09-09 – Backup-/Restore-I/O-Konsistenz
+
+### Geändert
+- Backup-ZIP verwendet eindeutige Tempdateien im Zielordner statt eines festen `.tmp`-Namens,
+- validiertes ZIP wird vor Veröffentlichung per Datei-`fsync` synchronisiert, atomar ersetzt und der Verzeichniseintrag bestmöglich synchronisiert,
+- Tempdateien werden auch bei Fehlern bereinigt,
+- SHA-256-Begleitdatei und RESTORE-JSON-Bericht verwenden `app.atomic_io.atomic_write_text`,
+- Backup-Dateinamen enthalten Mikrosekunden gegen schnelle Mehrfachlauf-Kollisionen,
+- `ZipFile.testzip()` wird explizit ausgewertet und meldet beschädigte Einträge,
+- Restore-Regressionen für Altbestandsschutz bei Replace-Fehler und Temp-Cleanup ergänzt.
+
+### Schutz / Abnahme
+- Restore-Pfadprüfung, Manifestvergleich, Vollprüfung und Headless-Start bleiben unverändert,
+- Append-only Ereignislogs und Nutzerdaten wurden bewusst nicht verändert,
+- Branch-Abnahme durch GitHub-Grundprüfung inklusive `bash scripts/pruefen.sh --full` und Restore-Gate steht noch aus; kein Merge vor grünem Gate.
+
 ## 0.13.2 – 2026-09-09 – Diagnose-I/O-Konsistenz
 
 ### Geändert
