@@ -25,42 +25,42 @@ fehler() {
 }
 
 cd "$PROJEKTORDNER"
-command -v "$PYTHON" >/dev/null 2>&1 || { printf '🔴 Python 3 wurde nicht gefunden.\n' >&2; exit 1; }
+command -v "$PYTHON" >/dev/null 2>&1 || { printf '🔴 Die benötigte Python-3-Grundlage wurde nicht gefunden.\n' >&2; exit 1; }
 mkdir -p "$PROJEKTORDNER/logs"
 "$PYTHON" "$STATUSWERKZEUG" init "$STATUSDATEI" >/dev/null 2>&1 || true
-checkpoint 1 ok "Python 3 ist verfügbar."
+checkpoint 1 ok "Grundlage ist vorhanden."
 
-checkpoint 2 running "Abgeschirmte Python-Umgebung wird geprüft."
+checkpoint 2 running "Startumgebung wird vorbereitet."
 if [[ ! -x "$UMGEBUNG/bin/python" ]]; then
-  "$PYTHON" -m venv "$UMGEBUNG" || fehler "Die Python-Umgebung konnte nicht angelegt werden. Unter Ubuntu/Kubuntu kann python3-venv fehlen."
+  "$PYTHON" -m venv "$UMGEBUNG" || fehler "Die geschützte Startumgebung konnte nicht angelegt werden. Unter Ubuntu/Kubuntu kann das Paket python3-venv fehlen."
 fi
-checkpoint 2 ok "Python-Umgebung ist bereit."
+checkpoint 2 ok "Startumgebung ist bereit."
 
-checkpoint 3 running "Benötigte Pakete werden geprüft."
+checkpoint 3 running "Benötigte Programmteile werden geprüft."
 if grep -Eq '^[[:space:]]*[^#[:space:]]' requirements.txt; then
   ANFORDERUNGS_HASH="$(sha256sum requirements.txt | awk '{print $1}')"
   HASH_DATEI="$UMGEBUNG/.requirements.sha256"
   if [[ ! -f "$HASH_DATEI" ]] || [[ "$(cat "$HASH_DATEI")" != "$ANFORDERUNGS_HASH" ]]; then
-    "$UMGEBUNG/bin/python" -m pip install --disable-pip-version-check -r requirements.txt >/dev/null || fehler "Benötigte Pakete konnten nicht eingerichtet werden."
+    "$UMGEBUNG/bin/python" -m pip install --disable-pip-version-check -r requirements.txt >/dev/null || fehler "Benötigte Programmteile konnten nicht eingerichtet werden. Prüfe die Internetverbindung und versuche es erneut."
     printf '%s' "$ANFORDERUNGS_HASH" > "$HASH_DATEI"
   fi
 fi
-checkpoint 3 ok "Abhängigkeiten sind bereit."
+checkpoint 3 ok "Benötigte Programmteile sind bereit."
 
 if [[ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]] && "$UMGEBUNG/bin/python" -c 'import PySide6' >/dev/null 2>&1; then
   "$UMGEBUNG/bin/python" "$STATUSWERKZEUG" gui "$STATUSDATEI" >/dev/null 2>&1 &
 fi
 
-checkpoint 4 running "Projekt wird begrenzt vorgeprüft."
-"$UMGEBUNG/bin/python" -m app.main --headless-check || fehler "Der Startunterbau ist nicht vollständig funktionsfähig."
+checkpoint 4 running "Projekt wird kurz auf Startfehler geprüft."
+"$UMGEBUNG/bin/python" -m app.main --headless-check || fehler "Die Startprüfung hat einen Fehler gefunden. Vorhandene Projektdaten wurden dabei nicht verändert."
 checkpoint 4 ok "Projektprüfung erfolgreich."
 
-checkpoint 5 running "PySide6-Oberfläche wird geprüft."
-"$UMGEBUNG/bin/python" -c 'from PySide6.QtWidgets import QApplication; print("PySide6 bereit")' >/dev/null || fehler "PySide6 ist nicht funktionsfähig."
-checkpoint 5 ok "PySide6 ist bereit."
+checkpoint 5 running "Programmoberfläche wird vorbereitet."
+"$UMGEBUNG/bin/python" -c 'from PySide6.QtWidgets import QApplication; print("Oberfläche bereit")' >/dev/null || fehler "Die Programmoberfläche konnte nicht vorbereitet werden."
+checkpoint 5 ok "Programmoberfläche ist bereit."
 
-checkpoint 6 running "Anwendung wird unter Prozesswache geöffnet."
-[[ -f "$PROJEKTORDNER/app/main.py" ]] || fehler "app/main.py fehlt."
-checkpoint 6 ok "Alle Start-Checkpoints sind grün."
-"$PYTHON" "$STATUSWERKZEUG" finish "$STATUSDATEI" "🟢 Start vollständig geprüft. Anwendung wird geöffnet." >/dev/null 2>&1 || true
+checkpoint 6 running "Provoware wird geöffnet."
+[[ -f "$PROJEKTORDNER/app/main.py" ]] || fehler "Die Hauptprogrammdatei app/main.py fehlt."
+checkpoint 6 ok "Alle Startprüfungen sind erfolgreich."
+"$PYTHON" "$STATUSWERKZEUG" finish "$STATUSDATEI" "🟢 Start erfolgreich. Provoware wird jetzt geöffnet." >/dev/null 2>&1 || true
 exec "$UMGEBUNG/bin/python" -m scripts.process_watch --root "$PROJEKTORDNER" -- "$UMGEBUNG/bin/python" -m app.main
