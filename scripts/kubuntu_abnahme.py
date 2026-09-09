@@ -21,6 +21,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.atomic_io import atomic_write_text
 
 
 @dataclass(frozen=True)
@@ -93,9 +97,7 @@ def write_report(root: Path, results: list[CheckResult], visual: dict[str, bool]
         "visual_confirmations": visual,
         "safety": "Signaltest ausschließlich in Tempdaten; keine Song-/Nutzerdaten verändert.",
     }
-    temporary = json_path.with_suffix(".json.tmp")
-    temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    os.replace(temporary, json_path)
+    atomic_write_text(json_path, json.dumps(payload, ensure_ascii=False, indent=2))
     lines = [
         "PROVOWARE · KUBUNTU/X11-ENDABNAHME",
         "=" * 54,
@@ -111,7 +113,7 @@ def write_report(root: Path, results: list[CheckResult], visual: dict[str, bool]
     else:
         lines.append("[OFFEN] Noch keine sichtbare Bestätigung erfasst.")
     lines += ["", "DATENSCHUTZ / SICHERHEIT", payload["safety"], ""]
-    txt_path.write_text("\n".join(lines), encoding="utf-8")
+    atomic_write_text(txt_path, "\n".join(lines))
     return txt_path, json_path
 
 
