@@ -38,7 +38,7 @@ class CalendarWindow(QWidget):
         self.project_root = project_root
         self.zoom_percent = zoom_percent
         self.on_changed = on_changed
-        self.setWindowTitle("Kalender")
+        self.setWindowTitle("Kalender & Termine")
         self.resize(1100, 720)
         self.setMinimumSize(860, 580)
         self._build()
@@ -51,19 +51,22 @@ class CalendarWindow(QWidget):
         outer.setSpacing(SPACING["s"])
 
         heading = QHBoxLayout()
-        title = QLabel("Kalender")
+        title = QLabel("Kalender & Termine")
         title.setObjectName("sectionTitle")
         heading.addWidget(title)
         heading.addStretch(1)
-        today = QPushButton("Heute")
+        today = QPushButton("Heute anzeigen")
         today.clicked.connect(self._select_today)
         heading.addWidget(today)
-        refresh_button = QPushButton("Aktualisieren")
+        refresh_button = QPushButton("Ansicht aktualisieren")
         refresh_button.clicked.connect(self.refresh)
         heading.addWidget(refresh_button)
         outer.addLayout(heading)
 
-        hint = QLabel("Datum wählen und zwischen Tag, Woche, Monat und Jahr wechseln. Termine werden in allen passenden Ansichten angezeigt.")
+        hint = QLabel(
+            "Links Datum auswählen oder neuen Termin anlegen. Rechts zwischen Tag, Woche, Monat und Jahr wechseln. "
+            "Erinnerungen funktionieren, solange das Hauptprogramm geöffnet ist."
+        )
         hint.setObjectName("muted")
         hint.setWordWrap(True)
         outer.addWidget(hint)
@@ -101,7 +104,7 @@ class CalendarWindow(QWidget):
         splitter.setStretchFactor(1, 1)
         outer.addWidget(splitter, 1)
 
-        self.status_label = QLabel("Bereit.")
+        self.status_label = QLabel("Bereit · Datum wählen oder links einen Termin anlegen.")
         self.status_label.setObjectName("muted")
         outer.addWidget(self.status_label)
 
@@ -110,12 +113,16 @@ class CalendarWindow(QWidget):
         form = QFormLayout(frame)
         form.setContentsMargins(0, SPACING["s"], 0, 0)
 
+        form_title = QLabel("Neuen Termin anlegen")
+        form_title.setObjectName("cardTitle")
+        form.addRow(form_title)
+
         self.title_entry = QLineEdit()
-        self.title_entry.setPlaceholderText("Terminbezeichnung")
+        self.title_entry.setPlaceholderText("Worum geht es?")
         form.addRow("Titel", self.title_entry)
 
         self.note_entry = QTextEdit()
-        self.note_entry.setPlaceholderText("Optionale Notiz …")
+        self.note_entry.setPlaceholderText("Zusätzliche Notiz (optional) …")
         self.note_entry.setFixedHeight(65)
         form.addRow("Notiz", self.note_entry)
 
@@ -134,9 +141,11 @@ class CalendarWindow(QWidget):
         for minutes in REMINDER_OPTIONS:
             self.reminder_combo.addItem(REMINDER_LABELS[minutes], minutes)
         self.reminder_combo.setCurrentIndex(0)
+        self.reminder_combo.setToolTip("Erinnerungen erscheinen nur, solange das Hauptprogramm läuft.")
         form.addRow("Erinnerung", self.reminder_combo)
 
         add_button = QPushButton("Termin anlegen")
+        add_button.setObjectName("primaryButton")
         add_button.clicked.connect(self.add_current_event)
         form.addRow("", add_button)
         self.title_entry.returnPressed.connect(self.add_current_event)
@@ -158,6 +167,7 @@ class CalendarWindow(QWidget):
         self.calendar.setSelectedDate(today)
         self.calendar.showSelectedDate()
         self.refresh()
+        self.status_label.setText("Heute ausgewählt.")
 
     def selected_date(self) -> date:
         selected = self.calendar.selectedDate()
@@ -197,13 +207,17 @@ class CalendarWindow(QWidget):
                 self.note_entry.toPlainText(), reminder,
             )
         except Exception as error:
-            QMessageBox.critical(self, "Termin nicht gespeichert", str(error))
+            QMessageBox.critical(
+                self,
+                "Termin nicht gespeichert",
+                f"Es wurde kein unvollständiger Termin angelegt.\n\nGrund: {error}",
+            )
             return
         self.calendar.setSelectedDate(QDate(start.year, start.month, start.day))
         self.title_entry.clear()
         self.note_entry.clear()
-        self.status_label.setText("Termin gespeichert.")
         self.refresh()
+        self.status_label.setText("Termin gespeichert · er erscheint jetzt in den passenden Ansichten.")
         if self.on_changed:
             self.on_changed()
         self.title_entry.setFocus()
@@ -220,7 +234,11 @@ class CalendarWindow(QWidget):
             month_events = events_between(self.project_root, month_start, month_end)
             year_events = events_between(self.project_root, year_start, year_end)
         except Exception as error:
-            QMessageBox.critical(self, "Kalenderdaten nicht lesbar", str(error))
+            QMessageBox.critical(
+                self,
+                "Kalender nicht lesbar",
+                f"Es wurden keine Kalenderdaten verändert.\n\nGrund: {error}",
+            )
             return
 
         self._fill_table(self.day_table, [
