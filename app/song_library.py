@@ -91,6 +91,7 @@ class SongLibrary(QWidget):
         super().__init__(parent, Qt.Window)
         self.project_root = project_root
         self.open_song_callback = open_song
+        self.new_song_callback = getattr(parent, "open_song_editor", None)
         self.zoom_percent = zoom_percent
         self._rows: list[SongRow] = []
         self._path_by_item: dict[int, Path] = {}
@@ -112,6 +113,12 @@ class SongLibrary(QWidget):
         title.setObjectName("sectionTitle")
         header.addWidget(title)
         header.addStretch(1)
+        if callable(self.new_song_callback):
+            new_button = QPushButton("＋ Neuen Song schreiben")
+            new_button.setObjectName("primaryButton")
+            new_button.setToolTip("Öffnet einen leeren Songtexteditor. Bestehende Songs bleiben unverändert.")
+            new_button.clicked.connect(self.new_song_callback)
+            header.addWidget(new_button)
         refresh_button = QPushButton("Liste aktualisieren")
         refresh_button.clicked.connect(self.refresh)
         header.addWidget(refresh_button)
@@ -277,7 +284,7 @@ class SongLibrary(QWidget):
             self._path_by_item[id(item)] = row.path
         self.table.resizeColumnToContents(0)
         if not self._rows:
-            self.status_label.setText("Noch keine Songs vorhanden · im Dashboard mit „Songtexte“ starten.")
+            self.status_label.setText("Noch keine Songs vorhanden · oben mit „Neuen Song schreiben“ starten.")
         elif not rows:
             self.status_label.setText(f"Keine Treffer · {len(self._rows)} Song(s) insgesamt. Suche oder Filter zurücksetzen.")
         else:
