@@ -13,6 +13,9 @@ MAX_ROOT_FILE_BYTES = 1_000_000
 
 class RepositoryHygieneTests(unittest.TestCase):
     def test_no_tracked_runtime_or_local_artifacts(self):
+        if not (ROOT / ".git").exists():
+            self.skipTest("Git-Metadaten fehlen im Restore; Hygiene wird im Repository-Checkout geprüft.")
+
         output = subprocess.check_output(
             ["git", "ls-files", "-z"], cwd=ROOT
         ).decode("utf-8")
