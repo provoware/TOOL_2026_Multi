@@ -1,6 +1,6 @@
 # TODO – TOOL_2026_Multi
 
-Stand: 2026-09-09
+Stand: 2026-09-10
 
 ## Ampel
 
@@ -106,11 +106,36 @@ Stand: 2026-09-09
 - 🟢 PR #29 per Squash-Merge sicher in `main` übernommen.
 - 🟢 resultierender Main-Commit: `1a64810fd2e202045666538f57054951e5099257`.
 
+## Iteration 26 – Release- und Bericht-I/O-Härtung
+
+**Hauptziel:** Verbleibende nicht-append Schreibwege vor dem nächsten vollständigen ZIP auf denselben atomaren Schutzvertrag bringen, ohne Nutzerdaten- oder Produktlogik zu verändern.
+
+### Umsetzung
+
+- 🟢 zentralen `atomic_publish_file()`-Schritt für fertig erzeugte Dateien ergänzt: Datei-`fsync`, atomarer Replace, bestmöglicher Verzeichnis-`fsync`, Temp-Cleanup.
+- 🟢 Log-Quarantäne, Regressionstatus, menschenlesbare Ereignis-/Wächterberichte, Startstatus und Kubuntu-Abnahmeberichte auf den zentralen atomaren Textschreiber umgestellt.
+- 🟢 Release-ZIP verwendet eindeutige Tempdateien und den zentralen Publish-Schritt; SHA-256-Begleitdatei wird atomar geschrieben.
+- 🟢 Diagnose-ZIP verwendet denselben zentralen Publish-Schritt.
+- 🟢 direkte Skriptstarts für Diagnose, Startstatus, Prozesswächter und Kubuntu-Abnahme gegen fehlenden Projektimport abgesichert.
+- 🟢 `app/laptop_layout.py` und Iterationsdokumente 22–26 in der Vollständigkeitsprüfung nachgezogen.
+- 🟢 Append-only Ereignislog und Projekt-Notiz bewusst nicht auf Dateiersatz umgestellt.
+- 🟢 bestehende Restore-ZIP-Implementierung bewusst unverändert gelassen, da sie bereits denselben Schutz nachweist und gezielt regressionsgeprüft ist.
+
+### Abnahme
+
+- 🟢 erste vollständige Grundprüfung **#503** erfolgreich.
+- 🟢 **81 Logik-/Regressionstests** erfolgreich.
+- 🟢 **52 PySide6-GUI-Tests** erfolgreich.
+- 🟢 Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich.
+- 🟢 Headless-Start erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, SHA-256 `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`.
+- 🟡 Version-/Evidence-Sync auf 0.15.2 wird anschließend nochmals vollständig geprüft.
+- 🔒 kein Merge vor grünem finalem Head-Gate.
+
 ## Danach
 
 1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und das Theme `Kontrast`.
-2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
-3. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
+2. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
 ## Geplante Produktbereiche
 
