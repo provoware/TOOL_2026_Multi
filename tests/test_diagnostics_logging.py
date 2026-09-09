@@ -1,4 +1,5 @@
 import json
+import subprocess
 import sys
 import tempfile
 import types
@@ -25,6 +26,22 @@ class DiagnosticsLoggingTests(unittest.TestCase):
             self.assertEqual(len(files), 1)
             self.assertNotIn("meinpasswort", files[0].read_text(encoding="utf-8"))
 
+    def test_quarantine_replace_failure_preserves_original_log_and_cleans_temp(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            log = root / "logs" / "ereignisse.jsonl"
+            quarantine = root / "logs" / "quarantaene"
+            log.parent.mkdir()
+            original = b'{"ok":1}\nkaputt password=meinpasswort\n'
+            log.write_bytes(original)
+
+            with patch("app.atomic_io.os.replace", side_effect=OSError("simuliert")):
+                with self.assertRaises(OSError):
+                    quarantine_corrupt_jsonl(log, quarantine)
+
+            self.assertEqual(log.read_bytes(), original)
+            self.assertEqual(list((root / "logs").rglob("*.tmp")), [])
+
     def test_size_rotation_moves_log_and_limits_archives(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -34,6 +51,17 @@ class DiagnosticsLoggingTests(unittest.TestCase):
                 log.write_text(f'{{"n":{index}}}\n', encoding="utf-8")
                 self.assertIsNotNone(rotate_log(log, max_bytes=0, max_age_days=9999, keep=2))
             self.assertLessEqual(len(list((root / "logs" / "archiv").glob("*.jsonl"))), 2)
+
+    def test_diagnostic_script_direct_invocation_can_import_project_modules(self):
+        root = Path(__file__).resolve().parent.parent
+        result = subprocess.run(
+            [sys.executable, "scripts/diagnosepaket.py", "--help"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
 
     def test_diagnostic_package_contains_only_redacted_copies(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -66,7 +94,7 @@ class DiagnosticsLoggingTests(unittest.TestCase):
             root = Path(temp)
             out = root / "out"
             (root / "MANIFEST.json").write_text(json.dumps({"tool":{"version":"9.9.9"}}), encoding="utf-8")
-            with patch("scripts.diagnosepaket.os.replace", side_effect=OSError("simulated replace failure")):
+            with patch("app.atomic_io.os.replace", side_effect=OSError("simulated replace failure")):
                 with self.assertRaises(OSError):
                     build_diagnostic(root, out)
             self.assertEqual(list(out.glob("*.zip")), [])
