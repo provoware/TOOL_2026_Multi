@@ -1,3 +1,4 @@
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -49,6 +50,31 @@ class ProcessConsistencyTests(unittest.TestCase):
             with patch("app.atomic_io.os.fsync", side_effect=fsync_file_then_fail_directory):
                 atomic_write_text(target, "gesichert\n")
             self.assertEqual(target.read_text(encoding="utf-8"), "gesichert\n")
+
+    def test_start_status_direct_invocation_can_import_atomic_writer(self):
+        root = Path(__file__).resolve().parent.parent
+        with tempfile.TemporaryDirectory() as temp:
+            status = Path(temp) / "startstatus.json"
+            result = subprocess.run(
+                [sys.executable, "scripts/start_status.py", "init", str(status)],
+                cwd=root,
+                text=True,
+                capture_output=True,
+                timeout=30,
+            )
+            self.assertEqual(result.returncode, 0, msg=result.stderr)
+            self.assertTrue(status.is_file())
+
+    def test_process_watch_direct_invocation_can_import_project_modules(self):
+        root = Path(__file__).resolve().parent.parent
+        result = subprocess.run(
+            [sys.executable, "scripts/process_watch.py", "--help"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
 
     def test_second_instance_guard_is_blocked_until_first_releases(self):
         with tempfile.TemporaryDirectory() as temp:
