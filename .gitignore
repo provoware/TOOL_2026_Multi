@@ -20,3 +20,8 @@ release/
 .vscode/
 .DS_Store
 *~
+
+# Unsortierte lokale Bildexporte im Repository-Root
+/ChatGPT Image *.png
+/Screenshot*.png
+/Bildschirmfoto*.png
