@@ -60,12 +60,30 @@ Damit wird nicht nur geprüft, dass der Zoomwert gesetzt wird, sondern erstmals 
 - keine neue Abhängigkeit,
 - keine Änderung der Zoomstufen 100/125/150/175/200 %.
 
-## Abnahme
+## Automatische Abnahme
 
-Vor Merge verbindlich:
+### Run #401 – gezielter Rückfall entdeckt
 
-```bash
-bash scripts/pruefen.sh --full
-```
+- 75 Logik-/Regressionstests: **grün**.
+- GUI-Prüfung: genau **eine** veraltete Iteration-22-Annahme schlug fehl. Der alte Test verlangte, dass die Sidebar bei 125 % zwingend breiter als bei 100 % sein müsse.
+- Diese Annahme widersprach dem neuen effektiven Breitenmodell: bei gleichem physischen Fenster kann die Oberfläche durch die zoom-bereinigte Klassifikation bewusst in den kompakten Modus wechseln.
+- Restore wurde wegen des fehlgeschlagenen Vollprüfungs-Gates korrekt nicht gestartet.
 
-und anschließend das bestehende Vollprojekt-Restore-Gate. Die reale Kubuntu/KDE-X11-Sichtprüfung bleibt zusätzlich erforderlich, weil Offscreen-GUI-Tests keine reale Font- und Desktopdarstellung vollständig ersetzen.
+Die Testannahme wurde nicht „weichgestellt“, sondern auf das eigentliche Nutzungsziel umgestellt: Kernbedienung bleibt sichtbar und Navigation besitzt sicheren Überlauf statt Überlagerung.
+
+### Run #403 – vollständig grün
+
+- **75 Logik-/Regressionstests** erfolgreich.
+- **50 PySide6-GUI-Tests** erfolgreich, einschließlich der neuen 200-%-Überlappungs-, Scroll-, Formular- und Reflow-Regressionen.
+- Schreibfehler-Simulation erfolgreich.
+- Headless-Start erfolgreich.
+- Release-Manifest gültig: **36 Betriebsdateien**.
+- Vollprojekt-Restore: **OK**.
+- Restore-SHA-256: `69e6cc8b3b5f3838b4478e3c0373ba0cb46c86942927d5b523f78a0cdb16214a`.
+- geprüfter Branch-Head: `e1dbc977f6bfef97d396ac105ac54a09172d831f`.
+
+Nach dem reinen Versions-/Evidence-Sync wird der endgültige PR-Head nochmals durch dieselbe Vollprüfung und dasselbe Restore-Gate geschickt. Erst danach darf gemergt werden.
+
+## Reale Zielsystem-Abnahme
+
+Die reale Kubuntu/KDE-X11-Sichtprüfung bleibt zusätzlich erforderlich, weil Offscreen-GUI-Tests keine reale Font- und Desktopdarstellung vollständig ersetzen. Dabei werden 100/125/150/175/200 % jeweils in normaler und maximierter Fenstergröße geprüft.
