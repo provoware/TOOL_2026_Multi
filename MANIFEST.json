@@ -10,8 +10,8 @@
   "iteration": {
     "number": 24,
     "goal": "Barrierefreiheit, Tastatur- und Screenreader-Grundwerte sowie kontrastgepruefte sitzungsweite Farbthemes zentral verbessern",
-    "completed": 10,
-    "open_next": 2
+    "completed": 11,
+    "open_next": 1
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -85,14 +85,18 @@
     "iteration23_merged_main_sha": "80544ad8cfd13452f35f9218247570f65beb8b05",
     "iteration24_initial_ci_run": 428,
     "iteration24_initial_ci_result": "success",
+    "iteration24_initial_restore_sha256": "76a861f4e2e2466906f0eee50f1d19339aa2ea5709c0a540cf0bb51b15a49d20",
+    "iteration24_final_ci_run": 440,
+    "iteration24_final_ci_result": "success",
     "iteration24_logic_tests": 75,
     "iteration24_gui_tests": 50,
     "iteration24_release_files": 36,
     "iteration24_restore_gate": true,
     "iteration24_restore_status": "OK",
-    "iteration24_restore_sha256": "76a861f4e2e2466906f0eee50f1d19339aa2ea5709c0a540cf0bb51b15a49d20",
-    "iteration24_tested_code_head_sha": "cf2d694564909de72dfc65891af23fc525e87cc9",
-    "iteration24_final_head_gate": "pending"
+    "iteration24_restore_sha256": "ef1fd94f7a3a421416935373a213bba696407c80b441cf5a8108d22ea11c880f",
+    "iteration24_tested_head_sha": "d750b98e0d98d7abe0441930f9ea52f0e0e85065",
+    "iteration24_final_head_gate": "success",
+    "iteration24_merged_main_sha": "234f2f5279dc5b6e6d334010da701d3a53ad6ebb"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
