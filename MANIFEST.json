@@ -1,16 +1,16 @@
 {
-  "schema_version": 20,
+  "schema_version": 21,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.15.0",
+    "version": "0.15.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-09"
   },
   "iteration": {
-    "number": 24,
-    "goal": "Barrierefreiheit, Tastatur- und Screenreader-Grundwerte sowie kontrastgepruefte sitzungsweite Farbthemes zentral verbessern",
-    "completed": 11,
+    "number": 25,
+    "goal": "Dashboard auf kleinen Laptop-Bildschirmen bei 125/150 Prozent platzsparend haerten, ohne die gute grosse Ansicht zu veraendern",
+    "completed": 8,
     "open_next": 1
   },
   "runtime": {
@@ -96,7 +96,11 @@
     "iteration24_restore_sha256": "ef1fd94f7a3a421416935373a213bba696407c80b441cf5a8108d22ea11c880f",
     "iteration24_tested_head_sha": "d750b98e0d98d7abe0441930f9ea52f0e0e85065",
     "iteration24_final_head_gate": "success",
-    "iteration24_merged_main_sha": "234f2f5279dc5b6e6d334010da701d3a53ad6ebb"
+    "iteration24_merged_main_sha": "234f2f5279dc5b6e6d334010da701d3a53ad6ebb",
+    "iteration25_ci_run": null,
+    "iteration25_ci_result": "pending",
+    "iteration25_restore_gate": false,
+    "iteration25_tested_head_sha": null
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -140,7 +144,15 @@
     "quit_label": "Programm beenden",
     "project_note_label": "Projekt-Notiz",
     "silent_no_selection_actions": false,
-    "core_text_contrast_minimum": 4.5
+    "core_text_contrast_minimum": 4.5,
+    "laptop_compact_mode": true,
+    "laptop_compact_scope": "dashboard_only",
+    "laptop_compact_zoom_percent": [125, 150],
+    "laptop_compact_wide_layout_unchanged_from_px": 1450,
+    "laptop_compact_height_trigger_px": 820,
+    "laptop_compact_effective_height_trigger_px": 700,
+    "laptop_compact_hides_only_redundant_planning_overviews": true,
+    "laptop_compact_keeps_core_navigation": true
   },
   "process_consistency": {
     "atomic_writer": "app/atomic_io.py",
@@ -241,6 +253,7 @@
     {"path":"kubuntu_abnahme.sh","release":true,"purpose":"Klickstart für reale Kubuntu/KDE-X11-Endabnahme"},
     {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
     {"path":"app/main.py","release":true,"purpose":"Programmeinstieg mit Einzelinstanz-Schutz und verständlichen Startmeldungen"},
+    {"path":"app/laptop_layout.py","release":true,"purpose":"Reversibler Laptop-Kompaktmodus fuer das Dashboard bei knapper Flaeche"},
     {"path":"app/atomic_io.py","release":true,"purpose":"Zentraler atomarer Schreibweg"},
     {"path":"app/process_guard.py","release":true,"purpose":"Mehrfachstart-Schutz pro Projektordner"},
     {"path":"app/event_log.py","release":true,"purpose":"Ereignisprotokoll"},
