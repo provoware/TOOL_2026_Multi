@@ -300,6 +300,31 @@ Stufen:
 
 **100 %, 125 %, 150 %, 175 %, 200 %**
 
+Bei **175 % und 200 %** schaltet das Dashboard automatisch auf eine platzsparende Hochzoom-Darstellung. Schrift bleibt groß; redundante Planungsübersichten werden vorübergehend ausgeblendet. Beim Zurückzoomen erscheinen sie automatisch wieder.
+
+---
+
+# Farben und Barrierefreiheit
+
+Unten im Dashboard befindet sich das Auswahlfeld **Farben**. Dort stehen vier Darstellungen zur Verfügung:
+
+- **Amber** – dunkles Standardtheme mit gelb-orangefarbenem Akzent
+- **Türkis** – dunkles Theme mit türkisfarbenem Akzent
+- **Lila** – dunkles Theme mit violettem Akzent
+- **Kontrast** – besonders kontrastreiche Schwarz-Weiß-Darstellung mit gelbem Akzent und stärkerem Fokusrahmen
+
+Ein Farbwechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswahl gilt nur für die laufende Sitzung und **verändert keine Song-, Todo-, Kalender- oder Profildaten**.
+
+Für die Bedienung ohne Maus:
+
+- `Tab` bewegt den Fokus zum nächsten bedienbaren Element.
+- Der aktuell fokussierte Bereich erhält einen deutlich sichtbaren Rahmen.
+- Eingaben, Schaltflächen, Listen und Auswahlfelder sind für Tastaturfokus freigegeben.
+- Zentrale Bedienelemente erhalten zusätzliche Namen und Beschreibungen für Screenreader.
+- Status wird nicht nur über Farbe vermittelt: Text, Symbole und gestrichelte Konturen bleiben zusätzlich vorhanden.
+
+Die Kernfarben aller vier Themes werden automatisch auf einen Kontrast von mindestens **4,5:1** gegen den Hintergrund geprüft.
+
 ---
 
 # Tastatur
@@ -354,8 +379,9 @@ Sie prüft unter anderem:
 - Todo und Kalender,
 - Fehlerhilfe,
 - Zoom und Tastaturwege,
+- Farbthemes, Screenreader-Grundwerte und Fokus,
 - Laienführung und sichtbare Statushinweise,
-- Kontraste wichtiger Texte,
+- Kontraste der Kernfarben aller Themes,
 - Repository-Hygiene,
 - vollständige Wiederherstellung aus einem Projekt-ZIP.
 
