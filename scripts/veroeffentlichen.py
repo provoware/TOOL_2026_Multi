@@ -6,11 +6,16 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
+import sys
+import tempfile
 import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.atomic_io import atomic_publish_file, atomic_write_text
 
 
 def load_manifest(root: Path) -> dict:
@@ -71,17 +76,23 @@ def build_release(root: Path, output_dir: Path | None = None) -> tuple[Path, str
     output_dir = output_dir or root / manifest.get("release_build", {}).get("output_dir", "release")
     output_dir.mkdir(parents=True, exist_ok=True)
     archive = output_dir / f"{tool['name']}_{tool['version']}_release.zip"
-    temporary = archive.with_suffix(".zip.tmp")
+    with tempfile.NamedTemporaryFile(
+        prefix=f".{archive.name}.", suffix=".tmp", dir=output_dir, delete=False
+    ) as temp_handle:
+        temporary = Path(temp_handle.name)
     try:
         with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED) as handle:
             for relative in selected:
                 handle.write(root / relative, arcname=relative.as_posix())
         verify_archive(temporary, selected)
-        os.replace(temporary, archive)
+        atomic_publish_file(temporary, archive)
     finally:
         temporary.unlink(missing_ok=True)
     checksum = sha256(archive)
-    archive.with_suffix(archive.suffix + ".sha256").write_text(f"{checksum}  {archive.name}\n", encoding="utf-8")
+    atomic_write_text(
+        archive.with_suffix(archive.suffix + ".sha256"),
+        f"{checksum}  {archive.name}\n",
+    )
     return archive, checksum
 
 

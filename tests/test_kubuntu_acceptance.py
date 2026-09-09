@@ -1,4 +1,6 @@
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -7,6 +9,17 @@ from scripts.kubuntu_abnahme import CheckResult, environment_checks, signal_prob
 
 
 class KubuntuAcceptanceTests(unittest.TestCase):
+    def test_direct_script_invocation_can_import_project_modules(self):
+        root = Path(__file__).resolve().parent.parent
+        result = subprocess.run(
+            [sys.executable, "scripts/kubuntu_abnahme.py", "--help"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+
     def test_x11_kde_environment_is_recognized(self):
         results = {item.key: item for item in environment_checks({
             "XDG_SESSION_TYPE": "x11",

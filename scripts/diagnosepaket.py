@@ -7,15 +7,19 @@ import argparse
 import hashlib
 import json
 import os
+import sys
 import tempfile
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from app.atomic_io import atomic_write_text
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.atomic_io import atomic_publish_file, atomic_write_text
 from app.redaction import redact
 
-ROOT = Path(__file__).resolve().parent.parent
 TEXT_GLOBS = ("logs/*.jsonl", "logs/*.json", "berichte/*.txt")
 ALWAYS = ("MANIFEST.json",)
 
@@ -26,30 +30,6 @@ def _sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
-
-
-def _fsync_directory(directory: Path) -> None:
-    """Sichert den Ziel-Verzeichniseintrag, soweit das Dateisystem dies unterstützt."""
-    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
-    try:
-        descriptor = os.open(str(directory), flags)
-    except OSError:
-        return
-    try:
-        try:
-            os.fsync(descriptor)
-        except OSError:
-            return
-    finally:
-        os.close(descriptor)
-
-
-def _commit_archive(temporary: Path, archive: Path) -> None:
-    """Synchronisiert ein fertiges ZIP und veröffentlicht es erst danach atomar."""
-    with temporary.open("rb") as handle:
-        os.fsync(handle.fileno())
-    os.replace(temporary, archive)
-    _fsync_directory(archive.parent)
 
 
 def _privacy_clean(text: str) -> str:
@@ -117,7 +97,7 @@ def build_diagnostic(root: Path = ROOT, output_dir: Path | None = None) -> tuple
                     data = handle.read(name).decode("utf-8")
                     if redact(data) != data:
                         raise ValueError(f"Datenschutzprüfung fehlgeschlagen: {name}")
-            _commit_archive(temporary, archive)
+            atomic_publish_file(temporary, archive)
             temporary = None
         finally:
             if temporary is not None:
@@ -132,7 +112,7 @@ def main() -> int:
     args = parser.parse_args()
     archive, checksum = build_diagnostic(output_dir=args.output_dir)
     print(f"🟢 Diagnosepaket: {archive}")
-    print(f"🟢 Datenschutzprüfung: OK")
+    print("🟢 Datenschutzprüfung: OK")
     print(f"🟢 SHA-256: {checksum}")
     return 0
 

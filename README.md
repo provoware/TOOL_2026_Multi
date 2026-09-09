@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.15.1 · **Stand:** 09.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore-Prüfung aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
+> **Version:** 0.15.2 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore-Prüfung aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -180,6 +180,8 @@ Technische Details bleiben standardmäßig ausgeblendet.
 Wichtige Schutzmechanismen:
 
 - zentraler atomarer Schreibweg für Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien
+- zentraler atomarer Publish-Schritt für fertig erzeugte Diagnose- und Release-Dateien
+- atomare Status-, Rückfall-, Quarantäne-, Ereignis-, Wächter- und Kubuntu-Abnahmeberichte
 - eindeutige Tempdateien
 - Datei-`fsync`, atomarer Replace und bestmöglicher Verzeichnis-`fsync`
 - Einzelinstanz-Schutz pro Projektordner
@@ -187,6 +189,7 @@ Wichtige Schutzmechanismen:
 - Pfadprüfung vor Versionswiederherstellung
 - geschützte Backup-/Restore-Kette mit ZIP-Prüfung und SHA-256
 - Diagnose- und Log-Bereinigung
+- Append-only-Protokolle bleiben bewusst Append-only statt unnötig per Dateiersatz umgebaut zu werden
 - ENOSPC-/EROFS-Schreibfehlersimulation ohne echten Datenträgerverbrauch
 - Repository-Hygiene-Test
 
@@ -232,9 +235,11 @@ Sie prüft unter anderem:
 - Kontraste aller Theme-Kernfarben mit mindestens 4,5:1
 - Laienführung und Nicht-Silent-Fail-Verhalten
 - responsive Breiten- und Tabellenverteilung
+- direkte Startbarkeit wichtiger Skripte
+- Release-/Diagnose-Publish-Fehler und Temp-Cleanup
 - Repository-Hygiene
 
-Iteration 25 wurde vollständig automatisiert abgenommen. Der finale PR-Head `d8f07560d4974708d8fa38ae57de4b1910bc536f` bestand **Grundprüfung #478** mit 75 Logik-/Regressionstests, 52 PySide6-GUI-Tests, 37 Release-Betriebsdateien, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Finale Restore-SHA-256: `5ac25bbd0499d30ad1ace80f1b6ffa0faa6db70e24fec6e30a0d9095420ce825`. PR #29 wurde danach per Squash-Merge in `main` übernommen (`1a64810fd2e202045666538f57054951e5099257`).
+Der technische Iteration-26-Stand bestand **Grundprüfung #503** mit 81 Logik-/Regressionstests, 52 PySide6-GUI-Tests, 37 Release-Betriebsdateien, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Restore-SHA-256: `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`. Der jeweils verbindliche finale Gate- und Merge-Stand steht maschinenlesbar in `MANIFEST.json` und ausführlich in `docs/ITERATION26_RELEASE_IO_HARDENING.md`.
 
 Vollständiges Restore-Gate:
 
@@ -278,11 +283,11 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION23_ZOOM_HAERTUNG.md` – Hochzoom-Härtung
 - `docs/ITERATION24_ACCESSIBILITY_THEMES.md` – Barrierefreiheit, Farbthemes und Kontrastprüfung
 - `docs/ITERATION25_LAPTOP_LAYOUT.md` – Laptop-Kompaktmodus, Fehlerkorrektur und Abnahme
+- `docs/ITERATION26_RELEASE_IO_HARDENING.md` – Release-/Bericht-I/O-Audit und Abnahme
 
 ## Noch offen
 
 1. Reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 % sowie 175/200 % und Theme `Kontrast`.
-2. Danach verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs nicht unnötig auf Dateiersatz umstellen.
-3. Anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
+2. Anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
 Die detaillierte Versionshistorie steht bewusst **nicht mehrfach in der README**, sondern im `CHANGELOG.md` und den Iterationsdokumenten.

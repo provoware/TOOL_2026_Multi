@@ -1,5 +1,32 @@
 # Änderungsverlauf
 
+## 0.15.2 – 2026-09-10 – Release- und Bericht-I/O-Härtung
+
+### Geändert
+- zentralen `app.atomic_io.atomic_publish_file()`-Schritt für bereits fertig erzeugte Dateien ergänzt: Datei-`fsync`, atomarer Replace, bestmöglicher Verzeichnis-`fsync` und Temp-Cleanup,
+- Log-Quarantäne und bereinigte JSONL-Neuschreibung, Rückfall-Lernstatus sowie menschenlesbare Ereignis-/Wächterberichte auf den zentralen atomaren Textschreiber umgestellt,
+- Startstatus und Kubuntu-Abnahmeberichte auf denselben zentralen Schreibvertrag umgestellt,
+- Release-ZIP von festem `.zip.tmp` auf eindeutige Tempdateien sowie zentralen Prepared-File-Publish umgestellt,
+- Release-SHA-256-Begleitdatei atomar geschrieben,
+- Diagnose-ZIP auf denselben zentralen Publish-Schritt vereinheitlicht,
+- direkt startbare Diagnose-, Startstatus-, Prozesswächter-, Kubuntu-Abnahme- und Release-Skripte gegen fehlenden Projektimport abgesichert,
+- Vollständigkeitsprüfung um `app/laptop_layout.py` und Iterationsdokumente 22–26 ergänzt,
+- gezielte Regressionen für Replace-Fehler, Altbestandsschutz, Temp-Cleanup und direkte Skriptstarts ergänzt.
+
+### Bewusst unverändert
+- Append-only Ereignislog und Projekt-Notiz bleiben Append-only,
+- Song-, Profil-, Todo- und Kalenderdatenformate bleiben unverändert,
+- vorhandene Backup-/Restore-Fachlogik bleibt unverändert; der bereits gehärtete Restore-ZIP-Pfad wird nicht unnötig refaktoriert,
+- keine neue Produktfunktion und keine neue externe Abhängigkeit.
+
+### Erste Abnahme
+- GitHub-Grundprüfung **#503** vollständig erfolgreich,
+- **81 Logik-/Regressionstests** und **52 PySide6-GUI-Tests** erfolgreich,
+- Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich,
+- Headless-Start erfolgreich,
+- Vollprojekt-Restore `OK`, SHA-256 `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`,
+- der auf Version 0.15.2 synchronisierte finale PR-Head wird vor Merge nochmals vollständig geprüft.
+
 ## 0.15.1 – 2026-09-09 – Laptop-Kompaktlayout
 
 ### Geändert
