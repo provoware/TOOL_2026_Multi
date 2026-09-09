@@ -79,7 +79,7 @@
 
 ### Schutz
 - Beginn und Ende verwenden lokale Rechnerzeit ohne erfundene Zeitzonenumrechnung,
-- Ende muss nach dem Beginn liegen; ungültige Termine werden vor dem Schreiben abgewiesen,
+- Ende muss nach Beginn liegen; ungültige Termine werden vor dem Schreiben abgewiesen,
 - Kalenderdaten werden atomar unter `daten/kalender/termine.json` gespeichert,
 - ein simulierter Fehler beim atomaren Ersetzen erhält den vorherigen Bestand,
 - eine Erinnerung wird erst nach erfolgreicher Anzeige atomar als erinnert markiert,
