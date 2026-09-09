@@ -40,6 +40,13 @@ def apply_laptop_layout(window: QWidget) -> None:
     """Verdichtet nur die kleine Dashboard-Ansicht und stellt sie reversibel wieder her."""
     compact = _is_laptop_compact(window)
     was_compact = bool(window.property("provowareLaptopCompact"))
+
+    # Ist der Laptop-Modus weder aktiv noch zu restaurieren, darf diese Schicht
+    # nichts anfassen. So bleiben normale Großansicht und 175/200-%-Hochzoom
+    # vollständig unter Kontrolle der bereits geprüften zentralen UI-Standards.
+    if not compact and not was_compact:
+        return
+
     nav_collapsed = bool(getattr(window, "nav_collapsed", False))
 
     for button in window.findChildren(QPushButton):
@@ -47,7 +54,7 @@ def apply_laptop_layout(window: QWidget) -> None:
             if compact:
                 button.setMaximumHeight(0)
                 button.setVisible(False)
-            elif was_compact:
+            else:
                 button.setMaximumHeight(16777215)
                 button.setVisible(not nav_collapsed)
         if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
@@ -73,7 +80,7 @@ def apply_laptop_layout(window: QWidget) -> None:
         elif text in {"Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"}:
             if compact:
                 label.setFixedWidth(88)
-            elif was_compact:
+            else:
                 label.setMinimumWidth(0)
                 label.setMaximumWidth(16777215)
 
@@ -82,7 +89,7 @@ def apply_laptop_layout(window: QWidget) -> None:
         if compact:
             profile_combo.setMinimumWidth(92)
             profile_combo.setMaximumWidth(120)
-        elif was_compact:
+        else:
             profile_combo.setMinimumWidth(0)
             profile_combo.setMaximumWidth(16777215)
 
