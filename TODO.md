@@ -95,8 +95,14 @@ Stand: 2026-09-09
 
 ### Abnahme
 
-- 🟡 finaler Branch wird vollständig per Grundprüfung einschließlich GUI-Regression und Vollprojekt-Restore geprüft.
-- 🔒 kein Merge vor vollständig grünem finalem Gate.
+- 🟠 erste Grundprüfung #464 deckte zwei begrenzte Rückfälle auf: fehlendes Testdouble für den neuen Startimport sowie eine ungewollte Wiederherstellung der Planungskarten beim Übergang in den bestehenden 175/200-%-Hochzoom.
+- 🟢 beide Ursachen minimal korrigiert; keine Erweiterung des Funktionsumfangs.
+- 🟢 korrigierter Produktions-/Test-Head `d21799baa13562496b5e0821a17b1fb2c6cd89fe` in Grundprüfung **#468** vollständig erfolgreich.
+- 🟢 **75 Logik-/Regressionstests** und **52 PySide6-GUI-Tests** erfolgreich.
+- 🟢 Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, SHA-256 `9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01`.
+- 🟡 Evidence-Sync ist im PR; dessen finaler Head muss vor Merge dieselbe Voll-/Restore-Prüfung erneut bestehen.
+- 🔒 kein Merge vor vollständig grünem finalem Head-Gate.
 
 ## Danach
 
