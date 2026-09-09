@@ -1,5 +1,35 @@
 # Änderungsverlauf
 
+## 0.16.0 – 2026-09-10 – Kubuntu 26.04 / native Wayland-Unterstützung
+
+### Geändert
+- Kubuntu 26.04 LTS mit KDE Plasma Wayland als offizielles Linux-Zielsystem für die reale Endabnahme festgelegt,
+- bisherige X11-only-Prüfung auf Wayland-Sitzung, `WAYLAND_DISPLAY`, KDE/Plasma und Ubuntu/Kubuntu-Basis 26.04 umgestellt,
+- tatsächlichen Qt-Plattformnamen über `QApplication.platformName()` in die Abnahme aufgenommen; `xcb`/XWayland gilt nicht als nativer Wayland-Pass,
+- `kubuntu_abnahme.sh` weist ausdrücklich erzwungenes `QT_QPA_PLATFORM=xcb`, `offscreen` und `minimal` für die reale Abnahme ab,
+- neuen `scripts/wayland_smoke.py` für einen echten nativen Qt-Wayland-Fensterstart ergänzt,
+- GitHub-Grundprüfung um einen isolierten headless Weston-Compositor und echten Qt-Wayland-Smoke erweitert,
+- bisherige Offscreen-GUI-Regressionen parallel beibehalten,
+- Wayland-/26.04-Regressionen für gültige und blockierte Sitzungen, erzwungenes X11, alten Distributionsstand und Reportstatus ergänzt,
+- reale Sichtabnahme um Wayland-spezifisches Fenster-, Menü- und Eingabefokus-Verhalten erweitert.
+
+### Bewusst unverändert / Schutz
+- `schnellstart.sh` bleibt backend-neutral und erzwingt weder Wayland noch X11,
+- X11 wird nicht künstlich aus der allgemeinen Laufzeit entfernt; es ist lediglich kein gültiger Pass für die offizielle Kubuntu-26.04-Wayland-Endabnahme,
+- keine Song-, Profil-, Todo- oder Kalenderdaten verändert,
+- keine Speicherformate, atomaren Schreiber, Backup- oder Restore-Fachlogik verändert,
+- Weston ist ausschließlich CI-Testinfrastruktur und keine neue Nutzer-Laufzeitabhängigkeit.
+
+### Technische Abnahme vor Versions-Sync
+- technischer Head `a7f2c168ecc3f0a2310fbff874cea33d30793d25` in GitHub-Grundprüfung **#567** vollständig erfolgreich,
+- **86 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich,
+- nativer Qt-Wayland-Smoke unter isoliertem Weston erfolgreich; Qt meldet Plattform `wayland`,
+- Release-Manifest mit **38 freigegebenen Betriebsdateien** erfolgreich,
+- Headless-Start erfolgreich,
+- Vollprojekt-Restore `OK`, SHA-256 `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`,
+- GitHub-CI lief auf Ubuntu 24.04.4; die reale sichtbare Kubuntu-26.04-/Plasma-Wayland-Abnahme bleibt deshalb zusätzlich erforderlich,
+- der auf Version 0.16.0 synchronisierte finale PR-Head wird vor Merge erneut vollständig einschließlich nativem Wayland-Smoke und Restore geprüft.
+
 ## 0.15.3 – 2026-09-10 – Menü-Übersicht und Laiennavigation
 
 ### Geändert
@@ -23,11 +53,11 @@
 
 ### Abnahme
 - korrigierter technischer Head `b129b47bb8123fc7ea49680f2fa921f457164c56` in GitHub-Grundprüfung **#540** vollständig erfolgreich,
-- **81 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich,
+- finaler 0.15.3-Head `9cd8101ba19c5e28b41fa7793d35860462d38864` in Grundprüfung **#554** erneut vollständig erfolgreich,
+- **81 Logik-/Regressionstests**, **56 PySide6-GUI-Tests** und **38 Release-Betriebsdateien** erfolgreich,
 - Headless-Start erfolgreich,
-- Vollprojekt-Restore `OK`, SHA-256 `42c67e08e419e890c29620ab8e6fef8afeb12a24b1e7006bfc972ab69d87eefc`,
-- der Versions-Sync auf 0.15.3 nimmt `app/navigation_ux.py` ausdrücklich in den Release-Bestand auf; erwarteter finaler Release-Bestand: **38 Betriebsdateien**,
-- der auf Version 0.15.3 synchronisierte finale PR-Head wird vor Merge erneut vollständig einschließlich Restore geprüft.
+- Vollprojekt-Restore `OK`, finale SHA-256 `add4af04204e694427aa2332edea4136c2816e0c196676391a5763e044be3718`,
+- PR #34 anschließend per SHA-geschütztem Squash-Merge übernommen; resultierender Main-Commit `e7027e57c3c8709263b73543fd2b01be84e6639d`.
 
 ## 0.15.2 – 2026-09-10 – Release- und Bericht-I/O-Härtung
 
