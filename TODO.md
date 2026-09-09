@@ -21,47 +21,59 @@ Stand: 2026-09-09
 
 ## Iteration 21 – Laien-UX-Konsistenz
 
-**Hauptziel:** Ein Nutzer ohne technisches Vorwissen muss jederzeit erkennen können, wo er ist, was bereits funktioniert, was nur geplant ist, was nach einem Klick passiert und was bei einem Fehler geschützt bleibt.
+**Hauptziel:** Ein Nutzer ohne technisches Vorwissen muss erkennen können, wo er ist, was funktioniert, was nur geplant ist, was nach einem Klick passiert und was bei einem Fehler geschützt bleibt.
 
 ### Umsetzung
 
-- 🟡 gesamtes produktives Projekt aus Nutzersicht auf Einstieg, Sprache, Navigation, Rückmeldung, Fehlermeldungen und Sackgassen geprüft.
-- 🟡 Dashboard-Suche wahrheitsgemäß als reine Song-Suche bezeichnet.
-- 🟡 `Logout` durch `Programm beenden` ersetzt und Speicherwirkung erklärt.
-- 🟡 technische `Entwicklerinfo` in der Oberfläche zu verständlicher `Projekt-Notiz` gemacht; bestehendes Dateiformat bleibt kompatibel.
-- 🟡 geplante Bereiche deutlich mit `In Planung` und gestricheltem Zustand markiert.
-- 🟡 Startkarte mit direkten Wegen zu Songtexte, Todo-Liste und Kalender ergänzt.
-- 🟡 Erstnutzer-Sackgasse in leerer Songbibliothek geschlossen: sichtbarer Knopf `＋ Neuen Song schreiben`.
-- 🟡 Songbibliothek gegen stille Nicht-Reaktionen gehärtet; fehlende Auswahl und leere Treffer erhalten klare Hinweise.
-- 🟡 Songeditor mit Drei-Schritt-Führung, verständlicher Speicheranzeige und Sicherheitsfrage vor Bereichsentfernung verbessert.
-- 🟡 Versionswiederherstellung zusätzlich vor dem tatsächlichen Restore bestätigungspflichtig gemacht; bestehende automatische Sicherung bleibt aktiv.
-- 🟡 Todo, Kalender und Profilverwaltung sprachlich vereinheitlicht und mit sichtbarem nächsten Schritt versehen.
-- 🟡 Recovery als `Fehlerhilfe (Recovery)` auf Nutzerfragen ausgerichtet; technische Details bleiben standardmäßig verborgen.
-- 🟡 Schnellstart und grafische Startanzeige auf sechs verständliche Prüfschritte umgestellt.
-- 🟡 `ANLEITUNG_LAIEN.md` auf 30-Sekunden-Einstieg und konkrete Arbeitsabläufe neu aufgebaut.
-- 🟡 README von historischer Doppelpflege befreit, auf Version 0.14.0 synchronisiert und als aktuelle Projektübersicht neu strukturiert.
-- 🟡 neuen GUI-Regressionstest `tests/test_layman_ux_gui.py` ergänzt: Beschriftungswahrheit, geplante Zustände, Erstnutzer-Songstart, Nicht-Silent-Fail, Sicherheitsfrage und Kernkontraste ≥ 4,5:1.
-- 🟡 Laien-UX-Test in `bash scripts/pruefen.sh --full` integriert.
+- 🟢 gesamtes produktives Projekt aus Nutzersicht auf Einstieg, Sprache, Navigation, Rückmeldung, Fehlermeldungen und Sackgassen geprüft.
+- 🟢 Dashboard-Suche als reine Song-Suche bezeichnet; `Logout` durch `Programm beenden` ersetzt.
+- 🟢 technische `Entwicklerinfo` in der Oberfläche zur verständlichen `Projekt-Notiz` gemacht; Dateiformat kompatibel belassen.
+- 🟢 geplante Bereiche deutlich mit `In Planung` und gestricheltem Zustand markiert.
+- 🟢 Startkarte mit direkten Wegen zu Songtexte, Todo-Liste und Kalender ergänzt.
+- 🟢 Erstnutzer-Sackgasse in leerer Songbibliothek mit `＋ Neuen Song schreiben` geschlossen.
+- 🟢 Songbibliothek gegen stille Nicht-Reaktionen gehärtet.
+- 🟢 Songeditor mit Drei-Schritt-Führung, verständlicher Speicheranzeige und Sicherheitsfrage vor Bereichsentfernung verbessert.
+- 🟢 Versionswiederherstellung zusätzlich bestätigungspflichtig gemacht; automatische Sicherung bleibt aktiv.
+- 🟢 Todo, Kalender, Profilverwaltung, Recovery und Startanzeige laienfreundlich vereinheitlicht.
+- 🟢 `ANLEITUNG_LAIEN.md`, README, MANIFEST und CHANGELOG auf den neuen Bedienstand synchronisiert.
+- 🟢 PR #23 wurde in `main` übernommen (`47a6124061268843d05d98ddadcb90066cc0d851`).
 
-### Schutzgrenzen
+### Nachprüfung
 
-- 🟢 keine Datenmigration.
-- 🟢 keine Änderung der Song-, Todo-, Kalender- oder Profil-Speicherformate.
-- 🟢 keine Änderung des zentralen atomaren Schreibwegs.
-- 🟢 keine Änderung der Backup-/Restore-Fachlogik.
-- 🟢 keine neue Hauptfunktion außerhalb des bestehenden Umfangs; der neue Song-Knopf macht nur den bereits vorhandenen Songeditor erreichbar.
+- 🟡 GitHub-Grundprüfung Run #368: **75 Logiktests grün**, aber drei GUI-Regressionen durch veraltete Testannahmen beziehungsweise zu starre Kartenbreitenprüfung.
+- 🟡 Restore-Gate von Run #368 wurde deshalb nicht gestartet.
+- 🟡 diese Nachprüfung wird mit Iteration 22 ursächlich korrigiert und vollständig wiederholt.
+
+## Iteration 22 – Responsive Design und visuelle Härtung
+
+**Hauptziel:** Erscheinungsbild, Schrift, Abstände und dynamische Größenanpassung auf Grundlage realer Kubuntu-Screenshots professionell modernisieren, ohne Daten- oder Fachlogik zu verändern.
+
+### Umsetzung
+
+- 🟡 moderne zentrale Dark-/Amber-Palette mit ruhigerer Flächenhierarchie und stärkerem Fokuskontrast umgesetzt.
+- 🟡 systemweite Sans-Serif-Schrift ohne externe Font-Abhängigkeit festgelegt.
+- 🟡 Schriftgrößen, Innenabstände, Rundungen, Eingabehöhen, Tabs, Scrollleisten und Splitter zentral vereinheitlicht.
+- 🟡 orange Vollrahmen auf Karten reduziert; Akzentfarbe gezielt für Primäraktionen, Fokus und Status eingesetzt.
+- 🟡 aktive Navigation mit dunkler Auswahlfläche und linker Akzentlinie modernisiert.
+- 🟡 responsive Breitenstufen für kompakte, normale und breite Fenster eingeführt.
+- 🟡 Sidebar, Dashboard-Suche, Profilfelder und Songbereichsliste passen sich dynamisch an die Fensterbreite an.
+- 🟡 Songeditor-Splitter verteilt Arbeitsfläche und Gesamtvorschau dynamisch.
+- 🟡 Songbibliothek nutzt verfügbare Tabellenbreite gezielt für Titel und Tags; kurze Spalten bleiben inhaltsbezogen.
+- 🟡 drei Rückfälle aus Run #368 ursächlich korrigiert: Suchplatzhalter-Test, Recovery-Beschriftung und starre Kartenbreitenannahme.
+- 🟡 Responsive-Regressionen für Dashboardbreiten und Bibliotheksspalten ergänzt.
+- 🟢 Datenformate, atomarer Schreibweg, Backup und Restore-Fachlogik unverändert.
 
 ### Finale Abnahme
 
-- 🔴 GitHub-Grundprüfung für den vollständigen Iteration-21-Branch ausführen.
-- 🔴 Restore-Gate für denselben geprüften Branch erfolgreich bestätigen.
+- 🔴 vollständige GitHub-Grundprüfung für Iteration 22 ausführen.
+- 🔴 Vollprojekt-Restore-Gate für denselben Head erfolgreich bestätigen.
 - 🔴 erst danach per Safe Merge in `main` übernehmen.
 
 ## Danach
 
 1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen.
 2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
-3. 🔴 anschließend nur noch einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
+3. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
 ## Geplante Produktbereiche
 
@@ -78,4 +90,4 @@ Noch nicht freigegeben und deshalb in der Oberfläche sichtbar als `In Planung` 
 - Trefferliste
 - Duplikatprüfer
 
-Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md`; sie wird bewusst nicht mehr im TODO doppelt gepflegt.
+Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md`; sie wird bewusst nicht mehrfach gepflegt.
