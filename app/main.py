@@ -44,9 +44,9 @@ def main() -> int:
             from PySide6.QtWidgets import QMessageBox
             QMessageBox.information(
                 None,
-                "Provoware läuft bereits",
-                "Das Dashboard ist für diesen Projektordner bereits geöffnet.\n\n"
-                "Ein zweiter schreibender Prozess wird zum Schutz Ihrer Daten nicht gestartet.",
+                "Provoware ist schon geöffnet",
+                "Dieses Projekt ist bereits in einem Provoware-Fenster geöffnet.\n\n"
+                "Zum Schutz deiner Daten wird kein zweites Fenster gestartet. Das bereits geöffnete Fenster läuft normal weiter.",
             )
             return CONTROLLED_ALREADY_RUNNING_EXIT
 
@@ -55,8 +55,8 @@ def main() -> int:
         install_exception_handler(app, logger, dashboard.refresh, dashboard)
         logger.record(
             severity="INFO", area="START", summary="Das Programm wurde sicher gestartet.",
-            cause="Normaler Programmstart", protection="Der Einzelinstanz-Schutz ist aktiv.",
-            next_step="Sie können das Werkzeug jetzt verwenden.",
+            cause="Normaler Programmstart", protection="Der Schutz vor einem versehentlichen Doppelstart ist aktiv.",
+            next_step="Starte im Dashboard mit Songtexte, Todo-Liste oder Kalender.",
         )
         dashboard.show()
         dashboard.refresh()
@@ -64,7 +64,7 @@ def main() -> int:
         logger.record(
             severity="INFO", area="ENDE", summary="Das Programm wurde kontrolliert beendet.",
             cause="Normales Schließen der Anwendung",
-            protection="Alle laufenden Oberflächenaktionen waren beendet.",
+            protection="Offene Songtexte wurden vor dem Beenden gespeichert.",
             next_step="Keine weitere Aktion nötig.",
         )
         return int(code)
@@ -73,10 +73,10 @@ def main() -> int:
             try:
                 logger.record(
                     severity="KRITISCH", area="START",
-                    summary="Das Programm konnte nicht gestartet oder sauber beendet werden.",
+                    summary="Das Programm konnte nicht vollständig gestartet oder beendet werden.",
                     cause=str(error) or "Unbekannter Start- oder Laufzeitfehler",
-                    protection="Der betroffene Ablauf wurde beendet; vorhandene Daten wurden nicht verändert.",
-                    next_step="Prüfen Sie den Bericht im Ordner berichte und starten Sie danach erneut.",
+                    protection="Der betroffene Ablauf wurde beendet; vorhandene Daten wurden nicht absichtlich verändert.",
+                    next_step="Öffne nach dem nächsten Start die Fehlerhilfe (Recovery). Falls das nicht möglich ist, prüfe den Ordner berichte.",
                     exception=error,
                 )
             except Exception:
