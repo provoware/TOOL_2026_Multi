@@ -43,7 +43,26 @@ SEVERITY_STATUS = {
 
 
 def scaled(value: int, zoom_percent: int) -> int:
+    """Skaliert Schriftwerte vollständig mit dem gewählten Zoom."""
     return max(1, round(value * zoom_percent / 100))
+
+
+def geometry_scaled(value: int, zoom_percent: int) -> int:
+    """Skaliert Geometrie bewusst flacher als Schrift.
+
+    200 % Schriftzoom darf nicht gleichzeitig alle Abstände, Radien und
+    Mindesthöhen verdoppeln. Die Geometrie wächst deshalb maximal um 25 %.
+    """
+    zoom = max(100, min(200, int(zoom_percent)))
+    factor = 1.0 + ((zoom - 100) / 100.0) * 0.25
+    return max(1, round(value * factor))
+
+
+def _zoom_percent(window: QWidget) -> int:
+    try:
+        return max(100, min(200, int(getattr(window, "zoom_percent", 100))))
+    except (TypeError, ValueError):
+        return 100
 
 
 def app_stylesheet(zoom_percent: int = 100) -> str:
@@ -52,10 +71,12 @@ def app_stylesheet(zoom_percent: int = 100) -> str:
     section = scaled(FONTS["section_size"], zoom_percent)
     title = scaled(FONTS["title_size"], zoom_percent)
     hero = scaled(FONTS["hero_size"], zoom_percent)
-    radius = scaled(9, zoom_percent)
-    pad_v = scaled(7, zoom_percent)
-    pad_h = scaled(11, zoom_percent)
-    control_height = scaled(27, zoom_percent)
+    radius = geometry_scaled(9, zoom_percent)
+    pad_v = geometry_scaled(6, zoom_percent)
+    pad_h = geometry_scaled(10, zoom_percent)
+    control_height = geometry_scaled(27, zoom_percent)
+    nav_pad_v = geometry_scaled(3, zoom_percent)
+    nav_pad_h = geometry_scaled(8, zoom_percent)
     return f"""
     QWidget {{
         background:{COLORS['background']}; color:{COLORS['text']};
@@ -111,30 +132,31 @@ def app_stylesheet(zoom_percent: int = 100) -> str:
     QPushButton[planned="true"]:hover {{ color:{COLORS['text']}; border-color:{COLORS['yellow']}; }}
     QPushButton#navButton {{
         text-align:left; border:none; background:transparent;
-        padding:{scaled(6, zoom_percent)}px {scaled(9, zoom_percent)}px;
-        min-height:{scaled(24, zoom_percent)}px;
+        padding:{nav_pad_v}px {nav_pad_h}px;
+        min-height:{geometry_scaled(22, zoom_percent)}px;
     }}
     QPushButton#navButton:hover {{ background:{COLORS['surface_alt']}; }}
     QPushButton#activeNav {{
         text-align:left; background:#142B3E; color:{COLORS['text']}; font-weight:700;
         border:1px solid {COLORS['border']}; border-left:3px solid {COLORS['accent']};
-        border-radius:{scaled(6, zoom_percent)}px;
-        padding:{scaled(6, zoom_percent)}px {scaled(8, zoom_percent)}px;
+        border-radius:{geometry_scaled(6, zoom_percent)}px;
+        padding:{nav_pad_v}px {nav_pad_h}px;
+        min-height:{geometry_scaled(22, zoom_percent)}px;
     }}
-    QPushButton#tileButton {{ min-height:{scaled(54, zoom_percent)}px; font-weight:600; }}
-    QPushButton#featureButton {{ min-height:{scaled(82, zoom_percent)}px; font-weight:600; }}
+    QPushButton#tileButton {{ min-height:{geometry_scaled(54, zoom_percent)}px; font-weight:600; }}
+    QPushButton#featureButton {{ min-height:{geometry_scaled(82, zoom_percent)}px; font-weight:600; }}
 
     QLineEdit, QTextEdit, QPlainTextEdit, QListWidget, QTreeWidget, QTableWidget {{
         background:{COLORS['surface']}; color:{COLORS['text']};
         border:1px solid {COLORS['border']}; border-radius:{radius}px;
-        padding:{scaled(6, zoom_percent)}px;
+        padding:{geometry_scaled(5, zoom_percent)}px;
         selection-background-color:{COLORS['accent_soft']}; selection-color:{COLORS['text']};
     }}
     QLineEdit {{ min-height:{control_height}px; }}
     QComboBox {{
         background:{COLORS['surface']}; color:{COLORS['text']};
         border:1px solid {COLORS['border']}; border-radius:{radius}px;
-        padding:{scaled(4, zoom_percent)}px {scaled(7, zoom_percent)}px;
+        padding:{geometry_scaled(3, zoom_percent)}px {geometry_scaled(6, zoom_percent)}px;
         min-height:{control_height}px;
         selection-background-color:{COLORS['accent_soft']}; selection-color:{COLORS['text']};
     }}
@@ -142,36 +164,37 @@ def app_stylesheet(zoom_percent: int = 100) -> str:
     QListWidget:focus, QTreeWidget:focus, QTableWidget:focus, QPushButton:focus, QToolButton:focus {{
         border:2px solid {COLORS['cyan']};
     }}
-    QComboBox::drop-down {{ border:none; width:{scaled(24, zoom_percent)}px; }}
+    QComboBox::drop-down {{ border:none; width:{geometry_scaled(24, zoom_percent)}px; }}
     QHeaderView::section {{
         background:#12283C; color:{COLORS['text']}; border:none;
         border-right:1px solid {COLORS['border_soft']}; border-bottom:1px solid {COLORS['border']};
-        padding:{scaled(7, zoom_percent)}px; font-weight:700;
+        padding:{geometry_scaled(6, zoom_percent)}px; font-weight:700;
     }}
     QTreeWidget, QTableWidget {{ alternate-background-color:{COLORS['surface_soft']}; outline:0; }}
-    QTreeWidget::item, QTableWidget::item {{ padding:{scaled(3, zoom_percent)}px; }}
+    QTreeWidget::item, QTableWidget::item {{ padding:{geometry_scaled(2, zoom_percent)}px; }}
     QTreeWidget::item:selected, QTableWidget::item:selected {{
         background:{COLORS['accent_soft']}; color:{COLORS['text']};
     }}
     QTabWidget::pane {{ border:1px solid {COLORS['border_soft']}; border-radius:{radius}px; }}
     QTabBar::tab {{
         background:{COLORS['surface_soft']}; color:{COLORS['muted']};
-        border:1px solid {COLORS['border_soft']}; padding:{scaled(7, zoom_percent)}px {scaled(12, zoom_percent)}px;
+        border:1px solid {COLORS['border_soft']};
+        padding:{geometry_scaled(6, zoom_percent)}px {geometry_scaled(11, zoom_percent)}px;
     }}
     QTabBar::tab:selected {{ color:{COLORS['text']}; border-bottom:2px solid {COLORS['accent']}; background:{COLORS['surface_alt']}; }}
-    QCheckBox {{ spacing:{scaled(7, zoom_percent)}px; }}
-    QSplitter::handle {{ background:{COLORS['border_soft']}; width:{scaled(5, zoom_percent)}px; }}
+    QCheckBox {{ spacing:{geometry_scaled(6, zoom_percent)}px; }}
+    QSplitter::handle {{ background:{COLORS['border_soft']}; width:{geometry_scaled(5, zoom_percent)}px; }}
     QSplitter::handle:hover {{ background:{COLORS['accent']}; }}
     QMenu {{ background:{COLORS['surface']}; color:{COLORS['text']}; border:1px solid {COLORS['border']}; }}
-    QMenu::item {{ padding:{scaled(7, zoom_percent)}px {scaled(14, zoom_percent)}px; }}
+    QMenu::item {{ padding:{geometry_scaled(6, zoom_percent)}px {geometry_scaled(12, zoom_percent)}px; }}
     QMenu::item:selected {{ background:{COLORS['accent_soft']}; }}
     QToolTip {{ background:{COLORS['surface_alt']}; color:{COLORS['text']}; border:1px solid {COLORS['accent']}; padding:5px; }}
-    QScrollBar:vertical {{ background:{COLORS['surface_soft']}; width:{scaled(10, zoom_percent)}px; margin:0; }}
-    QScrollBar::handle:vertical {{ background:{COLORS['border']}; min-height:{scaled(28, zoom_percent)}px; border-radius:{scaled(5, zoom_percent)}px; }}
+    QScrollBar:vertical {{ background:{COLORS['surface_soft']}; width:{geometry_scaled(10, zoom_percent)}px; margin:0; }}
+    QScrollBar::handle:vertical {{ background:{COLORS['border']}; min-height:{geometry_scaled(28, zoom_percent)}px; border-radius:{geometry_scaled(5, zoom_percent)}px; }}
     QScrollBar::handle:vertical:hover {{ background:{COLORS['accent']}; }}
     QScrollBar:add-line:vertical, QScrollBar:sub-line:vertical {{ height:0; }}
-    QScrollBar:horizontal {{ background:{COLORS['surface_soft']}; height:{scaled(10, zoom_percent)}px; margin:0; }}
-    QScrollBar::handle:horizontal {{ background:{COLORS['border']}; min-width:{scaled(28, zoom_percent)}px; border-radius:{scaled(5, zoom_percent)}px; }}
+    QScrollBar:horizontal {{ background:{COLORS['surface_soft']}; height:{geometry_scaled(10, zoom_percent)}px; margin:0; }}
+    QScrollBar::handle:horizontal {{ background:{COLORS['border']}; min-width:{geometry_scaled(28, zoom_percent)}px; border-radius:{geometry_scaled(5, zoom_percent)}px; }}
     QScrollBar::handle:horizontal:hover {{ background:{COLORS['accent']}; }}
     QScrollBar:add-line:horizontal, QScrollBar:sub-line:horizontal {{ width:0; }}
     """
@@ -183,11 +206,39 @@ def _set_width(widget: QWidget, value: int) -> None:
 
 
 def _zoom_width_factor(window: QWidget) -> float:
-    try:
-        zoom = int(getattr(window, "zoom_percent", 100))
-    except (TypeError, ValueError):
-        zoom = 100
-    return max(1.0, min(1.25, zoom / 100))
+    zoom = _zoom_percent(window)
+    return 1.0 + ((zoom - 100) / 100.0) * 0.10
+
+
+def _card_title(card: QFrame) -> str:
+    for label in card.findChildren(QLabel):
+        if label.objectName() == "cardTitle":
+            return label.text()
+    return ""
+
+
+def _apply_dashboard_high_zoom(window: QWidget, high_zoom: bool) -> None:
+    """Reduziert bei 175/200 % ausschließlich redundante Planungsübersichten.
+
+    Die geplanten Module bleiben oben als Kacheln sichtbar. In der langen linken
+    Navigation und im unteren 2x2-Bereich würden dieselben Einträge bei Hochzoom
+    sonst nur Platz verbrauchen und Überlagerungen provozieren.
+    """
+    if window.__class__.__name__ != "Dashboard":
+        return
+
+    nav_collapsed = bool(getattr(window, "nav_collapsed", False))
+    for button in window.findChildren(QPushButton):
+        if button.objectName() == "navButton" and button.property("planned") is True:
+            button.setMaximumHeight(0 if high_zoom else 16777215)
+            button.setVisible(not high_zoom and not nav_collapsed)
+
+    for card in window.findChildren(QFrame):
+        if card.objectName() != "card":
+            continue
+        title = _card_title(card)
+        if title.startswith("▣  Funktionen") or title.startswith("▤  Dateien & Werkzeuge"):
+            card.setVisible(not high_zoom)
 
 
 def _apply_responsive_layout(window: QWidget) -> None:
@@ -196,15 +247,23 @@ def _apply_responsive_layout(window: QWidget) -> None:
     window.setProperty("provowareResponsiveBusy", True)
     try:
         width = max(window.width(), window.minimumWidth())
+        zoom = _zoom_percent(window)
         compact = width < 1100
         wide = width >= 1450
+        high_zoom = zoom >= 175
         width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
         gap = 6 if compact else (10 if wide else 8)
+        if high_zoom:
+            margin = min(margin, 8)
+            gap = min(gap, 6)
+
         root_layout = window.layout()
         if root_layout is not None:
             root_layout.setContentsMargins(margin, margin, margin, margin)
             root_layout.setSpacing(gap)
+
+        _apply_dashboard_high_zoom(window, high_zoom)
 
         for card in window.findChildren(QFrame):
             if card.objectName() in {"card", "innerCard"}:
@@ -214,12 +273,16 @@ def _apply_responsive_layout(window: QWidget) -> None:
         sidebar = getattr(window, "sidebar", None)
         if isinstance(sidebar, QWidget) and not getattr(window, "nav_collapsed", False):
             base = 198 if compact else (258 if wide else 226)
+            if high_zoom:
+                base = max(base, 238 if compact else 260)
             _set_width(sidebar, round(base * width_factor))
 
         search = getattr(window, "search_entry", None)
         if isinstance(search, QWidget):
             if window.__class__.__name__ == "Dashboard":
                 base = 190 if compact else (320 if wide else 250)
+                if high_zoom:
+                    base = min(base, 250)
                 _set_width(search, round(base * width_factor))
             elif window.__class__.__name__ == "SongLibrary":
                 search.setMinimumWidth(round(220 * width_factor))
@@ -229,32 +292,36 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         profile_combo = getattr(window, "db_profile_combo", None)
         if isinstance(profile_combo, QWidget):
-            minimum = round((110 if compact else 135) * width_factor)
-            maximum = round((190 if wide else 160) * width_factor)
+            minimum = round((100 if high_zoom else (110 if compact else 135)) * width_factor)
+            maximum = round((135 if high_zoom else (190 if wide else 160)) * width_factor)
             profile_combo.setMinimumWidth(minimum)
             profile_combo.setMaximumWidth(maximum)
 
         for label in window.findChildren(QLabel):
             if label.text() in {"Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"}:
-                base = 94 if compact else (128 if wide else 108)
+                base = 82 if high_zoom else (94 if compact else (128 if wide else 108))
                 _set_width(label, round(base * width_factor))
 
         for button in window.findChildren(QPushButton):
-            if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten"}:
-                button.setText("Profile & Werte bearbeiten" if wide else "Profile bearbeiten")
+            if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
+                if high_zoom:
+                    button.setText("Profile")
+                else:
+                    button.setText("Profile & Werte bearbeiten" if wide else "Profile bearbeiten")
 
         section_list = getattr(window, "section_list", None)
         if isinstance(section_list, QListWidget):
-            base = 165 if compact else (235 if wide else 200)
+            base = 150 if high_zoom else (165 if compact else (235 if wide else 200))
             _set_width(section_list, round(base * width_factor))
             section_list.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
         for splitter in window.findChildren(QSplitter):
             splitter.setChildrenCollapsible(False)
-            splitter.setHandleWidth(5)
+            splitter.setHandleWidth(geometry_scaled(5, zoom))
             if window.__class__.__name__ == "SongEditor" and splitter.orientation() == Qt.Horizontal:
                 available = max(700, width - 40)
-                left = round(available * (0.57 if wide else 0.60))
+                left_ratio = 0.64 if high_zoom else (0.57 if wide else 0.60)
+                left = round(available * left_ratio)
                 splitter.setSizes([left, available - left])
                 splitter.setStretchFactor(0, 3)
                 splitter.setStretchFactor(1, 2)
