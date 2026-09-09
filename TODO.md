@@ -79,14 +79,13 @@ Stand: 2026-09-09
 
 ## Iteration 18 – Diagnose-I/O-Konsistenz
 
-- 🟡 Diagnose-ZIP verwendet eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync`.
-- 🟡 SHA-256-Begleitdatei nutzt den zentralen atomaren Textschreiber.
-- 🟡 schneller Mehrfachexport erhält durch Mikrosekunden eindeutige Zielnamen.
-- 🟡 Regression für eindeutige Dateinamen und Replace-Fehler ergänzt.
-- 🟡 Vollprüfung, Restore-Gate und CI müssen noch grün bestätigt werden, bevor Iteration 18 auf 🟢 gesetzt wird.
+- 🟢 Diagnose-ZIP verwendet eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync`.
+- 🟢 SHA-256-Begleitdatei nutzt den zentralen atomaren Textschreiber.
+- 🟢 schneller Mehrfachexport erhält durch Mikrosekunden eindeutige Zielnamen.
+- 🟢 Regression für eindeutige Dateinamen und Replace-Fehler ergänzt.
+- 🟢 GitHub-Grundprüfung inklusive `scripts/pruefen.sh --full` und Restore-Gate erfolgreich bestätigt.
 
 ## Nächste Freigabepunkte
 
 1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
-2. 🟡 Iteration 18: CI/Vollprüfung/Restore für Diagnose-I/O abschließen.
-3. 🔴 danach getrennt Backup- und Berichtsschreiber auf dieselben Temp-/fsync-/Fehlerregeln prüfen; Append-Logs nicht fälschlich auf Dateiersatz umstellen.
+2. 🔴 nächster separater Konsistenz-Slice: Backup- und Berichtsschreiber auf dieselben Temp-/fsync-/Fehlerregeln prüfen; Append-Logs nicht fälschlich auf Dateiersatz umstellen.
