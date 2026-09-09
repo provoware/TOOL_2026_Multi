@@ -10,7 +10,7 @@
   "iteration": {
     "number": 25,
     "goal": "Dashboard auf kleinen Laptop-Bildschirmen bei 125/150 Prozent platzsparend haerten, ohne die gute grosse Ansicht zu veraendern",
-    "completed": 8,
+    "completed": 9,
     "open_next": 1
   },
   "runtime": {
@@ -97,10 +97,19 @@
     "iteration24_tested_head_sha": "d750b98e0d98d7abe0441930f9ea52f0e0e85065",
     "iteration24_final_head_gate": "success",
     "iteration24_merged_main_sha": "234f2f5279dc5b6e6d334010da701d3a53ad6ebb",
-    "iteration25_ci_run": null,
-    "iteration25_ci_result": "pending",
-    "iteration25_restore_gate": false,
-    "iteration25_tested_head_sha": null
+    "iteration25_initial_ci_run": 464,
+    "iteration25_initial_ci_result": "failure",
+    "iteration25_initial_ci_cause": "Fehlendes Starttest-Testdouble fuer app.laptop_layout und Laptop-Restore ueberschrieb beim Wechsel auf 175/200 Prozent kurz die bestehende Hochzoom-Ausblendung",
+    "iteration25_ci_run": 468,
+    "iteration25_ci_result": "success",
+    "iteration25_logic_tests": 75,
+    "iteration25_gui_tests": 52,
+    "iteration25_release_files": 37,
+    "iteration25_restore_gate": true,
+    "iteration25_restore_status": "OK",
+    "iteration25_restore_sha256": "9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01",
+    "iteration25_tested_head_sha": "d21799baa13562496b5e0821a17b1fb2c6cd89fe",
+    "iteration25_final_head_gate": "pending_after_evidence_sync"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -288,9 +297,9 @@
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
     {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
     {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
-    {"path":"tests/test_dashboard_reference_gui.py","release":false,"purpose":"Regression für Referenzlayout, Hochzoom, Themes, WCAG-Kontraste, Tastaturfokus und Screenreader-Namen"},
+    {"path":"tests/test_dashboard_reference_gui.py","release":false,"purpose":"Regression für Referenzlayout, Hochzoom, Laptop-Kompaktmodus, Themes, WCAG-Kontraste, Tastaturfokus und Screenreader-Namen"},
     {"path":"tests/test_process_consistency.py","release":false,"purpose":"Atomar-, Mehrfachstart- und Wächterregression"},
-    {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz- und I/O-Regression"},
+    {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz-, I/O- und kontrollierte Start/Ende-Regression"},
     {"path":"tests/test_restore.py","release":false,"purpose":"Restore-, Backup-I/O- und Pfadsicherheitsregression"},
     {"path":"docs/ITERATION17_PROCESS_CONSISTENCY.md","release":false,"purpose":"Konsistenzhärtung und Abnahme"},
     {"path":"docs/ITERATION18_DIAGNOSTIC_IO.md","release":false,"purpose":"Diagnose-I/O-Härtung und CI-/Restore-Evidence"},
@@ -299,6 +308,7 @@
     {"path":"docs/ITERATION21_LAIEN_UX.md","release":false,"purpose":"Nutzersicht-, Laien-UX- und Abnahmebericht"},
     {"path":"docs/ITERATION22_RESPONSIVE_DESIGN.md","release":false,"purpose":"Responsive Design-, Screenshot-Befund- und Abnahmebericht"},
     {"path":"docs/ITERATION23_ZOOM_HAERTUNG.md","release":false,"purpose":"Hochzoom-Härtung, Screenshot-Befund und Abnahme"},
-    {"path":"docs/ITERATION24_ACCESSIBILITY_THEMES.md","release":false,"purpose":"Barrierefreiheits-, Theme-, Kontrast- und Abnahmebericht"}
+    {"path":"docs/ITERATION24_ACCESSIBILITY_THEMES.md","release":false,"purpose":"Barrierefreiheits-, Theme-, Kontrast- und Abnahmebericht"},
+    {"path":"docs/ITERATION25_LAPTOP_LAYOUT.md","release":false,"purpose":"Laptop-Kompaktlayout, Regression, Fehlerkorrektur und CI-/Restore-Evidence"}
   ]
 }
