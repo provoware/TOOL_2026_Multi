@@ -10,8 +10,8 @@
   "iteration": {
     "number": 22,
     "goal": "Erscheinungsbild, Schrift, Abstaende und dynamische Groessenanpassung auf realen Kubuntu-Screenshots basierend professionell haerten",
-    "completed": 11,
-    "open_next": 2
+    "completed": 13,
+    "open_next": 1
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -68,8 +68,15 @@
     "iteration21_ci_cause": "Drei GUI-Rueckfaelle: Suchplatzhalter-Test, alte Recovery-Beschriftung und starre Kartenbreitenannahme",
     "iteration21_restore_gate": false,
     "iteration21_merged_main_sha": "47a6124061268843d05d98ddadcb90066cc0d851",
-    "iteration22_ci_result": "pending",
-    "iteration22_restore_gate": false
+    "iteration22_ci_run": 385,
+    "iteration22_ci_result": "success",
+    "iteration22_logic_tests": 75,
+    "iteration22_gui_tests": 46,
+    "iteration22_release_files": 36,
+    "iteration22_restore_gate": true,
+    "iteration22_restore_status": "OK",
+    "iteration22_restore_sha256": "c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de",
+    "iteration22_tested_head_sha": "1ae0a32a328b09f9a12f6017d9b68ecc5c5ed4b7"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
