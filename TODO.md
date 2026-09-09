@@ -78,9 +78,35 @@ Stand: 2026-09-09
 - 🟢 PR #27 per Squash-Merge sicher in `main` übernommen.
 - 🟢 resultierender Main-Commit: `234f2f5279dc5b6e6d334010da701d3a53ad6ebb`.
 
+## Iteration 25 – Laptop-Kompaktlayout
+
+**Hauptziel:** Die reale 1366×768-Laptopansicht bei 125/150 % entzerren, ohne die bereits gute große Ansicht zu verändern.
+
+### Umsetzung
+
+- 🟢 eigener, reversibler Laptop-Kompaktmodus ausschließlich für das Dashboard ergänzt.
+- 🟢 Aktivierung nur bei knapper Höhe, Fensterbreite unter 1450 px und 125/150 % Zoom.
+- 🟢 redundante geplante Navigation und die beiden reinen Planungskarten werden nur in diesem Modus ausgeblendet.
+- 🟢 Songtexte, Genres/Vorgaben, Todo, Kalender, Fehlerhilfe, alle sieben oberen Modulkacheln, Zoom und Farbtheme bleiben erreichbar.
+- 🟢 Profilkopf und Hilfstexte werden auf knapper Fläche verkürzt; die große Ansicht stellt die vollständigen Beschriftungen automatisch wieder her.
+- 🟢 zentrale Responsive-/Theme-/Zoom-Engine selbst bleibt unverändert.
+- 🟢 Regression für 1366×768 bei 125 % sowie Rückkehr auf 1594×926 ergänzt.
+- 🟢 keine Nutzerdaten-, Speicher-, Backup- oder Restore-Logik verändert.
+
+### Abnahme
+
+- 🟠 erste Grundprüfung #464 deckte zwei begrenzte Rückfälle auf: fehlendes Testdouble für den neuen Startimport sowie eine ungewollte Wiederherstellung der Planungskarten beim Übergang in den bestehenden 175/200-%-Hochzoom.
+- 🟢 beide Ursachen minimal korrigiert; keine Erweiterung des Funktionsumfangs.
+- 🟢 korrigierter Produktions-/Test-Head `d21799baa13562496b5e0821a17b1fb2c6cd89fe` in Grundprüfung **#468** vollständig erfolgreich.
+- 🟢 **75 Logik-/Regressionstests** und **52 PySide6-GUI-Tests** erfolgreich.
+- 🟢 Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, SHA-256 `9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01`.
+- 🟡 Evidence-Sync ist im PR; dessen finaler Head muss vor Merge dieselbe Voll-/Restore-Prüfung erneut bestehen.
+- 🔒 kein Merge vor vollständig grünem finalem Head-Gate.
+
 ## Danach
 
-1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 150/175/200 % und das Theme `Kontrast`.
+1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und das Theme `Kontrast`.
 2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
 3. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 

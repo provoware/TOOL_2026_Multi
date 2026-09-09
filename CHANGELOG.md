@@ -1,5 +1,31 @@
 # Änderungsverlauf
 
+## 0.15.1 – 2026-09-09 – Laptop-Kompaktlayout
+
+### Geändert
+- reversiblen Laptop-Kompaktmodus ausschließlich für das Dashboard ergänzt,
+- Aktivierung auf knappe Laptopfläche bei Fensterbreite unter 1450 px und 125/150 % Zoom begrenzt,
+- redundante geplante Navigation und die beiden reinen Planungskarten in diesem Modus ausgeblendet,
+- produktive Navigation, alle sieben oberen Modulkacheln, Zoom und Farbtheme bleiben erreichbar,
+- Profilkopf und entbehrliche Hilfstexte werden platzsparend verkürzt,
+- Rückkehr auf große Fenster stellt die vollständige Darstellung automatisch wieder her,
+- bestehende zentrale Responsive-/Theme-/Hochzoom-Engine bewusst nicht umgebaut,
+- Regression für 1366×768 bei 125 %, Navigationszustand, produktive Erreichbarkeit, 1594×926-Rückkehr und unveränderten 175/200-%-Hochzoom ergänzt.
+
+### Fehlerbehebung / Schutz
+- erste Grundprüfung #464 fand ein fehlendes Testdouble für den neuen Startimport und eine ungewollte Wiederherstellung der Planungskarten beim Übergang in den bestehenden Hochzoom,
+- beide Ursachen minimal korrigiert, ohne den Funktionsumfang zu erweitern,
+- keine Nutzerdaten, Speicherformate, atomaren Schreiber, Backup- oder Restore-Fachlogik verändert,
+- keine neue externe Abhängigkeit eingeführt.
+
+### Abnahme
+- korrigierter Produktions-/Test-Head `d21799baa13562496b5e0821a17b1fb2c6cd89fe` in GitHub-Grundprüfung **#468** vollständig erfolgreich,
+- **75 Logik-/Regressionstests** und **52 PySide6-GUI-Tests** erfolgreich,
+- Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich,
+- Headless-Start erfolgreich,
+- Vollprojekt-Restore `OK`, SHA-256 `9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01`,
+- der nachgezogene Evidence-Sync wird vor Merge nochmals als finaler PR-Head vollständig geprüft.
+
 ## 0.15.0 – 2026-09-09 – Barrierefreiheit und Farbthemes
 
 ### Hinzugefügt / verbessert
