@@ -78,9 +78,29 @@ Stand: 2026-09-09
 - 🟢 PR #27 per Squash-Merge sicher in `main` übernommen.
 - 🟢 resultierender Main-Commit: `234f2f5279dc5b6e6d334010da701d3a53ad6ebb`.
 
+## Iteration 25 – Laptop-Kompaktlayout
+
+**Hauptziel:** Die reale 1366×768-Laptopansicht bei 125/150 % entzerren, ohne die bereits gute große Ansicht zu verändern.
+
+### Umsetzung
+
+- 🟢 eigener, reversibler Laptop-Kompaktmodus ausschließlich für das Dashboard ergänzt.
+- 🟢 Aktivierung nur bei knapper Höhe, Fensterbreite unter 1450 px und 125/150 % Zoom.
+- 🟢 redundante geplante Navigation und die beiden reinen Planungskarten werden nur in diesem Modus ausgeblendet.
+- 🟢 Songtexte, Genres/Vorgaben, Todo, Kalender, Fehlerhilfe, alle sieben oberen Modulkacheln, Zoom und Farbtheme bleiben erreichbar.
+- 🟢 Profilkopf und Hilfstexte werden auf knapper Fläche verkürzt; die große Ansicht stellt die vollständigen Beschriftungen automatisch wieder her.
+- 🟢 zentrale Responsive-/Theme-/Zoom-Engine selbst bleibt unverändert.
+- 🟢 Regression für 1366×768 bei 125 % sowie Rückkehr auf 1594×926 ergänzt.
+- 🟢 keine Nutzerdaten-, Speicher-, Backup- oder Restore-Logik verändert.
+
+### Abnahme
+
+- 🟡 finaler Branch wird vollständig per Grundprüfung einschließlich GUI-Regression und Vollprojekt-Restore geprüft.
+- 🔒 kein Merge vor vollständig grünem finalem Gate.
+
 ## Danach
 
-1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 150/175/200 % und das Theme `Kontrast`.
+1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und das Theme `Kontrast`.
 2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
 3. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
