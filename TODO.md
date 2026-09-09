@@ -71,11 +71,38 @@ Stand: 2026-09-09
 - 🟢 Schreibfehler-Simulation und Release-Manifestprüfung erfolgreich; 36 freigegebene Betriebsdateien.
 - 🟢 Vollprojekt-Restore erfolgreich, Restore-Status `OK`.
 - 🟢 Restore-SHA-256: `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`.
-- 🔒 Safe-Merge-Regel bleibt bestehen: nur mergen, wenn auch der aktuelle PR-Head nach diesem reinen Evidence-Sync grün ist.
+- 🟢 PR #24 wurde in `main` übernommen (`1f12951156a7ca86e5533f05a17ade4802c79543`).
+
+## Iteration 23 – Zoom-Härtung 150–200 %
+
+**Hauptziel:** Die real sichtbaren Überlagerungen und Abschneidefehler bei starkem Zoom ursächlich beseitigen, ohne Nutzerdaten oder Fachlogik anzufassen.
+
+### Umsetzung
+
+- 🟢 Schriftzoom und Geometriezoom technisch getrennt.
+- 🟢 Schrift bleibt vollständig bei 100/125/150/175/200 % skalierbar.
+- 🟢 Abstände, Radien, Mindesthöhen und andere Geometriewerte wachsen selbst bei 200 % nur noch moderat und maximal um 25 %.
+- 🟢 Breitenreserve bei Hochzoom von früher bis 25 % auf maximal 10 % begrenzt.
+- 🟢 ab 175 % reversiblen Hochzoom-Modus eingeführt.
+- 🟢 redundante geplante Navigationseinträge bei 175/200 % ausgeblendet; dieselben Module bleiben oben als Kacheln sichtbar.
+- 🟢 untere reine Planungs-Karten bei 175/200 % ausgeblendet, damit die produktiven Karten genügend Höhe behalten.
+- 🟢 beim Zurückzoomen auf 100/125/150 % wird der vollständige Normalmodus automatisch wiederhergestellt.
+- 🟢 Profilsteuerung und Songbereichsliste im Hochzoom kompakter dimensioniert.
+- 🟢 Songeditor-Splitter priorisiert im Hochzoom den eigentlichen Arbeitsbereich stärker.
+- 🟢 gezielte Regression für vollständigen Schriftzoom, begrenztes Geometriewachstum, Hochzoom-Sichtbarkeit und Rückkehr in den Normalmodus ergänzt.
+- 🟢 Datenformate, atomarer Schreibweg, Backup und Restore-Fachlogik unverändert.
+
+### Abnahme
+
+- 🟢 GitHub-Grundprüfung **Run #412** vollständig erfolgreich.
+- 🟢 vollständige Grundprüfung erfolgreich.
+- 🟢 Vollprojekt-Restore erfolgreich.
+- 🟡 aktueller Dokumentations-/Manifest-Sync wird nach derselben Safe-Merge-Regel nochmals vollständig geprüft.
+- 🔒 PR #26 erst nach grünem finalem Head mergen.
 
 ## Danach
 
-1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen.
+1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 150/175/200 % sowie normales und maximiertes Fenster.
 2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
 3. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 

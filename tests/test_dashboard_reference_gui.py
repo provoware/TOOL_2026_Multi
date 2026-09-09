@@ -9,7 +9,7 @@ from pathlib import Path
 from PySide6.QtWidgets import QApplication, QFrame, QPushButton
 
 from app.ui import Dashboard
-from app.ui_standards import COLORS
+from app.ui_standards import COLORS, geometry_scaled, scaled
 
 
 class FakeTexts:
@@ -77,6 +77,40 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.app.processEvents()
         self.assertEqual(self.dashboard.sidebar.width(), 258)
         self.assertEqual(self.dashboard.search_entry.width(), 320)
+
+    def test_high_zoom_keeps_font_growth_but_caps_geometry_growth(self):
+        self.assertEqual(scaled(10, 200), 20)
+        self.assertEqual(geometry_scaled(54, 100), 54)
+        self.assertLessEqual(geometry_scaled(54, 200), 68)
+        self.assertLess(geometry_scaled(54, 200), scaled(54, 200))
+
+    def test_high_zoom_removes_redundant_planning_duplicates_and_restores_them(self):
+        self.dashboard.resize(1600, 900)
+        self.dashboard.set_zoom(200)
+        self.app.processEvents()
+
+        planned_nav = [
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.objectName() == "navButton" and button.property("planned") is True
+        ]
+        self.assertTrue(planned_nav)
+        self.assertTrue(all(not button.isVisible() for button in planned_nav))
+
+        cards = [frame for frame in self.dashboard.findChildren(QFrame) if frame.objectName() == "card"]
+        visible_cards = [card for card in cards if card.isVisible()]
+        self.assertEqual(len(visible_cards), 2)
+
+        tiles = [
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.objectName() == "tileButton"
+        ]
+        self.assertEqual(len(tiles), 7)
+        self.assertTrue(all(button.isVisible() for button in tiles))
+
+        self.dashboard.set_zoom(100)
+        self.app.processEvents()
+        self.assertTrue(all(button.isVisible() for button in planned_nav))
+        self.assertEqual(len([card for card in cards if card.isVisible()]), 4)
 
     def test_recovery_occurs_once_in_dashboard_controls(self):
         buttons = [button for button in self.dashboard.findChildren(QPushButton) if "Recovery" in button.text()]
