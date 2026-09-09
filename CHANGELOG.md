@@ -1,5 +1,30 @@
 # Änderungsverlauf
 
+## 0.14.2 – 2026-09-09 – Zoom-sichere Layout-Härtung
+
+### Geändert
+- realen 200-%-Darstellungsfehler aus dem Kubuntu-Screenshot ursächlich auf das Zusammenspiel aus physischen Breakpoints, nahezu linear mitwachsendem Layout und fehlendem Überlaufschutz zurückgeführt,
+- Responsive-Klassifikation auf die zoom-bereinigte effektive Arbeitsbreite `Fensterbreite × 100 / Zoom` umgestellt,
+- vollständige Schriftvergrößerung 100/125/150/175/200 % beibehalten, während Abstände, Rundungen, Padding und Mindesthöhen bewusst flacher bis maximal 145 % wachsen,
+- große Überschriften auf eine flachere Skalierung bis maximal 165 % umgestellt,
+- linke Dashboard-Navigation mit eigenem vertikalen Scroll-/Überlaufschutz versehen,
+- Dashboard-Kartenbereich mit eigenem vertikalen Überlaufschutz versehen, ohne Header, Schnellkacheln, Projekt-Notiz oder Statusleiste darin zu verstecken,
+- vier Hauptkarten unter 960 px effektiver Arbeitsbreite automatisch von 2×2 auf eine Spalte umgestellt; Zurückzoomen stellt 2×2 wieder her,
+- Sidebar-, Kategorie- und Songbereichsbreiten bei hohem Zoom zusätzlich anhand realer Schriftmetriken dimensioniert,
+- Dashboard-Titel umbrechbar gemacht und sekundären Untertitel nur bei tatsächlich schmaler Hochzoom-Darstellung reduziert,
+- fünf gezielte 200-%-Regressionen für Scrollschutz, Karten-Reflow, Navigationsüberlappung, Profilzeilen und reversible Rückkehr ergänzt.
+
+### Schutz / Abnahme
+- keine Datenmigration, keine Änderung an Song-, Todo-, Kalender- oder Profildaten,
+- atomarer Schreibweg sowie Backup-/Restore-Fachlogik unverändert,
+- keine neue Produktfunktion und keine zusätzliche Abhängigkeit,
+- Grundprüfung #401 bestätigte 75 grüne Logiktests und deckte genau eine veraltete Iteration-22-Testannahme auf; das Restore-Gate wurde deshalb korrekt übersprungen,
+- die alte Annahme „Sidebar muss bei 125 % zwingend breiter werden“ wurde durch das tatsächliche Qualitätskriterium „Kernbedienung sichtbar und sicherer Überlauf“ ersetzt,
+- GitHub-Grundprüfung **#403** anschließend vollständig erfolgreich: **75 Logik-/Regressionstests und 50 PySide6-GUI-Tests** grün,
+- Schreibfehler-Simulation, Headless-Start und Release-Manifest mit 36 Betriebsdateien erfolgreich,
+- Vollprojekt-Restore Status `OK`, SHA-256 `69e6cc8b3b5f3838b4478e3c0373ba0cb46c86942927d5b523f78a0cdb16214a`,
+- geprüfter technischer Head `e1dbc977f6bfef97d396ac105ac54a09172d831f`; nach Versions-/Evidence-Sync wird der finale PR-Head erneut vollständig geprüft.
+
 ## 0.14.1 – 2026-09-09 – Responsive Design und visuelle Härtung
 
 ### Geändert
@@ -23,7 +48,7 @@
 - GitHub-Grundprüfung **#385** vollständig erfolgreich: 75 Logik-/Regressionstests und 46 PySide6-GUI-Tests grün,
 - Schreibfehler-Simulation, Headless-Start und Release-Manifest mit 36 Betriebsdateien erfolgreich,
 - Vollprojekt-Restore erfolgreich mit Status `OK` und SHA-256 `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`,
-- nach diesem reinen Evidence-Sync bleibt die Safe-Merge-Regel bestehen: der aktuelle PR-Head muss ebenfalls grün sein.
+- PR #24 wurde als Merge-Commit `1f12951156a7ca86e5533f05a17ade4802c79543` in `main` übernommen.
 
 ## 0.14.0 – 2026-09-09 – Laien-UX-Konsistenz
 
@@ -48,7 +73,7 @@
 - Kernkontraste für normalen Text, Hinweistext und Akzent gegen den Hintergrund werden automatisiert auf mindestens 4,5:1 geprüft,
 - Laien-UX-Test ist in `bash scripts/pruefen.sh --full` integriert,
 - keine Datenmigration, keine Änderung der Song-/Todo-/Kalender-/Profilformate und keine Änderung der atomaren Speicher- oder Restore-Fachlogik,
-- PR #23 wurde als Merge-Commit `47a6124061268843d05d98ddadcb90066cc0d851` in `main` übernommen; die anschließend ausgewertete Grundprüfung #368 zeigte drei GUI-Test-Rückfälle, die in 0.14.1 korrigiert werden.
+- PR #23 wurde als Merge-Commit `47a6124061268843d05d98ddadcb90066cc0d851` in `main` übernommen; die anschließend ausgewertete Grundprüfung #368 zeigte drei GUI-Test-Rückfälle, die in 0.14.1 korrigiert wurden.
 
 ## 0.13.4 – 2026-09-09 – Repository-Hygiene
 
