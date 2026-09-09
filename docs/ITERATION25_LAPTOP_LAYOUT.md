@@ -57,14 +57,21 @@ Der korrigierte Produktions-/Test-Head `d21799baa13562496b5e0821a17b1fb2c6cd89fe
 - 🟢 Vollprojekt-Restore `OK`,
 - 🟢 Restore-SHA-256 `9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01`.
 
-Der nachgezogene Evidence-Sync in README, TODO, MANIFEST, CHANGELOG und diesem Bericht wird vor Merge nochmals als eigener finaler PR-Head durch dieselbe Voll-/Restore-Prüfung geschickt. Erst ein vollständig grüner Endstand darf gemergt werden.
+Nach Synchronisierung von README, TODO, MANIFEST, CHANGELOG und diesem Bericht wurde der finale PR-Head `d8f07560d4974708d8fa38ae57de4b1910bc536f` nochmals vollständig durch **Grundprüfung #478** geschickt:
+
+- 🟢 75 Logik-/Regressionstests,
+- 🟢 52 PySide6-GUI-Tests,
+- 🟢 37 freigegebene Release-Betriebsdateien,
+- 🟢 Headless-Start,
+- 🟢 Vollprojekt-Restore `OK`,
+- 🟢 finale Restore-SHA-256 `5ac25bbd0499d30ad1ace80f1b6ffa0faa6db70e24fec6e30a0d9095420ce825`.
+
+Erst danach wurde PR #29 per Squash-Merge in `main` übernommen. Resultierender Main-Commit: `1a64810fd2e202045666538f57054951e5099257`.
 
 ## Schutz
 
 Keine Datenmigration, keine Änderung an Song-, Todo-, Kalender- oder Profildaten, keine Änderung am atomaren Schreibweg und keine Änderung an Backup/Restore.
 
-## Noch offen
+## Ergebnis
 
-- finale Voll-/Restore-Prüfung des Evidence-Sync-Heads,
-- danach Safe Merge von PR #29,
-- anschließend reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner, besonders 1366×768 bei 125/150 % sowie 175/200 % und Theme `Kontrast`.
+Iteration 25 ist technisch und automatisiert abgeschlossen. Die noch ausstehende Prüfung ist ausschließlich die reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner, besonders 1366×768 bei 125/150 % sowie 175/200 % und Theme `Kontrast`.

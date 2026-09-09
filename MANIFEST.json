@@ -10,7 +10,7 @@
   "iteration": {
     "number": 25,
     "goal": "Dashboard auf kleinen Laptop-Bildschirmen bei 125/150 Prozent platzsparend haerten, ohne die gute grosse Ansicht zu veraendern",
-    "completed": 9,
+    "completed": 10,
     "open_next": 1
   },
   "runtime": {
@@ -109,7 +109,17 @@
     "iteration25_restore_status": "OK",
     "iteration25_restore_sha256": "9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01",
     "iteration25_tested_head_sha": "d21799baa13562496b5e0821a17b1fb2c6cd89fe",
-    "iteration25_final_head_gate": "pending_after_evidence_sync"
+    "iteration25_final_ci_run": 478,
+    "iteration25_final_ci_result": "success",
+    "iteration25_final_logic_tests": 75,
+    "iteration25_final_gui_tests": 52,
+    "iteration25_final_release_files": 37,
+    "iteration25_final_restore_gate": true,
+    "iteration25_final_restore_status": "OK",
+    "iteration25_final_restore_sha256": "5ac25bbd0499d30ad1ace80f1b6ffa0faa6db70e24fec6e30a0d9095420ce825",
+    "iteration25_final_tested_head_sha": "d8f07560d4974708d8fa38ae57de4b1910bc536f",
+    "iteration25_final_head_gate": "success",
+    "iteration25_merged_main_sha": "1a64810fd2e202045666538f57054951e5099257"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",

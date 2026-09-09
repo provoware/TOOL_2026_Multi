@@ -234,7 +234,7 @@ Sie prüft unter anderem:
 - responsive Breiten- und Tabellenverteilung
 - Repository-Hygiene
 
-Der korrigierte Iteration-25-Produktions-/Teststand wurde in **Grundprüfung #468** bereits vollständig grün geprüft: 75 Logik-/Regressionstests, 52 PySide6-GUI-Tests, 37 Release-Betriebsdateien und Vollprojekt-Restore `OK` mit SHA-256 `9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01`. Der reine Evidence-Sync wird vor Merge nochmals vollständig geprüft.
+Iteration 25 wurde vollständig automatisiert abgenommen. Der finale PR-Head `d8f07560d4974708d8fa38ae57de4b1910bc536f` bestand **Grundprüfung #478** mit 75 Logik-/Regressionstests, 52 PySide6-GUI-Tests, 37 Release-Betriebsdateien, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Finale Restore-SHA-256: `5ac25bbd0499d30ad1ace80f1b6ffa0faa6db70e24fec6e30a0d9095420ce825`. PR #29 wurde danach per Squash-Merge in `main` übernommen (`1a64810fd2e202045666538f57054951e5099257`).
 
 Vollständiges Restore-Gate:
 
@@ -281,8 +281,8 @@ backups/    lokale Sicherungen, nicht versioniert
 
 ## Noch offen
 
-1. Den Evidence-Sync-Head von PR #29 nochmals vollständig per Grundprüfung und Restore prüfen und nur bei Grün übernehmen.
-2. Danach reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner durchführen.
-3. Anschließend verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs nicht unnötig auf Dateiersatz umstellen.
+1. Reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 % sowie 175/200 % und Theme `Kontrast`.
+2. Danach verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs nicht unnötig auf Dateiersatz umstellen.
+3. Anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
 Die detaillierte Versionshistorie steht bewusst **nicht mehrfach in der README**, sondern im `CHANGELOG.md` und den Iterationsdokumenten.
