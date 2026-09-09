@@ -47,8 +47,11 @@
     "iteration18_ci_run": 294,
     "iteration18_ci_result": "success",
     "iteration18_restore_gate": true,
-    "iteration19_ci_result": "pending",
-    "iteration19_restore_gate": false
+    "iteration19_ci_run": 315,
+    "iteration19_ci_result": "success",
+    "iteration19_restore_gate": true,
+    "iteration19_tested_head_sha": "ca6ff3a7eb29a6bbf237a81199a8a8764280784a",
+    "iteration19_merged_main_sha": "72719acbef5be379c1340b5771962a81fb40fc85"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",

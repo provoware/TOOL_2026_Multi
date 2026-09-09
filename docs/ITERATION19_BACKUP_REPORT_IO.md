@@ -25,7 +25,8 @@ Den bestehenden Restore-/Backup-Schreibweg auf denselben abgesicherten Temp-, fs
 `tests/test_restore.py` ergänzt:
 
 1. simulierter `os.replace()`-Fehler muss einen bestehenden Backup-Stand unverändert lassen und die Tempdatei entfernen,
-2. erfolgreicher ZIP-Bau muss ein valides Archiv ohne verbliebene Tempdatei liefern.
+2. erfolgreicher ZIP-Bau muss ein valides Archiv ohne verbliebene Tempdatei liefern,
+3. direkter CI-Skriptstart `python3 scripts/iteration_restore.py` bleibt ausführbar.
 
 ## Unverändert
 
@@ -36,6 +37,12 @@ Den bestehenden Restore-/Backup-Schreibweg auf denselben abgesicherten Temp-, fs
 - Append-only Ereignislogs,
 - Nutzerdaten und Fachlogik.
 
-## Gate
+## Gate / Evidence
 
-Der Branch darf erst nach erfolgreicher GitHub-Grundprüfung einschließlich `bash scripts/pruefen.sh --full` und Restore-Gate gemergt werden.
+- geprüfter PR-Head: `ca6ff3a7eb29a6bbf237a81199a8a8764280784a`,
+- GitHub Actions `Grundprüfung` Run #315: **success**,
+- der Workflow enthält `bash scripts/pruefen.sh --full` sowie das Restore-Gate,
+- PR #19 wurde anschließend per Squash-Merge in `main` übernommen,
+- resultierender Main-Commit: `72719acbef5be379c1340b5771962a81fb40fc85`.
+
+Damit ist Iteration 19 fachlich und als Restore-/CI-Evidence abgeschlossen. Weitere Schreibwege werden nur in einem getrennten Folgeslice geprüft.

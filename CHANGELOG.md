@@ -14,7 +14,8 @@
 ### Schutz / Abnahme
 - Restore-Pfadprüfung, Manifestvergleich, Vollprüfung und Headless-Start bleiben unverändert,
 - Append-only Ereignislogs und Nutzerdaten wurden bewusst nicht verändert,
-- Branch-Abnahme durch GitHub-Grundprüfung inklusive `bash scripts/pruefen.sh --full` und Restore-Gate steht noch aus; kein Merge vor grünem Gate.
+- GitHub Actions `Grundprüfung` Run #315 war erfolgreich; Vollprüfung und Restore-Gate sind grün bestätigt,
+- geprüfter PR-Head `ca6ff3a7eb29a6bbf237a81199a8a8764280784a` wurde als PR #19 per Squash-Merge in `main` übernommen; resultierender Main-Commit `72719acbef5be379c1340b5771962a81fb40fc85`.
 
 ## 0.13.2 – 2026-09-09 – Diagnose-I/O-Konsistenz
 

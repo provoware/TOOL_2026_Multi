@@ -87,14 +87,13 @@ Stand: 2026-09-09
 
 ## Iteration 19 – Backup- und Berichtsschreiber
 
-- 🟡 Backup-ZIP auf eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync` umgestellt.
-- 🟡 SHA-256-Begleitdatei und RESTORE-JSON-Bericht auf zentralen atomaren Textschreiber umgestellt.
-- 🟡 Backup-Dateinamen um Mikrosekunden gegen schnelle Mehrfachlauf-Kollisionen ergänzt.
-- 🟡 Regression für Replace-Fehler, Altbestandsschutz und Temp-Cleanup ergänzt.
-- 🟡 finale GitHub-Grundprüfung und Restore-Gate stehen für den Branch noch aus.
+- 🟢 Backup-ZIP auf eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync` umgestellt.
+- 🟢 SHA-256-Begleitdatei und RESTORE-JSON-Bericht auf zentralen atomaren Textschreiber umgestellt.
+- 🟢 Backup-Dateinamen um Mikrosekunden gegen schnelle Mehrfachlauf-Kollisionen ergänzt.
+- 🟢 Regression für Replace-Fehler, Altbestandsschutz und Temp-Cleanup ergänzt.
+- 🟢 GitHub-Grundprüfung Run #315 inklusive Vollprüfung und Restore-Gate erfolgreich; PR #19 per Squash-Merge in `main` übernommen (`72719acbef5be379c1340b5771962a81fb40fc85`).
 
 ## Nächste Freigabepunkte
 
-1. 🟡 Iteration 19 ausschließlich über Vollprüfung + Restore-Gate abschließen; erst bei Grün mergen.
-2. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
-3. 🔴 danach verbleibende Berichtsschreiber auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
+1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
+2. 🔴 danach verbleibende direkte Berichtsschreiber auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
