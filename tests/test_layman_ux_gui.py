@@ -157,16 +157,16 @@ class LaymanUxGuiTests(unittest.TestCase):
         self.assertGreater(self.dashboard.sidebar.width(), compact_sidebar)
         self.assertGreater(self.dashboard.search_entry.width(), compact_search)
 
-    def test_responsive_widths_follow_zoom_without_new_scroll_mode(self):
+    def test_zoom_keeps_core_controls_accessible_at_compact_effective_width(self):
         self.dashboard.resize(1280, 790)
-        self.dashboard.set_zoom(100)
-        self.app.processEvents()
-        sidebar_100 = self.dashboard.sidebar.width()
-        search_100 = self.dashboard.search_entry.width()
         self.dashboard.set_zoom(125)
         self.app.processEvents()
-        self.assertGreater(self.dashboard.sidebar.width(), sidebar_100)
-        self.assertGreater(self.dashboard.search_entry.width(), search_100)
+        self.assertGreaterEqual(self.dashboard.sidebar.width(), 190)
+        self.assertGreaterEqual(self.dashboard.search_entry.width(), 180)
+        self.assertTrue(self.dashboard.search_entry.isVisible())
+        nav_scroll = getattr(self.dashboard, "_provoware_nav_scroll", None)
+        self.assertIsNotNone(nav_scroll)
+        self.assertTrue(nav_scroll.isVisible())
 
     def test_song_library_columns_use_available_width(self):
         library = SongLibrary(self.root, 100, lambda _path: None)
