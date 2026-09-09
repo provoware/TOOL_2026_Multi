@@ -157,6 +157,17 @@ class LaymanUxGuiTests(unittest.TestCase):
         self.assertGreater(self.dashboard.sidebar.width(), compact_sidebar)
         self.assertGreater(self.dashboard.search_entry.width(), compact_search)
 
+    def test_responsive_widths_follow_zoom_without_new_scroll_mode(self):
+        self.dashboard.resize(1280, 790)
+        self.dashboard.set_zoom(100)
+        self.app.processEvents()
+        sidebar_100 = self.dashboard.sidebar.width()
+        search_100 = self.dashboard.search_entry.width()
+        self.dashboard.set_zoom(125)
+        self.app.processEvents()
+        self.assertGreater(self.dashboard.sidebar.width(), sidebar_100)
+        self.assertGreater(self.dashboard.search_entry.width(), search_100)
+
     def test_song_library_columns_use_available_width(self):
         library = SongLibrary(self.root, 100, lambda _path: None)
         library.resize(1180, 720)
