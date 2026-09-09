@@ -1,15 +1,15 @@
 {
-  "schema_version": 16,
+  "schema_version": 17,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.13.2",
+    "version": "0.13.3",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-09"
   },
   "iteration": {
-    "number": 18,
-    "goal": "Diagnoseexport auf denselben abgesicherten Temp-, fsync- und Replace-Vertrag wie die produktiven Schreibwege bringen",
+    "number": 19,
+    "goal": "Backup- und Restore-Berichtsschreiber auf denselben abgesicherten Temp-, fsync- und Replace-Vertrag bringen",
     "completed": 5,
     "open_next": 2
   },
@@ -46,7 +46,9 @@
     "write_failure_simulation_uses_production_writer": true,
     "iteration18_ci_run": 294,
     "iteration18_ci_result": "success",
-    "iteration18_restore_gate": true
+    "iteration18_restore_gate": true,
+    "iteration19_ci_result": "pending",
+    "iteration19_restore_gate": false
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -73,7 +75,7 @@
     "file_fsync_before_replace": true,
     "directory_fsync_after_replace_on_supported_platforms": true,
     "temp_cleanup_on_failure": true,
-    "writers_using_common_path": ["profile", "todo", "calendar", "song", "song_versions", "song_exports", "diagnostic_sha256"],
+    "writers_using_common_path": ["profile", "todo", "calendar", "song", "song_versions", "song_exports", "diagnostic_sha256", "restore_sha256", "restore_report"],
     "stale_lock_milliseconds": 5000
   },
   "profile_database": {
@@ -137,7 +139,14 @@
   "recovery": {
     "iteration_restore": "scripts/iteration_restore.py",
     "backup_entrypoint": "scripts/backup_erstellen.sh",
-    "status_rule": "OK nur nach ZIP-Prüfung, SHA-256, neuem Restore-Ordner, Manifestvergleich, Vollprüfung und Headless-Start"
+    "status_rule": "OK nur nach ZIP-Prüfung, SHA-256, neuem Restore-Ordner, Manifestvergleich, Vollprüfung und Headless-Start",
+    "zip_unique_temp": true,
+    "zip_file_fsync_before_replace": true,
+    "zip_directory_fsync_after_replace_on_supported_platforms": true,
+    "zip_temp_cleanup_on_failure": true,
+    "sha256_atomic_write": "app.atomic_io.atomic_write_text",
+    "report_atomic_write": "app.atomic_io.atomic_write_text",
+    "filename_precision": "microseconds"
   },
   "release_build": {
     "builder": "scripts/veroeffentlichen.py",
@@ -178,6 +187,7 @@
     {"path":"scripts/start_status.py","release":true,"purpose":"Startanzeige"},
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
     {"path":"scripts/diagnosepaket.py","release":true,"purpose":"Diagnoseexport mit abgesichertem ZIP-Commit und atomarer SHA-256-Begleitdatei"},
+    {"path":"scripts/iteration_restore.py","release":true,"purpose":"Backup, Restore-Gate und atomare Restore-Evidence"},
     {"path":"scripts/kubuntu_abnahme.py","release":true,"purpose":"Kubuntu-X11-Abnahmeassistent"},
     {"path":"texte/registry.json","release":true,"purpose":"Zentrale Nutzertexte"},
     {"path":"README.md","release":false,"purpose":"Entwicklerübersicht"},
@@ -185,7 +195,9 @@
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
     {"path":"tests/test_process_consistency.py","release":false,"purpose":"Atomar-, Mehrfachstart- und Wächterregression"},
     {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz- und I/O-Regression"},
+    {"path":"tests/test_restore.py","release":false,"purpose":"Restore-, Backup-I/O- und Pfadsicherheitsregression"},
     {"path":"docs/ITERATION17_PROCESS_CONSISTENCY.md","release":false,"purpose":"Konsistenzhärtung und Abnahme"},
-    {"path":"docs/ITERATION18_DIAGNOSTIC_IO.md","release":false,"purpose":"Diagnose-I/O-Härtung und CI-/Restore-Evidence"}
+    {"path":"docs/ITERATION18_DIAGNOSTIC_IO.md","release":false,"purpose":"Diagnose-I/O-Härtung und CI-/Restore-Evidence"},
+    {"path":"docs/ITERATION19_BACKUP_REPORT_IO.md","release":false,"purpose":"Backup-/Restore-Bericht-I/O-Härtung und Abnahme"}
   ]
 }
