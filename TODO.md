@@ -71,11 +71,36 @@ Stand: 2026-09-09
 - 🟢 Schreibfehler-Simulation und Release-Manifestprüfung erfolgreich; 36 freigegebene Betriebsdateien.
 - 🟢 Vollprojekt-Restore erfolgreich, Restore-Status `OK`.
 - 🟢 Restore-SHA-256: `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`.
-- 🔒 Safe-Merge-Regel bleibt bestehen: nur mergen, wenn auch der aktuelle PR-Head nach diesem reinen Evidence-Sync grün ist.
+- 🟢 PR #24 wurde in `main` übernommen (`1f12951156a7ca86e5533f05a17ade4802c79543`).
+
+## Iteration 23 – Zoom-sichere Layout-Härtung
+
+**Hauptziel:** Die reale 200-%-Darstellung muss ohne überlappende Navigation, kollidierende Formularzeilen oder zusammengedrückte Dashboard-Karten funktionieren.
+
+### Umsetzung
+
+- 🟡 Breakpoints auf zoom-bereinigte effektive Arbeitsbreite umgestellt (`Fensterbreite × 100 / Zoom`).
+- 🟡 Schrift bleibt vollständig zoombar; Abstände, Rundungen, Padding und Mindesthöhen wachsen bewusst flacher.
+- 🟡 große Überschriften skalieren flacher als Fließtext, damit sie Bedienelemente nicht verdrängen.
+- 🟡 Navigation mit eigenem vertikalen Überlauf-/Scrollschutz versehen; Einträge werden nicht mehr in zu geringe Höhe gepresst.
+- 🟡 Dashboard-Kartenfläche mit eigenem Überlauf-/Scrollschutz versehen; obere Schnellbereiche und Statusleiste bleiben stabil erreichbar.
+- 🟡 unter 960 px zoom-bereinigter Arbeitsbreite automatische Umstellung der vier Hauptkarten von 2×2 auf eine Spalte.
+- 🟡 Rückkehr auf 2×2 beim Zurückzoomen implementiert.
+- 🟡 Kategorie- und Songbereichsbreiten bei hohem Zoom schriftmetrisch statt pauschal berechnet.
+- 🟡 Sidebar-Breite bei 150–200 % an tatsächliche Textbreite angepasst und gegen Fensterbreite begrenzt.
+- 🟡 Dashboard-Titel darf bei Bedarf umbrechen; sekundärer Untertitel wird nur bei wirklich schmaler Hochzoom-Darstellung reduziert.
+- 🟡 fünf neue GUI-Regressionen gegen den konkreten 200-%-Fehlerzustand ergänzt.
+- 🟢 keine Daten-, Speicher-, Backup- oder Restore-Fachlogik verändert.
+
+### Finale Abnahme
+
+- 🔴 vollständige GitHub-Grundprüfung für Iteration 23 ausführen.
+- 🔴 Vollprojekt-Restore-Gate für denselben Head erfolgreich bestätigen.
+- 🔴 erst danach per Safe Merge in `main` übernehmen.
 
 ## Danach
 
-1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen.
+1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme bei **100/125/150/175/200 %** mit `bash kubuntu_abnahme.sh` durchführen.
 2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
 3. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
