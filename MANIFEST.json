@@ -10,7 +10,7 @@
   "iteration": {
     "number": 20,
     "goal": "Repository von eindeutig lokalen und reproduzierbaren Artefakten bereinigen und Wiederauftreten regressionspruefen",
-    "completed": 4,
+    "completed": 8,
     "open_next": 3
   },
   "runtime": {
@@ -53,8 +53,14 @@
     "iteration19_restore_gate": true,
     "iteration19_tested_head_sha": "ca6ff3a7eb29a6bbf237a81199a8a8764280784a",
     "iteration19_merged_main_sha": "72719acbef5be379c1340b5771962a81fb40fc85",
-    "iteration20_ci_result": "pending",
-    "iteration20_restore_gate": false
+    "iteration20_initial_ci_run": 335,
+    "iteration20_initial_ci_result": "failure",
+    "iteration20_initial_ci_cause": "Git-spezifischer Hygiene-Test lief auch im entpackten Restore ohne .git",
+    "iteration20_ci_run": 337,
+    "iteration20_ci_result": "success",
+    "iteration20_restore_gate": true,
+    "iteration20_tested_head_sha": "caefca0d51b158ac9a3c8cfedc6fb18e0899a580",
+    "iteration20_merged_main_sha": "aa66dc5ed106e470a533c4dd9f65cf80b726b05c"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
