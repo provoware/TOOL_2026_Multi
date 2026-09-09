@@ -51,7 +51,9 @@ Die automatische Prüfung deckt zusätzlich ab:
 
 Keine Nutzerdatenmigration. Keine Produktfunktion. Keine neue Abhängigkeit. Alle Änderungen sind Git-reversibel. Fehlerprüfungen arbeiten mit temporären Testbeständen.
 
-## Erste vollständige Abnahme
+## Abnahme
+
+### Technische Nullrunde
 
 GitHub-Grundprüfung **#503** war vollständig erfolgreich:
 
@@ -63,6 +65,19 @@ GitHub-Grundprüfung **#503** war vollständig erfolgreich:
 - Vollprojekt-Restore: `OK`,
 - Restore-SHA-256: `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`.
 
-Dieser Lauf prüfte den technischen Patch vor Versions-/Evidence-Sync. Der nun auf **0.15.2** synchronisierte finale PR-Head muss dieselbe vollständige Grundprüfung und das Restore-Gate erneut bestehen.
+### Finaler Version-/Evidence-Head
 
-**Status:** 🟡 technischer Patch grün; finaler Evidence-Head noch zu prüfen.
+Nach Synchronisierung auf Version **0.15.2** wurde der finale PR-Head `d386f9e848237ff400fc60c518f73645b6516cee` erneut von Null geprüft. GitHub-Grundprüfung **#513** war vollständig erfolgreich:
+
+- 81 Logik-/Regressionstests: `OK`,
+- 52 PySide6-GUI-Tests: `OK`,
+- Release-Manifest: 37 freigegebene Betriebsdateien,
+- Headless-Start: `OK`,
+- Vollprojekt-Restore: `OK`,
+- finale Restore-SHA-256: `560b9d9ca46ec3e0964f03b385941782e18e892d734c1b5e208dd69c6d4b5bf3`.
+
+PR **#31** wurde anschließend ausschließlich für genau diesen geprüften Head per SHA-geschütztem Squash-Merge übernommen. Resultierender `main`-Commit: `00513bbaaee124da1e04a963aa70ce9e4757108e`.
+
+Die nachfolgende Status-Synchronisierung verändert ausschließlich Projektmetadaten und Dokumentation; keine Produktions-, Nutzerdaten-, Backup- oder Restore-Logik.
+
+**Status:** 🟢 technischer Patch vollständig geprüft und sicher in `main` übernommen; Status-Sync separat final zu prüfen.
