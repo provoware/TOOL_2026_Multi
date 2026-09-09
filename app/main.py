@@ -35,6 +35,7 @@ def main() -> int:
         from app.ui import Dashboard, install_exception_handler
         from app.ui_standards import configure_application
         from app.laptop_layout import install_laptop_layout
+        from app.navigation_ux import install_navigation_ux
 
         app = QApplication.instance() or QApplication([])
         app.setApplicationName("Provoware-Datenbank-Dashboard 2026")
@@ -54,6 +55,7 @@ def main() -> int:
         logger = EventLogger(ROOT, version)
         dashboard = Dashboard(TextRegistry(ROOT / "texte" / "registry.json"), logger, ROOT)
         install_laptop_layout(dashboard)
+        install_navigation_ux(dashboard)
         install_exception_handler(app, logger, dashboard.refresh, dashboard)
         logger.record(
             severity="INFO", area="START", summary="Das Programm wurde sicher gestartet.",

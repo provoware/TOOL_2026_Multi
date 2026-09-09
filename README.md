@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.15.2 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore-Prüfung aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
+> **Version:** 0.15.3 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore-Prüfung aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -30,6 +30,8 @@ ANLEITUNG_LAIEN.md
 - 🟢 **Fehlerhilfe (Recovery)** – einfache Erklärung, Schutzmaßnahme und nächster Schritt
 - 🟢 **Zoom 100–200 %** – gemeinsam für alle Hauptfenster
 - 🟢 **Farbthemes** – Amber, Türkis, Lila und Kontrast
+
+Die linke Navigation stellt diese fertigen Wege jetzt zuerst unter **Direkt nutzbar** bereit. Die zehn noch nicht fertigen Bereiche stehen getrennt unter **Noch nicht fertig** und sind standardmäßig eingeklappt. So bleibt das Menü ruhig; wer die geplanten Bereiche sehen möchte, kann sie mit einem einzigen Schalter einblenden.
 
 ## Erscheinungsbild, Zoom und Barrierefreiheit
 
@@ -62,7 +64,7 @@ Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast
 
 ## Was ist noch geplant?
 
-Noch nicht fertige Bereiche werden sichtbar mit **„In Planung“** und gestrichelter Darstellung von fertigen Funktionen getrennt. Ein Klick auf einen geplanten Bereich verändert keine Daten.
+Noch nicht fertige Bereiche werden sichtbar mit **„In Planung“** und gestrichelter Darstellung von fertigen Funktionen getrennt. In der linken Navigation sind sie zusätzlich unter **Noch nicht fertig** gesammelt und standardmäßig eingeklappt. Ein Klick auf einen geplanten Bereich verändert keine Daten.
 
 Dazu gehören derzeit unter anderem:
 
@@ -160,11 +162,7 @@ Es läuft bewusst kein versteckter Erinnerungsdienst weiter, wenn Provoware voll
 
 ## Fehlerhilfe
 
-Die Fehlerhilfe befindet sich unter:
-
-```text
-Hilfe → Fehlerhilfe (Recovery)
-```
+Die Fehlerhilfe befindet sich unter **Direkt nutzbar → Fehlerhilfe (Recovery)**.
 
 Sie zeigt zuerst:
 
@@ -234,12 +232,13 @@ Sie prüft unter anderem:
 - Farbthemes und Screenreader-Grundwerte
 - Kontraste aller Theme-Kernfarben mit mindestens 4,5:1
 - Laienführung und Nicht-Silent-Fail-Verhalten
+- neue Menü-Hierarchie, Planungs-Aufklappzustand und Rückkehr aus Laptop-/Hochzoom-Modi
 - responsive Breiten- und Tabellenverteilung
 - direkte Startbarkeit wichtiger Skripte
 - Release-/Diagnose-Publish-Fehler und Temp-Cleanup
 - Repository-Hygiene
 
-Iteration 26 wurde zweistufig vollständig abgenommen. Die technische Nullrunde **#503** war grün; der anschließend auf Version 0.15.2 synchronisierte finale Head `d386f9e848237ff400fc60c518f73645b6516cee` bestand die vollständige **Grundprüfung #513** erneut mit **81 Logik-/Regressionstests**, **52 PySide6-GUI-Tests**, **37 Release-Betriebsdateien**, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Finale Restore-SHA-256: `560b9d9ca46ec3e0964f03b385941782e18e892d734c1b5e208dd69c6d4b5bf3`. PR #31 wurde danach SHA-geschützt per Squash-Merge übernommen; Main-Commit: `00513bbaaee124da1e04a963aa70ce9e4757108e`.
+Der korrigierte technische Iteration-27-Head `b129b47bb8123fc7ea49680f2fa921f457164c56` bestand **Grundprüfung #540** vollständig mit **81 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Restore-SHA-256: `42c67e08e419e890c29620ab8e6fef8afeb12a24b1e7006bfc972ab69d87eefc`. Beim Versions-Sync wird `app/navigation_ux.py` ausdrücklich in den Release-Bestand aufgenommen; dadurch steigt der erwartete Release-Bestand von 37 auf **38 Betriebsdateien**. Der auf Version 0.15.3 synchronisierte finale PR-Head muss vor Merge denselben vollständigen Prüf- und Restore-Block erneut bestehen.
 
 Vollständiges Restore-Gate:
 
@@ -284,6 +283,7 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION24_ACCESSIBILITY_THEMES.md` – Barrierefreiheit, Farbthemes und Kontrastprüfung
 - `docs/ITERATION25_LAPTOP_LAYOUT.md` – Laptop-Kompaktmodus, Fehlerkorrektur und Abnahme
 - `docs/ITERATION26_RELEASE_IO_HARDENING.md` – Release-/Bericht-I/O-Audit und Abnahme
+- `docs/ITERATION27_NAVIGATION_UX.md` – Menü-Hierarchie, Laiennavigation und Abnahme
 
 ## Noch offen
 

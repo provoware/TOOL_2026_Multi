@@ -1,5 +1,34 @@
 # Änderungsverlauf
 
+## 0.15.3 – 2026-09-10 – Menü-Übersicht und Laiennavigation
+
+### Geändert
+- linke Dashboard-Navigation auf eine klare Nutzerhierarchie umgestellt: fertige Wege zuerst unter `Direkt nutzbar`, geplante Wege getrennt unter `Noch nicht fertig`,
+- `Songtexte`, `Genres & Vorgaben`, `Todo-Liste`, `Kalender` und `Fehlerhilfe (Recovery)` als direkte fertige Hauptwege priorisiert,
+- redundanten sichtbaren Menüpunkt `Alle Bereiche · geplant` entfernt,
+- zehn geplante Bereiche standardmäßig eingeklappt und über einen einzigen Schalter ein-/ausblendbar gemacht,
+- geplante Bereiche bei Bedarf in `Kreativ & Inhalte`, `Dateien & Werkzeuge` und `Projekte` gruppiert,
+- wiederholte `· geplant`-Zusätze aus den einzelnen Planungszeilen entfernt,
+- Menütexte in `texte/registry.json` zentralisiert,
+- `app/navigation_ux.py` als eigene wiederverwendbare Menüschicht ergänzt und in Start-, Runtime- und Release-Pfad eingebunden,
+- gezielte GUI-Regressionen für Standardmenü, Auf-/Zuklappen, Laptopmodus, 175/200-%-Hochzoom, Rückkehr zur großen Ansicht und Accessibility ergänzt.
+
+### Fehlerbehebung / Schutz
+- erste CI-Läufe deckten zwei Qt-Synchronisationsrückfälle zwischen Planungsmenü und bestehendem Laptop-/Hochzoom-Layout auf,
+- die finale Lösung leitet Einschränkungen direkt aus der aktuellen Geometrieprüfung des Laptopmodus ab und ist damit unabhängig von der Reihenfolge einzelner Qt-Ereignisse,
+- keine Song-, Profil-, Todo- oder Kalenderdaten verändert,
+- keine Speicherformate, atomaren Schreiber, Backup- oder Restore-Fachlogik verändert,
+- keine neue externe Abhängigkeit eingeführt,
+- große Dashboard-Ansicht außerhalb der Menüstruktur bewusst nicht umgebaut.
+
+### Abnahme
+- korrigierter technischer Head `b129b47bb8123fc7ea49680f2fa921f457164c56` in GitHub-Grundprüfung **#540** vollständig erfolgreich,
+- **81 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich,
+- Headless-Start erfolgreich,
+- Vollprojekt-Restore `OK`, SHA-256 `42c67e08e419e890c29620ab8e6fef8afeb12a24b1e7006bfc972ab69d87eefc`,
+- der Versions-Sync auf 0.15.3 nimmt `app/navigation_ux.py` ausdrücklich in den Release-Bestand auf; erwarteter finaler Release-Bestand: **38 Betriebsdateien**,
+- der auf Version 0.15.3 synchronisierte finale PR-Head wird vor Merge erneut vollständig einschließlich Restore geprüft.
+
 ## 0.15.2 – 2026-09-10 – Release- und Bericht-I/O-Härtung
 
 ### Geändert
