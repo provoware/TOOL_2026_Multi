@@ -1,105 +1,254 @@
-# Anleitung für Laien
+# Provoware – einfache Anleitung
 
-## Starten
+## In 30 Sekunden starten
+
+1. Projektordner öffnen.
+2. `schnellstart.sh` starten.
+3. Die automatische Startprüfung abwarten.
+4. Im Dashboard mit **Songtexte**, **Todo-Liste** oder **Kalender** beginnen.
+
+Falls ein Doppelklick auf `schnellstart.sh` die Datei nur als Text öffnet: Rechtsklick → **Ausführen**. Alternativ im Projektordner ein Terminal öffnen und eingeben:
+
 ```bash
 bash schnellstart.sh
 ```
 
-Der Schnellstart richtet bei Bedarf die abgeschirmte Python-Umgebung ein, installiert die festgelegte PySide6-Version, prüft den Start und öffnet anschließend das Programm unter Prozesswache.
+Beim ersten Start können benötigte Programmteile eingerichtet werden. Danach öffnet sich das **Provoware-Datenbank-Dashboard 2026**.
 
-### Wenn Provoware schon läuft
-Pro Projektordner darf nur ein schreibendes Dashboard gleichzeitig laufen. Wird Provoware versehentlich ein zweites Mal gestartet, erscheint ein verständlicher Hinweis und der zweite Start wird beendet. Der bereits geöffnete Stand läuft unverändert weiter. Dadurch können zwei Prozesse nicht gegenseitig neuere Änderungen überschreiben.
+---
 
-### Einheitlicher Speicherschutz
-Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien verwenden denselben geschützten Schreibweg. Neue Daten werden zuerst vollständig in eine eindeutige temporäre Datei geschrieben und geprüft. Erst danach ersetzt das Programm den bisherigen Stand atomar. Ein Fehler vor diesem letzten Schritt lässt den vorherigen Bestand erhalten. Temporäre Reste werden entfernt.
+## Woran erkenne ich, was schon funktioniert?
 
-## Zoom und Schriftgröße
-Die Oberfläche kann ohne Einstellungsdialog vergrößert oder verkleinert werden:
-- `Strg` gedrückt halten und das **Mausrad nach oben** drehen: größer.
-- `Strg` gedrückt halten und das **Mausrad nach unten** drehen: kleiner.
-- unten in der Statusleiste stehen zusätzlich **A−** und **A+**.
-- `Strg+0` setzt wieder auf 100 % zurück.
+**Fertige Bereiche** sehen normal aus und können direkt benutzt werden.
 
-Verfügbare Stufen: **100 %, 125 %, 150 %, 175 % und 200 %**.
+**Noch nicht fertige Bereiche** sind mit **„In Planung“** markiert und gestrichelt dargestellt. Ein Klick zeigt nur einen Hinweis. Dabei wird **nichts gespeichert, gelöscht oder verändert**.
 
-Die Einstellung gilt gemeinsam für Dashboard, offene Songeditoren, Songbibliothek, Recovery, Profilverwaltung, Todo-Liste und Kalender. Dadurch gibt es nicht mehrere widersprüchliche Schriftgrößen.
+Aktuell direkt nutzbar sind vor allem:
 
-## Reale Kubuntu/X11-Endabnahme
-Für die echte Endprüfung auf dem Zielrechner gibt es einen eigenen Assistenten:
+- **Songtexte**
+- **Genres / Profile & Vorgaben**
+- **Todo-Liste**
+- **Kalender**
+- **Fehlerhilfe (Recovery)**
 
-```bash
-bash kubuntu_abnahme.sh
-```
+---
 
-Er prüft zuerst automatisch:
-- Linux,
-- eine echte X11-Sitzung,
-- KDE/Plasma,
-- den Prozesswächter mit einem echten `SIGTERM`-Signal.
+## Das Dashboard verstehen
 
-Der Signaltest läuft ausschließlich in einem temporären Ordner und verändert keine Song- oder Nutzerdaten.
+### Oben
 
-Danach öffnen Sie über den Assistenten das Dashboard und bestätigen drei sichtbare Punkte:
-1. Dark-Orange-Referenzlayout, linke Navigation, Schnellkacheln und 2×2-Hauptkarten sind korrekt sichtbar.
-2. Der Tastaturfokus ist beim Wechsel mit `Tab` deutlich sichtbar und logisch.
-3. Die Zoomstufen 100/125/150/175/200 % bleiben lesbar und schneiden die Hauptbedienung nicht ab.
+- **Songs durchsuchen …** durchsucht nur die Songbibliothek. Das Feld ist deshalb bewusst nicht mehr als allgemeine Suche beschriftet.
+- **Programm beenden** speichert zuerst offene Songtexte und beendet danach Provoware.
 
-Ein Bericht wird nur dann als **OK** markiert, wenn sowohl die automatischen Prüfungen als auch alle drei sichtbaren Punkte bestanden sind. Andernfalls steht ausdrücklich `NICHT_VOLLSTAENDIG` im Bericht.
+### Schnellkacheln
 
-Die Berichte liegen unter:
+Direkter Zugriff auf wichtige Bereiche. Noch nicht fertige Kacheln tragen sichtbar **„In Planung“**.
+
+### Linke Navigation
+
+Die Navigation ist nach einfachen Aufgaben gegliedert:
+
+- **Schreiben**
+- **Daten & Vorgaben**
+- **Funktionen**
+- **Dateien & Werkzeuge**
+- **Planung**
+- **Hilfe**
+
+Mit **☰** kann die linke Navigation schmal oder breit geschaltet werden.
+
+### Karte „So startest du“
+
+Für den schnellen Einstieg gibt es drei direkte Wege:
+
+1. **Songtexte öffnen**
+2. **Todo-Liste öffnen**
+3. **Kalender öffnen**
+
+### Projekt-Notiz
+
+Oben im Arbeitsbereich befindet sich **Projekt-Notiz**.
+
+- Text eingeben.
+- `Enter` drücken oder **Notiz speichern** anklicken.
+- Vorhandene Notizen bleiben erhalten.
+
+Die technische Datei dahinter heißt weiterhin `Entwicklerinformation.txt`, damit bestehende Daten kompatibel bleiben.
+
+---
+
+# Songtexte
+
+## Songbibliothek
+
+Über **Songtexte** öffnet sich die Songbibliothek.
+
+Oben kann gesucht werden nach:
+
+- Titel
+- Genre
+- Stimmung
+- Stil
+- Stimme
+- Tags
+
+Zusätzlich können Filter kombiniert werden.
+
+**Wichtig:** Suchen, Filtern, Sortieren und Gruppieren verändern keine Songdatei.
+
+### Einen Song öffnen
+
+1. Song in der Liste markieren.
+2. **Ausgewählten Song öffnen** anklicken oder doppelklicken.
+
+Ist nichts markiert, erscheint jetzt ein verständlicher Hinweis statt einer Aktion ohne sichtbare Reaktion.
+
+## Songtext schreiben
+
+Der Editor zeigt oben eine einfache Schrittfolge:
+
+1. Titel eintragen.
+2. Songbereich wählen oder hinzufügen.
+3. Text schreiben.
+
+Mögliche Bereiche sind zum Beispiel Strophe, Refrain, Intro, Bridge oder Outro.
+
+Rechts steht die **Gesamtvorschau**.
+
+## Speichern
+
+Änderungen werden automatisch gespeichert:
+
+- nach Änderungen an Eingabefeldern,
+- beim Verlassen größerer Textfelder,
+- alle 5 Minuten,
+- beim Schließen,
+- beim Beenden des Programms.
+
+Zusätzlich kann jederzeit **Jetzt speichern** oder `Strg+S` verwendet werden.
+
+Kann nicht gespeichert werden, bleibt der bisherige gespeicherte Stand geschützt und Provoware meldet verständlich, was passiert ist.
+
+## Songbereich entfernen
+
+Ein Bereich wird nicht mehr still entfernt.
+
+1. Bereich links auswählen.
+2. **Bereich entfernen** anklicken.
+3. Sicherheitsfrage bestätigen.
+
+Erst danach wird der Bereich aus dem aktuellen Arbeitsstand entfernt.
+
+## Ältere Version wiederherstellen
+
+1. Song in der Bibliothek markieren.
+2. **Ältere Version ansehen / wiederherstellen** öffnen.
+3. Alte Version auswählen.
+4. Vorschau prüfen.
+5. **Diese Version wiederherstellen** anklicken.
+6. Sicherheitsfrage bestätigen.
+
+Vor der Wiederherstellung wird der aktuelle Stand automatisch als neue Version gesichert.
+
+## Exportieren
+
+Über **Exportieren** können zusätzliche Dateien erzeugt werden:
+
+- TXT mit Angaben
+- Markdown
+- JSON
+- nur Songtext als TXT
+
+Der aktuelle Song wird durch einen Export nicht verändert.
+
+---
+
+# Profile & Vorgaben
+
+Ein **Profil** ist eine Sammlung passender Vorgaben.
+
+Beispiel: Im Profil **HardTechno** können eigene Werte für Genre, Stimmung, Stil, Stimme und Besonderheiten liegen.
+
+Öffnen über:
+
+**Navigation → Daten & Vorgaben**
+
+oder über die Genres-Kachel.
+
+Ablauf:
+
+1. Profil wählen.
+2. Bereich wählen.
+3. Vorhandene Werte ansehen.
+4. Neuen Wert eingeben und **Wert hinzufügen** anklicken.
+
+Beim Entfernen eines Wertes wird vorher nachgefragt.
+
+Eigene Profildaten werden gespeichert unter:
 
 ```text
-berichte/KUBUNTU_X11_ABNAHME_*.txt
-berichte/KUBUNTU_X11_ABNAHME_*.json
+daten/profile/db_profile.json
 ```
 
-Wenn beim Start gemeldet wird, dass keine X11-Sitzung aktiv ist, bei der Anmeldung **Plasma (X11)** wählen und die Prüfung erneut starten. Wayland wird nicht still als X11 akzeptiert.
+---
 
-## Das neue Dashboard
-Das Hauptfenster heißt **Provoware-Datenbank-Dashboard 2026**.
+# Aufgaben / Todo-Liste
 
-Die Oberfläche ist in fünf leicht erkennbare Bereiche gegliedert:
-1. oben der kompakte Kopfbereich mit Suche und Logout,
-2. darunter die Schnellkacheln,
-3. links die Navigation,
-4. in der Mitte vier große Arbeitskarten,
-5. unten die Statusleiste.
+Öffnen über:
 
-Die linke Navigation kann mit **☰** schmal und wieder breit geschaltet werden.
+**Navigation → Planung → Todo-Liste**
 
-Unter **Planung** finden Sie jetzt **Todo-Liste** und **Kalender**.
+## Aufgabe anlegen
 
-Noch nicht freigegebene Bereiche wie Hörspiele oder Reimfinder sind bereits sichtbar. Beim Anklicken erscheint nur ein Hinweis. Sie verändern keine Dateien.
+1. Aufgabe eingeben.
+2. Optional eine Notiz ergänzen.
+3. Optional **Termin hinzufügen** aktivieren.
+4. **Aufgabe anlegen** anklicken.
 
-## Kalender
+## Aufgabe erledigen
+
+1. Unter **Aktiv** eine Aufgabe markieren.
+2. **Als erledigt markieren → Archiv** anklicken.
+
+Die Aufgabe wird **nicht gelöscht**. Sie wird vollständig ins Archiv verschoben.
+
+Daten liegen unter:
+
+```text
+daten/todo/todo.json
+```
+
+---
+
+# Kalender & Termine
+
 Öffnen über:
 
 **Navigation → Planung → Kalender**
 
-Links sehen Sie einen Kalender zum Auswählen des Bezugsdatums und darunter die Eingabe für neue Termine. Rechts stehen vier Ansichten:
-- **Tag** – nur der gewählte Tag,
-- **Woche** – Montag bis zum folgenden Montag,
-- **Monat** – der vollständige gewählte Monat,
-- **Jahr** – das vollständige gewählte Jahr.
+Links kann ein Datum gewählt und ein neuer Termin angelegt werden. Rechts gibt es:
 
-Ein Termin über Mitternacht erscheint in allen Zeitbereichen, die er tatsächlich berührt.
+- **Tag**
+- **Woche**
+- **Monat**
+- **Jahr**
 
-### Termin anlegen
-1. Titel eingeben. Der Titel ist Pflicht.
-2. Optional eine Notiz eintragen.
-3. Beginn mit Datum und Uhrzeit wählen.
-4. Ende mit Datum und Uhrzeit wählen. Das Ende muss nach dem Beginn liegen.
-5. Optional eine Erinnerung wählen.
+## Termin anlegen
+
+1. Titel eingeben.
+2. Optional Notiz ergänzen.
+3. Beginn wählen.
+4. Ende wählen.
+5. Optional Erinnerung wählen.
 6. **Termin anlegen** anklicken.
 
-Zur Auswahl stehen:
-- keine Erinnerung,
-- zum Terminbeginn,
-- 5 Minuten vorher,
-- 15 Minuten vorher,
-- 30 Minuten vorher,
-- 1 Stunde vorher,
-- 1 Tag vorher.
+Das Ende muss nach dem Beginn liegen.
+
+## Erinnerungen
+
+Erinnerungen funktionieren, solange das **Hauptprogramm geöffnet** ist. Der Kalender selbst darf dabei geschlossen sein.
+
+Wenn Provoware komplett beendet wurde, läuft kein versteckter Hintergrunddienst.
 
 Kalenderdaten liegen unter:
 
@@ -107,225 +256,103 @@ Kalenderdaten liegen unter:
 daten/kalender/termine.json
 ```
 
-### Erinnerungen
-Solange das Provoware-Dashboard läuft, prüft es etwa alle 30 Sekunden auf fällige Erinnerungen. Das funktioniert auch, wenn das Kalenderfenster gerade geschlossen ist.
+---
 
-Nach dem Anzeigen wird die Erinnerung im Kalenderbestand als bereits angezeigt markiert. Dadurch erscheint derselbe Hinweis nicht immer wieder.
+# Fehlerhilfe (Recovery)
 
-Wichtig: Wenn das **gesamte Dashboard geschlossen** ist, läuft kein versteckter Linux-Hintergrunddienst. Erinnerungen bei vollständig geschlossenem Programm sind in dieser Version bewusst nicht enthalten.
-
-In dieser Iteration gibt es außerdem keine Terminlöschung. Dadurch wird kein destruktiver Weg eingeführt, der nicht verlangt wurde.
-
-## Profilbasierte DB-Eingaben
-In der Karte **DB-Eingaben** wählen Sie zuerst ein Profil, zum Beispiel:
-- HardTechno,
-- HipHop/Rap,
-- Hörspiele.
-
-Danach werden die passenden Werte für folgende Felder geladen:
-- Genres,
-- Stimmungen,
-- Stil,
-- Stimme,
-- Besonderheiten.
-
-Über **Bearbeiten …** oder die passenden Punkte in der linken Navigation öffnen Sie die Profilverwaltung. Dort können Sie eigene Profile und Werte ergänzen.
-
-Eigene Änderungen werden gespeichert unter:
-
-```text
-daten/profile/db_profile.json
-```
-
-Die eingebauten Startprofile erzeugen beim bloßen Programmstart noch keine Datei. Erst wenn Sie etwas ändern, wird gespeichert. Wenn eine vorhandene Profildatei widersprüchliche doppelte Werte enthält, wird sie nicht still verändert. Das Programm meldet den Fehler stattdessen.
-
-## Todo-Liste
 Öffnen über:
 
-**Navigation → Planung → Todo-Liste**
+**Navigation → Hilfe → Fehlerhilfe (Recovery)**
 
-### Aufgabe anlegen
-1. Titel eingeben. Der Titel ist Pflicht.
-2. Optional eine Notiz eintragen.
-3. Wenn ein Termin gewünscht ist, **Termin verwenden** aktivieren.
-4. Datum und Uhrzeit wählen.
-5. **Aufgabe anlegen** anklicken.
+Die Fehlerhilfe zeigt zuerst einfache Informationen:
 
-Aktive Aufgaben stehen in der Registerkarte **Aktiv**. Aufgaben mit Termin werden nach Termin einsortiert. Todo- und Kalenderzeiten verwenden einheitlich die lokale Rechnerzeit, ohne stille Umrechnung in eine andere Zeitzone.
+- **Was ist passiert?**
+- **Was wurde geschützt?**
+- **Was soll ich jetzt tun?**
+- **Wie oft ist das passiert?**
 
-### Aufgabe abhaken
-1. Eine aktive Aufgabe markieren.
-2. **Ausgewählte Aufgabe abhaken** anklicken.
-3. Die Aufgabe verschwindet aus **Aktiv** und erscheint vollständig unter **Archiv**.
+Technische Details bleiben zunächst ausgeblendet und können bei Bedarf geöffnet werden.
 
-Beim Abhaken wird die Aufgabe **nicht gelöscht**. Aktive Aufgaben und Archiv befinden sich gemeinsam in:
+Falls eine Meldung ausgewählt werden muss und nichts markiert ist, erscheint ein verständlicher Hinweis.
 
-```text
-daten/todo/todo.json
-```
+---
 
-Dadurch kann die Aufgabe nicht zwischen zwei getrennten Dateien verloren gehen. Die Datei wird über den gemeinsamen geschützten Schreibweg atomar ersetzt.
+# Anzeige vergrößern
 
-## Recovery
-Recovery befindet sich bewusst nur an einer Stelle:
+Die gesamte Oberfläche kann gemeinsam vergrößert oder verkleinert werden.
 
-**Navigation → Werkzeug → Recovery**
+- **A−** = kleiner
+- **A+** = größer
+- `Strg + Mausrad`
+- `Strg++`
+- `Strg+-`
+- `Strg+0` = zurück auf 100 %
 
-Dort können Ereignisse nach Schweregrad und Bereich gefiltert werden. Technische Angaben bleiben zunächst eingeklappt.
+Stufen:
 
-## Schnellinfo
-Im Dashboard gibt es das Feld **Entwicklerinfo**.
+**100 %, 125 %, 150 %, 175 %, 200 %**
 
-1. Kurze Information eingeben.
-2. `Enter` drücken oder **Speichern** anklicken.
-3. Die Information wird mit Zeitstempel an `Entwicklerinformation.txt` angehängt.
+---
 
-Vorhandene Einträge werden nicht überschrieben.
+# Tastatur
 
-## Zuletzt bearbeitete Songs
-Unter der Entwicklerinfo erscheinen bis zu fünf zuletzt bearbeitete Songs als kleine Schnellkacheln. Ein Klick öffnet den vorhandenen Song direkt im Songtexteditor.
+- `Tab` – zum nächsten bedienbaren Element
+- `Enter` – Eingabe bestätigen
+- `F5` – Liste / Fehlerhilfe aktualisieren
+- `Strg+S` – Song sofort speichern
+- `Strg+R` – Fehlerhilfe öffnen
+- `Strg+0` – Anzeige auf 100 %
+- `Escape` – untergeordnetes Fenster schließen
 
-Mit **Alle Songs** oder der Kachel **Songtexte** öffnen Sie die vollständige Songbibliothek.
+---
 
-## Songbibliothek
-Oben in der Songbibliothek können Sie frei suchen. Durchsucht werden:
-- Titel,
-- Genre,
-- Stimmung,
-- Stil,
-- Stimme,
-- Tags.
+# Wenn Provoware schon läuft
 
-Zusätzlich können Sie mehrere Filter gleichzeitig setzen:
-- Genre,
-- Stimmung,
-- Stil,
-- Stimme,
-- Tags,
-- Bearbeitungsstatus,
-- **nur Favoriten**.
+Pro Projektordner wird nur ein schreibendes Hauptfenster gleichzeitig zugelassen.
 
-**Filter zurücksetzen** stellt wieder alle Songs dar.
+Wird Provoware versehentlich zweimal gestartet, erscheint ein Hinweis. Das zweite Fenster wird nicht geöffnet. Das bereits laufende Fenster arbeitet normal weiter.
 
-### Sortieren und gruppieren
-Sortierung ist möglich nach:
-- zuletzt bearbeitet,
-- Titel,
-- Genre,
-- Tags,
-- Status.
+---
 
-Gruppierung ist möglich nach:
-- Genre,
-- Tags,
-- Status.
+# Wenn der Start fehlschlägt
 
-Suchen, Filtern, Sortieren und Gruppieren verändern keine Songdatei.
+Die Startanzeige zeigt sechs Schritte. Ein roter Schritt enthält eine einfache Fehlerbeschreibung.
 
-## Favoriten und Bearbeitungsstatus
-Im Songeditor gibt es:
-- **★ Favorit**,
-- **Bearbeitungsstatus** mit `Idee`, `Entwurf`, `Überarbeitung` oder `Fertig`.
+Typische Ursachen:
 
-Beides wird mit dem Song gespeichert und erscheint anschließend in der Bibliothek.
+- Python 3 fehlt.
+- Unter Ubuntu/Kubuntu fehlt `python3-venv`.
+- benötigte Programmteile konnten nicht eingerichtet werden.
+- eine Projektdatei fehlt oder ist beschädigt.
 
-## Songtexteditor
-Der Editor enthält:
-- Titel,
-- Genre,
-- Stimmung,
-- Stil,
-- Stimme,
-- Besonderheiten,
-- Tags,
-- Favorit und Bearbeitungsstatus,
-- Songbereiche wie Intro, Strophe, Refrain oder Bridge,
-- Vorschau,
-- Sonstiges.
+Vorhandene Nutzerdaten werden durch die reine Startprüfung nicht absichtlich verändert.
 
-Die Arbeitsdatei bleibt:
+---
 
-```text
-daten/songtexte/<Titel>.txt
-```
+# Technische Prüfung für Entwickler
 
-Alte Songdateien ohne Favorit oder Status können weiterhin geöffnet werden. Sie starten sicher als **Idee** und **nicht favorisiert**.
+Die vollständige automatische Prüfung lautet:
 
-## Automatisches Speichern und Versionsstände
-Gespeichert wird:
-- alle 5 Minuten,
-- beim Verlassen der Eingabefelder,
-- mit `Ctrl+S`,
-- beim Schließen des Editors,
-- vor Logout.
-
-Wenn sich der Inhalt geändert hat, wird der bisherige Stand vorher automatisch gesichert:
-
-```text
-daten/songtexte/.versionen/<Titel>/<Zeitstempel>.txt
-```
-
-Identisches Speichern erzeugt keinen neuen Versionsstand.
-
-## Alte Version sicher wiederherstellen
-1. In der Songbibliothek einen Song markieren.
-2. **Versionsstände / Wiederherstellen** öffnen.
-3. Einen alten Stand anklicken.
-4. Den Inhalt zuerst in der Vorschau prüfen.
-5. Erst dann **Diese Version wiederherstellen** anklicken.
-
-Vor der Wiederherstellung sichert das Programm den aktuellen Song automatisch noch einmal als neuen Versionsstand. Erst danach wird die gewählte alte Version eingesetzt.
-
-Eine Versionsdatei aus einem falschen Ordner wird abgewiesen.
-
-## Export
-Über **Export** im Songeditor stehen bereit:
-- TXT mit Metadaten,
-- Markdown,
-- JSON,
-- Nur Songtext als TXT.
-
-Exporte landen unter:
-
-```text
-daten/songtexte/export/
-```
-
-Die Arbeitsdatei wird beim Export nicht verändert.
-
-## Logout
-**Logout** speichert zuerst alle offenen Songeditoren. Wenn mindestens ein Song nicht gespeichert werden kann, bleibt das Programm geöffnet.
-
-## Tastatur
-- `Tab` – zum nächsten bedienbaren Element,
-- `Enter` – Eingabe bestätigen oder ausgewählten Eintrag öffnen,
-- `F5` – Bibliothek oder Recovery aktualisieren,
-- `Ctrl+S` – Song manuell speichern,
-- `Ctrl++` / `Ctrl+-` – Anzeige größer/kleiner,
-- `Ctrl+Mausrad` – Anzeige größer/kleiner,
-- `Ctrl+0` – zurück auf 100 Prozent,
-- `Ctrl+R` – Recovery öffnen,
-- `Escape` – untergeordnete Fenster schließen.
-
-## Vollprüfung
 ```bash
 bash scripts/pruefen.sh --full
 ```
 
-Die Vollprüfung prüft die bestehende Fachlogik, Recovery, Songbibliothek, Suche/Filter, Favoriten, Status, Versionswiederherstellung, Exporte, Profilverwaltung, Todo, Kalender und Erinnerungen, den gemeinsamen Produktions-Schreibweg, Mehrfachstart-Schutz, die echten PySide6-Oberflächenwege, Zoom/Schriftgrößensteuerung, die Struktur des Referenzdashboards und die automatisierbare Kubuntu-Abnahmelogik.
+Sie prüft unter anderem:
 
-## Bestehende Schutzfunktionen
-- gemeinsamer atomarer Schreibweg für Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien,
-- eindeutige temporäre Dateien statt kollisionsanfälliger fester `.tmp`-Namen,
-- Einzelinstanz-Schutz pro Projektordner,
-- automatische Versionssicherung vor geänderten Überschreibungen,
-- Sicherung des aktuellen Songs vor einer Wiederherstellung,
-- Pfadprüfung für Versionsstände,
-- einmalige Kalender-Erinnerungsmarkierung erst nach Anzeige,
-- Logrotation und Quarantäne,
-- Datenschutzbereinigung und Diagnosepaket,
-- Headless-Start,
-- Prozesswache,
-- echter SIGTERM-Wächtertest nur in Tempdaten,
-- ENOSPC-/EROFS-Simulation gegen den echten Produktionsschreiber ohne echten Datenträgerverbrauch,
-- vollständige ZIP-/SHA-/Restore-Prüfung.
+- Start und Syntax,
+- Daten- und Speicherlogik,
+- Songbibliothek und Songeditor,
+- Profile,
+- Todo und Kalender,
+- Fehlerhilfe,
+- Zoom und Tastaturwege,
+- Laienführung und sichtbare Statushinweise,
+- Kontraste wichtiger Texte,
+- Repository-Hygiene,
+- vollständige Wiederherstellung aus einem Projekt-ZIP.
+
+Die reale sichtbare Kubuntu/KDE-X11-Endabnahme bleibt zusätzlich möglich mit:
+
+```bash
+bash kubuntu_abnahme.sh
+```
