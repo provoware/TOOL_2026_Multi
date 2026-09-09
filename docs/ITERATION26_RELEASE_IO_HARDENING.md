@@ -51,8 +51,18 @@ Die automatische Prüfung deckt zusätzlich ab:
 
 Keine Nutzerdatenmigration. Keine Produktfunktion. Keine neue Abhängigkeit. Alle Änderungen sind Git-reversibel. Fehlerprüfungen arbeiten mit temporären Testbeständen.
 
-## Abnahme
+## Erste vollständige Abnahme
 
-Finale GitHub-Grundprüfung einschließlich vollständiger Tests, Release-Manifest-Prüfung, Headless-Start und Vollprojekt-Restore ist vor Merge verbindlich.
+GitHub-Grundprüfung **#503** war vollständig erfolgreich:
 
-**Status:** 🟡 Implementierung abgeschlossen; CI-/Restore-Gate ausstehend.
+- 81 Logik-/Regressionstests: `OK`,
+- 52 PySide6-GUI-Tests: `OK`,
+- Release-Manifest: 37 freigegebene Betriebsdateien,
+- Schreibfehlersimulation: `OK`,
+- Headless-Start: `OK`,
+- Vollprojekt-Restore: `OK`,
+- Restore-SHA-256: `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`.
+
+Dieser Lauf prüfte den technischen Patch vor Versions-/Evidence-Sync. Der nun auf **0.15.2** synchronisierte finale PR-Head muss dieselbe vollständige Grundprüfung und das Restore-Gate erneut bestehen.
+
+**Status:** 🟡 technischer Patch grün; finaler Evidence-Head noch zu prüfen.
