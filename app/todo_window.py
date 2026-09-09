@@ -25,22 +25,23 @@ class TodoWindow(QWidget):
         self.project_root = project_root
         self.zoom_percent = zoom_percent
         self.on_changed = on_changed
-        self.setWindowTitle("Todo-Liste")
+        self.setWindowTitle("Aufgaben · Todo-Liste")
         self.resize(900, 650)
         self.setMinimumSize(760, 520)
         self._build()
         self.set_zoom(zoom_percent)
         self.refresh()
+        self.title_entry.setFocus()
 
     def _build(self) -> None:
         outer = QVBoxLayout(self)
         outer.setContentsMargins(SPACING["m"], SPACING["m"], SPACING["m"], SPACING["m"])
         outer.setSpacing(SPACING["s"])
 
-        title = QLabel("Todo-Liste")
+        title = QLabel("Aufgaben (Todo-Liste)")
         title.setObjectName("sectionTitle")
         outer.addWidget(title)
-        hint = QLabel("Neue Aufgabe anlegen, optional terminieren und nach Erledigung sicher ins Archiv verschieben.")
+        hint = QLabel("1. Aufgabe eingeben  →  2. optional Termin einschalten  →  3. Aufgabe anlegen. Erledigte Aufgaben bleiben im Archiv erhalten.")
         hint.setObjectName("muted")
         hint.setWordWrap(True)
         outer.addWidget(hint)
@@ -50,14 +51,14 @@ class TodoWindow(QWidget):
         form = QFormLayout(form_frame)
         self.title_entry = QLineEdit()
         self.title_entry.setPlaceholderText("Was ist zu erledigen?")
-        form.addRow("Titel", self.title_entry)
+        form.addRow("Aufgabe", self.title_entry)
         self.note_entry = QTextEdit()
-        self.note_entry.setPlaceholderText("Optionale Notiz …")
+        self.note_entry.setPlaceholderText("Zusätzliche Notiz (optional) …")
         self.note_entry.setFixedHeight(75)
         form.addRow("Notiz", self.note_entry)
 
         due_row = QHBoxLayout()
-        self.use_due = QCheckBox("Termin verwenden")
+        self.use_due = QCheckBox("Termin hinzufügen")
         due_row.addWidget(self.use_due)
         self.due_edit = QDateTimeEdit(QDateTime.currentDateTime())
         self.due_edit.setCalendarPopup(True)
@@ -65,31 +66,33 @@ class TodoWindow(QWidget):
         self.due_edit.setEnabled(False)
         self.use_due.toggled.connect(self.due_edit.setEnabled)
         due_row.addWidget(self.due_edit, 1)
-        form.addRow("Termin", due_row)
+        form.addRow("Fällig am", due_row)
 
         add_row = QHBoxLayout()
         add_row.addStretch(1)
         add_button = QPushButton("Aufgabe anlegen")
+        add_button.setObjectName("primaryButton")
         add_button.clicked.connect(self.add_current_task)
         add_row.addWidget(add_button)
         form.addRow("", add_row)
         outer.addWidget(form_frame)
 
         self.tabs = QTabWidget()
-        self.active_table = self._make_table(["Titel", "Termin", "Notiz"])
-        self.archive_table = self._make_table(["Titel", "Termin", "Erledigt", "Notiz"])
+        self.active_table = self._make_table(["Aufgabe", "Termin", "Notiz"])
+        self.archive_table = self._make_table(["Aufgabe", "Termin", "Erledigt", "Notiz"])
         self.tabs.addTab(self.active_table, "Aktiv")
         self.tabs.addTab(self.archive_table, "Archiv")
         outer.addWidget(self.tabs, 1)
 
         buttons = QHBoxLayout()
-        self.status_label = QLabel("Bereit.")
+        self.status_label = QLabel("Bereit · Aufgabe eingeben oder eine aktive Aufgabe auswählen.")
         self.status_label.setObjectName("muted")
         buttons.addWidget(self.status_label, 1)
-        refresh = QPushButton("Aktualisieren")
+        refresh = QPushButton("Liste aktualisieren")
         refresh.clicked.connect(self.refresh)
         buttons.addWidget(refresh)
-        done = QPushButton("Ausgewählte Aufgabe abhaken")
+        done = QPushButton("Als erledigt markieren → Archiv")
+        done.setToolTip("Die Aufgabe wird nicht gelöscht, sondern vollständig ins Archiv verschoben.")
         done.clicked.connect(self.complete_selected)
         buttons.addWidget(done)
         outer.addLayout(buttons)
@@ -132,13 +135,16 @@ class TodoWindow(QWidget):
         try:
             add_task(self.project_root, self.title_entry.text(), self.note_entry.toPlainText(), due)
         except Exception as error:
-            QMessageBox.critical(self, "Aufgabe nicht gespeichert", str(error))
+            QMessageBox.critical(
+                self, "Aufgabe nicht gespeichert",
+                f"Es wurde keine unvollständige Aufgabe angelegt.\n\nGrund: {error}",
+            )
             return
         self.title_entry.clear()
         self.note_entry.clear()
         self.use_due.setChecked(False)
-        self.status_label.setText("Aufgabe gespeichert.")
         self.refresh()
+        self.status_label.setText("Aufgabe gespeichert · sie steht jetzt unter „Aktiv“.")
         if self.on_changed:
             self.on_changed()
         self.title_entry.setFocus()
@@ -172,7 +178,10 @@ class TodoWindow(QWidget):
             self._fill_active()
             self._fill_archive()
         except Exception as error:
-            QMessageBox.critical(self, "Todo-Daten nicht lesbar", str(error))
+            QMessageBox.critical(
+                self, "Aufgaben nicht lesbar",
+                f"Es wurden keine Daten verändert.\n\nGrund: {error}",
+            )
             return
         self.active_table.resizeColumnsToContents()
         self.archive_table.resizeColumnsToContents()
@@ -180,20 +189,23 @@ class TodoWindow(QWidget):
     def complete_selected(self) -> None:
         row = self.active_table.currentRow()
         if row < 0:
-            QMessageBox.information(self, "Keine Aufgabe gewählt", "Bitte zuerst eine aktive Aufgabe auswählen.")
+            QMessageBox.information(self, "Keine Aufgabe ausgewählt", "Bitte zuerst unter „Aktiv“ eine Aufgabe markieren.")
             return
         item = self.active_table.item(row, 0)
         task_id = item.data(Qt.UserRole) if item else None
         if not task_id:
-            QMessageBox.critical(self, "Aufgabe nicht gefunden", "Die ausgewählte Aufgabe besitzt keine gültige Kennung.")
+            QMessageBox.critical(self, "Aufgabe nicht gefunden", "Die ausgewählte Aufgabe kann nicht eindeutig zugeordnet werden. Es wurde nichts verändert.")
             return
         try:
             complete_task(self.project_root, str(task_id))
         except Exception as error:
-            QMessageBox.critical(self, "Abhaken fehlgeschlagen", str(error))
+            QMessageBox.critical(
+                self, "Aufgabe nicht verschoben",
+                f"Die Aufgabe bleibt unter „Aktiv“.\n\nGrund: {error}",
+            )
             return
-        self.status_label.setText("Aufgabe erledigt und ins Archiv verschoben.")
         self.refresh()
+        self.status_label.setText("Aufgabe erledigt · vollständig ins Archiv verschoben, nicht gelöscht.")
         if self.on_changed:
             self.on_changed()
 
