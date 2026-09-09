@@ -132,6 +132,31 @@ Stand: 2026-09-10
 - 🟢 PR #31 per SHA-geschütztem Squash-Merge in `main` übernommen.
 - 🟢 resultierender Main-Commit: `00513bbaaee124da1e04a963aa70ce9e4757108e`.
 
+## Iteration 27 – Menü-Übersicht und Laiennavigation
+
+**Hauptziel:** Fertige Wege in der linken Navigation zuerst sichtbar machen und geplante Bereiche platzsparend bündeln, ohne Fachlogik oder Nutzerdaten zu verändern.
+
+### Umsetzung
+
+- 🟢 fertige Hauptwege unter **Direkt nutzbar** priorisiert: Songtexte, Genres & Vorgaben, Todo-Liste, Kalender, Fehlerhilfe.
+- 🟢 redundanten sichtbaren Punkt `Alle Bereiche · geplant` aus der Nutzeransicht entfernt.
+- 🟢 zehn geplante Bereiche unter **Noch nicht fertig** zusammengeführt und standardmäßig eingeklappt.
+- 🟢 ein einziger Schalter blendet geplante Bereiche ein oder aus; bei geöffneter Planung werden sie in Kreativ & Inhalte, Dateien & Werkzeuge und Projekte gruppiert.
+- 🟢 unnötige wiederholte `· geplant`-Texte in den Einzelzeilen entfernt.
+- 🟢 Laptop-Kompaktmodus und 175/200-%-Hochzoom blenden die optionale Planung automatisch aus.
+- 🟢 Menütexte in der zentralen Textregistrierung gepflegt; bestehende Aktionen werden wiederverwendet.
+- 🟢 gezielte GUI-Regressionen für Standardansicht, Auf-/Zuklappen, Laptopmodus, Hochzoom, Rückkehr zur großen Ansicht und Accessibility ergänzt.
+- 🟢 zwei während der CI aufgedeckte Qt-Synchronisationsrückfälle ursächlich behoben; Sichtbarkeit wird jetzt aus der aktuellen Geometrie statt aus einem veralteten Zwischenzustand abgeleitet.
+
+### Abnahme
+
+- 🟢 korrigierter technischer Head `b129b47bb8123fc7ea49680f2fa921f457164c56` in Grundprüfung **#540** vollständig erfolgreich.
+- 🟢 **81 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich.
+- 🟢 Headless-Start erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, SHA-256 `42c67e08e419e890c29620ab8e6fef8afeb12a24b1e7006bfc972ab69d87eefc`.
+- 🟢 `app/navigation_ux.py` wird beim Versions-Sync ausdrücklich als Release-Betriebsdatei aufgenommen; erwarteter finaler Release-Bestand: **38 Dateien**.
+- 🟡 Version 0.15.3, Doku, MANIFEST, TODO und CHANGELOG sind synchronisiert; der finale PR-Head muss vor Merge denselben vollständigen Prüf- und Restore-Block erneut bestehen.
+
 ## Danach
 
 1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und das Theme `Kontrast`.
