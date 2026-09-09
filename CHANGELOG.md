@@ -1,5 +1,19 @@
 # Änderungsverlauf
 
+## 0.13.4 – 2026-09-09 – Repository-Hygiene
+
+### Geändert
+- unreferenziertes Root-Artefakt `ChatGPT Image 8. Sept. 2026, 02_16_14.png` mit 2.056.107 Bytes aus dem Iterationsbranch entfernt,
+- `.gitignore` um typische unsortierte ChatGPT-/Screenshot-Bildexporte ausschließlich im Repository-Root ergänzt,
+- neuen Regressionstest `tests/test_repo_hygiene.py` ergänzt,
+- Vollprüfung um automatische Kontrolle auf versionierte Laufzeit-/Temp-Artefakte, lokale Root-Screenshots und übergroße Root-Dateien erweitert.
+
+### Schutz / Abnahme
+- keine Anwendungs-, Speicher-, Backup-, Restore- oder UI-Fachlogik verändert,
+- keine Nutzerdaten verändert oder gelöscht,
+- reguläre Projektbilder in passenden Unterordnern bleiben weiterhin versionierbar,
+- GitHub-Grundprüfung und Restore-Gate für den Iterationsbranch stehen vor dem Merge noch aus.
+
 ## 0.13.3 – 2026-09-09 – Backup-/Restore-I/O-Konsistenz
 
 ### Geändert
@@ -65,7 +79,7 @@
 
 ### Schutz
 - Beginn und Ende verwenden lokale Rechnerzeit ohne erfundene Zeitzonenumrechnung,
-- Ende muss nach Beginn liegen; ungültige Termine werden vor dem Schreiben abgewiesen,
+- Ende muss nach dem Beginn liegen; ungültige Termine werden vor dem Schreiben abgewiesen,
 - Kalenderdaten werden atomar unter `daten/kalender/termine.json` gespeichert,
 - ein simulierter Fehler beim atomaren Ersetzen erhält den vorherigen Bestand,
 - eine Erinnerung wird erst nach erfolgreicher Anzeige atomar als erinnert markiert,
