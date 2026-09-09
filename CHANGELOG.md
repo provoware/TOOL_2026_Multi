@@ -1,5 +1,30 @@
 # Änderungsverlauf
 
+## 0.14.0 – 2026-09-09 – Laien-UX-Konsistenz
+
+### Geändert
+- gesamtes produktives Projekt aus Sicht eines Nutzers ohne technisches Vorwissen auf Einstieg, Sprache, Navigation, Rückmeldung, Fehlermeldungen und Sackgassen geprüft,
+- Dashboard-Suche wahrheitsgemäß als Song-Suche bezeichnet und `Logout` durch `Programm beenden` ersetzt,
+- technische Oberflächenbezeichnung `Entwicklerinfo` zu `Projekt-Notiz` vereinfacht, ohne das bestehende Speicherformat zu ändern,
+- geplante Bereiche sichtbar mit `In Planung` und gestricheltem Zustand von fertigen Bereichen getrennt,
+- echte Startwege zu Songtexte, Todo-Liste und Kalender in der Dashboard-Startkarte ergänzt,
+- Erstnutzer-Sackgasse in der leeren Songbibliothek durch `＋ Neuen Song schreiben` geschlossen,
+- Songbibliothek gegen stille Nicht-Reaktionen bei fehlender Auswahl gehärtet und Datumsanzeige auf deutsches Format umgestellt,
+- Songeditor mit Drei-Schritt-Führung, verständlicher Speicheranzeige und Sicherheitsfrage vor dem Entfernen eines Songbereichs ergänzt,
+- Wiederherstellung älterer Songversionen zusätzlich nach Vorschau bestätigungspflichtig gemacht; automatische Sicherung des aktuellen Stands bleibt bestehen,
+- Todo, Kalender und Profilverwaltung mit eindeutiger Schrittfolge und nächstem sinnvollen Schritt vereinheitlicht,
+- Recovery als `Fehlerhilfe (Recovery)` auf einfache Nutzerfragen ausgerichtet; technische Details bleiben standardmäßig verborgen,
+- Schnellstart und grafische Startanzeige auf sechs verständliche Prüfschritte umgestellt,
+- `ANLEITUNG_LAIEN.md` auf schnellen Einstieg und konkrete Arbeitsabläufe neu strukturiert,
+- README auf den aktuellen Stand 0.14.0 synchronisiert und von doppelter Versionshistorie befreit.
+
+### Prüfung / Schutz
+- neuer Regressionstest `tests/test_layman_ux_gui.py` prüft wahrheitsgemäße Beschriftungen, sichtbare Planungszustände, Erstnutzer-Songstart, Nicht-Silent-Fail-Verhalten und Sicherheitsbestätigungen,
+- Kernkontraste für normalen Text, Hinweistext und Akzent gegen den Hintergrund werden automatisiert auf mindestens 4,5:1 geprüft,
+- Laien-UX-Test ist in `bash scripts/pruefen.sh --full` integriert,
+- keine Datenmigration, keine Änderung der Song-/Todo-/Kalender-/Profilformate und keine Änderung der atomaren Speicher- oder Restore-Fachlogik,
+- finale GitHub-Grundprüfung und Restore-Gate stehen für den vollständigen Iteration-21-Branch noch aus.
+
 ## 0.13.4 – 2026-09-09 – Repository-Hygiene
 
 ### Geändert
@@ -181,7 +206,7 @@
 ## 0.9.1 – 2026-09-08 – CI-Wartung
 
 ### Geändert
-- GitHub Actions Checkout von `actions/checkout@v4` auf `actions/checkout@v7.0.1` aktualisiert.
+- GitHub Actions Checkout von `actions/checkout@v4` auf **`v7.0.1`** aktualisiert.
 
 ### Schutz
 - keine fachliche Funktion, Songdatei oder Laufzeitlogik verändert,
