@@ -86,6 +86,15 @@ class LaymanUxGuiTests(unittest.TestCase):
         self.assertEqual(len(planned), 5)
         self.assertTrue(all("In Planung" in button.text() for button in planned))
 
+    def test_empty_song_library_has_visible_new_song_entry(self):
+        self.dashboard.open_song_library()
+        self.app.processEvents()
+        library = self.dashboard._song_library
+        self.assertIsNotNone(library)
+        buttons = library.findChildren(QPushButton)
+        self.assertTrue(any("Neuen Song schreiben" in button.text() for button in buttons))
+        self.assertIn("Neuen Song schreiben", library.status_label.text())
+
     def test_subwindows_explain_the_next_step(self):
         todo = TodoWindow(self.root)
         calendar = CalendarWindow(self.root)
