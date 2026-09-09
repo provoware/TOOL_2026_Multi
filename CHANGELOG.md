@@ -3,16 +3,20 @@
 ## 0.13.4 – 2026-09-09 – Repository-Hygiene
 
 ### Geändert
-- unreferenziertes Root-Artefakt `ChatGPT Image 8. Sept. 2026, 02_16_14.png` mit 2.056.107 Bytes aus dem Iterationsbranch entfernt,
+- unreferenziertes Root-Artefakt `ChatGPT Image 8. Sept. 2026, 02_16_14.png` mit 2.056.107 Bytes aus dem Repository entfernt,
 - `.gitignore` um typische unsortierte ChatGPT-/Screenshot-Bildexporte ausschließlich im Repository-Root ergänzt,
 - neuen Regressionstest `tests/test_repo_hygiene.py` ergänzt,
-- Vollprüfung um automatische Kontrolle auf versionierte Laufzeit-/Temp-Artefakte, lokale Root-Screenshots und übergroße Root-Dateien erweitert.
+- Vollprüfung um automatische Kontrolle auf versionierte Laufzeit-/Temp-Artefakte, lokale Root-Screenshots und übergroße Root-Dateien erweitert,
+- veralteten, nicht mergebaren PR #2 als überholt geschlossen.
 
 ### Schutz / Abnahme
 - keine Anwendungs-, Speicher-, Backup-, Restore- oder UI-Fachlogik verändert,
 - keine Nutzerdaten verändert oder gelöscht,
 - reguläre Projektbilder in passenden Unterordnern bleiben weiterhin versionierbar,
-- GitHub-Grundprüfung und Restore-Gate für den Iterationsbranch stehen vor dem Merge noch aus.
+- Grundprüfung #335 zeigte einen Restore-spezifischen Rückfall: der Git-Hygienetest erwartete im entpackten Restore irrtümlich `.git`,
+- der Test wurde auf seinen tatsächlichen Geltungsbereich begrenzt; das Restore-Gate selbst blieb unverändert aktiv,
+- Grundprüfung #337 war anschließend vollständig erfolgreich, einschließlich Vollprüfung und Restore-Gate,
+- geprüfter Head `caefca0d51b158ac9a3c8cfedc6fb18e0899a580` wurde als PR #21 per Squash-Merge übernommen; resultierender Main-Commit `aa66dc5ed106e470a533c4dd9f65cf80b726b05c`.
 
 ## 0.13.3 – 2026-09-09 – Backup-/Restore-I/O-Konsistenz
 

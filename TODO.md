@@ -95,15 +95,17 @@ Stand: 2026-09-09
 
 ## Iteration 20 – Repository-Hygiene
 
-- 🟡 gesamten versionierten `main`-Baum auf typische Laufzeit-, Sicherungs-, Temp- und lokale Artefakte geprüft; keine solchen Bestände gefunden.
-- 🟡 unreferenziertes Root-Bild `ChatGPT Image 8. Sept. 2026, 02_16_14.png` (2.056.107 Bytes) im Iterationsbranch entfernt.
-- 🟡 `.gitignore` um typische unsortierte lokale Bildexporte im Repository-Root ergänzt, ohne reguläre Projektbilder global zu sperren.
-- 🟡 `tests/test_repo_hygiene.py` ergänzt und in `scripts/pruefen.sh --full` eingebunden.
-- 🟡 alter PR #2 als überholter, nicht mergebarer Projektstand zur Schließung vorgesehen; kein alter Code wird übernommen.
-- 🟡 GitHub-Grundprüfung inklusive Vollprüfung und Restore-Gate für den Iterationsbranch steht noch aus.
+- 🟢 gesamten versionierten `main`-Baum auf typische Laufzeit-, Sicherungs-, Temp- und lokale Artefakte geprüft; außer dem unten genannten Root-Bild keine solchen Bestände gefunden.
+- 🟢 unreferenziertes Root-Bild `ChatGPT Image 8. Sept. 2026, 02_16_14.png` (2.056.107 Bytes) entfernt.
+- 🟢 `.gitignore` um typische unsortierte lokale Bildexporte im Repository-Root ergänzt, ohne reguläre Projektbilder global zu sperren.
+- 🟢 `tests/test_repo_hygiene.py` ergänzt und in `scripts/pruefen.sh --full` eingebunden.
+- 🟢 Restore-Rückfall des neuen Tests ursächlich behoben: ohne `.git` wird nur dieser Git-spezifische Hygiene-Test übersprungen; das Restore-Gate selbst bleibt vollständig aktiv.
+- 🟢 Grundprüfung Run #337 inklusive Vollprüfung und Restore-Gate erfolgreich.
+- 🟢 veralteten, nicht mergebaren PR #2 als überholt geschlossen; kein alter Code übernommen.
+- 🟢 PR #21 per Squash-Merge in `main` übernommen (`aa66dc5ed106e470a533c4dd9f65cf80b726b05c`).
 
 ## Nächste Freigabepunkte
 
-1. 🟡 Iteration 20 nur nach grüner Grundprüfung + Restore-Gate abschließen und mergen.
-2. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
-3. 🔴 danach verbleibende direkte Berichtsschreiber auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
+1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
+2. 🔴 danach verbleibende direkte Berichtsschreiber auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
+3. 🔴 README-/Manifest-Stand in einer eigenen reinen Dokumentationsiteration synchronisieren; README weist noch den älteren Stand 0.13.1 aus.
