@@ -4,9 +4,14 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from app.atomic_io import atomic_write_text
 
 STEPS = [
     "Grundlage prüfen",
@@ -46,10 +51,7 @@ def read_state(path: Path) -> dict:
 
 
 def write_state(path: Path, state: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
-    os.replace(temporary, path)
+    atomic_write_text(path, json.dumps(state, ensure_ascii=False, indent=2))
 
 
 def set_step(path: Path, step_number: int, status: str, message: str) -> None:
