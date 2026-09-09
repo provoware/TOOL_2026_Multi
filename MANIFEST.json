@@ -10,7 +10,7 @@
   "iteration": {
     "number": 26,
     "goal": "Verbleibende nicht-append Schreibwege und Release-Publikation auf zentralen atomaren I/O-Vertrag vereinheitlichen",
-    "completed": 11,
+    "completed": 12,
     "open_next": 1
   },
   "runtime": {
@@ -129,10 +129,17 @@
     "iteration26_initial_restore_status": "OK",
     "iteration26_initial_restore_sha256": "c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806",
     "iteration26_initial_tested_head_sha": "0fc3690ac9a034255dfaaf8eb462119e6fd6b97a",
-    "iteration26_final_ci_run": null,
-    "iteration26_final_ci_result": "pending",
-    "iteration26_final_restore_gate": false,
-    "iteration26_final_tested_head_sha": null
+    "iteration26_final_ci_run": 513,
+    "iteration26_final_ci_result": "success",
+    "iteration26_final_logic_tests": 81,
+    "iteration26_final_gui_tests": 52,
+    "iteration26_final_release_files": 37,
+    "iteration26_final_restore_gate": true,
+    "iteration26_final_restore_status": "OK",
+    "iteration26_final_restore_sha256": "560b9d9ca46ec3e0964f03b385941782e18e892d734c1b5e208dd69c6d4b5bf3",
+    "iteration26_final_tested_head_sha": "d386f9e848237ff400fc60c518f73645b6516cee",
+    "iteration26_final_head_gate": "success",
+    "iteration26_merged_main_sha": "00513bbaaee124da1e04a963aa70ce9e4757108e"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",

@@ -19,13 +19,14 @@
 - vorhandene Backup-/Restore-Fachlogik bleibt unverändert; der bereits gehärtete Restore-ZIP-Pfad wird nicht unnötig refaktoriert,
 - keine neue Produktfunktion und keine neue externe Abhängigkeit.
 
-### Erste Abnahme
-- GitHub-Grundprüfung **#503** vollständig erfolgreich,
+### Abnahme
+- technische Grundprüfung **#503** vollständig erfolgreich; Restore-SHA-256 `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`,
+- finaler Version-/Evidence-Head `d386f9e848237ff400fc60c518f73645b6516cee` in Grundprüfung **#513** erneut vollständig erfolgreich,
 - **81 Logik-/Regressionstests** und **52 PySide6-GUI-Tests** erfolgreich,
 - Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich,
 - Headless-Start erfolgreich,
-- Vollprojekt-Restore `OK`, SHA-256 `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`,
-- der auf Version 0.15.2 synchronisierte finale PR-Head wird vor Merge nochmals vollständig geprüft.
+- Vollprojekt-Restore `OK`, finale SHA-256 `560b9d9ca46ec3e0964f03b385941782e18e892d734c1b5e208dd69c6d4b5bf3`,
+- PR #31 anschließend per SHA-geschütztem Squash-Merge übernommen; resultierender Main-Commit `00513bbaaee124da1e04a963aa70ce9e4757108e`.
 
 ## 0.15.1 – 2026-09-09 – Laptop-Kompaktlayout
 

@@ -239,7 +239,7 @@ Sie prüft unter anderem:
 - Release-/Diagnose-Publish-Fehler und Temp-Cleanup
 - Repository-Hygiene
 
-Der technische Iteration-26-Stand bestand **Grundprüfung #503** mit 81 Logik-/Regressionstests, 52 PySide6-GUI-Tests, 37 Release-Betriebsdateien, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Restore-SHA-256: `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`. Der jeweils verbindliche finale Gate- und Merge-Stand steht maschinenlesbar in `MANIFEST.json` und ausführlich in `docs/ITERATION26_RELEASE_IO_HARDENING.md`.
+Iteration 26 wurde zweistufig vollständig abgenommen. Die technische Nullrunde **#503** war grün; der anschließend auf Version 0.15.2 synchronisierte finale Head `d386f9e848237ff400fc60c518f73645b6516cee` bestand die vollständige **Grundprüfung #513** erneut mit **81 Logik-/Regressionstests**, **52 PySide6-GUI-Tests**, **37 Release-Betriebsdateien**, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Finale Restore-SHA-256: `560b9d9ca46ec3e0964f03b385941782e18e892d734c1b5e208dd69c6d4b5bf3`. PR #31 wurde danach SHA-geschützt per Squash-Merge übernommen; Main-Commit: `00513bbaaee124da1e04a963aa70ce9e4757108e`.
 
 Vollständiges Restore-Gate:
 
