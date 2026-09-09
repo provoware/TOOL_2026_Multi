@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.0",
+  "text_version": "0.2.1",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -18,6 +18,18 @@
     "dashboard.help": "Die letzten fünf Ereignisse zeigen verständlich, was das Programm getan hat. Details stehen unter Debug/Log.",
     "dashboard.open_log": "Debug/Log öffnen",
     "dashboard.empty": "Noch keine Ereignisse vorhanden.",
-    "log.title": "Debug/Log – Ereignisdetails"
+    "log.title": "Debug/Log – Ereignisdetails",
+    "navigation.title": "Menü",
+    "navigation.toggle": "Menü ein- oder ausklappen",
+    "navigation.ready": "Direkt nutzbar",
+    "navigation.ready.profile": "Genres & Vorgaben",
+    "navigation.planned": "Noch nicht fertig",
+    "navigation.planned.hint": "{count} vorbereitete Bereiche – nur bei Bedarf anzeigen.",
+    "navigation.planned.show": "▸  Geplante Bereiche anzeigen ({count})",
+    "navigation.planned.hide": "▾  Geplante Bereiche ausblenden ({count})",
+    "navigation.planned.tooltip": "Blendet vorbereitete, aber noch nicht nutzbare Bereiche ein oder aus.",
+    "navigation.planned.group.creative": "Kreativ & Inhalte",
+    "navigation.planned.group.files": "Dateien & Werkzeuge",
+    "navigation.planned.group.projects": "Projekte"
   }
 }
