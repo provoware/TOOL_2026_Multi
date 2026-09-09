@@ -321,7 +321,7 @@ class NavigationUxController(QObject):
     def eventFilter(self, watched: QObject, event: QEvent) -> bool:
         if event.type() in {
             QEvent.Type.Show, QEvent.Type.Resize, QEvent.Type.LayoutRequest,
-            QEvent.Type.StyleChange, QEvent.Type.FontChange,
+            QEvent.Type.StyleChange, QEvent.Type.FontChange, QEvent.Type.DynamicPropertyChange,
         }:
             self._schedule_sync()
         return False
