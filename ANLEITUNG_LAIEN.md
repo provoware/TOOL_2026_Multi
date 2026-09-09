@@ -83,6 +83,14 @@ Die technische Datei dahinter heißt weiterhin `Entwicklerinformation.txt`, dami
 
 Über **Songtexte** öffnet sich die Songbibliothek.
 
+### Neuen Song anfangen
+
+Auch bei einer komplett leeren Bibliothek gibt es oben den sichtbaren Knopf:
+
+**＋ Neuen Song schreiben**
+
+Dieser öffnet einen leeren Songtexteditor. Vorhandene Songs werden dadurch nicht verändert.
+
 Oben kann gesucht werden nach:
 
 - Titel
@@ -96,7 +104,7 @@ Zusätzlich können Filter kombiniert werden.
 
 **Wichtig:** Suchen, Filtern, Sortieren und Gruppieren verändern keine Songdatei.
 
-### Einen Song öffnen
+### Einen vorhandenen Song öffnen
 
 1. Song in der Liste markieren.
 2. **Ausgewählten Song öffnen** anklicken oder doppelklicken.
