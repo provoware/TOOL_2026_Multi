@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication, QPushButton
+from PySide6.QtWidgets import QApplication, QHeaderView, QPushButton
 
 from app.calendar_window import CalendarWindow
 from app.profile_editor import ProfileEditor
@@ -16,7 +16,7 @@ from app.song_editor import SongEditor
 from app.song_library import SongLibrary
 from app.todo_window import TodoWindow
 from app.ui import Dashboard
-from app.ui_standards import COLORS
+from app.ui_standards import COLORS, UI_FONT_FAMILY
 
 
 class FakeTexts:
@@ -146,7 +146,32 @@ class LaymanUxGuiTests(unittest.TestCase):
             editor._closing_after_save = True
             editor.close()
 
-    def test_core_text_contrasts_meet_wcag_normal_text_minimum(self):
+    def test_responsive_dashboard_changes_space_distribution(self):
+        self.dashboard.resize(1020, 700)
+        self.app.processEvents()
+        compact_sidebar = self.dashboard.sidebar.width()
+        compact_search = self.dashboard.search_entry.width()
+
+        self.dashboard.resize(1500, 850)
+        self.app.processEvents()
+        self.assertGreater(self.dashboard.sidebar.width(), compact_sidebar)
+        self.assertGreater(self.dashboard.search_entry.width(), compact_search)
+
+    def test_song_library_columns_use_available_width(self):
+        library = SongLibrary(self.root, 100, lambda _path: None)
+        library.resize(1180, 720)
+        library.show()
+        self.app.processEvents()
+        try:
+            header = library.table.header()
+            self.assertEqual(header.sectionResizeMode(0), QHeaderView.Stretch)
+            self.assertEqual(header.sectionResizeMode(5), QHeaderView.Stretch)
+            self.assertEqual(header.sectionResizeMode(7), QHeaderView.ResizeToContents)
+        finally:
+            library.close()
+
+    def test_modern_font_and_core_contrasts(self):
+        self.assertEqual(self.dashboard.font().family(), UI_FONT_FAMILY)
         self.assertGreaterEqual(_contrast(COLORS["text"], COLORS["background"]), 4.5)
         self.assertGreaterEqual(_contrast(COLORS["muted"], COLORS["background"]), 4.5)
         self.assertGreaterEqual(_contrast(COLORS["accent"], COLORS["background"]), 4.5)
