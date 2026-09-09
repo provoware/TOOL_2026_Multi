@@ -1,5 +1,27 @@
 # Änderungsverlauf
 
+## 0.14.1 – 2026-09-09 – Responsive Design und visuelle Härtung
+
+### Geändert
+- reales Dashboard, Songbibliothek und Songeditor anhand der Kubuntu-Screenshots auf Schriftwirkung, Breiten, Abstände, Kontraste und Platznutzung geprüft,
+- zentrale Dark-Palette ruhiger aufgebaut und Amber von flächendeckenden Rahmen auf gezielte Akzente, Primäraktionen und Status reduziert,
+- systemweite Sans-Serif-Schrift ohne zusätzliche Font-Abhängigkeit festgelegt,
+- Schrift-Hierarchie, Innenabstände, Rundungen, Eingabehöhen, Fokusrahmen, Tabs, Scrollleisten und Splitter vereinheitlicht,
+- aktive Navigation auf dunkle Auswahlfläche mit linker Akzentlinie umgestellt,
+- responsive Breitenstufen für kompakte, normale und breite Fenster eingeführt,
+- Sidebar, Dashboard-Suche, Profilfelder und Songbereichsliste passen sich abhängig von der Fensterbreite an,
+- Songeditor-Splitter verteilt Arbeitsbereich und Gesamtvorschau dynamisch,
+- Songbibliothek verteilt Tabellenbreite gezielt auf Titel und Tags und hält kurze Spalten inhaltsbezogen,
+- drei GUI-Rückfälle aus Grundprüfung #368 korrigiert: Suchplatzhalter-Erwartung, alte Recovery-Beschriftung und zu starre Kartenbreitenannahme,
+- Responsive-Regressionen für Dashboardbreiten und Tabellen-Spaltenmodi ergänzt.
+
+### Schutz / Abnahme
+- keine Datenmigration und keine Änderung an Song-, Todo-, Kalender- oder Profildaten,
+- atomarer Schreibweg, Backup- und Restore-Fachlogik bleiben unverändert,
+- keine externe Schriftart und keine neue Abhängigkeit eingeführt,
+- Grundprüfung #368 hatte bereits 75 Logiktests erfolgreich abgeschlossen; das Restore-Gate wurde nur wegen der drei GUI-Rückfälle übersprungen,
+- finale Vollprüfung und Vollprojekt-Restore stehen für Iteration 22 noch aus.
+
 ## 0.14.0 – 2026-09-09 – Laien-UX-Konsistenz
 
 ### Geändert
@@ -23,7 +45,7 @@
 - Kernkontraste für normalen Text, Hinweistext und Akzent gegen den Hintergrund werden automatisiert auf mindestens 4,5:1 geprüft,
 - Laien-UX-Test ist in `bash scripts/pruefen.sh --full` integriert,
 - keine Datenmigration, keine Änderung der Song-/Todo-/Kalender-/Profilformate und keine Änderung der atomaren Speicher- oder Restore-Fachlogik,
-- finale GitHub-Grundprüfung und Restore-Gate stehen für den vollständigen Iteration-21-Branch noch aus.
+- PR #23 wurde als Merge-Commit `47a6124061268843d05d98ddadcb90066cc0d851` in `main` übernommen; die anschließend ausgewertete Grundprüfung #368 zeigte drei GUI-Test-Rückfälle, die in 0.14.1 korrigiert werden.
 
 ## 0.13.4 – 2026-09-09 – Repository-Hygiene
 
@@ -191,9 +213,8 @@
 - Dashboardtitel auf `Provoware-Datenbank-Dashboard 2026` gesetzt,
 - Dashboard nach dem bereitgestellten Dark-Orange-Referenzentwurf neu strukturiert: kompakter Header, Schnellkachelleiste, einklappbare linke Navigation, schmale „Zuletzt bearbeitet“-Zeile, 2×2-Hauptkarten und Statusleiste,
 - zentrale Qt/QSS-Standards für Farben, Abstände, Schriftgrößen, Fokus und Zoom eingeführt,
-- Songeditor, Songbibliothek, Recovery-Zentrale und grafische Startanzeige auf PySide6 umgestellt,
-- Recovery aus der Dashboard-Hauptfläche entfernt und als einzelner Navigationspunkt `Werkzeug → Recovery` geführt,
-- GitHub-CI auf Qt-Offscreen-Prüfung und die für PySide6 benötigte `libegl1`-Systembibliothek umgestellt.
+- Songeditor, Songbibliothek, Recovery-Zentrale und Startanzeige ebenfalls auf PySide6 migriert,
+- Recovery aus der Startfläche entfernt und **genau einmal** als linker Navigationspunkt geführt.
 
 ### Schutz
 - bestehendes Song-Textformat und alle Nutzerdatenpfade bleiben unverändert,
