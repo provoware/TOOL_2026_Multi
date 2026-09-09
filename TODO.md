@@ -85,7 +85,16 @@ Stand: 2026-09-09
 - 🟢 Regression für eindeutige Dateinamen und Replace-Fehler ergänzt.
 - 🟢 GitHub-Grundprüfung inklusive `scripts/pruefen.sh --full` und Restore-Gate erfolgreich bestätigt.
 
+## Iteration 19 – Backup- und Berichtsschreiber
+
+- 🟡 Backup-ZIP auf eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync` umgestellt.
+- 🟡 SHA-256-Begleitdatei und RESTORE-JSON-Bericht auf zentralen atomaren Textschreiber umgestellt.
+- 🟡 Backup-Dateinamen um Mikrosekunden gegen schnelle Mehrfachlauf-Kollisionen ergänzt.
+- 🟡 Regression für Replace-Fehler, Altbestandsschutz und Temp-Cleanup ergänzt.
+- 🟡 finale GitHub-Grundprüfung und Restore-Gate stehen für den Branch noch aus.
+
 ## Nächste Freigabepunkte
 
-1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
-2. 🔴 nächster separater Konsistenz-Slice: Backup- und Berichtsschreiber auf dieselben Temp-/fsync-/Fehlerregeln prüfen; Append-Logs nicht fälschlich auf Dateiersatz umstellen.
+1. 🟡 Iteration 19 ausschließlich über Vollprüfung + Restore-Gate abschließen; erst bei Grün mergen.
+2. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
+3. 🔴 danach verbleibende Berichtsschreiber auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
