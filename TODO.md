@@ -123,14 +123,14 @@ Stand: 2026-09-10
 
 ### Abnahme
 
-- 🟢 erste vollständige Grundprüfung **#503** erfolgreich.
-- 🟢 **81 Logik-/Regressionstests** erfolgreich.
-- 🟢 **52 PySide6-GUI-Tests** erfolgreich.
+- 🟢 erste vollständige Grundprüfung **#503** erfolgreich; Restore-SHA-256 `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`.
+- 🟢 finaler Version-/Evidence-Head `d386f9e848237ff400fc60c518f73645b6516cee` in Grundprüfung **#513** vollständig erfolgreich.
+- 🟢 **81 Logik-/Regressionstests** und **52 PySide6-GUI-Tests** erfolgreich.
 - 🟢 Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich.
 - 🟢 Headless-Start erfolgreich.
-- 🟢 Vollprojekt-Restore `OK`, SHA-256 `c7ff7f7e107d815918e9d52a84302bd245baa19f301cb3d4730ee5acff4b0806`.
-- 🟡 Version-/Evidence-Sync auf 0.15.2 wird anschließend nochmals vollständig geprüft.
-- 🔒 kein Merge vor grünem finalem Head-Gate.
+- 🟢 Vollprojekt-Restore `OK`, finale SHA-256 `560b9d9ca46ec3e0964f03b385941782e18e892d734c1b5e208dd69c6d4b5bf3`.
+- 🟢 PR #31 per SHA-geschütztem Squash-Merge in `main` übernommen.
+- 🟢 resultierender Main-Commit: `00513bbaaee124da1e04a963aa70ce9e4757108e`.
 
 ## Danach
 
