@@ -1,17 +1,17 @@
 {
-  "schema_version": 19,
+  "schema_version": 20,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.14.1",
+    "version": "0.15.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-09"
   },
   "iteration": {
-    "number": 22,
-    "goal": "Erscheinungsbild, Schrift, Abstaende und dynamische Groessenanpassung auf realen Kubuntu-Screenshots basierend professionell haerten",
-    "completed": 13,
-    "open_next": 1
+    "number": 24,
+    "goal": "Barrierefreiheit, Tastatur- und Screenreader-Grundwerte sowie kontrastgepruefte sitzungsweite Farbthemes zentral verbessern",
+    "completed": 10,
+    "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -76,7 +76,23 @@
     "iteration22_restore_gate": true,
     "iteration22_restore_status": "OK",
     "iteration22_restore_sha256": "c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de",
-    "iteration22_tested_head_sha": "1ae0a32a328b09f9a12f6017d9b68ecc5c5ed4b7"
+    "iteration22_tested_head_sha": "1ae0a32a328b09f9a12f6017d9b68ecc5c5ed4b7",
+    "iteration22_merged_main_sha": "1f12951156a7ca86e5533f05a17ade4802c79543",
+    "iteration23_ci_run": 419,
+    "iteration23_ci_result": "success",
+    "iteration23_restore_gate": true,
+    "iteration23_tested_head_sha": "6d311315f46fbc2515e5fd01f63a213d7c244257",
+    "iteration23_merged_main_sha": "80544ad8cfd13452f35f9218247570f65beb8b05",
+    "iteration24_initial_ci_run": 428,
+    "iteration24_initial_ci_result": "success",
+    "iteration24_logic_tests": 75,
+    "iteration24_gui_tests": 50,
+    "iteration24_release_files": 36,
+    "iteration24_restore_gate": true,
+    "iteration24_restore_status": "OK",
+    "iteration24_restore_sha256": "76a861f4e2e2466906f0eee50f1d19339aa2ea5709c0a540cf0bb51b15a49d20",
+    "iteration24_tested_code_head_sha": "cf2d694564909de72dfc65891af23fc525e87cc9",
+    "iteration24_final_head_gate": "pending"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -89,15 +105,30 @@
     "framework_version": "6.11.2",
     "dashboard_title": "Provoware-Datenbank-Dashboard 2026",
     "reference_theme": "Modern Dark Amber",
+    "themes": ["Amber", "Türkis", "Lila", "Kontrast"],
+    "default_theme": "Amber",
+    "theme_scope": "current_session_all_open_windows",
+    "theme_persistence": false,
+    "theme_changes_user_data": false,
+    "high_contrast_theme": true,
+    "theme_selector_location": "dashboard_statusbar",
+    "theme_selector_accessible_name": "Farbtheme auswählen",
     "font_family": "Sans Serif",
     "external_font_dependency": false,
     "zoom_levels_percent": [100, 125, 150, 175, 200],
     "zoom_managed_windows": ["dashboard", "song_editor", "song_library", "recovery", "profile_editor", "todo", "calendar"],
     "font_size_follows_zoom": true,
+    "geometry_zoom_max_growth_percent": 25,
+    "responsive_width_zoom_max_growth_percent": 10,
+    "high_zoom_mode_from_percent": 175,
     "responsive_breakpoints_px": {"compact_below": 1100, "wide_from": 1450},
     "responsive_components": ["dashboard_sidebar", "dashboard_search", "profile_controls", "song_section_list", "song_editor_splitter", "song_library_columns"],
     "song_library_stretch_columns": ["title", "tags"],
     "splitters_non_collapsible": true,
+    "keyboard_focus_policy": "Qt.StrongFocus",
+    "screenreader_names_autofill": true,
+    "screenreader_descriptions_from_tooltips": true,
+    "color_is_not_only_status_signal": true,
     "layman_guidance": true,
     "planned_features_visibly_marked": true,
     "planned_feature_label": "In Planung",
@@ -199,7 +230,7 @@
     "rule": "Nur Dateien mit release=true"
   },
   "files": [
-    {"path":"MANIFEST.json","release":true,"purpose":"Laufzeit-, Versions- und UX-Freigabedaten"},
+    {"path":"MANIFEST.json","release":true,"purpose":"Laufzeit-, Versions-, Accessibility- und UX-Freigabedaten"},
     {"path":"ANLEITUNG_LAIEN.md","release":true,"purpose":"Laienfreundliche Nutzeranleitung"},
     {"path":"requirements.txt","release":true,"purpose":"Fest gepinnte PySide6-Abhängigkeit"},
     {"path":"schnellstart.sh","release":true,"purpose":"Vollautomatischer laienfreundlich beschrifteter Start"},
@@ -227,7 +258,7 @@
     {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek mit sichtbarem Erstnutzer-Einstieg, responsiver Tabelle und klaren Rückmeldungen"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
     {"path":"app/ui.py","release":true,"purpose":"Laiengeführtes PySide6-Referenzdashboard"},
-    {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale responsive UI-, Schrift-, Fokus-, Planungs- und Kontraststandards"},
+    {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale responsive UI-, Zoom-, Theme-, Fokus-, Screenreader- und Kontraststandards"},
     {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit- und Vollprüfung inklusive Repository-Hygiene und Laien-UX"},
     {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Startanzeige mit sechs verständlichen Prüfschritten"},
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
@@ -240,6 +271,7 @@
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
     {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
     {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
+    {"path":"tests/test_dashboard_reference_gui.py","release":false,"purpose":"Regression für Referenzlayout, Hochzoom, Themes, WCAG-Kontraste, Tastaturfokus und Screenreader-Namen"},
     {"path":"tests/test_process_consistency.py","release":false,"purpose":"Atomar-, Mehrfachstart- und Wächterregression"},
     {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz- und I/O-Regression"},
     {"path":"tests/test_restore.py","release":false,"purpose":"Restore-, Backup-I/O- und Pfadsicherheitsregression"},
@@ -248,6 +280,8 @@
     {"path":"docs/ITERATION19_BACKUP_REPORT_IO.md","release":false,"purpose":"Backup-/Restore-Bericht-I/O-Härtung und Abnahme"},
     {"path":"docs/ITERATION20_REPO_HYGIENE.md","release":false,"purpose":"Repository-Hygiene, Schutzgrenzen und Abnahme"},
     {"path":"docs/ITERATION21_LAIEN_UX.md","release":false,"purpose":"Nutzersicht-, Laien-UX- und Abnahmebericht"},
-    {"path":"docs/ITERATION22_RESPONSIVE_DESIGN.md","release":false,"purpose":"Responsive Design-, Screenshot-Befund- und Abnahmebericht"}
+    {"path":"docs/ITERATION22_RESPONSIVE_DESIGN.md","release":false,"purpose":"Responsive Design-, Screenshot-Befund- und Abnahmebericht"},
+    {"path":"docs/ITERATION23_ZOOM_HAERTUNG.md","release":false,"purpose":"Hochzoom-Härtung, Screenshot-Befund und Abnahme"},
+    {"path":"docs/ITERATION24_ACCESSIBILITY_THEMES.md","release":false,"purpose":"Barrierefreiheits-, Theme-, Kontrast- und Abnahmebericht"}
   ]
 }

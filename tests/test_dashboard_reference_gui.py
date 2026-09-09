@@ -6,10 +6,14 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from pathlib import Path
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QFrame, QPushButton
 
 from app.ui import Dashboard
-from app.ui_standards import COLORS, geometry_scaled, scaled
+from app.ui_standards import (
+    COLORS, DEFAULT_THEME, THEMES, THEME_NAMES, geometry_scaled, scaled,
+    set_application_theme,
+)
 
 
 class FakeTexts:
@@ -26,12 +30,28 @@ class FakeLogger:
         return str(event)
 
 
+def _luminance(hex_color: str) -> float:
+    channels = [int(hex_color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+
+    def linear(value: float) -> float:
+        return value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4
+
+    red, green, blue = map(linear, channels)
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue
+
+
+def _contrast(first: str, second: str) -> float:
+    light, dark = sorted((_luminance(first), _luminance(second)), reverse=True)
+    return (light + 0.05) / (dark + 0.05)
+
+
 class DashboardReferenceGuiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.app = QApplication.instance() or QApplication([])
 
     def setUp(self):
+        self.app.setProperty("provowareTheme", DEFAULT_THEME)
         self.temp = tempfile.TemporaryDirectory()
         self.dashboard = Dashboard(FakeTexts(), FakeLogger(), Path(self.temp.name))
         self.dashboard.resize(1280, 790)
@@ -39,6 +59,7 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.app.processEvents()
 
     def tearDown(self):
+        set_application_theme(DEFAULT_THEME)
         self.dashboard._closing_after_save = True
         self.dashboard.close()
         self.app.processEvents()
@@ -106,11 +127,39 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         ]
         self.assertEqual(len(tiles), 7)
         self.assertTrue(all(button.isVisible() for button in tiles))
+        self.assertTrue(self.dashboard.theme_combo.isVisible())
 
         self.dashboard.set_zoom(100)
         self.app.processEvents()
         self.assertTrue(all(button.isVisible() for button in planned_nav))
         self.assertEqual(len([card for card in cards if card.isVisible()]), 4)
+
+    def test_four_themes_keep_core_colors_wcag_readable(self):
+        self.assertEqual(THEME_NAMES, ("Amber", "Türkis", "Lila", "Kontrast"))
+        for theme_name, palette in THEMES.items():
+            for key in ("text", "muted", "accent", "cyan", "green", "yellow", "red"):
+                with self.subTest(theme=theme_name, color=key):
+                    self.assertGreaterEqual(_contrast(palette[key], palette["background"]), 4.5)
+
+    def test_theme_selector_is_keyboard_and_screenreader_accessible(self):
+        self.assertEqual(self.dashboard.theme_combo.count(), 4)
+        self.assertEqual(self.dashboard.theme_combo.accessibleName(), "Farbtheme auswählen")
+        self.assertEqual(self.dashboard.theme_combo.focusPolicy(), Qt.StrongFocus)
+        self.assertTrue(self.dashboard.search_entry.accessibleName())
+        self.assertEqual(self.dashboard.search_entry.focusPolicy(), Qt.StrongFocus)
+        self.assertTrue(self.dashboard.quit_button.accessibleName())
+
+        tiles = [
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.objectName() == "tileButton"
+        ]
+        self.assertTrue(all(button.accessibleName() for button in tiles))
+
+        self.dashboard.theme_combo.setCurrentText("Kontrast")
+        self.app.processEvents()
+        self.assertEqual(self.dashboard.theme_name, "Kontrast")
+        self.assertIn("#000000", self.dashboard.styleSheet())
+        self.assertIn("#FFD800", self.dashboard.styleSheet())
 
     def test_recovery_occurs_once_in_dashboard_controls(self):
         buttons = [button for button in self.dashboard.findChildren(QPushButton) if "Recovery" in button.text()]

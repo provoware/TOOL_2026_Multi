@@ -1,5 +1,42 @@
 # Änderungsverlauf
 
+## 0.15.0 – 2026-09-09 – Barrierefreiheit und Farbthemes
+
+### Hinzugefügt / verbessert
+- vier zentrale, sitzungsweite Farbthemes `Amber`, `Türkis`, `Lila` und `Kontrast`,
+- kompakter Theme-Schalter im Dashboard-Statusbereich; geöffnete Fenster wechseln gemeinsam und neu geöffnete Fenster übernehmen das aktive Theme,
+- Hochkontrast-Theme mit schwarzem Hintergrund, weißem Text, gelbem Akzent und 3-px-Fokusrahmen,
+- zentrale `Qt.StrongFocus`-Grundregel für interaktive Buttons, Eingaben, Auswahlfelder, Listen und Tabellen,
+- automatische Accessible Names aus sichtbaren Beschriftungen/Platzhaltern und Accessible Descriptions aus Tooltips,
+- Screenreader-Bezeichnung `Farbtheme auswählen` für den Theme-Schalter,
+- automatische WCAG-Kontrastregression der Kernfarben aller vier Themes mit mindestens 4,5:1,
+- Hochzoom-Statusbereich so angepasst, dass bei 175/200 % die entbehrliche Legende ausgeblendet werden kann, der Theme-Schalter aber erreichbar bleibt.
+
+### Schutz / Abnahme
+- Theme-Auswahl gilt bewusst nur für die laufende Sitzung und erzeugt keinen neuen Schreibpfad,
+- keine Nutzerdaten, Speicherformate, atomaren Schreiber, Backup- oder Restore-Fachlogik verändert,
+- keine externe Font- oder Theme-Abhängigkeit ergänzt,
+- Grundprüfung #428 für den Produktions-/Test-Head `cf2d694564909de72dfc65891af23fc525e87cc9` vollständig erfolgreich,
+- 75 Logik-/Regressionstests und 50 PySide6-GUI-Tests erfolgreich,
+- Vollprojekt-Restore `OK`, SHA-256 `76a861f4e2e2466906f0eee50f1d19339aa2ea5709c0a540cf0bb51b15a49d20`,
+- nach Synchronisierung von Doku/MANIFEST/TODO/CHANGELOG bleibt die Safe-Merge-Regel bestehen: der finale PR-Head wird nochmals vollständig geprüft.
+
+## 0.14.2 – 2026-09-09 – Zoom-Härtung 150–200 %
+
+### Geändert
+- Schriftzoom und Geometriezoom getrennt, damit 200 % Schrift nicht gleichzeitig Abstände, Radien und Mindesthöhen verdoppelt,
+- Geometriewachstum selbst bei 200 % auf maximal 25 % begrenzt und zusätzliche Breitenreserve auf maximal 10 % reduziert,
+- ab 175 % reversiblen Hochzoom-Modus eingeführt,
+- redundante geplante Navigationseinträge und reine Planungskarten bei 175/200 % platzsparend ausgeblendet, während obere Modulkacheln und produktive Bereiche erreichbar bleiben,
+- Profilsteuerung, Songbereichsliste und Songeditor-Splitter für Hochzoom kompakter verteilt,
+- Rückkehr auf 100/125/150 % stellt den vollständigen Normalmodus automatisch wieder her,
+- gezielte GUI-Regression für Schriftwachstum, Geometriegrenze, Hochzoom-Sichtbarkeit und Rückkehr in den Normalmodus ergänzt.
+
+### Schutz / Abnahme
+- keine Daten- oder Fachlogik verändert,
+- Grundprüfung #419 einschließlich Vollprüfung und Restore-Gate erfolgreich,
+- PR #26 sicher in `main` übernommen; resultierender Main-Commit `80544ad8cfd13452f35f9218247570f65beb8b05`.
+
 ## 0.14.1 – 2026-09-09 – Responsive Design und visuelle Härtung
 
 ### Geändert
@@ -23,7 +60,7 @@
 - GitHub-Grundprüfung **#385** vollständig erfolgreich: 75 Logik-/Regressionstests und 46 PySide6-GUI-Tests grün,
 - Schreibfehler-Simulation, Headless-Start und Release-Manifest mit 36 Betriebsdateien erfolgreich,
 - Vollprojekt-Restore erfolgreich mit Status `OK` und SHA-256 `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`,
-- nach diesem reinen Evidence-Sync bleibt die Safe-Merge-Regel bestehen: der aktuelle PR-Head muss ebenfalls grün sein.
+- PR #24 wurde anschließend in `main` übernommen (`1f12951156a7ca86e5533f05a17ade4802c79543`).
 
 ## 0.14.0 – 2026-09-09 – Laien-UX-Konsistenz
 
@@ -48,7 +85,7 @@
 - Kernkontraste für normalen Text, Hinweistext und Akzent gegen den Hintergrund werden automatisiert auf mindestens 4,5:1 geprüft,
 - Laien-UX-Test ist in `bash scripts/pruefen.sh --full` integriert,
 - keine Datenmigration, keine Änderung der Song-/Todo-/Kalender-/Profilformate und keine Änderung der atomaren Speicher- oder Restore-Fachlogik,
-- PR #23 wurde als Merge-Commit `47a6124061268843d05d98ddadcb90066cc0d851` in `main` übernommen; die anschließend ausgewertete Grundprüfung #368 zeigte drei GUI-Test-Rückfälle, die in 0.14.1 korrigiert werden.
+- PR #23 wurde als Merge-Commit `47a6124061268843d05d98ddadcb90066cc0d851` in `main` übernommen; die anschließend ausgewertete Grundprüfung #368 zeigte drei GUI-Test-Rückfälle, die in 0.14.1 korrigiert wurden.
 
 ## 0.13.4 – 2026-09-09 – Repository-Hygiene
 
