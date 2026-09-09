@@ -14,6 +14,10 @@ import zipfile
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from app.atomic_io import atomic_write_text
 
 EXCLUDED = {".git", ".venv", "backups", "logs", "berichte", "tmp", "release", "__pycache__"}
