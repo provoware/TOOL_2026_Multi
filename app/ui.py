@@ -1,4 +1,4 @@
-"""PySide6-Multimodul-Dashboard nach dem Provoware-Referenzentwurf."""
+"""PySide6-Multimodul-Dashboard mit klarer Laienführung."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from app.ui_standards import COLORS, SPACING, apply_global_style
 
 
 class Dashboard(QWidget):
-    """Referenznahes Hauptfenster mit linker Navigation, Kachelleiste und 2×2-Arbeitsfläche."""
+    """Hauptfenster mit klarer Trennung zwischen fertigen und geplanten Bereichen."""
 
     closed_cleanly = Signal()
 
@@ -106,7 +106,7 @@ class Dashboard(QWidget):
         title_box.setSpacing(0)
         title = QLabel("Provoware-Datenbank-Dashboard 2026")
         title.setObjectName("appTitle")
-        subtitle = QLabel("Linux · PySide6 · Erweiterbares Multimodul-Dashboard")
+        subtitle = QLabel("Deine Zentrale für Songs, Planung und Projektvorgaben")
         subtitle.setObjectName("subtitle")
         title_box.addWidget(title)
         title_box.addWidget(subtitle)
@@ -117,31 +117,41 @@ class Dashboard(QWidget):
         search_icon.setObjectName("accent")
         layout.addWidget(search_icon)
         self.search_entry = QLineEdit()
-        self.search_entry.setPlaceholderText("Suchen …")
+        self.search_entry.setPlaceholderText("Songs durchsuchen …")
+        self.search_entry.setToolTip("Durchsucht deine Songbibliothek nach Titel, Genre, Stimmung, Stil, Stimme und Tags.")
         self.search_entry.setFixedWidth(245)
         self.search_entry.returnPressed.connect(self._header_search)
         layout.addWidget(self.search_entry)
-        logout = QPushButton("Logout")
-        logout.clicked.connect(self.logout)
-        layout.addWidget(logout)
+        self.quit_button = QPushButton("Programm beenden")
+        self.quit_button.setObjectName("dangerButton")
+        self.quit_button.setToolTip("Speichert zuerst offene Songtexte und beendet danach das Programm.")
+        self.quit_button.clicked.connect(self.logout)
+        layout.addWidget(self.quit_button)
         return header
+
+    @staticmethod
+    def _mark_planned(button: QPushButton, name: str) -> None:
+        button.setProperty("planned", True)
+        button.setToolTip(f"{name} ist sichtbar vorbereitet, aber noch nicht fertig nutzbar.")
 
     def _build_tile_strip(self) -> QHBoxLayout:
         strip = QHBoxLayout()
         strip.setSpacing(SPACING["xs"])
         tiles = (
-            ("♫\nSongtexte", self.open_song_library),
-            ("▣\nHörspiele", lambda: self._planned("Hörspiele")),
-            ("▤\nBlogartikel", lambda: self._planned("Blogartikel")),
-            ("▥\nGenres", lambda: self.open_profile_editor("Genres")),
-            ("?\nPrompts", lambda: self._planned("Prompts")),
-            ("⌕\nSuche", lambda: self._planned("Dateisuche")),
-            ("≡\nDuplikate", lambda: self._planned("Duplikatprüfer")),
+            ("♫\nSongtexte", self.open_song_library, False, "Songtexte"),
+            ("▣\nHörspiele\nIn Planung", lambda: self._planned("Hörspiele"), True, "Hörspiele"),
+            ("▤\nBlogartikel\nIn Planung", lambda: self._planned("Blogartikel"), True, "Blogartikel"),
+            ("▥\nGenres", lambda: self.open_profile_editor("Genres"), False, "Genres"),
+            ("?\nPrompts\nIn Planung", lambda: self._planned("Prompts"), True, "Prompts"),
+            ("⌕\nDateisuche\nIn Planung", lambda: self._planned("Dateisuche"), True, "Dateisuche"),
+            ("≡\nDuplikate\nIn Planung", lambda: self._planned("Duplikatprüfer"), True, "Duplikatprüfer"),
         )
-        for text, command in tiles:
+        for text, command, planned, name in tiles:
             button = QPushButton(text)
             button.setObjectName("tileButton")
             button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+            if planned:
+                self._mark_planned(button, name)
             button.clicked.connect(command)
             strip.addWidget(button)
         return strip
@@ -157,6 +167,7 @@ class Dashboard(QWidget):
         top = QHBoxLayout()
         menu_button = QPushButton("☰")
         menu_button.setObjectName("navButton")
+        menu_button.setToolTip("Navigation ein- oder ausklappen")
         menu_button.setFixedWidth(42)
         menu_button.clicked.connect(self.toggle_sidebar)
         top.addWidget(menu_button)
@@ -167,29 +178,29 @@ class Dashboard(QWidget):
         layout.addLayout(top)
 
         self._add_nav(layout, "▦  Übersicht", lambda: None, active=True)
-        self._add_nav(layout, "◈  Modulauswahl", lambda: self._planned("Modulauswahl"))
-        self._add_heading(layout, "Workflow Schreiben")
+        self._add_nav(layout, "◈  Alle Bereiche · geplant", lambda: self._planned("Alle Bereiche"), planned=True)
+        self._add_heading(layout, "Schreiben")
         self._add_nav(layout, "  ♫  Songtexte", self.open_song_library)
-        self._add_nav(layout, "  ▣  Hörspiele", lambda: self._planned("Hörspiele"))
-        self._add_nav(layout, "  ▤  Blogartikel", lambda: self._planned("Blogartikel"))
-        self._add_heading(layout, "DB-Eingaben")
+        self._add_nav(layout, "  ▣  Hörspiele · geplant", lambda: self._planned("Hörspiele"), planned=True)
+        self._add_nav(layout, "  ▤  Blogartikel · geplant", lambda: self._planned("Blogartikel"), planned=True)
+        self._add_heading(layout, "Daten & Vorgaben")
         for label in CATEGORIES:
             self._add_nav(layout, f"  ·  {label}", lambda _checked=False, item=label: self.open_profile_editor(item))
-        self._add_nav(layout, "  ·  GitHub-Repositories", lambda: self._planned("GitHub-Repositories"))
-        self._add_nav(layout, "  ·  Prompts", lambda: self._planned("Prompts"))
+        self._add_nav(layout, "  ·  GitHub-Repositories · geplant", lambda: self._planned("GitHub-Repositories"), planned=True)
+        self._add_nav(layout, "  ·  Prompts · geplant", lambda: self._planned("Prompts"), planned=True)
         self._add_heading(layout, "Funktionen")
-        self._add_nav(layout, "  ◉  Genreszufallsgenerator", lambda: self._planned("Genreszufallsgenerator"))
-        self._add_nav(layout, "  ✎  Reimfinder", lambda: self._planned("Reimfinder"))
-        self._add_heading(layout, "Systemanwendungen")
-        self._add_nav(layout, "  ⌕  Datenbank-Suche", lambda: self._planned("Datenbank-Suche"))
-        self._add_nav(layout, "  ▤  Inhaltssuche Textdateien", lambda: self._planned("Inhaltssuche Textdateien"))
-        self._add_nav(layout, "  ≡  Trefferliste", lambda: self._planned("Trefferliste"))
-        self._add_nav(layout, "  ◫  Duplikatprüfer", lambda: self._planned("Duplikatprüfer"))
+        self._add_nav(layout, "  ◉  Genre-Zufall · geplant", lambda: self._planned("Genre-Zufall"), planned=True)
+        self._add_nav(layout, "  ✎  Reimfinder · geplant", lambda: self._planned("Reimfinder"), planned=True)
+        self._add_heading(layout, "Dateien & Werkzeuge")
+        self._add_nav(layout, "  ⌕  Dateisuche · geplant", lambda: self._planned("Dateisuche"), planned=True)
+        self._add_nav(layout, "  ▤  Textinhalt suchen · geplant", lambda: self._planned("Textinhalt suchen"), planned=True)
+        self._add_nav(layout, "  ≡  Trefferliste · geplant", lambda: self._planned("Trefferliste"), planned=True)
+        self._add_nav(layout, "  ◫  Duplikatprüfer · geplant", lambda: self._planned("Duplikatprüfer"), planned=True)
         self._add_heading(layout, "Planung")
         self.todo_nav_button = self._add_nav(layout, "  ✓  Todo-Liste", self.open_todo)
         self.calendar_nav_button = self._add_nav(layout, "  ▦  Kalender", self.open_calendar)
-        self._add_heading(layout, "Werkzeug")
-        self.recovery_nav_button = self._add_nav(layout, "  ⚕  Recovery", self.open_recovery)
+        self._add_heading(layout, "Hilfe")
+        self.recovery_nav_button = self._add_nav(layout, "  ⚕  Fehlerhilfe (Recovery)", self.open_recovery)
         layout.addStretch(1)
         return sidebar
 
@@ -201,9 +212,11 @@ class Dashboard(QWidget):
         self._nav_entries.append(label)
 
     def _add_nav(self, layout: QVBoxLayout, text: str, command: Callable[[], None],
-                 active: bool = False) -> QPushButton:
+                 active: bool = False, planned: bool = False) -> QPushButton:
         button = QPushButton(text)
         button.setObjectName("activeNav" if active else "navButton")
+        if planned:
+            self._mark_planned(button, text.replace("· geplant", "").strip())
         button.clicked.connect(command)
         layout.addWidget(button)
         self._nav_entries.append(button)
@@ -220,12 +233,14 @@ class Dashboard(QWidget):
         frame.setObjectName("toolbar")
         layout = QHBoxLayout(frame)
         layout.setContentsMargins(10, 5, 8, 5)
-        layout.addWidget(QLabel("Entwicklerinfo:"))
+        self.quick_info_label = QLabel("Projekt-Notiz:")
+        layout.addWidget(self.quick_info_label)
         self.quick_entry = QLineEdit()
-        self.quick_entry.setPlaceholderText("Kurze Information an Entwicklerinformation.txt anhängen …")
+        self.quick_entry.setPlaceholderText("Kurze Notiz für dieses Projekt …")
+        self.quick_entry.setToolTip("Die Notiz wird fortlaufend gespeichert. Vorhandene Notizen bleiben erhalten.")
         self.quick_entry.returnPressed.connect(self.save_quick_info)
         layout.addWidget(self.quick_entry, 1)
-        save = QPushButton("Speichern")
+        save = QPushButton("Notiz speichern")
         save.clicked.connect(self.save_quick_info)
         layout.addWidget(save)
         return frame
@@ -235,7 +250,7 @@ class Dashboard(QWidget):
         frame.setObjectName("toolbar")
         layout = QHBoxLayout(frame)
         layout.setContentsMargins(10, 5, 8, 5)
-        label = QLabel("Zuletzt bearbeitet")
+        label = QLabel("Zuletzt bearbeitete Songs")
         label.setObjectName("muted")
         layout.addWidget(label)
         self.recent_layout = QHBoxLayout()
@@ -266,18 +281,28 @@ class Dashboard(QWidget):
         grid.setRowStretch(0, 1)
         grid.setRowStretch(1, 1)
 
-        workflow, w = self._card("🚀  Workflow Übersicht")
-        claim = QLabel("Kreative Ideen.\nStrukturierte Workflows.\nStarke Ergebnisse.")
+        workflow, w = self._card("🚀  So startest du")
+        claim = QLabel("Wähle einen fertigen Bereich.\nGeplante Funktionen sind deutlich mit „In Planung“ markiert.")
+        claim.setWordWrap(True)
         claim.setAlignment(Qt.AlignCenter)
         w.addWidget(claim)
-        for step in ("①  Idee erfassen", "②  DB-Eingaben ergänzen", "③  Funktionen nutzen", "④  Ergebnisse speichern"):
-            hint = QLabel(step)
-            hint.setObjectName("cardHint")
-            w.addWidget(hint)
+        for text, command in (
+            ("①  Songtexte öffnen", self.open_song_library),
+            ("②  Todo-Liste öffnen", self.open_todo),
+            ("③  Kalender öffnen", self.open_calendar),
+        ):
+            button = QPushButton(text)
+            button.setObjectName("primaryButton" if text.startswith("①") else "")
+            button.clicked.connect(command)
+            w.addWidget(button)
+        hint = QLabel("Tipp: Für Genres, Stimmung, Stil oder Stimme rechts ein Profil wählen.")
+        hint.setObjectName("cardHint")
+        hint.setWordWrap(True)
+        w.addWidget(hint)
         w.addStretch(1)
         grid.addWidget(workflow, 0, 0)
 
-        db, d = self._card("▦  DB-Eingaben")
+        db, d = self._card("▦  Daten & Vorgaben")
         d.setSpacing(5)
         heading = d.takeAt(0).widget()
         profile_row = QHBoxLayout()
@@ -289,15 +314,16 @@ class Dashboard(QWidget):
         profile_row.addWidget(profile_label)
         self.db_profile_combo = QComboBox()
         self.db_profile_combo.setMinimumWidth(150)
+        self.db_profile_combo.setToolTip("Ein Profil bündelt passende Genres, Stimmungen, Stil, Stimme und Besonderheiten.")
         self.db_profile_combo.currentTextChanged.connect(self._load_profile_values)
         profile_row.addWidget(self.db_profile_combo)
-        edit_profiles = QPushButton("Bearbeiten …")
+        edit_profiles = QPushButton("Profile & Werte bearbeiten")
         edit_profiles.clicked.connect(self.open_profile_editor)
         profile_row.addWidget(edit_profiles)
         d.insertLayout(0, profile_row)
 
         self.db_boxes: dict[str, QComboBox] = {}
-        for label in (*CATEGORIES, "GitHub-Repositories", "Prompts"):
+        for label in CATEGORIES:
             row = QHBoxLayout()
             name = QLabel(label)
             name.setObjectName("cardHint")
@@ -308,42 +334,38 @@ class Dashboard(QWidget):
             row.addWidget(combo, 1)
             d.addLayout(row)
             self.db_boxes[label] = combo
+        planned_db = QLabel("GitHub-Repositories und Prompts: In Planung")
+        planned_db.setObjectName("cardHint")
+        d.addWidget(planned_db)
         d.addStretch(1)
         grid.addWidget(db, 0, 1)
 
-        functions, f = self._card("▣  Funktionen")
+        functions, f = self._card("▣  Funktionen · In Planung")
         function_row = QHBoxLayout()
-        for text, command in (
-            ("◈\nGenreszufallsgenerator\nZufällige Genres entdecken", lambda: self._planned("Genreszufallsgenerator")),
-            ("✎\nReimfinder\nPassende Reime finden", lambda: self._planned("Reimfinder")),
+        for text, name in (
+            ("◈\nGenre-Zufall\nIn Planung", "Genre-Zufall"),
+            ("✎\nReimfinder\nIn Planung", "Reimfinder"),
         ):
             button = QPushButton(text)
             button.setObjectName("featureButton")
-            button.clicked.connect(command)
+            self._mark_planned(button, name)
+            button.clicked.connect(lambda _checked=False, selected=name: self._planned(selected))
             function_row.addWidget(button)
         f.addLayout(function_row)
         grid.addWidget(functions, 1, 0)
 
-        system, s = self._card("▤  Systemanwendungen")
-        for icon, title, subtitle in (
-            ("⌕", "Datenbank-Suche", "Nach Dateien im System suchen"),
-            ("▤", "Inhaltssuche Textdateien", "Inhalte in Textdateien durchsuchen"),
-            ("≡", "Trefferliste", "Suchergebnisse anzeigen"),
-            ("◫", "Duplikatprüfer", "Doppelte Dateien finden"),
+        system, s = self._card("▤  Dateien & Werkzeuge · In Planung")
+        for title, subtitle in (
+            ("⌕  Dateisuche", "Dateien nach Namen finden"),
+            ("▤  Textinhalt suchen", "Wörter in Textdateien finden"),
+            ("≡  Trefferliste", "Gefundene Dateien gesammelt anzeigen"),
+            ("◫  Duplikatprüfer", "Doppelte Dateien finden"),
         ):
-            row = QHBoxLayout()
-            icon_label = QLabel(icon)
-            icon_label.setObjectName("accent")
-            icon_label.setFixedWidth(28)
-            row.addWidget(icon_label)
-            text_box = QVBoxLayout()
-            text_box.setSpacing(0)
-            text_box.addWidget(QLabel(title))
-            sub = QLabel(subtitle)
-            sub.setObjectName("cardHint")
-            text_box.addWidget(sub)
-            row.addLayout(text_box, 1)
-            s.addLayout(row)
+            button = QPushButton(f"{title} · In Planung")
+            button.setToolTip(subtitle)
+            self._mark_planned(button, title)
+            button.clicked.connect(lambda _checked=False, selected=title: self._planned(selected))
+            s.addWidget(button)
         s.addStretch(1)
         grid.addWidget(system, 1, 1)
         return grid
@@ -356,7 +378,7 @@ class Dashboard(QWidget):
         self.status_dot = QLabel("●")
         self.status_dot.setObjectName("statusGood")
         layout.addWidget(self.status_dot)
-        self.quick_status = QLabel("Bereit.")
+        self.quick_status = QLabel("Bereit · Wähle Songtexte, Todo-Liste oder Kalender.")
         self.quick_status.setObjectName("muted")
         layout.addWidget(self.quick_status)
         layout.addStretch(1)
@@ -373,9 +395,9 @@ class Dashboard(QWidget):
         larger.setToolTip("Schrift und Oberfläche vergrößern (Strg + Mausrad nach oben)")
         larger.clicked.connect(lambda: self._step_zoom(1))
         layout.addWidget(larger)
-        tech = QLabel("Linux · PySide6 · Dark Orange Industrial")
-        tech.setObjectName("muted")
-        layout.addWidget(tech)
+        legend = QLabel("Gestrichelt = noch nicht fertig")
+        legend.setObjectName("muted")
+        layout.addWidget(legend)
         return frame
 
     def _bind_shortcuts(self) -> None:
@@ -414,22 +436,27 @@ class Dashboard(QWidget):
         return super().eventFilter(watched, event)
 
     def _planned(self, name: str) -> None:
-        QMessageBox.information(self, "Geplanter Bereich", f"{name} ist im Dashboard vorgesehen, aber noch nicht als Fachfunktion freigegeben.")
+        QMessageBox.information(
+            self,
+            "Noch nicht verfügbar",
+            f"{name} ist bereits eingeplant, aber noch nicht fertig nutzbar.\n\n"
+            "Hier wird nichts gespeichert oder verändert. Nutze bis dahin einen Bereich ohne „In Planung“.",
+        )
 
     def _header_search(self) -> None:
         self.open_song_library(initial_search=self.search_entry.text().strip())
 
     def save_quick_info(self) -> None:
         try:
-            target = append_developer_info(self.project_root, self.quick_entry.text())
+            append_developer_info(self.project_root, self.quick_entry.text())
         except ValueError:
-            self.quick_status.setText("Bitte zuerst eine kurze Information eingeben.")
+            self.quick_status.setText("Bitte zuerst eine kurze Projekt-Notiz eingeben.")
             return
-        except Exception as error:
-            self.quick_status.setText(f"Speichern fehlgeschlagen: {type(error).__name__}")
+        except Exception:
+            self.quick_status.setText("Projekt-Notiz konnte nicht gespeichert werden. Öffne bei Bedarf die Fehlerhilfe.")
             return
         self.quick_entry.clear()
-        self.quick_status.setText(f"An {target.name} angehängt.")
+        self.quick_status.setText("Projekt-Notiz gespeichert. Vorhandene Notizen bleiben erhalten.")
         self.quick_entry.setFocus()
 
     def refresh_recent_songs(self) -> None:
@@ -440,7 +467,7 @@ class Dashboard(QWidget):
                 widget.deleteLater()
         paths = list_songs(self.project_root)[:5]
         if not paths:
-            empty = QLabel("Noch keine Songs gespeichert.")
+            empty = QLabel("Noch keine Songs gespeichert · mit „Songtexte“ starten.")
             empty.setObjectName("muted")
             self.recent_layout.addWidget(empty)
             return
@@ -459,8 +486,8 @@ class Dashboard(QWidget):
         current = self.db_profile_combo.currentText()
         try:
             profiles = load_profiles(self.project_root)
-        except Exception as error:
-            self.quick_status.setText(f"Profildaten nicht lesbar: {type(error).__name__}")
+        except Exception:
+            self.quick_status.setText("Profile konnten nicht geladen werden. Öffne die Fehlerhilfe, wenn das Problem bleibt.")
             return
         self.db_profile_combo.blockSignals(True)
         self.db_profile_combo.clear()
@@ -478,8 +505,8 @@ class Dashboard(QWidget):
             return
         try:
             data = load_profiles(self.project_root).get(profile, {})
-        except Exception as error:
-            self.quick_status.setText(f"Profildaten nicht lesbar: {type(error).__name__}")
+        except Exception:
+            self.quick_status.setText("Profilwerte konnten nicht geladen werden. Öffne bei Bedarf die Fehlerhilfe.")
             return
         for category in CATEGORIES:
             combo = self.db_boxes[category]
@@ -541,7 +568,8 @@ class Dashboard(QWidget):
         QMessageBox.information(self, "Terminerinnerung", message)
 
     def _calendar_reminder_error(self, error: Exception) -> None:
-        self.quick_status.setText(f"Kalender-Erinnerung konnte nicht geprüft werden: {type(error).__name__}")
+        del error
+        self.quick_status.setText("Kalender-Erinnerungen konnten nicht geprüft werden. Öffne bei Bedarf die Fehlerhilfe.")
 
     def open_song_editor(self) -> None:
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
@@ -553,7 +581,10 @@ class Dashboard(QWidget):
         try:
             document = load_song(path)
         except Exception as error:
-            QMessageBox.critical(self, "Song konnte nicht geöffnet werden", str(error))
+            QMessageBox.critical(
+                self, "Song konnte nicht geöffnet werden",
+                f"Der Song wurde nicht verändert.\n\nGrund: {error}",
+            )
             return
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, document=document,
@@ -602,7 +633,10 @@ class Dashboard(QWidget):
 
     def logout(self) -> None:
         if not self.save_open_song_editors():
-            QMessageBox.critical(self, "Logout gestoppt", "Mindestens ein Songtext konnte nicht gespeichert werden. Die Sitzung bleibt geöffnet.")
+            QMessageBox.critical(
+                self, "Beenden gestoppt",
+                "Mindestens ein Songtext konnte nicht gespeichert werden. Das Programm bleibt geöffnet, damit nichts verloren geht.",
+            )
             return
         self._closing_after_save = True
         for editor in list(self._song_editors):
@@ -626,7 +660,10 @@ class Dashboard(QWidget):
             event.accept()
             return
         if not self.save_open_song_editors():
-            QMessageBox.critical(self, "Schließen gestoppt", "Mindestens ein Songtext konnte nicht gespeichert werden.")
+            QMessageBox.critical(
+                self, "Schließen gestoppt",
+                "Mindestens ein Songtext konnte nicht gespeichert werden. Das Fenster bleibt geöffnet, damit nichts verloren geht.",
+            )
             event.ignore()
             return
         self._closing_after_save = True
@@ -639,7 +676,7 @@ class Dashboard(QWidget):
     def refresh(self) -> None:
         self.refresh_recent_songs()
         self.refresh_db_profiles()
-        self.quick_status.setText("Bereit.")
+        self.quick_status.setText("Bereit · Wähle Songtexte, Todo-Liste oder Kalender.")
         if self._recovery_center is not None and self._recovery_center.isVisible():
             self._recovery_center.refresh()
         if self._todo_window is not None and self._todo_window.isVisible():
@@ -683,7 +720,7 @@ def install_exception_handler(app, logger: EventLogger, refresh: Callable[[], No
                 severity="FEHLER", area="OBERFLAECHE",
                 summary="Eine Aktion wurde sicher abgebrochen.", cause=str(error) or "Unbekannter Programmfehler",
                 protection="Die betroffene Aktion wurde beendet; andere Bereiche bleiben verfügbar.",
-                next_step="Öffnen Sie Recovery und folgen Sie dem dort genannten Schritt.", exception=error,
+                next_step="Öffnen Sie die Fehlerhilfe (Recovery) und folgen Sie dem dort genannten Schritt.", exception=error,
             )
             refresh()
             QMessageBox.critical(parent, "Aktion sicher beendet", f"{event['summary']}\n\n{event['next_step']}\n\nKennung: {event['event_id']}")

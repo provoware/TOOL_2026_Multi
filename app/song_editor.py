@@ -63,25 +63,32 @@ class SongEditor(QWidget):
         outer.setSpacing(SPACING["m"])
 
         header = QHBoxLayout()
-        title = QLabel("Songtexteditor")
+        title = QLabel("Songtext schreiben")
         title.setObjectName("sectionTitle")
         header.addWidget(title)
         header.addStretch(1)
         self.export_button = QToolButton()
-        self.export_button.setText("Export")
+        self.export_button.setText("Exportieren")
+        self.export_button.setToolTip("Eine zusätzliche Datei erzeugen. Der aktuelle Song wird dabei nicht verändert.")
         self.export_button.setPopupMode(QToolButton.InstantPopup)
         export_menu = QMenu(self.export_button)
-        export_menu.addAction("TXT mit Metadaten", lambda: self.export("txt"))
+        export_menu.addAction("TXT mit Angaben", lambda: self.export("txt"))
         export_menu.addAction("Markdown", lambda: self.export("md"))
         export_menu.addAction("JSON", lambda: self.export("json"))
         export_menu.addSeparator()
-        export_menu.addAction("Nur Songtext (TXT)", lambda: self.export("txt", lyrics_only=True))
+        export_menu.addAction("Nur Songtext als TXT", lambda: self.export("txt", lyrics_only=True))
         self.export_button.setMenu(export_menu)
         header.addWidget(self.export_button)
-        save_button = QPushButton("Speichern")
+        save_button = QPushButton("Jetzt speichern")
+        save_button.setToolTip("Zusätzlich zum automatischen Speichern sofort speichern.")
         save_button.clicked.connect(lambda: self.save())
         header.addWidget(save_button)
         outer.addLayout(header)
+
+        guide = QLabel("1. Titel eintragen  →  2. Bereich wählen oder hinzufügen  →  3. Text schreiben. Änderungen werden automatisch gespeichert.")
+        guide.setObjectName("muted")
+        guide.setWordWrap(True)
+        outer.addWidget(guide)
 
         meta_frame = QFrame()
         meta_frame.setObjectName("card")
@@ -90,7 +97,7 @@ class SongEditor(QWidget):
         meta_layout.setHorizontalSpacing(10)
         meta_layout.setVerticalSpacing(5)
         self.meta_entries: list[QLineEdit] = []
-        field_names = ("Titel", "Genre", "Stimmung", "Stil", "Stimme", "Besonderheiten", "Tags (Komma getrennt)")
+        field_names = ("Titel", "Genre", "Stimmung", "Stil", "Stimme", "Besonderheiten", "Tags (mit Komma trennen)")
         self._meta_by_name: dict[str, QLineEdit] = {}
         for index, label_text in enumerate(field_names):
             row, col = divmod(index, 3)
@@ -109,13 +116,13 @@ class SongEditor(QWidget):
         self.style_entry = self._meta_by_name["Stil"]
         self.voice_entry = self._meta_by_name["Stimme"]
         self.special_entry = self._meta_by_name["Besonderheiten"]
-        self.tags_entry = self._meta_by_name["Tags (Komma getrennt)"]
+        self.tags_entry = self._meta_by_name["Tags (mit Komma trennen)"]
 
         status_row = QHBoxLayout()
-        status_row.addWidget(QLabel("Bearbeitungsstatus:"))
+        status_row.addWidget(QLabel("Bearbeitungsstand:"))
         self.status_song = QComboBox()
         self.status_song.addItems(SONG_STATUSES)
-        self.status_song.currentTextChanged.connect(lambda _value: self.save(reason="Status gespeichert"))
+        self.status_song.currentTextChanged.connect(lambda _value: self.save(reason="Bearbeitungsstand gespeichert"))
         status_row.addWidget(self.status_song)
         self.favorite_check = QCheckBox("★ Favorit")
         self.favorite_check.toggled.connect(lambda _value: self.save(reason="Favorit gespeichert"))
@@ -131,7 +138,7 @@ class SongEditor(QWidget):
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
         section_bar = QHBoxLayout()
-        section_bar.addWidget(QLabel("Bereich:"))
+        section_bar.addWidget(QLabel("Songbereich:"))
         self.section_type = QComboBox()
         self.section_type.addItems(SECTION_TYPES)
         self.section_type.setCurrentText("Strophe")
@@ -140,6 +147,7 @@ class SongEditor(QWidget):
         add_button.clicked.connect(self.add_section)
         section_bar.addWidget(add_button)
         remove_button = QPushButton("Bereich entfernen")
+        remove_button.setToolTip("Fragt vor dem Entfernen noch einmal nach.")
         remove_button.clicked.connect(self.remove_section)
         section_bar.addWidget(remove_button)
         section_bar.addStretch(1)
@@ -151,6 +159,7 @@ class SongEditor(QWidget):
         self.section_list.currentRowChanged.connect(self._section_changed)
         content_row.addWidget(self.section_list)
         self.section_text = QTextEdit()
+        self.section_text.setPlaceholderText("Hier den Text für den ausgewählten Songbereich schreiben …")
         self.section_text.textChanged.connect(self._section_text_changed)
         self.section_text.installEventFilter(self)
         content_row.addWidget(self.section_text, 1)
@@ -160,15 +169,16 @@ class SongEditor(QWidget):
         right = QWidget()
         right_layout = QVBoxLayout(right)
         right_layout.setContentsMargins(0, 0, 0, 0)
-        preview_title = QLabel("Vorschau")
+        preview_title = QLabel("Gesamtvorschau")
         preview_title.setObjectName("sectionTitle")
         right_layout.addWidget(preview_title)
         self.preview = QTextEdit()
         self.preview.setReadOnly(True)
         right_layout.addWidget(self.preview, 1)
-        right_layout.addWidget(QLabel("Sonstiges (optional):"))
+        right_layout.addWidget(QLabel("Zusätzliche Notizen zum Song (optional):"))
         self.other_text = QTextEdit()
         self.other_text.setMaximumHeight(120)
+        self.other_text.setPlaceholderText("Ideen, Hinweise oder offene Punkte …")
         self.other_text.textChanged.connect(self._update_preview)
         self.other_text.installEventFilter(self)
         right_layout.addWidget(self.other_text)
@@ -176,14 +186,14 @@ class SongEditor(QWidget):
         splitter.setSizes([700, 470])
         outer.addWidget(splitter, 1)
 
-        self.status_label = QLabel("Bereit · Autosave alle 5 Minuten")
+        self.status_label = QLabel("Bereit · Änderungen werden automatisch gespeichert.")
         self.status_label.setObjectName("muted")
         outer.addWidget(self.status_label)
 
     def eventFilter(self, watched, event):
         from PySide6.QtCore import QEvent
         if event.type() == QEvent.FocusOut and watched in {self.section_text, self.other_text}:
-            QTimer.singleShot(0, lambda: self.save(reason="Feld gespeichert"))
+            QTimer.singleShot(0, lambda: self.save(reason="Änderung gespeichert"))
         return super().eventFilter(watched, event)
 
     def _load_document_into_widgets(self) -> None:
@@ -264,19 +274,33 @@ class SongEditor(QWidget):
         self._refresh_section_list()
         self._load_section(len(self.document.sections) - 1)
         self._update_preview()
+        self.status_label.setText("Neuer Songbereich angelegt · Text kann jetzt eingegeben werden.")
         self.section_text.setFocus()
 
     def remove_section(self) -> None:
         index = self._active_index
         if index is None:
+            QMessageBox.information(self, "Kein Bereich ausgewählt", "Bitte zuerst links einen Songbereich auswählen.")
             return
         self._store_current_section()
+        section = self.document.sections[index]
+        answer = QMessageBox.question(
+            self,
+            "Songbereich entfernen?",
+            f"Soll „{section.kind}“ wirklich aus diesem Song entfernt werden?\n\n"
+            "Die Änderung wird erst mit dem nächsten Speichern dauerhaft übernommen.",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No,
+        )
+        if answer != QMessageBox.Yes:
+            return
         del self.document.sections[index]
         if not self.document.sections:
             self.document.sections.append(SongSection("Strophe"))
         self._refresh_section_list()
         self._load_section(min(index, len(self.document.sections) - 1))
         self._update_preview()
+        self.status_label.setText("Songbereich entfernt · Änderung noch nicht dauerhaft gespeichert.")
 
     def _sync_document(self) -> None:
         self._store_current_section()
@@ -299,7 +323,7 @@ class SongEditor(QWidget):
         self.preview.setPlainText(self.document.render())
 
     def _save_from_focus(self) -> None:
-        self.save(reason="Feld gespeichert")
+        self.save(reason="Änderung gespeichert")
 
     def save(self, *, reason: str = "gespeichert") -> Path | None:
         if self._closed:
@@ -312,24 +336,32 @@ class SongEditor(QWidget):
                 self.on_saved(target)
             return target
         except Exception as error:
-            self.status_label.setText(f"Speichern fehlgeschlagen: {type(error).__name__}")
-            QMessageBox.critical(self, "Songtext nicht gespeichert", str(error))
+            self.status_label.setText("Speichern fehlgeschlagen · der bisherige Stand bleibt geschützt.")
+            QMessageBox.critical(
+                self,
+                "Songtext nicht gespeichert",
+                f"Der bisherige gespeicherte Stand bleibt erhalten.\n\nGrund: {error}",
+            )
             return None
 
     def export(self, export_format: str, *, lyrics_only: bool = False) -> Path | None:
         try:
             self._sync_document()
             target = export_song(self.project_root, self.document, export_format, lyrics_only=lyrics_only)
-            self.status_label.setText(f"Export erstellt: {target.name}")
+            self.status_label.setText(f"Export gespeichert: {target.name}")
             return target
         except Exception as error:
-            self.status_label.setText(f"Export fehlgeschlagen: {type(error).__name__}")
-            QMessageBox.critical(self, "Export fehlgeschlagen", str(error))
+            self.status_label.setText("Export fehlgeschlagen · der Song wurde nicht verändert.")
+            QMessageBox.critical(
+                self,
+                "Export fehlgeschlagen",
+                f"Der Song wurde nicht verändert.\n\nGrund: {error}",
+            )
             return None
 
     def _autosave(self) -> None:
         if not self._closed:
-            self.save(reason="Autosave")
+            self.save(reason="automatisch gespeichert")
 
     def close_safely(self) -> None:
         if self._closed:

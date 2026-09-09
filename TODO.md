@@ -3,109 +3,79 @@
 Stand: 2026-09-09
 
 ## Ampel
-🟢 erledigt und geprüft · 🟡 teilweise · 🔴 offen · ⚫ blockiert
 
-## Iteration 9 – Songbibliothek vervollständigen
+🟢 erledigt und geprüft · 🟡 umgesetzt, finale Abnahme offen · 🔴 offen · ⚫ blockiert
 
-- 🟢 freie Suche über Titel, Genre, Stimmung, Stil, Stimme und Tags.
-- 🟢 kombinierbare Filter für Genre, Stimmung, Stil, Stimme, Tags, Status und Favoriten.
-- 🟢 Favoriten im Songeditor speicherbar und in der Bibliothek filterbar.
-- 🟢 Bearbeitungsstatus Idee, Entwurf, Überarbeitung, Fertig integriert.
-- 🟢 Sortierung nach zuletzt bearbeitet, Titel, Genre, Tags und Status; Gruppierung nach Genre, Tags und Status.
-- 🟢 Versionswiederherstellung nur nach Vorschau; aktueller Stand wird unmittelbar davor automatisch als neuer Versionsstand gesichert.
-- 🟢 fremde Versionspfade werden abgewiesen; ältere 0.7.0/0.8.0-Songs bleiben lesbar.
+## Aktueller freigegebener Stand
 
-## Iteration 10 – CI-Wartung
+### Iteration 20 – Repository-Hygiene
 
-- 🟢 `actions/checkout` von `v4` auf `v7.0.1` aktualisiert; keine fachliche Laufzeitfunktion verändert.
+- 🟢 versionierten Projektbaum auf Laufzeit-, Sicherungs-, Temp- und lokale Artefakte geprüft.
+- 🟢 unreferenziertes 2,05-MB-Root-Bild entfernt.
+- 🟢 `.gitignore` und automatischen Repo-Hygiene-Test ergänzt.
+- 🟢 Restore-spezifischen Rückfall des Git-Hygienetests ursächlich behoben.
+- 🟢 Grundprüfung #337 einschließlich Vollprüfung und Restore-Gate erfolgreich.
+- 🟢 veralteten, nicht mergebaren PR #2 geschlossen.
+- 🟢 Hygiene-Patch über PR #21 sicher in `main` übernommen.
+- 🟢 anschließender Status-Sync über PR #22 ebenfalls vollständig grün geprüft und übernommen.
 
-## Iteration 11 – PySide6-Referenzdashboard
+## Iteration 21 – Laien-UX-Konsistenz
 
-- 🟢 gesamte produktive GUI auf PySide6 6.11.2 migriert.
-- 🟢 Referenzdashboard, einzelne Recovery-Navigation und vollständige CI-/Restore-Abnahme.
+**Hauptziel:** Ein Nutzer ohne technisches Vorwissen muss jederzeit erkennen können, wo er ist, was bereits funktioniert, was nur geplant ist, was nach einem Klick passiert und was bei einem Fehler geschützt bleibt.
 
-## Iteration 12 – reale Kubuntu/X11-Endabnahme vorbereiten
+### Umsetzung
 
-- 🟢 eigener PySide6-Abnahmeassistent mit Klickstart, X11-Erkennung und isoliertem SIGTERM-Test.
-- 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner steht weiterhin aus.
+- 🟡 gesamtes produktives Projekt aus Nutzersicht auf Einstieg, Sprache, Navigation, Rückmeldung, Fehlermeldungen und Sackgassen geprüft.
+- 🟡 Dashboard-Suche wahrheitsgemäß als reine Song-Suche bezeichnet.
+- 🟡 `Logout` durch `Programm beenden` ersetzt und Speicherwirkung erklärt.
+- 🟡 technische `Entwicklerinfo` in der Oberfläche zu verständlicher `Projekt-Notiz` gemacht; bestehendes Dateiformat bleibt kompatibel.
+- 🟡 geplante Bereiche deutlich mit `In Planung` und gestricheltem Zustand markiert.
+- 🟡 Startkarte mit direkten Wegen zu Songtexte, Todo-Liste und Kalender ergänzt.
+- 🟡 Erstnutzer-Sackgasse in leerer Songbibliothek geschlossen: sichtbarer Knopf `＋ Neuen Song schreiben`.
+- 🟡 Songbibliothek gegen stille Nicht-Reaktionen gehärtet; fehlende Auswahl und leere Treffer erhalten klare Hinweise.
+- 🟡 Songeditor mit Drei-Schritt-Führung, verständlicher Speicheranzeige und Sicherheitsfrage vor Bereichsentfernung verbessert.
+- 🟡 Versionswiederherstellung zusätzlich vor dem tatsächlichen Restore bestätigungspflichtig gemacht; bestehende automatische Sicherung bleibt aktiv.
+- 🟡 Todo, Kalender und Profilverwaltung sprachlich vereinheitlicht und mit sichtbarem nächsten Schritt versehen.
+- 🟡 Recovery als `Fehlerhilfe (Recovery)` auf Nutzerfragen ausgerichtet; technische Details bleiben standardmäßig verborgen.
+- 🟡 Schnellstart und grafische Startanzeige auf sechs verständliche Prüfschritte umgestellt.
+- 🟡 `ANLEITUNG_LAIEN.md` auf 30-Sekunden-Einstieg und konkrete Arbeitsabläufe neu aufgebaut.
+- 🟡 README von historischer Doppelpflege befreit, auf Version 0.14.0 synchronisiert und als aktuelle Projektübersicht neu strukturiert.
+- 🟡 neuen GUI-Regressionstest `tests/test_layman_ux_gui.py` ergänzt: Beschriftungswahrheit, geplante Zustände, Erstnutzer-Songstart, Nicht-Silent-Fail, Sicherheitsfrage und Kernkontraste ≥ 4,5:1.
+- 🟡 Laien-UX-Test in `bash scripts/pruefen.sh --full` integriert.
 
-## Iteration 13 – Zoom und Schriftgröße
+### Schutzgrenzen
 
-- 🟢 `Strg + Mausrad`, `Strg++`, `Strg+-`, `Strg+0` sowie A−/A+ umgesetzt.
-- 🟢 Zoom gilt gemeinsam für Dashboard, Songeditoren, Songbibliothek, Recovery, Profilverwaltung, Todo und Kalender.
+- 🟢 keine Datenmigration.
+- 🟢 keine Änderung der Song-, Todo-, Kalender- oder Profil-Speicherformate.
+- 🟢 keine Änderung des zentralen atomaren Schreibwegs.
+- 🟢 keine Änderung der Backup-/Restore-Fachlogik.
+- 🟢 keine neue Hauptfunktion außerhalb des bestehenden Umfangs; der neue Song-Knopf macht nur den bereits vorhandenen Songeditor erreichbar.
 
-## Iteration 14 – profilbasierte DB-Eingaben
+### Finale Abnahme
 
-- 🟢 Profile HardTechno, HipHop/Rap und Hörspiele als sofort nutzbare Startprofile.
-- 🟢 getrennte Werte für Genres, Stimmungen, Stil, Stimme und Besonderheiten.
-- 🟢 Profil- und Kategorienverwaltung in eigener PySide6-Oberfläche.
-- 🟢 Profilauswahl direkt in der DB-Karte des Dashboards; Auswahlfelder werden passend befüllt.
-- 🟢 neue Profile/Werte speicherbar; Duplikate werden verhindert; Entfernen verlangt Bestätigung.
-- 🟢 atomare JSON-Speicherung unter `daten/profile/db_profile.json`; Startprofile erzeugen ohne Änderung keine Nutzerdatendatei.
+- 🔴 GitHub-Grundprüfung für den vollständigen Iteration-21-Branch ausführen.
+- 🔴 Restore-Gate für denselben geprüften Branch erfolgreich bestätigen.
+- 🔴 erst danach per Safe Merge in `main` übernehmen.
 
-## Iteration 15 – Todo-Liste
+## Danach
 
-- 🟢 Aufgabe mit Pflicht-Titel und optionaler Notiz anlegbar.
-- 🟢 optionaler Termin mit Datum und Uhrzeit.
-- 🟢 aktive Aufgaben nach Termin sortiert in eigener Ansicht.
-- 🟢 Abhaken verschiebt die vollständige Aufgabe in derselben atomaren Transaktion ins Archiv.
-- 🟢 Archiv ist getrennt sichtbar; beim Abhaken wird nichts gelöscht.
-- 🟢 gemeinsamer Bestand unter `daten/todo/todo.json`, atomar mit Tempdatei, `fsync` und `os.replace`.
-- 🟢 Todo ist unter `Planung → Todo-Liste` erreichbar und folgt der zentralen Zoomsteuerung.
+1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen.
+2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
+3. 🔴 anschließend nur noch einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
-## Iteration 16 – Kalender
+## Geplante Produktbereiche
 
-- 🟢 echte Tagesansicht für den gewählten Kalendertag.
-- 🟢 Wochenansicht von Montag bis zum folgenden Montag.
-- 🟢 Monatsansicht vom ersten Tag bis zum ersten Tag des Folgemonats.
-- 🟢 Jahresansicht vom 1. Januar bis zum 1. Januar des Folgejahres.
-- 🟢 Termine mit Titel, optionaler Notiz, Beginn und Ende anlegbar; Ende muss nach Beginn liegen.
-- 🟢 optionale Erinnerungen: Terminbeginn, 5/15/30/60 Minuten oder 1 Tag vorher.
-- 🟢 Erinnerungsprüfung alle 30 Sekunden, solange das Dashboard läuft, auch bei geschlossenem Kalenderfenster.
-- 🟢 Erinnerung wird erst nach Anzeige atomar als erledigt markiert; keine Wiederholungsmeldung desselben Termins.
-- 🟢 Kalenderdaten atomar unter `daten/kalender/termine.json`; in dieser Iteration keine destruktive Terminlöschung.
-- 🟢 Kalender ist unter `Planung → Kalender` erreichbar und folgt der zentralen Zoomsteuerung.
+Noch nicht freigegeben und deshalb in der Oberfläche sichtbar als `In Planung` markiert:
 
-## Iteration 17 – Prozess- und Schreibkonsistenz
+- Hörspiele
+- Blogartikel
+- Prompts
+- GitHub-Repositories als eigenes Dashboardmodul
+- Genre-Zufall
+- Reimfinder
+- Dateisuche
+- Textinhalt-Suche
+- Trefferliste
+- Duplikatprüfer
 
-- 🟢 Profil-, Todo-, Kalender-, Song-, Versions- und Exportdateien verwenden denselben zentralen atomaren Schreibweg.
-- 🟢 eindeutige Tempdateien statt fester `.tmp`-Namen verhindern Kollisionen paralleler Schreibversuche.
-- 🟢 Dateiinhalt wird vor dem Ersetzen synchronisiert; Verzeichniseintrag wird auf unterstützten Dateisystemen zusätzlich synchronisiert.
-- 🟢 zweite schreibende Dashboard-Instanz pro Projektordner wird mit `QLockFile` kontrolliert blockiert.
-- 🟢 kontrollierter Mehrfachstart erzeugt keinen falschen Absturzbericht des Prozesswächters.
-- 🟢 Todo- und Kalendertermine verwenden dieselbe lokale, zeitzonenlose Datum/Zeit-Semantik.
-- 🟢 beschädigte Profilbestände mit doppelten Werten werden nicht mehr still verändert, sondern als Fehler gemeldet.
-- 🟢 ENOSPC-/EROFS-Simulation prüft den echten Produktionsschreiber.
-
-## Iteration 18 – Diagnose-I/O-Konsistenz
-
-- 🟢 Diagnose-ZIP verwendet eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync`.
-- 🟢 SHA-256-Begleitdatei nutzt den zentralen atomaren Textschreiber.
-- 🟢 schneller Mehrfachexport erhält durch Mikrosekunden eindeutige Zielnamen.
-- 🟢 Regression für eindeutige Dateinamen und Replace-Fehler ergänzt.
-- 🟢 GitHub-Grundprüfung inklusive `scripts/pruefen.sh --full` und Restore-Gate erfolgreich bestätigt.
-
-## Iteration 19 – Backup- und Berichtsschreiber
-
-- 🟢 Backup-ZIP auf eindeutige Tempdatei, Datei-`fsync`, atomaren Replace und bestmöglichen Verzeichnis-`fsync` umgestellt.
-- 🟢 SHA-256-Begleitdatei und RESTORE-JSON-Bericht auf zentralen atomaren Textschreiber umgestellt.
-- 🟢 Backup-Dateinamen um Mikrosekunden gegen schnelle Mehrfachlauf-Kollisionen ergänzt.
-- 🟢 Regression für Replace-Fehler, Altbestandsschutz und Temp-Cleanup ergänzt.
-- 🟢 GitHub-Grundprüfung Run #315 inklusive Vollprüfung und Restore-Gate erfolgreich; PR #19 per Squash-Merge in `main` übernommen (`72719acbef5be379c1340b5771962a81fb40fc85`).
-
-## Iteration 20 – Repository-Hygiene
-
-- 🟢 gesamten versionierten `main`-Baum auf typische Laufzeit-, Sicherungs-, Temp- und lokale Artefakte geprüft; außer dem unten genannten Root-Bild keine solchen Bestände gefunden.
-- 🟢 unreferenziertes Root-Bild `ChatGPT Image 8. Sept. 2026, 02_16_14.png` (2.056.107 Bytes) entfernt.
-- 🟢 `.gitignore` um typische unsortierte lokale Bildexporte im Repository-Root ergänzt, ohne reguläre Projektbilder global zu sperren.
-- 🟢 `tests/test_repo_hygiene.py` ergänzt und in `scripts/pruefen.sh --full` eingebunden.
-- 🟢 Restore-Rückfall des neuen Tests ursächlich behoben: ohne `.git` wird nur dieser Git-spezifische Hygiene-Test übersprungen; das Restore-Gate selbst bleibt vollständig aktiv.
-- 🟢 Grundprüfung Run #337 inklusive Vollprüfung und Restore-Gate erfolgreich.
-- 🟢 veralteten, nicht mergebaren PR #2 als überholt geschlossen; kein alter Code übernommen.
-- 🟢 PR #21 per Squash-Merge in `main` übernommen (`aa66dc5ed106e470a533c4dd9f65cf80b726b05c`).
-
-## Nächste Freigabepunkte
-
-1. 🟡 reale Kubuntu/KDE-X11-Sichtabnahme mit `bash kubuntu_abnahme.sh` abschließen.
-2. 🔴 danach verbleibende direkte Berichtsschreiber auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
-3. 🔴 README-/Manifest-Stand in einer eigenen reinen Dokumentationsiteration synchronisieren; README weist noch den älteren Stand 0.13.1 aus.
+Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md`; sie wird bewusst nicht mehr im TODO doppelt gepflegt.
