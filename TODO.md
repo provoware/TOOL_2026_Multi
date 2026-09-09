@@ -69,12 +69,14 @@ Stand: 2026-09-09
 
 ### Abnahme
 
-- 🟢 erster Produktions-/Test-Head `cf2d694564909de72dfc65891af23fc525e87cc9` in Grundprüfung #428 vollständig erfolgreich.
-- 🟢 75 Logik-/Regressionstests erfolgreich.
-- 🟢 50 PySide6-GUI-Tests einschließlich Theme-, Accessibility-, Zoom- und Responsive-Regressionen erfolgreich.
-- 🟢 Vollprojekt-Restore `OK`, SHA-256 `76a861f4e2e2466906f0eee50f1d19339aa2ea5709c0a540cf0bb51b15a49d20`.
-- 🟡 Doku/MANIFEST/TODO/CHANGELOG werden in diesem PR synchronisiert und der dadurch entstehende finale PR-Head nochmals vollständig geprüft.
-- 🔒 kein Merge vor grünem finalem Vollprüfungs- und Restore-Gate.
+- 🟢 Vorprüfung #428 für den Produktions-/Teststand vollständig erfolgreich.
+- 🟢 finaler PR-Head `d750b98e0d98d7abe0441930f9ea52f0e0e85065` in Grundprüfung **#440** vollständig erfolgreich.
+- 🟢 **75 Logik-/Regressionstests** erfolgreich.
+- 🟢 **50 PySide6-GUI-Tests** einschließlich Theme-, Accessibility-, Zoom- und Responsive-Regressionen erfolgreich.
+- 🟢 Release-Manifest mit **36 freigegebenen Betriebsdateien** erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, finale Restore-SHA-256 `ef1fd94f7a3a421416935373a213bba696407c80b441cf5a8108d22ea11c880f`.
+- 🟢 PR #27 per Squash-Merge sicher in `main` übernommen.
+- 🟢 resultierender Main-Commit: `234f2f5279dc5b6e6d334010da701d3a53ad6ebb`.
 
 ## Danach
 

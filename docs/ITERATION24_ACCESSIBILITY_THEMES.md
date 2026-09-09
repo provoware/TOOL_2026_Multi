@@ -28,7 +28,9 @@ Die vorhandene Oberfläche wird ohne Eingriff in Nutzerdaten oder Fachlogik bess
 
 ## Automatische Prüfung
 
-GitHub-Grundprüfung **Run #428** für den reinen Produktions-/Teststand war vollständig erfolgreich:
+### Vorprüfung
+
+GitHub-Grundprüfung **#428** für den reinen Produktions-/Teststand war vollständig erfolgreich:
 
 - 75 Logik-/Regressionstests: **OK**
 - 50 PySide6-GUI-Tests: **OK**
@@ -39,7 +41,28 @@ GitHub-Grundprüfung **Run #428** für den reinen Produktions-/Teststand war vol
 - Restore-SHA-256: `76a861f4e2e2466906f0eee50f1d19339aa2ea5709c0a540cf0bb51b15a49d20`
 - geprüfter Code-Head: `cf2d694564909de72dfc65891af23fc525e87cc9`
 
-Die GUI-Regression prüft zusätzlich für alle vier Themes die zentralen Text-, Hinweis-, Akzent-, Fokus-, Status- und Fehlerfarben gegen den jeweiligen Hintergrund mit mindestens **4,5:1** Kontrast.
+### Finale PR-Abnahme
+
+Nach Synchronisierung von README, Laienanleitung, TODO, MANIFEST, CHANGELOG und Iterationsdokument wurde der endgültige PR-Head nochmals vollständig geprüft:
+
+- GitHub-Grundprüfung **#440**: **SUCCESS**
+- geprüfter PR-Head: `d750b98e0d98d7abe0441930f9ea52f0e0e85065`
+- 75 Logik-/Regressionstests: **OK**
+- 50 PySide6-GUI-Tests: **OK**
+- Release-Manifest: **36 Betriebsdateien**
+- Headless-Start: **OK**
+- Vollprojekt-Restore: **OK**
+- finale Restore-SHA-256: `ef1fd94f7a3a421416935373a213bba696407c80b441cf5a8108d22ea11c880f`
+- Restore-Version: `0.15.0`
+
+Die GUI-Regression prüft für alle vier Themes die zentralen Text-, Hinweis-, Akzent-, Fokus-, Status- und Fehlerfarben gegen den jeweiligen Hintergrund mit mindestens **4,5:1** Kontrast.
+
+## Safe Merge
+
+PR #27 wurde nach der vollständig grünen finalen Abnahme per Squash-Merge in `main` übernommen.
+
+- Merge-Commit: `234f2f5279dc5b6e6d334010da701d3a53ad6ebb`
+- keine nachträgliche Änderung an Produktionslogik oder Nutzerdaten.
 
 ## Schutzgrenzen
 
