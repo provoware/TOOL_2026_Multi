@@ -97,12 +97,14 @@ Stand: 2026-09-09
 
 - 🟠 erste Grundprüfung #464 deckte zwei begrenzte Rückfälle auf: fehlendes Testdouble für den neuen Startimport sowie eine ungewollte Wiederherstellung der Planungskarten beim Übergang in den bestehenden 175/200-%-Hochzoom.
 - 🟢 beide Ursachen minimal korrigiert; keine Erweiterung des Funktionsumfangs.
-- 🟢 korrigierter Produktions-/Test-Head `d21799baa13562496b5e0821a17b1fb2c6cd89fe` in Grundprüfung **#468** vollständig erfolgreich.
+- 🟢 korrigierter Produktions-/Test-Head `d21799baa13562496b5e0821a17b1fb2c6cd89fe` in Grundprüfung #468 vollständig erfolgreich.
+- 🟢 finaler Evidence-Sync-Head `d8f07560d4974708d8fa38ae57de4b1910bc536f` in Grundprüfung **#478** vollständig erfolgreich.
 - 🟢 **75 Logik-/Regressionstests** und **52 PySide6-GUI-Tests** erfolgreich.
 - 🟢 Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich.
-- 🟢 Vollprojekt-Restore `OK`, SHA-256 `9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01`.
-- 🟡 Evidence-Sync ist im PR; dessen finaler Head muss vor Merge dieselbe Voll-/Restore-Prüfung erneut bestehen.
-- 🔒 kein Merge vor vollständig grünem finalem Head-Gate.
+- 🟢 Headless-Start erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, finale SHA-256 `5ac25bbd0499d30ad1ace80f1b6ffa0faa6db70e24fec6e30a0d9095420ce825`.
+- 🟢 PR #29 per Squash-Merge sicher in `main` übernommen.
+- 🟢 resultierender Main-Commit: `1a64810fd2e202045666538f57054951e5099257`.
 
 ## Danach
 
