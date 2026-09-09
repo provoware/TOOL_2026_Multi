@@ -42,7 +42,7 @@ Stand: 2026-09-09
 
 - 🟡 GitHub-Grundprüfung Run #368: **75 Logiktests grün**, aber drei GUI-Regressionen durch veraltete Testannahmen beziehungsweise zu starre Kartenbreitenprüfung.
 - 🟡 Restore-Gate von Run #368 wurde deshalb nicht gestartet.
-- 🟡 diese Nachprüfung wird mit Iteration 22 ursächlich korrigiert und vollständig wiederholt.
+- 🟢 die drei Nachprüfungsfehler wurden in Iteration 22 ursächlich korrigiert und erneut vollständig geprüft.
 
 ## Iteration 22 – Responsive Design und visuelle Härtung
 
@@ -50,24 +50,28 @@ Stand: 2026-09-09
 
 ### Umsetzung
 
-- 🟡 moderne zentrale Dark-/Amber-Palette mit ruhigerer Flächenhierarchie und stärkerem Fokuskontrast umgesetzt.
-- 🟡 systemweite Sans-Serif-Schrift ohne externe Font-Abhängigkeit festgelegt.
-- 🟡 Schriftgrößen, Innenabstände, Rundungen, Eingabehöhen, Tabs, Scrollleisten und Splitter zentral vereinheitlicht.
-- 🟡 orange Vollrahmen auf Karten reduziert; Akzentfarbe gezielt für Primäraktionen, Fokus und Status eingesetzt.
-- 🟡 aktive Navigation mit dunkler Auswahlfläche und linker Akzentlinie modernisiert.
-- 🟡 responsive Breitenstufen für kompakte, normale und breite Fenster eingeführt.
-- 🟡 Sidebar, Dashboard-Suche, Profilfelder und Songbereichsliste passen sich dynamisch an die Fensterbreite an.
-- 🟡 Songeditor-Splitter verteilt Arbeitsfläche und Gesamtvorschau dynamisch.
-- 🟡 Songbibliothek nutzt verfügbare Tabellenbreite gezielt für Titel und Tags; kurze Spalten bleiben inhaltsbezogen.
-- 🟡 drei Rückfälle aus Run #368 ursächlich korrigiert: Suchplatzhalter-Test, Recovery-Beschriftung und starre Kartenbreitenannahme.
-- 🟡 Responsive-Regressionen für Dashboardbreiten und Bibliotheksspalten ergänzt.
+- 🟢 moderne zentrale Dark-/Amber-Palette mit ruhigerer Flächenhierarchie und stärkerem Fokuskontrast umgesetzt.
+- 🟢 systemweite Sans-Serif-Schrift ohne externe Font-Abhängigkeit festgelegt.
+- 🟢 Schriftgrößen, Innenabstände, Rundungen, Eingabehöhen, Tabs, Scrollleisten und Splitter zentral vereinheitlicht.
+- 🟢 orange Vollrahmen auf Karten reduziert; Akzentfarbe gezielt für Primäraktionen, Fokus und Status eingesetzt.
+- 🟢 aktive Navigation mit dunkler Auswahlfläche und linker Akzentlinie modernisiert.
+- 🟢 responsive Breitenstufen für kompakte, normale und breite Fenster eingeführt.
+- 🟢 Sidebar, Dashboard-Suche, Profilfelder und Songbereichsliste passen sich dynamisch an Fensterbreite und Zoom an.
+- 🟢 Songeditor-Splitter verteilt Arbeitsfläche und Gesamtvorschau dynamisch.
+- 🟢 Songbibliothek nutzt verfügbare Tabellenbreite gezielt für Titel und Tags; kurze Spalten bleiben inhaltsbezogen.
+- 🟢 drei Rückfälle aus Run #368 ursächlich korrigiert: Suchplatzhalter-Test, Recovery-Beschriftung und starre Kartenbreitenannahme.
+- 🟢 Responsive-Regressionen für Dashboardbreiten, Zoom-Breitenreserve und Bibliotheksspalten ergänzt.
 - 🟢 Datenformate, atomarer Schreibweg, Backup und Restore-Fachlogik unverändert.
 
-### Finale Abnahme
+### Abnahme
 
-- 🔴 vollständige GitHub-Grundprüfung für Iteration 22 ausführen.
-- 🔴 Vollprojekt-Restore-Gate für denselben Head erfolgreich bestätigen.
-- 🔴 erst danach per Safe Merge in `main` übernehmen.
+- 🟢 GitHub-Grundprüfung **Run #385** vollständig erfolgreich.
+- 🟢 **75 Logik-/Regressionstests** erfolgreich.
+- 🟢 **46 PySide6-GUI-Tests** einschließlich Laien-, Responsive-, Zoom- und Tabellenprüfung erfolgreich.
+- 🟢 Schreibfehler-Simulation und Release-Manifestprüfung erfolgreich; 36 freigegebene Betriebsdateien.
+- 🟢 Vollprojekt-Restore erfolgreich, Restore-Status `OK`.
+- 🟢 Restore-SHA-256: `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`.
+- 🔒 Safe-Merge-Regel bleibt bestehen: nur mergen, wenn auch der aktuelle PR-Head nach diesem reinen Evidence-Sync grün ist.
 
 ## Danach
 
