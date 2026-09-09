@@ -72,6 +72,15 @@ def theme_colors(theme_name: str | None = None) -> dict[str, str]:
     return THEMES.get(theme_name or DEFAULT_THEME, THEMES[DEFAULT_THEME])
 
 
+def _application_theme_name() -> str:
+    app = QApplication.instance()
+    if app is not None:
+        value = app.property("provowareTheme")
+        if isinstance(value, str) and value in THEMES:
+            return value
+    return DEFAULT_THEME
+
+
 def scaled(value: int, zoom_percent: int) -> int:
     """Skaliert Schriftwerte vollständig mit dem gewählten Zoom."""
     return max(1, round(value * zoom_percent / 100))
@@ -406,7 +415,10 @@ def _clean_accessible_text(text: str) -> str:
 
 def _apply_accessibility(widget: QWidget) -> None:
     """Ergänzt robuste Tastatur- und Screenreader-Grundwerte ohne Fachlogik."""
-    interactive_types = (QPushButton, QToolButton, QLineEdit, QTextEdit, QPlainTextEdit, QComboBox, QCheckBox, QListWidget, QTreeWidget, QTableWidget)
+    interactive_types = (
+        QPushButton, QToolButton, QLineEdit, QTextEdit, QPlainTextEdit,
+        QComboBox, QCheckBox, QListWidget, QTreeWidget, QTableWidget,
+    )
     for control_type in interactive_types:
         for control in widget.findChildren(control_type):
             control.setFocusPolicy(Qt.StrongFocus)
@@ -431,29 +443,110 @@ def _apply_accessibility(widget: QWidget) -> None:
                 control.setAccessibleName(name)
 
 
-def apply_global_style(widget: QWidget, zoom_percent: int = 100, theme_name: str | None = None) -> None:
-    selected = theme_name or getattr(widget, "theme_name", DEFAULT_THEME)
-    if selected not in THEMES:
-        selected = DEFAULT_THEME
-    widget.theme_name = selected  # type: ignore[attr-defined]
-    widget.setStyleSheet(app_stylesheet(zoom_percent, selected))
+def _refresh_accent_labels(widget: QWidget, theme_name: str) -> None:
+    colors = theme_colors(theme_name)
+    for label in widget.findChildren(QLabel):
+        if label.objectName() == "accent" and label.styleSheet():
+            style = label.styleSheet()
+            if "font-size: 23pt" in style:
+                label.setStyleSheet(f"font-size: 23pt; color: {colors['accent']}; font-weight: 700;")
+
+
+def _apply_theme_to_widget(widget: QWidget, zoom_percent: int, theme_name: str) -> None:
+    widget.theme_name = theme_name  # type: ignore[attr-defined]
+    widget.setStyleSheet(app_stylesheet(zoom_percent, theme_name))
     font = QFont(UI_FONT_FAMILY)
     font.setPointSize(scaled(FONTS["body_size"], zoom_percent))
     widget.setFont(font)
+    _refresh_accent_labels(widget, theme_name)
     _apply_accessibility(widget)
     _install_responsive_layout(widget)
 
 
+def set_application_theme(theme_name: str) -> None:
+    """Wechselt das Theme für alle geöffneten Provoware-Fenster derselben Sitzung."""
+    if theme_name not in THEMES:
+        return
+    app = QApplication.instance()
+    if app is None:
+        return
+    app.setProperty("provowareTheme", theme_name)
+    for top in app.topLevelWidgets():
+        if not isinstance(top, QWidget):
+            continue
+        _apply_theme_to_widget(top, _zoom_percent(top), theme_name)
+        combo = getattr(top, "theme_combo", None)
+        if isinstance(combo, QComboBox) and combo.currentText() != theme_name:
+            combo.blockSignals(True)
+            combo.setCurrentText(theme_name)
+            combo.blockSignals(False)
+
+
+def _install_theme_selector(widget: QWidget) -> None:
+    """Fügt dem Dashboard einen kompakten, tastaturbedienbaren Theme-Schalter hinzu."""
+    if widget.__class__.__name__ != "Dashboard" or hasattr(widget, "theme_combo"):
+        return
+    status = None
+    for frame in widget.findChildren(QFrame):
+        if frame.objectName() == "statusBar":
+            status = frame
+            break
+    if status is None or status.layout() is None:
+        return
+
+    layout = status.layout()
+    legend = None
+    for label in status.findChildren(QLabel):
+        if label.text().startswith("Gestrichelt"):
+            legend = label
+            break
+    widget.status_legend = legend  # type: ignore[attr-defined]
+
+    label = QLabel("Farben:")
+    label.setObjectName("muted")
+    combo = QComboBox()
+    combo.setObjectName("theme_selector")
+    combo.addItems(THEME_NAMES)
+    combo.setCurrentText(_application_theme_name())
+    combo.setToolTip("Farbtheme für alle geöffneten Provoware-Fenster. Die Auswahl gilt für diese Sitzung.")
+    combo.setAccessibleName("Farbtheme auswählen")
+    combo.setAccessibleDescription("Wähle Amber, Türkis, Lila oder Kontrast. Die Auswahl verändert keine Nutzerdaten.")
+    combo.currentTextChanged.connect(set_application_theme)
+    widget.theme_combo = combo  # type: ignore[attr-defined]
+
+    if legend is not None:
+        index = layout.indexOf(legend)
+        layout.insertWidget(index, label)
+        layout.insertWidget(index + 1, combo)
+    else:
+        layout.addWidget(label)
+        layout.addWidget(combo)
+
+
+def apply_global_style(widget: QWidget, zoom_percent: int = 100, theme_name: str | None = None) -> None:
+    selected = theme_name or getattr(widget, "theme_name", None) or _application_theme_name()
+    if selected not in THEMES:
+        selected = DEFAULT_THEME
+    app = QApplication.instance()
+    if app is not None and app.property("provowareTheme") is None:
+        app.setProperty("provowareTheme", selected)
+    _apply_theme_to_widget(widget, zoom_percent, selected)
+    _install_theme_selector(widget)
+    _apply_accessibility(widget)
+    _apply_responsive_layout(widget)
+
+
 def configure_application(app: QApplication, zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> None:
     app.setStyle("Fusion")
+    app.setProperty("provowareTheme", theme_name if theme_name in THEMES else DEFAULT_THEME)
     font = QFont(UI_FONT_FAMILY)
     font.setPointSize(scaled(FONTS["body_size"], zoom_percent))
     app.setFont(font)
-    app.setStyleSheet(app_stylesheet(zoom_percent, theme_name))
+    app.setStyleSheet(app_stylesheet(zoom_percent, _application_theme_name()))
 
 
-def severity_display(severity: str, theme_name: str = DEFAULT_THEME) -> tuple[str, str]:
-    colors = theme_colors(theme_name)
+def severity_display(severity: str, theme_name: str | None = None) -> tuple[str, str]:
+    colors = theme_colors(theme_name or _application_theme_name())
     key = severity.upper()
     color_key = "green" if key in {"INFO", "HINWEIS"} else "yellow" if key == "WARNUNG" else "red" if key in {"FEHLER", "KRITISCH", "SCHWER", "ABSTURZ"} else "blocked"
     return "●", colors[color_key]
