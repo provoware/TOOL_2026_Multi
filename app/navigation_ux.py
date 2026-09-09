@@ -263,11 +263,7 @@ class NavigationUxController(QObject):
     def _restricted(self) -> bool:
         zoom = int(getattr(self.dashboard, "zoom_percent", 100))
         from app.laptop_layout import _is_laptop_compact
-        return (
-            zoom >= 175
-            or bool(self.dashboard.property("provowareLaptopCompact"))
-            or _is_laptop_compact(self.dashboard)
-        )
+        return zoom >= 175 or _is_laptop_compact(self.dashboard)
 
     def sync_visibility(self) -> None:
         collapsed = bool(getattr(self.dashboard, "nav_collapsed", False))
