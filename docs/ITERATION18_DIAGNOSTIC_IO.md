@@ -19,6 +19,12 @@ Den Diagnoseexport auf dieselben sicheren Temp-/fsync-/Replace-Regeln wie die pr
 2. ein simulierter Replace-Fehler hinterlässt weder Teil-ZIP noch `.tmp` noch SHA-Datei;
 3. bestehende Datenschutz-/ZIP-Prüfung bleibt aktiv.
 
+## Abnahme / Evidence
+- GitHub Actions `Grundprüfung`, Run #294, Commit `8b2863ac1983fd3cef8a4b6751c72f040e564d6c`: **success**.
+- Der Workflow führt verbindlich `bash scripts/pruefen.sh --full` aus.
+- Derselbe Workflow führt danach `python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"` aus.
+- Damit sind Vollprüfung und Restore-Gate für den geprüften Produktionspatch grün nachgewiesen.
+
 ## Nicht verändert
 - Append-only Ereignislogs;
 - Nutzerdaten;
