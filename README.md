@@ -1,8 +1,8 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.14.0 · **Stand:** 09.09.2026 · **Status:** ausführbarer Kern, automatische Prüfungen aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
+> **Version:** 0.14.1 · **Stand:** 09.09.2026 · **Status:** ausführbarer Kern, responsive Designhärtung in Abnahme, reale Kubuntu/KDE-X11-Sichtabnahme danach noch offen
 
-Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen** ausgelegt.
+Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen** ausgelegt und passt zentrale Bedienelemente dynamisch an die verfügbare Fensterbreite an.
 
 ## Schnellstart
 
@@ -29,6 +29,22 @@ ANLEITUNG_LAIEN.md
 - 🟢 **Kalender** – Tag/Woche/Monat/Jahr, Termine und Erinnerungen
 - 🟢 **Fehlerhilfe (Recovery)** – einfache Erklärung, Schutzmaßnahme und nächster Schritt; technische Details nur bei Bedarf
 - 🟢 **Zoom 100–200 %** – gemeinsam für alle Hauptfenster
+
+## Modernes und dynamisches Erscheinungsbild
+
+Die Oberfläche verwendet zentrale, wiederverwendbare UI-Standards statt einzelner Sonderformatierungen:
+
+- ruhiges dunkles Grunddesign mit gezielten Amber-Akzenten,
+- gut lesbare systemweite Sans-Serif-Schrift ohne zusätzliche Font-Installation,
+- klarer Cyan-Fokus für Tastaturbedienung,
+- gleichmäßige Abstände, Rundungen und Eingabehöhen,
+- kompaktere Darstellung bei schmaleren Fenstern,
+- großzügigere Navigation und Suche bei breiten Fenstern,
+- dynamische Aufteilung von Songtext-Arbeitsbereich und Gesamtvorschau,
+- adaptive Songbibliothek: Titel und Tags nutzen freie Breite, kurze Spalten bleiben kompakt,
+- deutlich greifbarere Splitter und Scrollleisten.
+
+Die aktuelle Responsive-Logik unterscheidet grob zwischen **kompakt unter 1100 px**, **normal ab 1100 px** und **breit ab 1450 px**. Die bestehenden Zoomstufen bleiben davon unabhängig erhalten.
 
 ## Was ist noch geplant?
 
@@ -207,6 +223,7 @@ Sie prüft unter anderem:
 - reale PySide6-Bedienwege im Offscreen-Test
 - Zoom und Fokus
 - Laienführung, wahrheitsgemäße Beschriftungen und Nicht-Silent-Fail-Verhalten
+- responsive Breiten- und Tabellenverteilung
 - wichtige Textkontraste mit mindestens 4,5:1
 - Repository-Hygiene
 
@@ -224,7 +241,7 @@ Die automatische CI ersetzt keine echte sichtbare Prüfung auf dem Zielrechner. 
 bash kubuntu_abnahme.sh
 ```
 
-Diese reale Sichtabnahme bleibt der nächste Freigabeschritt nach erfolgreicher Iteration 21.
+Diese reale Sichtabnahme bleibt der nächste Freigabeschritt nach vollständig grüner Iteration 22.
 
 ## Projektstruktur
 
@@ -247,12 +264,13 @@ backups/    lokale Sicherungen, nicht versioniert
 - `TODO.md` – aktueller Entwicklungsstand und offene Freigabepunkte
 - `CHANGELOG.md` – Versionshistorie
 - `MANIFEST.json` – maschinenlesbarer Projekt- und Freigabestand
-- `docs/ITERATION21_LAIEN_UX.md` – Befund und Abnahme der aktuellen UX-Iteration
+- `docs/ITERATION21_LAIEN_UX.md` – Laien-UX-Befund
+- `docs/ITERATION22_RESPONSIVE_DESIGN.md` – Responsive Design-, Screenshot- und Abnahmebericht
 
 ## Noch offen
 
-1. Iteration 21 nur nach grüner Vollprüfung und grünem Restore-Gate in `main` übernehmen.
+1. Iteration 22 nur nach grüner Vollprüfung und grünem Restore-Gate in `main` übernehmen.
 2. Danach reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner durchführen.
 3. Anschließend verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs nicht unnötig auf Dateiersatz umstellen.
 
-Die detaillierte Versionshistorie steht bewusst **nicht mehr doppelt in der README**, sondern ausschließlich im `CHANGELOG.md` und den Iterationsdokumenten.
+Die detaillierte Versionshistorie steht bewusst **nicht mehrfach in der README**, sondern im `CHANGELOG.md` und den Iterationsdokumenten.

@@ -1,17 +1,17 @@
 {
-  "schema_version": 18,
+  "schema_version": 19,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.14.0",
+    "version": "0.14.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-09"
   },
   "iteration": {
-    "number": 21,
-    "goal": "Gesamte produktive Bedienung aus Nutzersicht laienfreundlich, wahrheitsgemaess und ohne stille Sackgassen vereinheitlichen",
-    "completed": 15,
-    "open_next": 3
+    "number": 22,
+    "goal": "Erscheinungsbild, Schrift, Abstaende und dynamische Groessenanpassung auf realen Kubuntu-Screenshots basierend professionell haerten",
+    "completed": 13,
+    "open_next": 1
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -62,8 +62,21 @@
     "iteration20_restore_gate": true,
     "iteration20_tested_head_sha": "caefca0d51b158ac9a3c8cfedc6fb18e0899a580",
     "iteration20_merged_main_sha": "aa66dc5ed106e470a533c4dd9f65cf80b726b05c",
-    "iteration21_ci_result": "pending",
-    "iteration21_restore_gate": false
+    "iteration21_ci_run": 368,
+    "iteration21_ci_result": "failure",
+    "iteration21_ci_logic_tests": "75 passed",
+    "iteration21_ci_cause": "Drei GUI-Rueckfaelle: Suchplatzhalter-Test, alte Recovery-Beschriftung und starre Kartenbreitenannahme",
+    "iteration21_restore_gate": false,
+    "iteration21_merged_main_sha": "47a6124061268843d05d98ddadcb90066cc0d851",
+    "iteration22_ci_run": 385,
+    "iteration22_ci_result": "success",
+    "iteration22_logic_tests": 75,
+    "iteration22_gui_tests": 46,
+    "iteration22_release_files": 36,
+    "iteration22_restore_gate": true,
+    "iteration22_restore_status": "OK",
+    "iteration22_restore_sha256": "c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de",
+    "iteration22_tested_head_sha": "1ae0a32a328b09f9a12f6017d9b68ecc5c5ed4b7"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -75,10 +88,16 @@
     "framework": "PySide6",
     "framework_version": "6.11.2",
     "dashboard_title": "Provoware-Datenbank-Dashboard 2026",
-    "reference_theme": "Dark Orange Industrial",
+    "reference_theme": "Modern Dark Amber",
+    "font_family": "Sans Serif",
+    "external_font_dependency": false,
     "zoom_levels_percent": [100, 125, 150, 175, 200],
     "zoom_managed_windows": ["dashboard", "song_editor", "song_library", "recovery", "profile_editor", "todo", "calendar"],
     "font_size_follows_zoom": true,
+    "responsive_breakpoints_px": {"compact_below": 1100, "wide_from": 1450},
+    "responsive_components": ["dashboard_sidebar", "dashboard_search", "profile_controls", "song_section_list", "song_editor_splitter", "song_library_columns"],
+    "song_library_stretch_columns": ["title", "tags"],
+    "splitters_non_collapsible": true,
     "layman_guidance": true,
     "planned_features_visibly_marked": true,
     "planned_feature_label": "In Planung",
@@ -205,10 +224,10 @@
     {"path":"app/calendar_window.py","release":true,"purpose":"Schrittgeführte Kalender-Oberfläche"},
     {"path":"app/song_document.py","release":true,"purpose":"Songdaten, Versionen und Exporte"},
     {"path":"app/song_editor.py","release":true,"purpose":"Schrittgeführter Songtexteditor mit sicheren Bestätigungen"},
-    {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek mit sichtbarem Erstnutzer-Einstieg und klaren Rückmeldungen"},
+    {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek mit sichtbarem Erstnutzer-Einstieg, responsiver Tabelle und klaren Rückmeldungen"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
     {"path":"app/ui.py","release":true,"purpose":"Laiengeführtes PySide6-Referenzdashboard"},
-    {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale UI-, Fokus-, Planungs- und Kontraststandards"},
+    {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale responsive UI-, Schrift-, Fokus-, Planungs- und Kontraststandards"},
     {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit- und Vollprüfung inklusive Repository-Hygiene und Laien-UX"},
     {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Startanzeige mit sechs verständlichen Prüfschritten"},
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
@@ -220,7 +239,7 @@
     {"path":"TODO.md","release":false,"purpose":"Aktueller Freigabe- und Entwicklungsplan"},
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
     {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
-    {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
+    {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
     {"path":"tests/test_process_consistency.py","release":false,"purpose":"Atomar-, Mehrfachstart- und Wächterregression"},
     {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz- und I/O-Regression"},
     {"path":"tests/test_restore.py","release":false,"purpose":"Restore-, Backup-I/O- und Pfadsicherheitsregression"},
@@ -228,6 +247,7 @@
     {"path":"docs/ITERATION18_DIAGNOSTIC_IO.md","release":false,"purpose":"Diagnose-I/O-Härtung und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION19_BACKUP_REPORT_IO.md","release":false,"purpose":"Backup-/Restore-Bericht-I/O-Härtung und Abnahme"},
     {"path":"docs/ITERATION20_REPO_HYGIENE.md","release":false,"purpose":"Repository-Hygiene, Schutzgrenzen und Abnahme"},
-    {"path":"docs/ITERATION21_LAIEN_UX.md","release":false,"purpose":"Nutzersicht-, Laien-UX- und Abnahmebericht"}
+    {"path":"docs/ITERATION21_LAIEN_UX.md","release":false,"purpose":"Nutzersicht-, Laien-UX- und Abnahmebericht"},
+    {"path":"docs/ITERATION22_RESPONSIVE_DESIGN.md","release":false,"purpose":"Responsive Design-, Screenshot-Befund- und Abnahmebericht"}
   ]
 }
