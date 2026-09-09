@@ -3,15 +3,15 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.13.3",
+    "version": "0.13.4",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-09"
   },
   "iteration": {
-    "number": 19,
-    "goal": "Backup- und Restore-Berichtsschreiber auf denselben abgesicherten Temp-, fsync- und Replace-Vertrag bringen",
-    "completed": 5,
-    "open_next": 2
+    "number": 20,
+    "goal": "Repository von eindeutig lokalen und reproduzierbaren Artefakten bereinigen und Wiederauftreten regressionspruefen",
+    "completed": 4,
+    "open_next": 3
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -41,7 +41,8 @@
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
     "qt_platform_for_ci": "offscreen",
-    "targeted_tests": "python3 -m unittest tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_kubuntu_acceptance; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui",
+    "targeted_tests": "python3 -m unittest tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_kubuntu_acceptance; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui",
+    "repo_hygiene_test": "python3 -m unittest tests.test_repo_hygiene",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py",
     "write_failure_simulation_uses_production_writer": true,
     "iteration18_ci_run": 294,
@@ -51,7 +52,9 @@
     "iteration19_ci_result": "success",
     "iteration19_restore_gate": true,
     "iteration19_tested_head_sha": "ca6ff3a7eb29a6bbf237a81199a8a8764280784a",
-    "iteration19_merged_main_sha": "72719acbef5be379c1340b5771962a81fb40fc85"
+    "iteration19_merged_main_sha": "72719acbef5be379c1340b5771962a81fb40fc85",
+    "iteration20_ci_result": "pending",
+    "iteration20_restore_gate": false
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -186,7 +189,7 @@
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
     {"path":"app/ui.py","release":true,"purpose":"PySide6-Referenzdashboard"},
     {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale UI-Standards"},
-    {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit- und Vollprüfung"},
+    {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit- und Vollprüfung inklusive Repository-Hygiene"},
     {"path":"scripts/start_status.py","release":true,"purpose":"Startanzeige"},
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
     {"path":"scripts/diagnosepaket.py","release":true,"purpose":"Diagnoseexport mit abgesichertem ZIP-Commit und atomarer SHA-256-Begleitdatei"},
@@ -196,11 +199,13 @@
     {"path":"README.md","release":false,"purpose":"Entwicklerübersicht"},
     {"path":"TODO.md","release":false,"purpose":"Entwicklungsplanung"},
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
+    {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
     {"path":"tests/test_process_consistency.py","release":false,"purpose":"Atomar-, Mehrfachstart- und Wächterregression"},
     {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz- und I/O-Regression"},
     {"path":"tests/test_restore.py","release":false,"purpose":"Restore-, Backup-I/O- und Pfadsicherheitsregression"},
     {"path":"docs/ITERATION17_PROCESS_CONSISTENCY.md","release":false,"purpose":"Konsistenzhärtung und Abnahme"},
     {"path":"docs/ITERATION18_DIAGNOSTIC_IO.md","release":false,"purpose":"Diagnose-I/O-Härtung und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION19_BACKUP_REPORT_IO.md","release":false,"purpose":"Backup-/Restore-Bericht-I/O-Härtung und Abnahme"}
+    {"path":"docs/ITERATION19_BACKUP_REPORT_IO.md","release":false,"purpose":"Backup-/Restore-Bericht-I/O-Härtung und Abnahme"},
+    {"path":"docs/ITERATION20_REPO_HYGIENE.md","release":false,"purpose":"Repository-Hygiene, Schutzgrenzen und Abnahme"}
   ]
 }
