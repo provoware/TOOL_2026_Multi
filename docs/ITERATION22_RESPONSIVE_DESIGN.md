@@ -22,6 +22,7 @@ Das bereits laienfreundlich strukturierte Provoware-UI wird auf Grundlage der re
 - Aktive Navigation erhält eine moderne dunkle Auswahlfläche mit linker Akzentlinie.
 - Geplante Funktionen bleiben bewusst gestrichelt und visuell nachrangig.
 - Responsive Breitenstufen eingeführt: kompakt unter 1100 px, normal ab 1100 px, breit ab 1450 px.
+- Zoomstufen reservieren zusätzlich zur größeren Schrift kontrolliert mehr Breite für Navigation, Suche und zentrale Listen.
 - Dashboard-Navigation und Song-Suchfeld passen ihre Breite an die Fenstergröße an.
 - Profilfelder und Beschriftungen werden abhängig vom verfügbaren Platz kompakter oder großzügiger.
 - Songeditor-Splitter passt Arbeitsbereich und Gesamtvorschau dynamisch an; Songbereichsliste erhält passende Breite und bei Bedarf horizontales Scrollen.
@@ -36,7 +37,7 @@ GitHub-Grundprüfung Run #368 zeigte nach dem bereits erfolgten Merge von PR #23
 2. alter Recovery-Test erwartete noch die frühere Beschriftung `Recovery`;
 3. alter Referenztest verlangte Kartenbreiten mit weniger als 35 px Abweichung und blockierte damit responsive Inhaltsverteilung.
 
-Iteration 22 korrigiert ausschließlich diese veralteten Erwartungen beziehungsweise die zu starre Layoutannahme und ergänzt echte Responsive-Regressionen. Die 75 Logiktests des fehlgeschlagenen Laufs waren bereits vollständig grün; das Restore-Gate wurde wegen des GUI-Testfehlers nicht gestartet.
+Iteration 22 korrigiert diese veralteten Erwartungen beziehungsweise die zu starre Layoutannahme und ergänzt echte Responsive-Regressionen. Die 75 Logiktests des fehlgeschlagenen Laufs waren bereits vollständig grün; das Restore-Gate wurde damals wegen des GUI-Testfehlers nicht gestartet.
 
 ## Schutzgrenzen
 
@@ -47,12 +48,21 @@ Iteration 22 korrigiert ausschließlich diese veralteten Erwartungen beziehungsw
 - keine neue Produktfunktion,
 - keine externen Fonts oder zusätzlichen Abhängigkeiten.
 
-## Automatische Abnahme
+## Automatische Abnahme / Evidence
 
-Der finale Branch muss vor Merge vollständig bestehen:
+GitHub-Grundprüfung **Run #385** war vollständig erfolgreich:
 
-```bash
-bash scripts/pruefen.sh --full
-```
+- 🟢 75 Logik-/Regressionstests,
+- 🟢 Schreibfehler-Simulation,
+- 🟢 46 PySide6-GUI-Tests einschließlich Laien-, Responsive-, Zoom- und Tabellenregressionen,
+- 🟢 Release-Manifest mit 36 freigegebenen Betriebsdateien,
+- 🟢 Headless-Start,
+- 🟢 Vollprojekt-Restore,
+- 🟢 Restore-Status `OK`,
+- 🟢 SHA-256 des Restore-Pakets `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`.
 
-Zusätzlich muss das bestehende Vollprojekt-Restore-Gate erfolgreich sein. Die reale Kubuntu/KDE-X11-Sichtabnahme bleibt danach der verbindliche letzte visuelle Nachweis auf dem Zielrechner.
+Der CI-Lauf prüfte den PR-Merge-Stand aus dem Head `1ae0a32a328b09f9a12f6017d9b68ecc5c5ed4b7` gegen `main`.
+
+Nach dem Eintragen dieser Evidence werden nur Dokumentations-/Statusdateien verändert; auch dieser finale PR-Stand wird vor Merge erneut automatisch geprüft.
+
+Die reale Kubuntu/KDE-X11-Sichtabnahme bleibt danach der verbindliche letzte visuelle Nachweis auf dem Zielrechner.
