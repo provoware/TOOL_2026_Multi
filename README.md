@@ -1,10 +1,12 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.15.3 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore-Prüfung aktiv, reale Kubuntu/KDE-X11-Sichtabnahme noch offen
+> **Version:** 0.16.0 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore- und native Wayland-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
-## Schnellstart
+## Zielsystem und Schnellstart
+
+Offizielles Linux-Zielsystem ist **Kubuntu 26.04 LTS mit KDE Plasma unter Wayland**. Der normale Programmstart bleibt bewusst backend-neutral: Provoware setzt `QT_QPA_PLATFORM` nicht künstlich auf Wayland oder X11, sondern lässt Qt die aktive Desktop-Sitzung verwenden.
 
 Im Projektordner:
 
@@ -31,7 +33,7 @@ ANLEITUNG_LAIEN.md
 - 🟢 **Zoom 100–200 %** – gemeinsam für alle Hauptfenster
 - 🟢 **Farbthemes** – Amber, Türkis, Lila und Kontrast
 
-Die linke Navigation stellt diese fertigen Wege jetzt zuerst unter **Direkt nutzbar** bereit. Die zehn noch nicht fertigen Bereiche stehen getrennt unter **Noch nicht fertig** und sind standardmäßig eingeklappt. So bleibt das Menü ruhig; wer die geplanten Bereiche sehen möchte, kann sie mit einem einzigen Schalter einblenden.
+Die linke Navigation stellt diese fertigen Wege zuerst unter **Direkt nutzbar** bereit. Die zehn noch nicht fertigen Bereiche stehen getrennt unter **Noch nicht fertig** und sind standardmäßig eingeklappt. So bleibt das Menü ruhig; wer die geplanten Bereiche sehen möchte, kann sie mit einem einzigen Schalter einblenden.
 
 ## Erscheinungsbild, Zoom und Barrierefreiheit
 
@@ -235,10 +237,14 @@ Sie prüft unter anderem:
 - neue Menü-Hierarchie, Planungs-Aufklappzustand und Rückkehr aus Laptop-/Hochzoom-Modi
 - responsive Breiten- und Tabellenverteilung
 - direkte Startbarkeit wichtiger Skripte
+- Kubuntu-26.04-/Wayland-Erkennung und Abnahmeberichte
+- tatsächlichen nativen Qt-Wayland-Start in einem isolierten headless Wayland-Compositor
 - Release-/Diagnose-Publish-Fehler und Temp-Cleanup
 - Repository-Hygiene
 
-Der korrigierte technische Iteration-27-Head `b129b47bb8123fc7ea49680f2fa921f457164c56` bestand **Grundprüfung #540** vollständig mit **81 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, erfolgreichem Headless-Start und Vollprojekt-Restore `OK`. Restore-SHA-256: `42c67e08e419e890c29620ab8e6fef8afeb12a24b1e7006bfc972ab69d87eefc`. Beim Versions-Sync wird `app/navigation_ux.py` ausdrücklich in den Release-Bestand aufgenommen; dadurch steigt der erwartete Release-Bestand von 37 auf **38 Betriebsdateien**. Der auf Version 0.15.3 synchronisierte finale PR-Head muss vor Merge denselben vollständigen Prüf- und Restore-Block erneut bestehen.
+Iteration 27 wurde mit dem finalen 0.15.3-Head `9cd8101ba19c5e28b41fa7793d35860462d38864` in **Grundprüfung #554** vollständig abgenommen: **81 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **38 Release-Betriebsdateien**, Headless-Start und Restore `OK`; Restore-SHA-256 `add4af04204e694427aa2332edea4136c2816e0c196676391a5763e044be3718`. PR #34 wurde danach sicher gemergt; Main-Commit `e7027e57c3c8709263b73543fd2b01be84e6639d`.
+
+Der technische Iteration-28-Head `a7f2c168ecc3f0a2310fbff874cea33d30793d25` bestand **Grundprüfung #567** mit **86 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **38 Release-Betriebsdateien**, Headless-Start, einem echten nativen Qt-Wayland-Smoke (`QApplication.platformName() = wayland`) und Vollprojekt-Restore `OK`. Restore-SHA-256: `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`. Der CI-Compositor läuft isoliert und ersetzt ausdrücklich nicht die reale sichtbare Kubuntu-26.04-/Plasma-Endabnahme.
 
 Vollständiges Restore-Gate:
 
@@ -246,15 +252,17 @@ Vollständiges Restore-Gate:
 python3 scripts/iteration_restore.py
 ```
 
-## Reale Kubuntu/KDE-X11-Abnahme
+## Reale Kubuntu 26.04 / Plasma-Wayland-Abnahme
 
-Automatische Offscreen-CI ersetzt keine echte sichtbare Prüfung auf dem Zielrechner. Dafür gibt es:
+Für die offizielle Zielsystem-Abnahme auf **Kubuntu 26.04 LTS**:
 
 ```bash
 bash kubuntu_abnahme.sh
 ```
 
-Besonders zu prüfen sind **1366×768 bei 125/150 %**, zusätzlich 175/200 %, normales und maximiertes Fenster sowie das Theme **Kontrast**.
+Die Abnahme verlangt eine echte **Plasma-Wayland-Sitzung**, prüft die Betriebssystembasis 26.04, `WAYLAND_DISPLAY`, KDE/Plasma und zusätzlich den tatsächlich von Qt verwendeten Plattformnamen. Ein erzwungenes `QT_QPA_PLATFORM=xcb`/XWayland zählt nicht als native Wayland-Abnahme.
+
+Besonders sichtbar zu prüfen sind **1366×768 bei 125/150 %**, zusätzlich 175/200 %, das Theme **Kontrast**, Tastaturfokus sowie Fenster-, Menü- und Eingabeverhalten. Automatische CI kann diesen echten Plasma-Bildschirm nicht vollständig ersetzen.
 
 ## Projektstruktur
 
@@ -284,10 +292,11 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION25_LAPTOP_LAYOUT.md` – Laptop-Kompaktmodus, Fehlerkorrektur und Abnahme
 - `docs/ITERATION26_RELEASE_IO_HARDENING.md` – Release-/Bericht-I/O-Audit und Abnahme
 - `docs/ITERATION27_NAVIGATION_UX.md` – Menü-Hierarchie, Laiennavigation und Abnahme
+- `docs/ITERATION28_KUBUNTU_2604_WAYLAND.md` – Kubuntu-26.04-/Wayland-Umstellung und Plattformabnahme
 
 ## Noch offen
 
-1. Reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 % sowie 175/200 % und Theme `Kontrast`.
+1. Reale sichtbare Kubuntu-26.04-/KDE-Plasma-Wayland-Abnahme auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und Theme `Kontrast`.
 2. Anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
 Die detaillierte Versionshistorie steht bewusst **nicht mehrfach in der README**, sondern im `CHANGELOG.md` und den Iterationsdokumenten.
