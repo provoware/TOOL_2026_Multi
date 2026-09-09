@@ -7,9 +7,10 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QFrame, QPushButton
+from PySide6.QtWidgets import QApplication, QFrame, QLabel, QPushButton
 
 from app.ui import Dashboard
+from app.laptop_layout import install_laptop_layout
 from app.ui_standards import (
     COLORS, DEFAULT_THEME, THEMES, THEME_NAMES, geometry_scaled, scaled,
     set_application_theme,
@@ -54,6 +55,7 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.app.setProperty("provowareTheme", DEFAULT_THEME)
         self.temp = tempfile.TemporaryDirectory()
         self.dashboard = Dashboard(FakeTexts(), FakeLogger(), Path(self.temp.name))
+        install_laptop_layout(self.dashboard)
         self.dashboard.resize(1280, 790)
         self.dashboard.show()
         self.app.processEvents()
@@ -98,6 +100,80 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.app.processEvents()
         self.assertEqual(self.dashboard.sidebar.width(), 258)
         self.assertEqual(self.dashboard.search_entry.width(), 320)
+
+    def test_1366x768_at_125_uses_laptop_compact_without_losing_core_actions(self):
+        self.dashboard.resize(1366, 768)
+        self.dashboard.set_zoom(125)
+        self.app.processEvents()
+
+        self.assertTrue(self.dashboard.property("provowareLaptopCompact"))
+
+        planned_nav = [
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.objectName() == "navButton" and button.property("planned") is True
+        ]
+        self.assertTrue(planned_nav)
+        self.assertTrue(all(not button.isVisible() for button in planned_nav))
+
+        cards = [frame for frame in self.dashboard.findChildren(QFrame) if frame.objectName() == "card"]
+        visible_cards = [card for card in cards if card.isVisible()]
+        self.assertEqual(len(visible_cards), 2)
+
+        tiles = [
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.objectName() == "tileButton"
+        ]
+        self.assertEqual(len(tiles), 7)
+        self.assertTrue(all(button.isVisible() for button in tiles))
+        self.assertTrue(self.dashboard.theme_combo.isVisible())
+        self.assertFalse(self.dashboard.status_legend.isVisible())
+
+        profile_buttons = [
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}
+        ]
+        self.assertEqual(len(profile_buttons), 1)
+        self.assertEqual(profile_buttons[0].text(), "Profile")
+        self.assertLessEqual(self.dashboard.db_profile_combo.maximumWidth(), 120)
+
+        profile_label = next(label for label in self.dashboard.findChildren(QLabel) if label.text() == "Profil:")
+        self.assertFalse(profile_label.isVisible())
+        self.assertTrue(self.dashboard.todo_nav_button.isVisible())
+        self.assertTrue(self.dashboard.calendar_nav_button.isVisible())
+        self.assertTrue(self.dashboard.recovery_nav_button.isVisible())
+
+        self.dashboard.toggle_sidebar()
+        self.app.processEvents()
+        self.dashboard.toggle_sidebar()
+        self.app.processEvents()
+        self.assertTrue(all(not button.isVisible() for button in planned_nav))
+        self.assertTrue(self.dashboard.todo_nav_button.isVisible())
+
+    def test_laptop_compact_restores_full_large_layout(self):
+        self.dashboard.resize(1366, 768)
+        self.dashboard.set_zoom(125)
+        self.app.processEvents()
+        self.assertTrue(self.dashboard.property("provowareLaptopCompact"))
+
+        self.dashboard.resize(1594, 926)
+        self.app.processEvents()
+
+        self.assertFalse(self.dashboard.property("provowareLaptopCompact"))
+        cards = [frame for frame in self.dashboard.findChildren(QFrame) if frame.objectName() == "card"]
+        self.assertEqual(len([card for card in cards if card.isVisible()]), 4)
+        planned_nav = [
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.objectName() == "navButton" and button.property("planned") is True
+        ]
+        self.assertTrue(all(button.isVisible() for button in planned_nav))
+        self.assertTrue(self.dashboard.status_legend.isVisible())
+        profile_button = next(
+            button for button in self.dashboard.findChildren(QPushButton)
+            if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}
+        )
+        self.assertEqual(profile_button.text(), "Profile & Werte bearbeiten")
+        profile_label = next(label for label in self.dashboard.findChildren(QLabel) if label.text() == "Profil:")
+        self.assertTrue(profile_label.isVisible())
 
     def test_high_zoom_keeps_font_growth_but_caps_geometry_growth(self):
         self.assertEqual(scaled(10, 200), 20)
