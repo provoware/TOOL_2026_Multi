@@ -10,6 +10,11 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from app.atomic_io import atomic_write_text
 from app.process_guard import CONTROLLED_ALREADY_RUNNING_EXIT
 from app.redaction import redact
 
@@ -37,14 +42,14 @@ def write_crash_report(root: Path, returncode: int, command: list[str]) -> Path:
     with jsonl.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
     report = report_dir / f"{event_id}.txt"
-    report.write_text(
+    atomic_write_text(
+        report,
         "WAS IST PASSIERT?\n" + data["summary"] +
         "\n\nWIE WURDE ES ERKANNT?\nDer separate Wächter sah einen fehlerhaften Prozessabschluss." +
         "\n\nWO IST ES PASSIERT?\nAnwendungsprozess" +
         "\n\nWAS WURDE GESCHÜTZT?\n" + data["safe_action"] +
         "\n\nGRUND\n" + data["technical_cause"] +
         "\n\nNÄCHSTER SCHRITT\n" + data["next_step"] + "\n",
-        encoding="utf-8",
     )
     return report
 
