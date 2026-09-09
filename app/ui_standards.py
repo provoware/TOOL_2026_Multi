@@ -121,8 +121,8 @@ def app_stylesheet(zoom_percent: int = 100) -> str:
         border-radius:{scaled(6, zoom_percent)}px;
         padding:{scaled(6, zoom_percent)}px {scaled(8, zoom_percent)}px;
     }}
-    QPushButton#tileButton {{ min-height:{scaled(54, zoom_percent)}px; font-weight:650; }}
-    QPushButton#featureButton {{ min-height:{scaled(82, zoom_percent)}px; font-weight:650; }}
+    QPushButton#tileButton {{ min-height:{scaled(54, zoom_percent)}px; font-weight:600; }}
+    QPushButton#featureButton {{ min-height:{scaled(82, zoom_percent)}px; font-weight:600; }}
 
     QLineEdit, QTextEdit, QPlainTextEdit, QListWidget, QTreeWidget, QTableWidget {{
         background:{COLORS['surface']}; color:{COLORS['text']};
@@ -177,9 +177,17 @@ def app_stylesheet(zoom_percent: int = 100) -> str:
     """
 
 
-def _set_width(widget: QWidget, minimum: int, maximum: int) -> None:
-    widget.setMinimumWidth(minimum)
-    widget.setMaximumWidth(maximum)
+def _set_width(widget: QWidget, value: int) -> None:
+    widget.setMinimumWidth(value)
+    widget.setMaximumWidth(value)
+
+
+def _zoom_width_factor(window: QWidget) -> float:
+    try:
+        zoom = int(getattr(window, "zoom_percent", 100))
+    except (TypeError, ValueError):
+        zoom = 100
+    return max(1.0, min(1.25, zoom / 100))
 
 
 def _apply_responsive_layout(window: QWidget) -> None:
@@ -190,6 +198,7 @@ def _apply_responsive_layout(window: QWidget) -> None:
         width = max(window.width(), window.minimumWidth())
         compact = width < 1100
         wide = width >= 1450
+        width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
         gap = 6 if compact else (10 if wide else 8)
         root_layout = window.layout()
@@ -204,38 +213,40 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         sidebar = getattr(window, "sidebar", None)
         if isinstance(sidebar, QWidget) and not getattr(window, "nav_collapsed", False):
-            target = 198 if compact else (258 if wide else 226)
-            _set_width(sidebar, target, target)
+            base = 198 if compact else (258 if wide else 226)
+            _set_width(sidebar, round(base * width_factor))
 
         search = getattr(window, "search_entry", None)
         if isinstance(search, QWidget):
             if window.__class__.__name__ == "Dashboard":
-                target = 190 if compact else (320 if wide else 250)
-                _set_width(search, target, target)
+                base = 190 if compact else (320 if wide else 250)
+                _set_width(search, round(base * width_factor))
             elif window.__class__.__name__ == "SongLibrary":
-                search.setMinimumWidth(220)
+                search.setMinimumWidth(round(220 * width_factor))
                 search.setMaximumWidth(16777215)
                 if hasattr(search, "setPlaceholderText"):
                     search.setPlaceholderText("Songtitel, Genre, Stimmung, Stil, Stimme oder Tag eingeben …")
 
         profile_combo = getattr(window, "db_profile_combo", None)
         if isinstance(profile_combo, QWidget):
-            profile_combo.setMinimumWidth(110 if compact else 135)
-            profile_combo.setMaximumWidth(190 if wide else 160)
+            minimum = round((110 if compact else 135) * width_factor)
+            maximum = round((190 if wide else 160) * width_factor)
+            profile_combo.setMinimumWidth(minimum)
+            profile_combo.setMaximumWidth(maximum)
 
         for label in window.findChildren(QLabel):
             if label.text() in {"Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"}:
-                target = 94 if compact else (128 if wide else 108)
-                _set_width(label, target, target)
+                base = 94 if compact else (128 if wide else 108)
+                _set_width(label, round(base * width_factor))
 
         for button in window.findChildren(QPushButton):
-            if button.text() == "Profile & Werte bearbeiten":
-                button.setText("Profile bearbeiten" if not wide else "Profile & Werte bearbeiten")
+            if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten"}:
+                button.setText("Profile & Werte bearbeiten" if wide else "Profile bearbeiten")
 
         section_list = getattr(window, "section_list", None)
         if isinstance(section_list, QListWidget):
-            target = 165 if compact else (235 if wide else 200)
-            _set_width(section_list, target, target)
+            base = 165 if compact else (235 if wide else 200)
+            _set_width(section_list, round(base * width_factor))
             section_list.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
         for splitter in window.findChildren(QSplitter):
@@ -252,7 +263,7 @@ def _apply_responsive_layout(window: QWidget) -> None:
             table = getattr(window, "table", None)
             if isinstance(table, QTreeWidget) and table.columnCount() >= 8:
                 header = table.header()
-                header.setMinimumSectionSize(42)
+                header.setMinimumSectionSize(round(42 * width_factor))
                 header.setStretchLastSection(False)
                 modes = (
                     QHeaderView.Stretch,
@@ -275,6 +286,11 @@ class _ResponsiveFilter(QObject):
         if isinstance(watched, QWidget) and event.type() in {QEvent.Type.Show, QEvent.Type.Resize}:
             _apply_responsive_layout(watched)
         return False
+
+
+def refresh_responsive_layout(widget: QWidget) -> None:
+    """Wendet die aktuelle Breiten-/Zoomverteilung erneut an."""
+    _apply_responsive_layout(widget)
 
 
 def _install_responsive_layout(widget: QWidget) -> None:
