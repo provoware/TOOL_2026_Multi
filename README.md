@@ -234,6 +234,8 @@ Sie prüft unter anderem:
 - responsive Breiten- und Tabellenverteilung
 - Repository-Hygiene
 
+Der korrigierte Iteration-25-Produktions-/Teststand wurde in **Grundprüfung #468** bereits vollständig grün geprüft: 75 Logik-/Regressionstests, 52 PySide6-GUI-Tests, 37 Release-Betriebsdateien und Vollprojekt-Restore `OK` mit SHA-256 `9ace0f9d3311dbe98fa4875b9c1ed86ed51ef1d48ad50a41b6527be09c160b01`. Der reine Evidence-Sync wird vor Merge nochmals vollständig geprüft.
+
 Vollständiges Restore-Gate:
 
 ```bash
@@ -275,11 +277,11 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION22_RESPONSIVE_DESIGN.md` – Responsive Design und Abnahme
 - `docs/ITERATION23_ZOOM_HAERTUNG.md` – Hochzoom-Härtung
 - `docs/ITERATION24_ACCESSIBILITY_THEMES.md` – Barrierefreiheit, Farbthemes und Kontrastprüfung
-- `docs/ITERATION25_LAPTOP_LAYOUT.md` – Laptop-Kompaktmodus und Regression
+- `docs/ITERATION25_LAPTOP_LAYOUT.md` – Laptop-Kompaktmodus, Fehlerkorrektur und Abnahme
 
 ## Noch offen
 
-1. Iteration 25 nur nach grüner Vollprüfung und grünem Restore-Gate in `main` übernehmen.
+1. Den Evidence-Sync-Head von PR #29 nochmals vollständig per Grundprüfung und Restore prüfen und nur bei Grün übernehmen.
 2. Danach reale sichtbare Kubuntu/KDE-X11-Abnahme auf dem Zielrechner durchführen.
 3. Anschließend verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs nicht unnötig auf Dateiersatz umstellen.
 
