@@ -1,16 +1,16 @@
 {
-  "schema_version": 19,
+  "schema_version": 20,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.14.1",
+    "version": "0.14.2",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-09"
   },
   "iteration": {
-    "number": 22,
-    "goal": "Erscheinungsbild, Schrift, Abstaende und dynamische Groessenanpassung auf realen Kubuntu-Screenshots basierend professionell haerten",
-    "completed": 13,
+    "number": 23,
+    "goal": "Zoom-Darstellung von 100 bis 200 Prozent ohne Ueberlagerungen, kollidierende Formularzeilen oder komprimierte Dashboard-Karten haerten",
+    "completed": 12,
     "open_next": 1
   },
   "runtime": {
@@ -44,6 +44,7 @@
     "targeted_tests": "python3 -m unittest tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_kubuntu_acceptance; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui",
     "repo_hygiene_test": "python3 -m unittest tests.test_repo_hygiene",
     "layman_ux_test": "QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui",
+    "zoom_layout_test": "QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_zoom_controls_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py",
     "write_failure_simulation_uses_production_writer": true,
     "iteration18_ci_run": 294,
@@ -76,7 +77,22 @@
     "iteration22_restore_gate": true,
     "iteration22_restore_status": "OK",
     "iteration22_restore_sha256": "c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de",
-    "iteration22_tested_head_sha": "1ae0a32a328b09f9a12f6017d9b68ecc5c5ed4b7"
+    "iteration22_tested_head_sha": "1ae0a32a328b09f9a12f6017d9b68ecc5c5ed4b7",
+    "iteration22_merged_main_sha": "1f12951156a7ca86e5533f05a17ade4802c79543",
+    "iteration23_initial_ci_run": 401,
+    "iteration23_initial_ci_result": "failure",
+    "iteration23_initial_logic_tests": 75,
+    "iteration23_initial_cause": "Veraltete Testannahme verlangte zwingend wachsende Sidebar bei 125 Prozent statt sicheren Ueberlauf und sichtbare Kernbedienung",
+    "iteration23_ci_run": 403,
+    "iteration23_ci_result": "success",
+    "iteration23_logic_tests": 75,
+    "iteration23_gui_tests": 50,
+    "iteration23_release_files": 36,
+    "iteration23_restore_gate": true,
+    "iteration23_restore_status": "OK",
+    "iteration23_restore_sha256": "69e6cc8b3b5f3838b4478e3c0373ba0cb46c86942927d5b523f78a0cdb16214a",
+    "iteration23_tested_head_sha": "e1dbc977f6bfef97d396ac105ac54a09172d831f",
+    "iteration23_final_evidence_sync_pending_recheck": true
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -94,8 +110,17 @@
     "zoom_levels_percent": [100, 125, 150, 175, 200],
     "zoom_managed_windows": ["dashboard", "song_editor", "song_library", "recovery", "profile_editor", "todo", "calendar"],
     "font_size_follows_zoom": true,
-    "responsive_breakpoints_px": {"compact_below": 1100, "wide_from": 1450},
-    "responsive_components": ["dashboard_sidebar", "dashboard_search", "profile_controls", "song_section_list", "song_editor_splitter", "song_library_columns"],
+    "effective_width_formula": "window_width_px * 100 / zoom_percent",
+    "responsive_breakpoints_effective_px": {"compact_below": 1100, "wide_from": 1450},
+    "dashboard_single_column_effective_below_px": 960,
+    "metric_zoom_cap_percent": 145,
+    "heading_zoom_cap_percent": 165,
+    "dashboard_sidebar_vertical_overflow": "scroll_as_needed",
+    "dashboard_cards_vertical_overflow": "scroll_as_needed",
+    "dashboard_reflow_reversible": true,
+    "font_metric_widths_at_high_zoom": ["dashboard_sidebar", "profile_category_labels", "song_section_list"],
+    "high_zoom_overlap_regression": true,
+    "responsive_components": ["dashboard_sidebar", "dashboard_search", "dashboard_cards", "profile_controls", "song_section_list", "song_editor_splitter", "song_library_columns"],
     "song_library_stretch_columns": ["title", "tags"],
     "splitters_non_collapsible": true,
     "layman_guidance": true,
@@ -227,7 +252,7 @@
     {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek mit sichtbarem Erstnutzer-Einstieg, responsiver Tabelle und klaren Rückmeldungen"},
     {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
     {"path":"app/ui.py","release":true,"purpose":"Laiengeführtes PySide6-Referenzdashboard"},
-    {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale responsive UI-, Schrift-, Fokus-, Planungs- und Kontraststandards"},
+    {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale zoom-sichere Responsive-, Schrift-, Fokus-, Planungs- und Kontraststandards"},
     {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit- und Vollprüfung inklusive Repository-Hygiene und Laien-UX"},
     {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Startanzeige mit sechs verständlichen Prüfschritten"},
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache"},
@@ -239,7 +264,8 @@
     {"path":"TODO.md","release":false,"purpose":"Aktueller Freigabe- und Entwicklungsplan"},
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
     {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
-    {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
+    {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, zoom-bereinigte Breiten, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
+    {"path":"tests/test_zoom_controls_gui.py","release":false,"purpose":"Regression für 100 bis 200 Prozent Zoom, Überlappungsschutz, Scroll-Reflow und reversible Kartenanordnung"},
     {"path":"tests/test_process_consistency.py","release":false,"purpose":"Atomar-, Mehrfachstart- und Wächterregression"},
     {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz- und I/O-Regression"},
     {"path":"tests/test_restore.py","release":false,"purpose":"Restore-, Backup-I/O- und Pfadsicherheitsregression"},
@@ -248,6 +274,7 @@
     {"path":"docs/ITERATION19_BACKUP_REPORT_IO.md","release":false,"purpose":"Backup-/Restore-Bericht-I/O-Härtung und Abnahme"},
     {"path":"docs/ITERATION20_REPO_HYGIENE.md","release":false,"purpose":"Repository-Hygiene, Schutzgrenzen und Abnahme"},
     {"path":"docs/ITERATION21_LAIEN_UX.md","release":false,"purpose":"Nutzersicht-, Laien-UX- und Abnahmebericht"},
-    {"path":"docs/ITERATION22_RESPONSIVE_DESIGN.md","release":false,"purpose":"Responsive Design-, Screenshot-Befund- und Abnahmebericht"}
+    {"path":"docs/ITERATION22_RESPONSIVE_DESIGN.md","release":false,"purpose":"Responsive Design-, Screenshot-Befund- und Abnahmebericht"},
+    {"path":"docs/ITERATION23_ZOOM_LAYOUT.md","release":false,"purpose":"Zoom-Layout-Fehleranalyse, Hochzoom-Härtung und Abnahmebericht"}
   ]
 }

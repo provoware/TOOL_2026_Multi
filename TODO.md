@@ -48,34 +48,50 @@ Stand: 2026-09-09
 
 **Hauptziel:** Erscheinungsbild, Schrift, Abstände und dynamische Größenanpassung auf Grundlage realer Kubuntu-Screenshots professionell modernisieren, ohne Daten- oder Fachlogik zu verändern.
 
+### Umsetzung und Abnahme
+
+- 🟢 moderne zentrale Dark-/Amber-Palette, Sans-Serif-Schrift und ruhigere Flächenhierarchie umgesetzt.
+- 🟢 Schriftgrößen, Abstände, Rundungen, Eingabehöhen, Tabs, Scrollleisten und Splitter zentral vereinheitlicht.
+- 🟢 Sidebar, Dashboard-Suche, Profilfelder, Songbereichsliste, Songeditor-Splitter und Bibliotheksspalten responsiv gemacht.
+- 🟢 drei Rückfälle aus Run #368 ursächlich korrigiert.
+- 🟢 GitHub-Grundprüfung **Run #385**: 75 Logik-/Regressionstests und 46 PySide6-GUI-Tests erfolgreich.
+- 🟢 Vollprojekt-Restore Status `OK`, SHA-256 `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`.
+- 🟢 PR #24 wurde in `main` übernommen (`1f12951156a7ca86e5533f05a17ade4802c79543`).
+
+## Iteration 23 – Zoom-sichere Layout-Härtung
+
+**Hauptziel:** Die reale 200-%-Darstellung muss ohne überlappende Navigation, kollidierende Formularzeilen oder zusammengedrückte Dashboard-Karten funktionieren.
+
 ### Umsetzung
 
-- 🟢 moderne zentrale Dark-/Amber-Palette mit ruhigerer Flächenhierarchie und stärkerem Fokuskontrast umgesetzt.
-- 🟢 systemweite Sans-Serif-Schrift ohne externe Font-Abhängigkeit festgelegt.
-- 🟢 Schriftgrößen, Innenabstände, Rundungen, Eingabehöhen, Tabs, Scrollleisten und Splitter zentral vereinheitlicht.
-- 🟢 orange Vollrahmen auf Karten reduziert; Akzentfarbe gezielt für Primäraktionen, Fokus und Status eingesetzt.
-- 🟢 aktive Navigation mit dunkler Auswahlfläche und linker Akzentlinie modernisiert.
-- 🟢 responsive Breitenstufen für kompakte, normale und breite Fenster eingeführt.
-- 🟢 Sidebar, Dashboard-Suche, Profilfelder und Songbereichsliste passen sich dynamisch an Fensterbreite und Zoom an.
-- 🟢 Songeditor-Splitter verteilt Arbeitsfläche und Gesamtvorschau dynamisch.
-- 🟢 Songbibliothek nutzt verfügbare Tabellenbreite gezielt für Titel und Tags; kurze Spalten bleiben inhaltsbezogen.
-- 🟢 drei Rückfälle aus Run #368 ursächlich korrigiert: Suchplatzhalter-Test, Recovery-Beschriftung und starre Kartenbreitenannahme.
-- 🟢 Responsive-Regressionen für Dashboardbreiten, Zoom-Breitenreserve und Bibliotheksspalten ergänzt.
-- 🟢 Datenformate, atomarer Schreibweg, Backup und Restore-Fachlogik unverändert.
+- 🟢 Breakpoints auf zoom-bereinigte effektive Arbeitsbreite umgestellt (`Fensterbreite × 100 / Zoom`).
+- 🟢 Schrift bleibt vollständig zoombar; Abstände, Rundungen, Padding und Mindesthöhen wachsen bewusst flacher.
+- 🟢 große Überschriften skalieren flacher als Fließtext, damit sie Bedienelemente nicht verdrängen.
+- 🟢 Navigation mit eigenem vertikalen Überlauf-/Scrollschutz versehen; Einträge werden nicht mehr in zu geringe Höhe gepresst.
+- 🟢 Dashboard-Kartenfläche mit eigenem Überlauf-/Scrollschutz versehen; obere Schnellbereiche und Statusleiste bleiben stabil erreichbar.
+- 🟢 unter 960 px zoom-bereinigter Arbeitsbreite automatische Umstellung der vier Hauptkarten von 2×2 auf eine Spalte.
+- 🟢 Rückkehr auf 2×2 beim Zurückzoomen implementiert.
+- 🟢 Kategorie- und Songbereichsbreiten bei hohem Zoom schriftmetrisch statt pauschal berechnet.
+- 🟢 Sidebar-Breite bei 150–200 % an tatsächliche Textbreite angepasst und gegen Fensterbreite begrenzt.
+- 🟢 Dashboard-Titel darf bei Bedarf umbrechen; sekundärer Untertitel wird nur bei wirklich schmaler Hochzoom-Darstellung reduziert.
+- 🟢 fünf neue GUI-Regressionen gegen den konkreten 200-%-Fehlerzustand ergänzt.
+- 🟢 keine Daten-, Speicher-, Backup- oder Restore-Fachlogik verändert.
 
 ### Abnahme
 
-- 🟢 GitHub-Grundprüfung **Run #385** vollständig erfolgreich.
+- 🟡 erste GitHub-Grundprüfung **Run #401**: 75 Logiktests grün; genau eine veraltete Iteration-22-Testannahme zur zwingend wachsenden Sidebar schlug fehl, Restore deshalb korrekt übersprungen.
+- 🟢 veraltete Breitenannahme durch das tatsächliche Abnahmekriterium `Kernbedienung sichtbar + sicherer Überlauf` ersetzt.
+- 🟢 GitHub-Grundprüfung **Run #403** vollständig erfolgreich.
 - 🟢 **75 Logik-/Regressionstests** erfolgreich.
-- 🟢 **46 PySide6-GUI-Tests** einschließlich Laien-, Responsive-, Zoom- und Tabellenprüfung erfolgreich.
-- 🟢 Schreibfehler-Simulation und Release-Manifestprüfung erfolgreich; 36 freigegebene Betriebsdateien.
-- 🟢 Vollprojekt-Restore erfolgreich, Restore-Status `OK`.
-- 🟢 Restore-SHA-256: `c18e1ac25b8b2b43cf7c93d2c9dc8edf8b22dc9a521f3956c1d13d6cfae1d5de`.
-- 🔒 Safe-Merge-Regel bleibt bestehen: nur mergen, wenn auch der aktuelle PR-Head nach diesem reinen Evidence-Sync grün ist.
+- 🟢 **50 PySide6-GUI-Tests** einschließlich der neuen 200-%-Überlappungs-, Scroll- und Reflow-Regressionen erfolgreich.
+- 🟢 Schreibfehler-Simulation, Headless-Start und Release-Manifest mit 36 Betriebsdateien erfolgreich.
+- 🟢 Vollprojekt-Restore Status `OK`.
+- 🟢 Restore-SHA-256: `69e6cc8b3b5f3838b4478e3c0373ba0cb46c86942927d5b523f78a0cdb16214a`.
+- 🔒 finaler Evidence-/Versions-Sync wird noch einmal auf demselben PR geprüft; erst danach Safe Merge.
 
 ## Danach
 
-1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen.
+1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme bei **100/125/150/175/200 %** mit `bash kubuntu_abnahme.sh` durchführen.
 2. 🔴 verbleibende direkte Berichtsschreiber separat auditieren; Append-Logs ausdrücklich nicht auf Dateiersatz umstellen.
 3. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
