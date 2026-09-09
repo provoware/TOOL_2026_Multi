@@ -1,5 +1,21 @@
 # Änderungsverlauf
 
+## 0.13.2 – 2026-09-09 – Diagnose-I/O-Konsistenz
+
+### Geändert
+- Diagnose-ZIP verwendet eindeutige Tempdateien im Zielordner statt eines festen `.tmp`-Namens,
+- ZIP-Datei wird vor Veröffentlichung per `fsync` synchronisiert und anschließend atomar ersetzt,
+- bestmöglicher Verzeichnis-`fsync` und Temp-Cleanup bei Fehlern ergänzt,
+- SHA-256-Begleitdatei auf `app.atomic_io.atomic_write_text` umgestellt,
+- Diagnose-Dateinamen um Mikrosekunden ergänzt, damit schnelle Mehrfachexporte nicht kollidieren,
+- gezielte Regression für eindeutige Exportnamen und Replace-Fehler ergänzt.
+
+### Schutz / Abnahme
+- bestehende Datenschutz- und ZIP-Inhaltsprüfungen bleiben unverändert aktiv,
+- Append-only Ereignislogs, Nutzerdaten, Restore-Logik, Backup-Skript und sonstige Berichtsschreiber wurden bewusst nicht verändert,
+- GitHub Actions `Grundprüfung` Run #294 war erfolgreich und führte sowohl `bash scripts/pruefen.sh --full` als auch `python3 scripts/iteration_restore.py` aus,
+- damit sind Vollprüfung und Restore-Gate für den geprüften Produktionspatch grün nachgewiesen.
+
 ## 0.13.1 – 2026-09-08 – Prozess- und Schreibkonsistenz
 
 ### Geändert

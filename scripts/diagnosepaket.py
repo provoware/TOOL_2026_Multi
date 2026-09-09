@@ -12,6 +12,7 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
+from app.atomic_io import atomic_write_text
 from app.redaction import redact
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -25,6 +26,30 @@ def _sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _fsync_directory(directory: Path) -> None:
+    """Sichert den Ziel-Verzeichniseintrag, soweit das Dateisystem dies unterstützt."""
+    flags = os.O_RDONLY | getattr(os, "O_DIRECTORY", 0)
+    try:
+        descriptor = os.open(str(directory), flags)
+    except OSError:
+        return
+    try:
+        try:
+            os.fsync(descriptor)
+        except OSError:
+            return
+    finally:
+        os.close(descriptor)
+
+
+def _commit_archive(temporary: Path, archive: Path) -> None:
+    """Synchronisiert ein fertiges ZIP und veröffentlicht es erst danach atomar."""
+    with temporary.open("rb") as handle:
+        os.fsync(handle.fileno())
+    os.replace(temporary, archive)
+    _fsync_directory(archive.parent)
 
 
 def _privacy_clean(text: str) -> str:
@@ -50,10 +75,11 @@ def build_diagnostic(root: Path = ROOT, output_dir: Path | None = None) -> tuple
     output_dir = (output_dir or root / "diagnose").resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     version = json.loads((root / "MANIFEST.json").read_text(encoding="utf-8"))["tool"]["version"]
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
     archive = output_dir / f"TOOL_2026_Multi_{version}_DIAGNOSE_{stamp}.zip"
     checksum = archive.with_suffix(archive.suffix + ".sha256")
     collected: list[dict[str, object]] = []
+    temporary: Path | None = None
     with tempfile.TemporaryDirectory(dir=output_dir) as temp:
         temp_root = Path(temp)
         for source in source_files(root):
@@ -76,18 +102,27 @@ def build_diagnostic(root: Path = ROOT, output_dir: Path | None = None) -> tuple
             "files": collected,
         }
         (temp_root / "DIAGNOSE_INFO.json").write_text(json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8")
-        temporary = archive.with_suffix(archive.suffix + ".tmp")
-        with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED) as handle:
-            for path in sorted(temp_root.rglob("*")):
-                if path.is_file():
-                    handle.write(path, path.relative_to(temp_root))
-        with zipfile.ZipFile(temporary) as handle:
-            for name in handle.namelist():
-                data = handle.read(name).decode("utf-8")
-                if redact(data) != data:
-                    raise ValueError(f"Datenschutzprüfung fehlgeschlagen: {name}")
-        os.replace(temporary, archive)
-    checksum.write_text(f"{_sha256(archive)}  {archive.name}\n", encoding="utf-8")
+        descriptor, temporary_name = tempfile.mkstemp(
+            prefix=f".{archive.name}.", suffix=".tmp", dir=str(output_dir)
+        )
+        os.close(descriptor)
+        temporary = Path(temporary_name)
+        try:
+            with zipfile.ZipFile(temporary, "w", zipfile.ZIP_DEFLATED) as handle:
+                for path in sorted(temp_root.rglob("*")):
+                    if path.is_file():
+                        handle.write(path, path.relative_to(temp_root))
+            with zipfile.ZipFile(temporary) as handle:
+                for name in handle.namelist():
+                    data = handle.read(name).decode("utf-8")
+                    if redact(data) != data:
+                        raise ValueError(f"Datenschutzprüfung fehlgeschlagen: {name}")
+            _commit_archive(temporary, archive)
+            temporary = None
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
+    atomic_write_text(checksum, f"{_sha256(archive)}  {archive.name}\n")
     return archive, checksum
 
 

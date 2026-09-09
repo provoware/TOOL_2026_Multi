@@ -51,6 +51,28 @@ class DiagnosticsLoggingTests(unittest.TestCase):
             self.assertNotIn("a@b.de", combined)
             self.assertIn('"privacy_check": "OK"', combined)
 
+    def test_diagnostic_uses_unique_archive_names(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "MANIFEST.json").write_text(json.dumps({"tool":{"version":"9.9.9"}}), encoding="utf-8")
+            first, _ = build_diagnostic(root, root / "out")
+            second, _ = build_diagnostic(root, root / "out")
+            self.assertNotEqual(first.name, second.name)
+            self.assertTrue(first.is_file())
+            self.assertTrue(second.is_file())
+
+    def test_failed_archive_replace_leaves_no_temp_or_partial_archive(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            out = root / "out"
+            (root / "MANIFEST.json").write_text(json.dumps({"tool":{"version":"9.9.9"}}), encoding="utf-8")
+            with patch("scripts.diagnosepaket.os.replace", side_effect=OSError("simulated replace failure")):
+                with self.assertRaises(OSError):
+                    build_diagnostic(root, out)
+            self.assertEqual(list(out.glob("*.zip")), [])
+            self.assertEqual(list(out.glob("*.tmp")), [])
+            self.assertEqual(list(out.glob("*.sha256")), [])
+
     def test_normal_gui_return_records_controlled_end(self):
         import app.main as main_module
         events = []
