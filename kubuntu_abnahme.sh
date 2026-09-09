@@ -20,7 +20,13 @@ if [[ ! -f "$HASHDATEI" ]] || [[ "$(cat "$HASHDATEI")" != "$HASH" ]]; then
   printf '%s' "$HASH" > "$HASHDATEI"
 fi
 
-[[ "${XDG_SESSION_TYPE:-}" == "x11" ]] || fehler "Diese Endabnahme ist ausschließlich für eine echte X11-Sitzung vorgesehen. Bitte bei der Anmeldung 'Plasma (X11)' wählen."
-[[ -n "${DISPLAY:-}" ]] || fehler "Es wurde keine grafische X11-Anzeige erkannt."
+SESSION="${XDG_SESSION_TYPE:-}"
+SESSION="${SESSION,,}"
+[[ "$SESSION" == "wayland" ]] || fehler "Die Kubuntu-26.04-Endabnahme benötigt eine echte Plasma-Wayland-Sitzung. Melde dich bei 'Plasma (Wayland)' an und starte die Abnahme erneut."
+[[ -n "${WAYLAND_DISPLAY:-}" ]] || fehler "Es wurde keine Wayland-Anzeige erkannt (WAYLAND_DISPLAY fehlt)."
+case "${QT_QPA_PLATFORM:-}" in
+  xcb|xcb:*) fehler "Qt ist ausdrücklich auf X11/XWayland (xcb) gezwungen. Entferne QT_QPA_PLATFORM=xcb und starte erneut." ;;
+  offscreen|minimal) fehler "Qt ist auf einen Test-Backendwert gesetzt. Für die reale Abnahme darf QT_QPA_PLATFORM nicht offscreen/minimal sein." ;;
+esac
 
 exec "$VENV/bin/python" scripts/kubuntu_abnahme.py
