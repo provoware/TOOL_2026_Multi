@@ -26,7 +26,7 @@ Beim ersten Start können benötigte Programmteile eingerichtet werden. Danach �
 Aktuell direkt nutzbar sind vor allem:
 
 - **Songtexte**
-- **Genres / Profile & Vorgaben**
+- **Genres & Vorgaben**
 - **Todo-Liste**
 - **Kalender**
 - **Fehlerhilfe (Recovery)**
@@ -46,14 +46,21 @@ Direkter Zugriff auf wichtige Bereiche. Noch nicht fertige Kacheln tragen sichtb
 
 ### Linke Navigation
 
-Die Navigation ist nach einfachen Aufgaben gegliedert:
+Die Navigation ist bewusst in zwei einfache Teile gegliedert.
 
-- **Schreiben**
-- **Daten & Vorgaben**
-- **Funktionen**
-- **Dateien & Werkzeuge**
-- **Planung**
-- **Hilfe**
+Unter **Direkt nutzbar** stehen zuerst die Bereiche, mit denen du sofort arbeiten kannst:
+
+- **Songtexte**
+- **Genres & Vorgaben**
+- **Todo-Liste**
+- **Kalender**
+- **Fehlerhilfe (Recovery)**
+
+Darunter steht **Noch nicht fertig**. Die geplanten Bereiche sind normalerweise eingeklappt, damit das Menü ruhig und übersichtlich bleibt.
+
+Mit **Geplante Bereiche anzeigen (10)** kannst du sie bei Bedarf öffnen. Dort sind sie in **Kreativ & Inhalte**, **Dateien & Werkzeuge** und **Projekte** gruppiert. Mit **Geplante Bereiche ausblenden (10)** klappst du sie wieder zu.
+
+Auf kleinen Laptop-Bildschirmen sowie bei 175/200 % Zoom kann Provoware diese optionale Planung automatisch ausblenden, damit die fertigen Funktionen genügend Platz behalten.
 
 Mit **☰** kann die linke Navigation schmal oder breit geschaltet werden.
 
@@ -179,7 +186,7 @@ Beispiel: Im Profil **HardTechno** können eigene Werte für Genre, Stimmung, St
 
 Öffnen über:
 
-**Navigation → Daten & Vorgaben**
+**Direkt nutzbar → Genres & Vorgaben**
 
 oder über die Genres-Kachel.
 
@@ -204,7 +211,7 @@ daten/profile/db_profile.json
 
 Öffnen über:
 
-**Navigation → Planung → Todo-Liste**
+**Direkt nutzbar → Todo-Liste**
 
 ## Aufgabe anlegen
 
@@ -232,7 +239,7 @@ daten/todo/todo.json
 
 Öffnen über:
 
-**Navigation → Planung → Kalender**
+**Direkt nutzbar → Kalender**
 
 Links kann ein Datum gewählt und ein neuer Termin angelegt werden. Rechts gibt es:
 
@@ -270,7 +277,7 @@ daten/kalender/termine.json
 
 Öffnen über:
 
-**Navigation → Hilfe → Fehlerhilfe (Recovery)**
+**Direkt nutzbar → Fehlerhilfe (Recovery)**
 
 Die Fehlerhilfe zeigt zuerst einfache Informationen:
 
@@ -380,7 +387,7 @@ Sie prüft unter anderem:
 - Fehlerhilfe,
 - Zoom und Tastaturwege,
 - Farbthemes, Screenreader-Grundwerte und Fokus,
-- Laienführung und sichtbare Statushinweise,
+- Laienführung, Menü-Hierarchie und sichtbare Statushinweise,
 - Kontraste der Kernfarben aller Themes,
 - Repository-Hygiene,
 - vollständige Wiederherstellung aus einem Projekt-ZIP.
