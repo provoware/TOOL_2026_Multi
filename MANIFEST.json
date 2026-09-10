@@ -1,16 +1,16 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.16.0",
+    "version": "0.16.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-10"
   },
   "iteration": {
-    "number": 28,
-    "goal": "Kubuntu 26.04 LTS mit KDE Plasma Wayland als offizielles Zielsystem pruefen und absichern",
-    "completed": 12,
+    "number": 29,
+    "goal": "Darstellungszustände zentral, deterministisch und Qt-unabhängig klassifizieren und Runtime-Release-Vollständigkeit erzwingen",
+    "completed": 10,
     "open_next": 1
   },
   "runtime": {
@@ -183,7 +183,20 @@
     "iteration28_final_restore_sha256": "23792d1c96db0b0fd61eaf74630593fbbf37578b64c4f82fd1f6644d2efa103e",
     "iteration28_final_tested_head_sha": "2536bd3183e39ad1566496a067b817dd3ad30b07",
     "iteration28_final_head_gate": "success",
-    "iteration28_merged_main_sha": "3b829e799536cc1464e760f77ac7c28295c6ea70"
+    "iteration28_merged_main_sha": "3b829e799536cc1464e760f77ac7c28295c6ea70",
+    "iteration29_initial_ci_run": 598,
+    "iteration29_initial_ci_result": "failure",
+    "iteration29_initial_ci_cause": "Neuer Release-Vollständigkeitstest erkannte app/presentation_policy.py als noch nicht im Release-Manifest eingetragen",
+    "iteration29_technical_ci_run": 600,
+    "iteration29_technical_ci_result": "success",
+    "iteration29_technical_logic_tests": 94,
+    "iteration29_technical_gui_tests": 56,
+    "iteration29_technical_release_files": 39,
+    "iteration29_technical_native_wayland_smoke": true,
+    "iteration29_technical_restore_gate": true,
+    "iteration29_technical_restore_status": "OK",
+    "iteration29_technical_restore_sha256": "064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624",
+    "iteration29_technical_tested_head_sha": "117aa0eee4e3422804506d9bc1c1fc50f75d4591"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -422,6 +435,7 @@
     {"path":"docs/ITERATION25_LAPTOP_LAYOUT.md","release":false,"purpose":"Laptop-Kompaktlayout, Regression, Fehlerkorrektur und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION26_RELEASE_IO_HARDENING.md","release":false,"purpose":"Release-/Bericht-I/O-Audit, zentraler Publish-Pfad und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION27_NAVIGATION_UX.md","release":false,"purpose":"Menü-Hierarchie, Laiennavigation, Synchronisationsfehler und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION28_KUBUNTU_2604_WAYLAND.md","release":false,"purpose":"Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"}
+    {"path":"docs/ITERATION28_KUBUNTU_2604_WAYLAND.md","release":false,"purpose":"Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"},
+    {"path":"docs/ITERATION29_PRESENTATION_POLICY.md","release":false,"purpose":"Architekturanalyse, Präsentationspolicy, Release-Vollständigkeit und CI-/Restore-Evidence"}
   ]
 }
