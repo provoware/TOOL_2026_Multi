@@ -20,15 +20,16 @@
 - keine Speicherformate, atomaren Schreiber, Backup- oder Restore-Fachlogik verändert,
 - Weston ist ausschließlich CI-Testinfrastruktur und keine neue Nutzer-Laufzeitabhängigkeit.
 
-### Technische Abnahme vor Versions-Sync
+### Abnahme
 - technischer Head `a7f2c168ecc3f0a2310fbff874cea33d30793d25` in GitHub-Grundprüfung **#567** vollständig erfolgreich,
+- finaler 0.16.0-Head `2536bd3183e39ad1566496a067b817dd3ad30b07` in Grundprüfung **#579** erneut vollständig erfolgreich,
 - **86 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich,
-- nativer Qt-Wayland-Smoke unter isoliertem Weston erfolgreich; Qt meldet Plattform `wayland`,
+- nativer Qt-Wayland-Smoke unter isoliertem Weston in beiden vollständigen Abnahmen erfolgreich; Qt meldet Plattform `wayland`,
 - Release-Manifest mit **38 freigegebenen Betriebsdateien** erfolgreich,
 - Headless-Start erfolgreich,
-- Vollprojekt-Restore `OK`, SHA-256 `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`,
+- Vollprojekt-Restore `OK`, finale Feature-SHA-256 `23792d1c96db0b0fd61eaf74630593fbbf37578b64c4f82fd1f6644d2efa103e`,
 - GitHub-CI lief auf Ubuntu 24.04.4; die reale sichtbare Kubuntu-26.04-/Plasma-Wayland-Abnahme bleibt deshalb zusätzlich erforderlich,
-- der auf Version 0.16.0 synchronisierte finale PR-Head wird vor Merge erneut vollständig einschließlich nativem Wayland-Smoke und Restore geprüft.
+- PR #35 anschließend ausschließlich für den geprüften Head per SHA-geschütztem Squash-Merge übernommen; resultierender Produkt-Main-Commit `3b829e799536cc1464e760f77ac7c28295c6ea70`.
 
 ## 0.15.3 – 2026-09-10 – Menü-Übersicht und Laiennavigation
 

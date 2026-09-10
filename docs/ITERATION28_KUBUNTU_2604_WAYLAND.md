@@ -6,7 +6,7 @@ TOOL_2026_Multi auf Kubuntu 26.04 LTS mit KDE Plasma Wayland als offizielles Zie
 
 ## Befund
 
-Die bisherige reale Endabnahme war technisch auf X11 festgelegt und verlangte `XDG_SESSION_TYPE=x11` sowie `DISPLAY`. Der normale `schnellstart.sh` war dagegen bereits backend-neutral. Für Kubuntu 26.04 ist deshalb nicht die Anwendung selbst auf einen festen Backendwert umzubauen, sondern die Plattformabnahme auf **native Wayland-Nutzung** umzustellen und zusätzlich in CI einen echten Qt-Wayland-Start nachzuweisen.
+Die bisherige reale Endabnahme war technisch auf X11 festgelegt und verlangte `XDG_SESSION_TYPE=x11` sowie `DISPLAY`. Der normale `schnellstart.sh` war dagegen bereits backend-neutral. Für Kubuntu 26.04 war deshalb nicht die Anwendung selbst auf einen festen Backendwert umzubauen, sondern die Plattformabnahme auf **native Wayland-Nutzung** umzustellen und zusätzlich in CI einen echten Qt-Wayland-Start nachzuweisen.
 
 ## Umsetzung
 
@@ -42,8 +42,20 @@ GitHub-Grundprüfung **#567**:
 - 🟢 Vollprojekt-Restore `OK`,
 - 🟢 Restore-SHA-256 `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`.
 
-Der GitHub-Runner selbst war Ubuntu 24.04.4. Damit ist der native Qt-Wayland-Pfad automatisiert bewiesen, **nicht** jedoch eine reale Kubuntu-26.04-/KDE-Plasma-Sitzung. Genau dafür bleibt `bash kubuntu_abnahme.sh` als sichtbare Zielsystem-Abnahme erforderlich.
+## Finale 0.16.0-Abnahme und Merge
 
-## Finale Abnahme
+Finaler Feature-Head: `2536bd3183e39ad1566496a067b817dd3ad30b07`
 
-Nach Synchronisierung auf Version 0.16.0 wird der vollständige Block aus Vollprüfung, nativem Wayland-Smoke und Restore erneut auf dem finalen PR-Head ausgeführt. Erst bei vollständig grünem Ergebnis darf gemergt werden.
+GitHub-Grundprüfung **#579**:
+
+- 🟢 86 Logik-/Regressionstests,
+- 🟢 56 PySide6-GUI-Tests unter `offscreen`,
+- 🟢 Release-Manifest: 38 Betriebsdateien,
+- 🟢 Headless-Start,
+- 🟢 nativer Qt-Wayland-Smoke unter isoliertem Weston; `QApplication.platformName()` meldet `wayland`,
+- 🟢 Vollprojekt-Restore `OK`,
+- 🟢 Restore-SHA-256 `23792d1c96db0b0fd61eaf74630593fbbf37578b64c4f82fd1f6644d2efa103e`.
+
+PR #35 wurde anschließend ausschließlich für diesen geprüften Head per SHA-geschütztem Squash-Merge übernommen. Resultierender Produkt-Main-Commit: `3b829e799536cc1464e760f77ac7c28295c6ea70`.
+
+Der GitHub-Runner selbst war Ubuntu 24.04.4. Damit sind Programmregressionen und der **native Qt-Wayland-Pfad** automatisiert nachgewiesen, nicht jedoch eine reale Kubuntu-26.04-/KDE-Plasma-Sitzung. Genau dafür bleibt `bash kubuntu_abnahme.sh` als sichtbare Zielsystem-Abnahme erforderlich.
