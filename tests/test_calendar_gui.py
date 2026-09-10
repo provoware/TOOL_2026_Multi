@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import QDate, QDateTime
+from PySide6.QtCore import QDate, QDateTime, Qt
 from PySide6.QtWidgets import QApplication
 
 from app.calendar_reminders import CalendarReminderController
@@ -80,6 +80,41 @@ class CalendarGuiTests(unittest.TestCase):
     def test_zoom_is_shared_with_calendar_window(self):
         self.window.set_zoom(175)
         self.assertEqual(self.window.zoom_percent, 175)
+
+    def test_calendar_has_visible_close_action_and_dashboard_opens_it_as_independent_window(self):
+        self.assertTrue(self.window.close_button.isVisible())
+        self.assertEqual(self.window.close_button.text(), "Kalender schließen")
+
+        dashboard = Dashboard(FakeTexts(), FakeLogger(), self.root)
+        dashboard.show()
+        self.app.processEvents()
+        try:
+            dashboard.open_calendar()
+            self.app.processEvents()
+            calendar = dashboard._calendar_window
+            self.assertIsNotNone(calendar)
+            assert calendar is not None
+            self.assertTrue(calendar.isWindow())
+            self.assertEqual(calendar.windowModality(), Qt.NonModal)
+            self.assertTrue(calendar.property("provowareModuleWindow"))
+            self.assertTrue(calendar.close_button.isVisible())
+            calendar.close_button.click()
+            self.app.processEvents()
+            self.assertFalse(calendar.isVisible())
+            self.assertTrue(dashboard.isVisible())
+        finally:
+            dashboard._closing_after_save = True
+            dashboard.close()
+            self.app.processEvents()
+
+    def test_calendar_close_button_stays_reachable_at_200_percent(self):
+        self.window.resize(1100, 720)
+        self.window.set_zoom(200)
+        self.app.processEvents()
+        self.assertTrue(self.window.close_button.isVisible())
+        self.assertEqual(self.window.close_button.text(), "Schließen")
+        self.assertGreater(self.window.close_button.width(), 0)
+        self.assertGreater(self.window.close_button.height(), 0)
 
     def test_reminder_controller_marks_only_after_callback(self):
         add_event(

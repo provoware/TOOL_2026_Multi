@@ -43,6 +43,23 @@ class _ManagedWindow(Protocol):
 ManagedWindowT = TypeVar("ManagedWindowT", bound=_ManagedWindow)
 
 
+def _prepare_module_window(window: QWidget) -> None:
+    """Kennzeichnet Module als eigenständige, nicht-modale Fenster.
+
+    Der Dashboard-Parent bleibt als Besitzbeziehung erhalten, aber ``Qt.Window``
+    verhindert ein versehentliches Einbetten in das Hauptfenster. Damit hat jedes
+    Modul seine eigene Fensterdekoration und kann unabhängig geschlossen werden.
+    """
+    window.setWindowFlag(Qt.Window, True)
+    window.setWindowModality(Qt.NonModal)
+    window.setProperty("provowareModuleWindow", True)
+
+
+def _show_module_window(window: QWidget) -> None:
+    _prepare_module_window(window)
+    window.show()
+
+
 def _open_managed_window(
     current: ManagedWindowT | None,
     factory: Callable[[], ManagedWindowT],
@@ -67,6 +84,8 @@ def _open_managed_window(
         return current
 
     window = current if reuse_hidden and current is not None else factory()
+    if isinstance(window, QWidget):
+        _prepare_module_window(window)
     if prepare_before_show is not None:
         prepare_before_show(window)
     window.show()
@@ -161,8 +180,10 @@ class Dashboard(QWidget):
         title_box.setSpacing(0)
         title = QLabel("Provoware-Datenbank-Dashboard 2026")
         title.setObjectName("appTitle")
+        self.app_title_label = title
         subtitle = QLabel("Deine Zentrale für Songs, Planung und Projektvorgaben")
         subtitle.setObjectName("subtitle")
+        self.header_subtitle = subtitle
         title_box.addWidget(title)
         title_box.addWidget(subtitle)
         layout.addLayout(title_box)
@@ -170,6 +191,7 @@ class Dashboard(QWidget):
 
         search_icon = QLabel("⌕")
         search_icon.setObjectName("accent")
+        self.header_search_icon = search_icon
         layout.addWidget(search_icon)
         self.search_entry = QLineEdit()
         self.search_entry.setPlaceholderText("Songs durchsuchen …")
@@ -205,6 +227,7 @@ class Dashboard(QWidget):
             button = QPushButton(text)
             button.setObjectName("tileButton")
             button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+            button.setProperty("ready", not planned)
             if planned:
                 self._mark_planned(button, name)
             button.clicked.connect(command)
@@ -296,6 +319,7 @@ class Dashboard(QWidget):
         self.quick_entry.returnPressed.connect(self.save_quick_info)
         layout.addWidget(self.quick_entry, 1)
         save = QPushButton("Notiz speichern")
+        self.quick_save_button = save
         save.clicked.connect(self.save_quick_info)
         layout.addWidget(save)
         return frame
@@ -303,17 +327,36 @@ class Dashboard(QWidget):
     def _build_recent_strip(self) -> QFrame:
         frame = QFrame()
         frame.setObjectName("toolbar")
+        self.recent_frame = frame
         layout = QHBoxLayout(frame)
         layout.setContentsMargins(10, 5, 8, 5)
         label = QLabel("Zuletzt bearbeitete Songs")
         label.setObjectName("muted")
+        self.recent_label = label
         layout.addWidget(label)
         self.recent_layout = QHBoxLayout()
         self.recent_layout.setSpacing(4)
         layout.addLayout(self.recent_layout, 1)
-        all_songs = QPushButton("Alle Songs")
-        all_songs.clicked.connect(self.open_song_library)
-        layout.addWidget(all_songs)
+
+        # Bei 175/200 % ersetzt eine platzsparende Auswahl die breite Buttonreihe.
+        # Die normalen Schnellbuttons bleiben darunter erhalten und werden nur
+        # darstellungsabhängig ein-/ausgeblendet.
+        self.recent_combo = QComboBox()
+        self.recent_combo.setObjectName("recent_song_selector")
+        self.recent_combo.setAccessibleName("Zuletzt bearbeitete Songs")
+        self.recent_combo.setToolTip("Wähle einen zuletzt bearbeiteten Song aus.")
+        self.recent_combo.hide()
+        layout.addWidget(self.recent_combo, 1)
+        self.recent_open_button = QPushButton("Song öffnen")
+        self.recent_open_button.setToolTip("Öffnet den ausgewählten zuletzt bearbeiteten Song in einem eigenen Fenster.")
+        self.recent_open_button.clicked.connect(self._open_recent_selected)
+        self.recent_open_button.hide()
+        layout.addWidget(self.recent_open_button)
+
+        self.recent_all_button = QPushButton("Alle Songs")
+        self.recent_all_button.clicked.connect(self.open_song_library)
+        layout.addWidget(self.recent_all_button)
+        self._recent_widgets: list[QWidget] = []
         return frame
 
     def _card(self, title: str) -> tuple[QFrame, QVBoxLayout]:
@@ -552,12 +595,23 @@ class Dashboard(QWidget):
             widget = item.widget()
             if widget is not None:
                 widget.deleteLater()
+        self._recent_widgets = []
+        self.recent_combo.clear()
         paths = list_songs(self.project_root)[:5]
         if not paths:
             empty = QLabel("Noch keine Songs gespeichert · mit „Songtexte“ starten.")
             empty.setObjectName("muted")
             self.recent_layout.addWidget(empty)
+            self._recent_widgets.append(empty)
+            self.recent_combo.addItem("Noch keine Songs gespeichert")
+            self.recent_combo.setEnabled(False)
+            self.recent_open_button.setEnabled(False)
+            from app.ui_standards import refresh_responsive_layout
+            refresh_responsive_layout(self)
             return
+
+        self.recent_combo.setEnabled(True)
+        self.recent_open_button.setEnabled(True)
         for path in paths:
             try:
                 document = load_song(path)
@@ -565,9 +619,24 @@ class Dashboard(QWidget):
                 continue
             subtitle = document.genre or "ohne Genre"
             button = QPushButton(f"{document.title}\n{subtitle}")
+            button.setObjectName("recentSongButton")
             button.setToolTip(f"{document.title} öffnen")
             button.clicked.connect(lambda _checked=False, selected=path: self.open_song_path(selected))
             self.recent_layout.addWidget(button, 1)
+            self._recent_widgets.append(button)
+            self.recent_combo.addItem(f"{document.title} — {subtitle}", str(path))
+
+        if self.recent_combo.count() == 0:
+            self.recent_combo.addItem("Keine lesbaren Songs gefunden")
+            self.recent_combo.setEnabled(False)
+            self.recent_open_button.setEnabled(False)
+        from app.ui_standards import refresh_responsive_layout
+        refresh_responsive_layout(self)
+
+    def _open_recent_selected(self) -> None:
+        selected = self.recent_combo.currentData()
+        if selected:
+            self.open_song_path(Path(str(selected)))
 
     def refresh_db_profiles(self) -> None:
         current = self.db_profile_combo.currentText()
@@ -656,7 +725,7 @@ class Dashboard(QWidget):
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, on_saved=self._song_saved, parent=self)
         self._song_editors.append(editor)
-        editor.show()
+        _show_module_window(editor)
 
     def open_song_path(self, path: Path) -> None:
         try:
@@ -671,7 +740,7 @@ class Dashboard(QWidget):
                             on_closed=self._song_editor_closed, document=document,
                             on_saved=self._song_saved, parent=self)
         self._song_editors.append(editor)
-        editor.show()
+        _show_module_window(editor)
 
     def open_song_library(self, initial_search: str = "") -> None:
         def apply_search(window: SongLibrary) -> None:

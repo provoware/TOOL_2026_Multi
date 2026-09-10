@@ -265,10 +265,24 @@ class NavigationUxController(QObject):
     def _restricted(self) -> bool:
         return presentation_state(self.dashboard).restricted_navigation
 
+    def _sync_ready_labels(self, high_zoom: bool) -> None:
+        """Verwendet bei 175/200 % kurze sichtbare Labels ohne Informationsverlust."""
+        labels = (
+            "♫  Songtexte",
+            "▦  Vorgaben" if high_zoom else f"▦  {self._t('navigation.ready.profile', 'Genres & Vorgaben')}",
+            "✓  Todo-Liste",
+            "▦  Kalender",
+            "⚕  Fehlerhilfe" if high_zoom else "⚕  Fehlerhilfe (Recovery)",
+        )
+        for button, text in zip(self.ready_buttons, labels, strict=True):
+            button.setText(text)
+
     def sync_visibility(self) -> None:
         collapsed = bool(getattr(self.dashboard, "nav_collapsed", False))
         sidebar_open = not collapsed
-        restricted = self._restricted()
+        state = presentation_state(self.dashboard)
+        restricted = state.restricted_navigation
+        self._sync_ready_labels(state.high_zoom)
 
         self.menu_title.setVisible(sidebar_open)
         for widget in self.core_entries:

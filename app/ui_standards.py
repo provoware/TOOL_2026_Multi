@@ -20,8 +20,8 @@ THEMES: dict[str, dict[str, str]] = {
         "muted": "#B7C4D2", "accent": "#FFB11B", "accent_hover": "#FFC44D",
         "accent_soft": "#35280F", "cyan": "#34D9FF", "green": "#48E69B",
         "yellow": "#FFD66B", "red": "#FF7180", "red_soft": "#35171E",
-        "blocked": "#7D91A5", "border": "#2D4963", "border_soft": "#20384E",
-        "hover": "#162D42", "active_nav": "#142B3E", "header_section": "#12283C",
+        "blocked": "#93A8BA", "border": "#52718C", "border_soft": "#38546B",
+        "hover": "#19354B", "active_nav": "#18344A", "header_section": "#173149",
         "inverse_text": "#07111A",
     },
     "Türkis": {
@@ -30,8 +30,8 @@ THEMES: dict[str, dict[str, str]] = {
         "muted": "#B6DDE2", "accent": "#40F2E2", "accent_hover": "#83FFF4",
         "accent_soft": "#143B3A", "cyan": "#5DE8FF", "green": "#61F2A6",
         "yellow": "#FFE06A", "red": "#FF7A8A", "red_soft": "#3A1B22",
-        "blocked": "#8DB7BC", "border": "#2B6770", "border_soft": "#1F4850",
-        "hover": "#12353D", "active_nav": "#12313A", "header_section": "#12333B",
+        "blocked": "#9BC2C7", "border": "#3F7C86", "border_soft": "#2F5E66",
+        "hover": "#143B43", "active_nav": "#143A42", "header_section": "#153D45",
         "inverse_text": "#041012",
     },
     "Lila": {
@@ -40,8 +40,8 @@ THEMES: dict[str, dict[str, str]] = {
         "muted": "#D7C2E5", "accent": "#DFA0FF", "accent_hover": "#F0C4FF",
         "accent_soft": "#432653", "cyan": "#69E6FF", "green": "#62E6A7",
         "yellow": "#FFD86A", "red": "#FF7C92", "red_soft": "#431C2B",
-        "blocked": "#B59AC4", "border": "#5B3A72", "border_soft": "#3D2850",
-        "hover": "#38204D", "active_nav": "#321D45", "header_section": "#342047",
+        "blocked": "#C0A6D0", "border": "#80609B", "border_soft": "#5B4070",
+        "hover": "#3B2251", "active_nav": "#38204D", "header_section": "#3D2353",
         "inverse_text": "#13081A",
     },
     "Kontrast": {
@@ -184,6 +184,14 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
         min-height:{geometry_scaled(22, zoom_percent)}px;
     }}
     QPushButton#tileButton {{ min-height:{geometry_scaled(54, zoom_percent)}px; font-weight:600; }}
+    QPushButton#tileButton[ready="true"] {{
+        background:{colors['header_section']}; border-bottom:2px solid {colors['accent']};
+    }}
+    QPushButton#recentSongButton {{ text-align:left; }}
+    QPushButton#closeWindowButton {{
+        border:1px solid {colors['border']}; background:{colors['surface_soft']}; font-weight:700;
+    }}
+    QPushButton#closeWindowButton:hover {{ border-color:{colors['accent']}; background:{colors['hover']}; }}
     QPushButton#featureButton {{ min-height:{geometry_scaled(82, zoom_percent)}px; font-weight:600; }}
 
     QLineEdit, QTextEdit, QPlainTextEdit, QListWidget, QTreeWidget, QTableWidget {{
@@ -258,7 +266,7 @@ def _card_title(card: QFrame) -> str:
 
 
 def _apply_dashboard_high_zoom(window: QWidget, high_zoom: bool) -> None:
-    """Reduziert bei 175/200 % ausschließlich redundante Planungsübersichten."""
+    """Schaltet das Dashboard bei 175/200 % auf eine verlustarme Hochzoomansicht."""
     if window.__class__.__name__ != "Dashboard":
         return
 
@@ -267,6 +275,8 @@ def _apply_dashboard_high_zoom(window: QWidget, high_zoom: bool) -> None:
         if button.objectName() == "navButton" and button.property("planned") is True:
             button.setMaximumHeight(0 if high_zoom else 16777215)
             button.setVisible(not high_zoom and not nav_collapsed)
+        elif button.objectName() == "tileButton" and button.property("planned") is True:
+            button.setVisible(not high_zoom)
 
     for card in window.findChildren(QFrame):
         if card.objectName() != "card":
@@ -275,9 +285,64 @@ def _apply_dashboard_high_zoom(window: QWidget, high_zoom: bool) -> None:
         if title.startswith("▣  Funktionen") or title.startswith("▤  Dateien & Werkzeuge"):
             card.setVisible(not high_zoom)
 
+    # Header: bei 200 % keine abgeschnittene Produktbezeichnung und keine
+    # redundante Unterzeile, die Platz von Suche und Beenden nimmt.
+    title = getattr(window, "app_title_label", None)
+    if isinstance(title, QLabel):
+        title.setText("Provoware Dashboard 2026" if high_zoom else "Provoware-Datenbank-Dashboard 2026")
+    subtitle = getattr(window, "header_subtitle", None)
+    if isinstance(subtitle, QLabel):
+        subtitle.setVisible(not high_zoom)
+    search_icon = getattr(window, "header_search_icon", None)
+    if isinstance(search_icon, QLabel):
+        search_icon.setVisible(not high_zoom)
+    quit_button = getattr(window, "quit_button", None)
+    if isinstance(quit_button, QPushButton):
+        quit_button.setText("Beenden" if high_zoom else "Programm beenden")
+
+    quick_label = getattr(window, "quick_info_label", None)
+    if isinstance(quick_label, QLabel):
+        quick_label.setText("Notiz:" if high_zoom else "Projekt-Notiz:")
+    quick_save = getattr(window, "quick_save_button", None)
+    if isinstance(quick_save, QPushButton):
+        quick_save.setText("Speichern" if high_zoom else "Notiz speichern")
+
+    # Breite Einzelbuttons für letzte Songs werden im Hochzoom durch ein einziges
+    # Auswahlfeld ersetzt. Dadurch bleiben alle fünf Einträge erreichbar, ohne
+    # dass lange Songtitel andere Bedienelemente verdecken.
+    for recent in getattr(window, "_recent_widgets", ()):  # type: ignore[attr-defined]
+        if isinstance(recent, QWidget):
+            recent.setVisible(not high_zoom)
+    recent_label = getattr(window, "recent_label", None)
+    if isinstance(recent_label, QLabel):
+        recent_label.setText("Letzte Songs" if high_zoom else "Zuletzt bearbeitete Songs")
+    recent_combo = getattr(window, "recent_combo", None)
+    if isinstance(recent_combo, QComboBox):
+        recent_combo.setVisible(high_zoom)
+    recent_open = getattr(window, "recent_open_button", None)
+    if isinstance(recent_open, QPushButton):
+        recent_open.setVisible(high_zoom)
+
+    for label in window.findChildren(QLabel):
+        text = label.text()
+        if text.startswith("Tipp: Für Genres, Stimmung, Stil oder Stimme"):
+            label.setVisible(not high_zoom)
+        elif text == "GitHub-Repositories und Prompts: In Planung":
+            label.setVisible(not high_zoom)
+        elif text == "Profil:":
+            label.setVisible(not high_zoom)
+        elif text.startswith("Wähle einen fertigen Bereich."):
+            label.setText(
+                "Wähle einen fertigen Bereich." if high_zoom
+                else "Wähle einen fertigen Bereich.\nGeplante Funktionen sind deutlich mit „In Planung“ markiert."
+            )
+
     legend = getattr(window, "status_legend", None)
     if isinstance(legend, QLabel):
         legend.setVisible(not high_zoom)
+    theme_label = getattr(window, "theme_label", None)
+    if isinstance(theme_label, QLabel):
+        theme_label.setText("Theme:" if high_zoom else "Farben:")
 
 
 def _apply_responsive_layout(window: QWidget) -> None:
@@ -313,7 +378,9 @@ def _apply_responsive_layout(window: QWidget) -> None:
         if isinstance(sidebar, QWidget) and not getattr(window, "nav_collapsed", False):
             base = 198 if compact else (258 if wide else 226)
             if high_zoom:
-                base = max(base, 238 if compact else 260)
+                # Kurze Hochzoom-Labels erlauben eine schmalere Navigation und
+                # geben dem eigentlichen Arbeitsbereich wieder mehr Platz.
+                base = 224
             _set_width(sidebar, round(base * width_factor))
 
         search = getattr(window, "search_entry", None)
@@ -321,7 +388,7 @@ def _apply_responsive_layout(window: QWidget) -> None:
             if window.__class__.__name__ == "Dashboard":
                 base = 190 if compact else (320 if wide else 250)
                 if high_zoom:
-                    base = min(base, 250)
+                    base = 205
                 _set_width(search, round(base * width_factor))
             elif window.__class__.__name__ == "SongLibrary":
                 search.setMinimumWidth(round(220 * width_factor))
@@ -331,7 +398,7 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         theme_combo = getattr(window, "theme_combo", None)
         if isinstance(theme_combo, QComboBox):
-            _set_width(theme_combo, round((112 if high_zoom else 132) * width_factor))
+            _set_width(theme_combo, round((90 if high_zoom else 132) * width_factor))
 
         profile_combo = getattr(window, "db_profile_combo", None)
         if isinstance(profile_combo, QWidget):
@@ -342,8 +409,14 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         for label in window.findChildren(QLabel):
             if label.text() in {"Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"}:
-                base = 82 if high_zoom else (94 if compact else (128 if wide else 108))
-                _set_width(label, round(base * width_factor))
+                if high_zoom:
+                    # Keine starre Mini-Breite bei doppelter Schriftgröße: die
+                    # längste Beschriftung muss vollständig lesbar bleiben.
+                    base = max(128, label.fontMetrics().horizontalAdvance(label.text()) + 18)
+                    _set_width(label, base)
+                else:
+                    base = 94 if compact else (128 if wide else 108)
+                    _set_width(label, round(base * width_factor))
 
         for button in window.findChildren(QPushButton):
             if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
@@ -351,6 +424,17 @@ def _apply_responsive_layout(window: QWidget) -> None:
                     button.setText("Profile")
                 else:
                     button.setText("Profile & Werte bearbeiten" if wide else "Profile bearbeiten")
+
+        if window.__class__.__name__ == "CalendarWindow":
+            today_button = window.findChild(QPushButton, "calendarTodayButton")
+            refresh_button = window.findChild(QPushButton, "calendarRefreshButton")
+            close_button = window.findChild(QPushButton, "closeWindowButton")
+            if today_button is not None:
+                today_button.setText("Heute" if high_zoom else "Heute anzeigen")
+            if refresh_button is not None:
+                refresh_button.setText("Aktualisieren" if high_zoom else "Ansicht aktualisieren")
+            if close_button is not None:
+                close_button.setText("Schließen" if high_zoom else "Kalender schließen")
 
         section_list = getattr(window, "section_list", None)
         if isinstance(section_list, QListWidget):
@@ -503,6 +587,7 @@ def _install_theme_selector(widget: QWidget) -> None:
 
     label = QLabel("Farben:")
     label.setObjectName("muted")
+    widget.theme_label = label  # type: ignore[attr-defined]
     combo = QComboBox()
     combo.setObjectName("theme_selector")
     combo.addItems(THEME_NAMES)
