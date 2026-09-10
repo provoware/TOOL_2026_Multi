@@ -1,0 +1,29 @@
+{
+  "title": "Beispieltitel",
+  "genre": "Hard Techno",
+  "mood": "treibend, düster",
+  "style": "direkt, repetitiv",
+  "voice": "tiefe Stimme",
+  "special": "lange Drops",
+  "tags": [
+    "beispiel",
+    "techno"
+  ],
+  "status": "Idee",
+  "favorite": false,
+  "other": "Optionale abschließende Notizen zum Song.",
+  "sections": [
+    {
+      "kind": "Intro",
+      "text": "Text des Intros"
+    },
+    {
+      "kind": "Strophe",
+      "text": "Text der ersten Strophe"
+    },
+    {
+      "kind": "Eigener Bereichsname",
+      "text": "Auch frei benannte Bereiche sind erlaubt."
+    }
+  ]
+}
