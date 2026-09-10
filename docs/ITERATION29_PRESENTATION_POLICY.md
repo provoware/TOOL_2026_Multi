@@ -50,9 +50,11 @@ Der Zustand enthält explizit:
 
 ### 3.2 Abhängigkeiten entkoppelt
 
-`app/laptop_layout.py` und `app/navigation_ux.py` verwenden nun dieselbe öffentliche Policy. Die Navigation importiert keine private `_is_laptop_compact()`-Funktion mehr und dupliziert die Grenze `zoom >= 175` nicht mehr.
+`app/laptop_layout.py`, `app/navigation_ux.py` und nach der strengen Konsistenzrunde auch `app/ui_standards.py` verwenden die gemeinsame öffentliche Policy für die fachlich identischen Darstellungsgrenzen. Die Navigation importiert keine private `_is_laptop_compact()`-Funktion mehr und dupliziert die Grenze `zoom >= 175` nicht mehr. Die Responsive-Schicht bezieht `WIDE_MIN_WIDTH_PX`, `HIGH_ZOOM_MIN_PERCENT` und die Zoomnormalisierung ebenfalls aus `app.presentation_policy`.
 
-Die bisherigen privaten Laptop-Helfer bleiben vorerst nur als kleine Kompatibilitätsadapter erhalten. Damit wird unnötiger API-Bruch vermieden, während die eigentliche Entscheidung bereits vollständig zentralisiert ist.
+Der eigenständige Responsive-Breakpoint `compact < 1100 px` bleibt bewusst in `app/ui_standards.py`: Er beschreibt eine andere Layoutklasse und ist nicht identisch mit dem Dashboard-Laptop-Kompaktmodus. Damit wird nur tatsächlich gemeinsame Semantik zentralisiert und keine künstliche Kopplung erzeugt.
+
+Die bisherigen privaten Laptop-Helfer bleiben vorerst nur als kleine Kompatibilitätsadapter erhalten. Damit wird unnötiger API-Bruch vermieden, während die eigentliche Entscheidung zentralisiert ist.
 
 ### 3.3 Reine Grenzwerttests
 
@@ -66,7 +68,7 @@ Die bisherigen privaten Laptop-Helfer bleiben vorerst nur als kleine Kompatibili
 - Mindestgrößen in der Klassifikation,
 - Ausschluss des Dashboard-Laptopmodus für andere Fensterklassen.
 
-Die bestehenden 56 GUI-Regressionsprüfungen bleiben unverändert als zweite Ebene bestehen. Damit werden reine Zustandslogik und tatsächliche Qt-Wirkung getrennt geprüft.
+Die bestehenden 56 GUI-Regressionsprüfungen bleiben als zweite Ebene bestehen. Damit werden reine Zustandslogik und tatsächliche Qt-Wirkung getrennt geprüft.
 
 ### 3.4 Release-Vollständigkeit als Invariant
 
@@ -127,13 +129,39 @@ Iteration 29 ist eine **interne Architektur- und Qualitätshärtung**, keine neu
 
 Die Änderung senkt vor allem das zukünftige Änderungsrisiko:
 
-- Bildschirm-/Zoomgrenzen sind an einer Stelle nachvollziehbar,
+- fachlich gemeinsame Bildschirm-/Zoomgrenzen sind an einer Stelle nachvollziehbar,
 - reine Zustandslogik kann ohne Qt-Ereignisreihenfolge geprüft werden,
-- Navigation und Laptopmodus können nicht mehr still unterschiedliche Regeln entwickeln,
+- Responsive-Schicht, Navigation und Laptopmodus können für gemeinsame Zustände nicht mehr still unterschiedliche Grenzwerte entwickeln,
 - ein neues Runtime-Pythonmodul kann nicht mehr unbemerkt aus dem Release herausfallen.
 
 Die reale sichtbare Kubuntu-26.04-/Plasma-Wayland-Abnahme bleibt trotz automatischer Tests ein separater Zielsystem-Gate.
 
-## 8. Finales Gate
+## 8. Finale Abnahme und strenge Konsistenzrunde
 
-Nach Version-/Doku-/Manifest-Synchronisierung wird **derselbe vollständige Prüfweg erneut** ausgeführt. Erst bei erneut grünem Volltest, nativem Wayland-Smoke und Restore darf PR #37 gemergt werden.
+Der vollständig synchronisierte 0.16.1-Head `306eb551234882401d98114182b51c2ecdbdfdcb` bestand **Grundprüfung #612** erneut vollständig:
+
+- 🟢 94 Logik-/Regressionstests,
+- 🟢 56 PySide6-GUI-Tests,
+- 🟢 39 freigegebene Betriebsdateien,
+- 🟢 Headless-Start,
+- 🟢 nativer Qt-Wayland-Smoke (`wayland`),
+- 🟢 Vollprojekt-Restore `OK`,
+- 🟢 Restore-SHA-256 `78813816a492133dab8687112f80479bd7eff7309577ab2853833b9baf5b479f`.
+
+PR #37 wurde danach ausschließlich für diesen geprüften Head per SHA-geschütztem Squash-Merge übernommen. Resultierender Produkt-Main-Commit: `608f7236f68161436b5d77e6e4c907ff6c1aa1a0`.
+
+Eine anschließende strengere **Single-Source-of-Truth-Prüfung** fand in `app/ui_standards.py` noch zwei rohe, semantisch identische Grenzwerte (`1450` für breite Ansicht und `175` für Hochzoom) sowie eine lokale Zoomnormalisierung. Der isolierte Commit `5d0eb33165bfe721a380912cd528981c51a88042` ersetzte ausschließlich diese Duplikate durch die zentralen Policy-Konstanten und die gemeinsame Normalisierung; Schwellen, Geometrie und Produktverhalten blieben unverändert.
+
+Dieser isolierte Konsistenzstand bestand **Grundprüfung #616** vollständig:
+
+- 🟢 94 Logik-/Regressionstests,
+- 🟢 56 PySide6-GUI-Tests,
+- 🟢 39 freigegebene Betriebsdateien,
+- 🟢 Headless-Start,
+- 🟢 nativer Qt-Wayland-Smoke (`wayland`),
+- 🟢 Vollprojekt-Restore `OK`,
+- 🟢 Restore-SHA-256 `f745cfd8ae287ecfe7b34340f695959317f7a19901dae3cee9131133d5f90c82`.
+
+PR #38 wurde anschließend mit exaktem Head-SHA-Schutz per Squash-Merge übernommen. Resultierender Main-Commit: `e74d0ddc45258dc51926c94662ab23303f80e5f2`.
+
+Damit ist Iteration 29 unter der strengeren Architekturdefinition für die gemeinsam genutzten Präsentationszustände **technisch abgeschlossen**. Die reale sichtbare Kubuntu-26.04-/KDE-Plasma-Wayland-Abnahme bleibt bewusst als separates Projektgate offen.
