@@ -15,6 +15,18 @@ bash schnellstart.sh
 
 Beim ersten Start können benötigte Programmteile eingerichtet werden. Danach öffnet sich das **Provoware-Datenbank-Dashboard 2026**.
 
+### Für Kubuntu 26.04
+
+Das offizielle Zielsystem ist **Kubuntu 26.04 LTS mit KDE Plasma unter Wayland**. Du musst für den normalen Start **keine technische Anzeigevariable einstellen**. `schnellstart.sh` lässt Qt die aktive Plasma-Sitzung selbst verwenden.
+
+Die besondere Zielsystem-Prüfung startest du erst nach dem normalen Funktionstest mit:
+
+```bash
+bash kubuntu_abnahme.sh
+```
+
+Falls diese Prüfung meldet, dass keine Wayland-Sitzung aktiv ist, melde dich ab und wähle beim Anmelden **Plasma (Wayland)**. Ein ausdrücklich auf `xcb`/X11 gezwungenes Qt zählt nicht als native Wayland-Abnahme.
+
 ---
 
 ## Woran erkenne ich, was schon funktioniert?
@@ -369,6 +381,36 @@ Vorhandene Nutzerdaten werden durch die reine Startprüfung nicht absichtlich ve
 
 ---
 
+# Kubuntu 26.04 / Wayland prüfen
+
+Nach einem normalen Funktionstest kannst du die Zielsystem-Abnahme starten:
+
+```bash
+bash kubuntu_abnahme.sh
+```
+
+Die automatische Vorprüfung kontrolliert:
+
+- Linux,
+- Ubuntu/Kubuntu-Basis **26.04**,
+- KDE/Plasma,
+- echte Wayland-Sitzung,
+- vorhandene Wayland-Anzeige,
+- dass Qt nicht ausdrücklich auf X11/XWayland gezwungen wurde,
+- den tatsächlich verwendeten Qt-Plattformnamen,
+- den sicheren Prozesswächtertest ausschließlich in einem Tempordner.
+
+Danach bestätigst du sichtbar:
+
+- 1366×768 bei 125/150 % ohne Überlagerungen,
+- 175/200 % mit erreichbarer Hauptbedienung,
+- Tastaturfokus und Theme **Kontrast**,
+- Fenster, Menüs und Eingabefokus unter Wayland.
+
+Nur wenn **alle automatischen und sichtbaren Punkte** bestätigt sind, bekommt der Bericht den Status `OK`. Die Abnahme verändert dabei keine Song-, Todo-, Kalender- oder Profildaten.
+
+---
+
 # Technische Prüfung für Entwickler
 
 Die vollständige automatische Prüfung lautet:
@@ -388,12 +430,9 @@ Sie prüft unter anderem:
 - Zoom und Tastaturwege,
 - Farbthemes, Screenreader-Grundwerte und Fokus,
 - Laienführung, Menü-Hierarchie und sichtbare Statushinweise,
+- Kubuntu-26.04-/Wayland-Prüflogik,
 - Kontraste der Kernfarben aller Themes,
 - Repository-Hygiene,
 - vollständige Wiederherstellung aus einem Projekt-ZIP.
 
-Die reale sichtbare Kubuntu/KDE-X11-Endabnahme bleibt zusätzlich möglich mit:
-
-```bash
-bash kubuntu_abnahme.sh
-```
+GitHub Actions prüft zusätzlich einen **echten nativen Qt-Wayland-Start** gegen einen isolierten headless Wayland-Compositor. Diese technische Prüfung ist wichtig, ersetzt aber nicht die sichtbare Abnahme auf einem echten Kubuntu-26.04-/Plasma-Rechner.
