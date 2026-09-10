@@ -20,11 +20,29 @@ jobs:
         uses: actions/checkout@v7.0.1
         with:
           ref: iteration-34-core-modules-data-standards
+      - name: Exakten CSS-Anker an aktuelle F-String-Syntax anpassen
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/iteration34_apply.py')
+          text = path.read_text(encoding='utf-8')
+          replacements = (
+              ('QTableWidget {\\n', 'QTableWidget {{\\n'),
+              ('QPlainTextEdit {\\n', 'QPlainTextEdit {{\\n'),
+              ('QLineEdit { min-height:{control_height}px; }\\n', 'QLineEdit {{ min-height:{control_height}px; }}\\n'),
+              ('QComboBox {\\n', 'QComboBox {{\\n'),
+              ("selection-color:{colors['text']};\\n    }\\n", "selection-color:{colors['text']};\\n    }}\\n"),
+          )
+          for old, new in replacements:
+              text = text.replace(old, new)
+          path.write_text(text, encoding='utf-8')
+          PY
       - name: Exakten Integrationspatch anwenden
         run: python3 scripts/iteration34_apply.py
       - name: Ergebnis committen
         run: |
           set -Eeuo pipefail
+          git checkout -- scripts/iteration34_apply.py
           git config user.name "provoware"
           git config user.email "provoware.one@gmail.com"
           git add app tests scripts
