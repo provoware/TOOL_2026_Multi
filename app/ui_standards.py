@@ -10,6 +10,8 @@ from PySide6.QtWidgets import (
     QTextEdit, QToolButton, QTreeWidget, QWidget,
 )
 
+from app.presentation_policy import HIGH_ZOOM_MIN_PERCENT, WIDE_MIN_WIDTH_PX, normalize_zoom
+
 DEFAULT_THEME = "Amber"
 THEMES: dict[str, dict[str, str]] = {
     "Amber": {
@@ -92,16 +94,13 @@ def geometry_scaled(value: int, zoom_percent: int) -> int:
     200 % Schriftzoom darf nicht gleichzeitig alle Abstände, Radien und
     Mindesthöhen verdoppeln. Die Geometrie wächst deshalb maximal um 25 %.
     """
-    zoom = max(100, min(200, int(zoom_percent)))
+    zoom = normalize_zoom(zoom_percent)
     factor = 1.0 + ((zoom - 100) / 100.0) * 0.25
     return max(1, round(value * factor))
 
 
 def _zoom_percent(window: QWidget) -> int:
-    try:
-        return max(100, min(200, int(getattr(window, "zoom_percent", 100))))
-    except (TypeError, ValueError):
-        return 100
+    return normalize_zoom(getattr(window, "zoom_percent", 100))
 
 
 def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> str:
@@ -289,8 +288,8 @@ def _apply_responsive_layout(window: QWidget) -> None:
         width = max(window.width(), window.minimumWidth())
         zoom = _zoom_percent(window)
         compact = width < 1100
-        wide = width >= 1450
-        high_zoom = zoom >= 175
+        wide = width >= WIDE_MIN_WIDTH_PX
+        high_zoom = zoom >= HIGH_ZOOM_MIN_PERCENT
         width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
         gap = 6 if compact else (10 if wide else 8)
