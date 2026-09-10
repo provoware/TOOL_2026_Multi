@@ -15,9 +15,32 @@ jobs:
       - name: PySide6-Prüfumgebung bereitstellen
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libegl1
+          sudo apt-get install -y -qq libegl1 weston
           python3 -m pip install --disable-pip-version-check -r requirements.txt
       - name: Vollständige Grundprüfung ausführen
         run: bash scripts/pruefen.sh --full
+      - name: Nativen Qt-Wayland-Start prüfen
+        env:
+          QT_QPA_PLATFORM: wayland
+        run: |
+          set -Eeuo pipefail
+          export XDG_RUNTIME_DIR="$RUNNER_TEMP/provoware-wayland-runtime"
+          mkdir -p "$XDG_RUNTIME_DIR"
+          chmod 700 "$XDG_RUNTIME_DIR"
+          unset DISPLAY
+          weston --backend=headless-backend.so --socket=wayland-ci --idle-time=0 --log="$RUNNER_TEMP/provoware-weston.log" &
+          WESTON_PID=$!
+          cleanup(){ kill "$WESTON_PID" >/dev/null 2>&1 || true; wait "$WESTON_PID" >/dev/null 2>&1 || true; }
+          trap cleanup EXIT
+          for _ in $(seq 1 50); do
+            [[ -S "$XDG_RUNTIME_DIR/wayland-ci" ]] && break
+            sleep 0.1
+          done
+          if [[ ! -S "$XDG_RUNTIME_DIR/wayland-ci" ]]; then
+            cat "$RUNNER_TEMP/provoware-weston.log" >&2 || true
+            exit 1
+          fi
+          export WAYLAND_DISPLAY=wayland-ci
+          python3 scripts/wayland_smoke.py
       - name: Vollprojekt wiederherstellen und prüfen
         run: python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"

@@ -150,16 +150,41 @@ Stand: 2026-09-10
 
 ### Abnahme
 
-- 🟢 korrigierter technischer Head `b129b47bb8123fc7ea49680f2fa921f457164c56` in Grundprüfung **#540** vollständig erfolgreich.
-- 🟢 **81 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich.
+- 🟢 technischer Head `b129b47bb8123fc7ea49680f2fa921f457164c56` in Grundprüfung **#540** vollständig erfolgreich.
+- 🟢 finaler 0.15.3-Head `9cd8101ba19c5e28b41fa7793d35860462d38864` in Grundprüfung **#554** erneut vollständig erfolgreich.
+- 🟢 **81 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **38 Release-Betriebsdateien** und Headless-Start erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, finale SHA-256 `add4af04204e694427aa2332edea4136c2816e0c196676391a5763e044be3718`.
+- 🟢 PR #34 per SHA-geschütztem Squash-Merge in `main` übernommen; Main-Commit `e7027e57c3c8709263b73543fd2b01be84e6639d`.
+
+## Iteration 28 – Kubuntu 26.04 / native Wayland-Unterstützung
+
+**Hauptziel:** Kubuntu 26.04 LTS mit KDE Plasma Wayland als offizielles Zielsystem prüfen und absichern, ohne den normalen Start künstlich auf ein einzelnes Qt-Backend festzunageln.
+
+### Umsetzung
+
+- 🟢 X11-only-Endabnahme auf Kubuntu 26.04 / Plasma Wayland umgestellt.
+- 🟢 Abnahme prüft Linux, Ubuntu/Kubuntu-Basis 26.04, KDE/Plasma, `XDG_SESSION_TYPE=wayland` und `WAYLAND_DISPLAY`.
+- 🟢 erzwungenes `QT_QPA_PLATFORM=xcb`/XWayland wird für die offizielle Wayland-Abnahme blockiert.
+- 🟢 tatsächlicher Qt-Plattformname wird über `QApplication.platformName()` kontrolliert; nur natives `wayland*` gilt als Pass.
+- 🟢 nativen Qt-Wayland-Smoke-Test `scripts/wayland_smoke.py` ergänzt.
+- 🟢 CI startet dafür einen isolierten headless Weston-Compositor; bestehende Offscreen-GUI-Regressionsprüfung bleibt zusätzlich erhalten.
+- 🟢 `schnellstart.sh` bleibt backend-neutral und setzt weder Wayland noch X11 künstlich.
+- 🟢 reale Sichtabnahme prüft zusätzlich Laptoplayout 125/150 %, Hochzoom 175/200 %, Tastaturfokus, Kontrasttheme sowie Fenster-/Menü-/Eingabeverhalten unter Wayland.
+- 🟢 keine Nutzerdaten-, Speicher-, Backup- oder Restore-Fachlogik verändert.
+
+### Technische Abnahme
+
+- 🟢 technischer Head `a7f2c168ecc3f0a2310fbff874cea33d30793d25` in Grundprüfung **#567** vollständig erfolgreich.
+- 🟢 **86 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich.
+- 🟢 nativer Qt-Wayland-Start unter isoliertem Weston erfolgreich; gemeldete Qt-Plattform: `wayland`.
+- 🟢 Release-Manifest mit **38 freigegebenen Betriebsdateien** erfolgreich.
 - 🟢 Headless-Start erfolgreich.
-- 🟢 Vollprojekt-Restore `OK`, SHA-256 `42c67e08e419e890c29620ab8e6fef8afeb12a24b1e7006bfc972ab69d87eefc`.
-- 🟢 `app/navigation_ux.py` wird beim Versions-Sync ausdrücklich als Release-Betriebsdatei aufgenommen; erwarteter finaler Release-Bestand: **38 Dateien**.
-- 🟡 Version 0.15.3, Doku, MANIFEST, TODO und CHANGELOG sind synchronisiert; der finale PR-Head muss vor Merge denselben vollständigen Prüf- und Restore-Block erneut bestehen.
+- 🟢 Vollprojekt-Restore `OK`, SHA-256 `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`.
+- 🟡 Version 0.16.0 und Projektdokumentation werden jetzt synchronisiert; der daraus entstehende finale PR-Head muss denselben Voll-/Wayland-/Restore-Block erneut bestehen.
 
 ## Danach
 
-1. 🟡 reale sichtbare Kubuntu/KDE-X11-Abnahme mit `bash kubuntu_abnahme.sh` durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und das Theme `Kontrast`.
+1. 🟡 reale sichtbare **Kubuntu 26.04 / KDE Plasma Wayland**-Abnahme mit `bash kubuntu_abnahme.sh` auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und Theme `Kontrast`.
 2. 🔴 anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
 ## Geplante Produktbereiche

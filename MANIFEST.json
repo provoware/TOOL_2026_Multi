@@ -1,15 +1,15 @@
 {
-  "schema_version": 23,
+  "schema_version": 24,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.15.3",
+    "version": "0.16.0",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-10"
   },
   "iteration": {
-    "number": 27,
-    "goal": "Linke Navigation aus Nutzersicht ordnen und geplante Bereiche platzsparend einklappen",
+    "number": 28,
+    "goal": "Kubuntu 26.04 LTS mit KDE Plasma Wayland als offizielles Zielsystem pruefen und absichern",
     "completed": 10,
     "open_next": 1
   },
@@ -41,7 +41,8 @@
     "headless_command": "python3 -m app.main --headless-check",
     "bounded": true,
     "qt_platform_for_ci": "offscreen",
-    "targeted_tests": "python3 -m unittest tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_kubuntu_acceptance; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui",
+    "native_wayland_smoke_command": "QT_QPA_PLATFORM=wayland python3 scripts/wayland_smoke.py",
+    "targeted_tests": "python3 -m unittest tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_kubuntu_acceptance tests.test_wayland_smoke; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui",
     "repo_hygiene_test": "python3 -m unittest tests.test_repo_hygiene",
     "layman_ux_test": "QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py",
@@ -149,16 +150,42 @@
     "iteration27_initial_restore_status": "OK",
     "iteration27_initial_restore_sha256": "42c67e08e419e890c29620ab8e6fef8afeb12a24b1e7006bfc972ab69d87eefc",
     "iteration27_initial_tested_head_sha": "b129b47bb8123fc7ea49680f2fa921f457164c56",
-    "iteration27_final_ci_run": null,
-    "iteration27_final_ci_result": "pending",
-    "iteration27_final_restore_gate": false,
-    "iteration27_final_tested_head_sha": null
+    "iteration27_final_ci_run": 554,
+    "iteration27_final_ci_result": "success",
+    "iteration27_final_logic_tests": 81,
+    "iteration27_final_gui_tests": 56,
+    "iteration27_final_release_files": 38,
+    "iteration27_final_restore_gate": true,
+    "iteration27_final_restore_status": "OK",
+    "iteration27_final_restore_sha256": "add4af04204e694427aa2332edea4136c2816e0c196676391a5763e044be3718",
+    "iteration27_final_tested_head_sha": "9cd8101ba19c5e28b41fa7793d35860462d38864",
+    "iteration27_final_head_gate": "success",
+    "iteration27_merged_main_sha": "e7027e57c3c8709263b73543fd2b01be84e6639d",
+    "iteration28_initial_ci_run": 567,
+    "iteration28_initial_ci_result": "success",
+    "iteration28_initial_logic_tests": 86,
+    "iteration28_initial_gui_tests": 56,
+    "iteration28_initial_release_files": 38,
+    "iteration28_initial_native_wayland_smoke": true,
+    "iteration28_initial_restore_gate": true,
+    "iteration28_initial_restore_status": "OK",
+    "iteration28_initial_restore_sha256": "1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579",
+    "iteration28_initial_tested_head_sha": "a7f2c168ecc3f0a2310fbff874cea33d30793d25",
+    "iteration28_final_ci_run": null,
+    "iteration28_final_ci_result": "pending",
+    "iteration28_final_native_wayland_smoke": false,
+    "iteration28_final_restore_gate": false,
+    "iteration28_final_tested_head_sha": null
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
     "checkout_action": "actions/checkout@v7.0.1",
     "gui_dependency": "PySide6==6.11.2",
-    "gui_test_platform": "offscreen"
+    "gui_test_platform": "offscreen",
+    "native_wayland_smoke": true,
+    "native_wayland_ci_compositor": "Weston headless",
+    "native_wayland_smoke_script": "scripts/wayland_smoke.py",
+    "ci_runner_limitation": "GitHub-Runner ist kein echter Kubuntu-26.04-/KDE-Plasma-Desktop; reale Sichtabnahme bleibt erforderlich."
   },
   "ui": {
     "framework": "PySide6",
@@ -274,9 +301,15 @@
   },
   "kubuntu_acceptance": {
     "launcher": "kubuntu_abnahme.sh",
-    "target": "Kubuntu/KDE Plasma X11",
-    "requires_x11": true,
-    "ci_limitation": "Offscreen-CI ersetzt keine reale sichtbare Kubuntu/KDE-X11-Abnahme."
+    "target": "Kubuntu 26.04 LTS / KDE Plasma Wayland",
+    "requires_release": "26.04",
+    "requires_wayland": true,
+    "requires_native_qt_wayland": true,
+    "native_qt_platform_prefix": "wayland",
+    "x11_is_valid_for_official_acceptance": false,
+    "normal_launcher_forces_qt_backend": false,
+    "ci_native_wayland_smoke": true,
+    "ci_limitation": "Headless-Weston beweist nativen Qt-Wayland-Start, ersetzt aber keine reale sichtbare Kubuntu-26.04-/KDE-Plasma-Abnahme."
   },
   "diagnostics": {
     "machine_log": "logs/ereignisse.jsonl",
@@ -315,11 +348,11 @@
     "sha256_atomic_write": "app.atomic_io.atomic_write_text"
   },
   "files": [
-    {"path":"MANIFEST.json","release":true,"purpose":"Laufzeit-, Versions-, Accessibility-, UX- und I/O-Freigabedaten"},
-    {"path":"ANLEITUNG_LAIEN.md","release":true,"purpose":"Laienfreundliche Nutzeranleitung"},
+    {"path":"MANIFEST.json","release":true,"purpose":"Laufzeit-, Versions-, Accessibility-, UX-, Plattform- und I/O-Freigabedaten"},
+    {"path":"ANLEITUNG_LAIEN.md","release":true,"purpose":"Laienfreundliche Nutzeranleitung inklusive Kubuntu-26.04-Wayland-Abnahme"},
     {"path":"requirements.txt","release":true,"purpose":"Fest gepinnte PySide6-Abhängigkeit"},
-    {"path":"schnellstart.sh","release":true,"purpose":"Vollautomatischer laienfreundlich beschrifteter Start"},
-    {"path":"kubuntu_abnahme.sh","release":true,"purpose":"Klickstart für reale Kubuntu/KDE-X11-Endabnahme"},
+    {"path":"schnellstart.sh","release":true,"purpose":"Vollautomatischer laienfreundlich beschrifteter backend-neutraler Start"},
+    {"path":"kubuntu_abnahme.sh","release":true,"purpose":"Klickstart für reale Kubuntu-26.04-/KDE-Plasma-Wayland-Endabnahme"},
     {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
     {"path":"app/main.py","release":true,"purpose":"Programmeinstieg mit Einzelinstanz-Schutz und verständlichen Startmeldungen"},
     {"path":"app/laptop_layout.py","release":true,"purpose":"Reversibler Laptop-Kompaktmodus fuer das Dashboard bei knapper Flaeche"},
@@ -351,11 +384,13 @@
     {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache mit atomarem menschenlesbarem Absturzbericht"},
     {"path":"scripts/diagnosepaket.py","release":true,"purpose":"Diagnoseexport mit zentralem abgesichertem ZIP-Publish und atomarer SHA-256-Begleitdatei"},
     {"path":"scripts/iteration_restore.py","release":true,"purpose":"Backup, Restore-Gate und atomare Restore-Evidence"},
-    {"path":"scripts/kubuntu_abnahme.py","release":true,"purpose":"Kubuntu-X11-Abnahmeassistent mit atomaren Berichten"},
+    {"path":"scripts/kubuntu_abnahme.py","release":true,"purpose":"Kubuntu-26.04-/Wayland-Abnahmeassistent mit nativer Qt-Plattformprüfung und atomaren Berichten"},
     {"path":"texte/registry.json","release":true,"purpose":"Zentrale Nutzertexte"},
     {"path":"README.md","release":false,"purpose":"Aktuelle Projektübersicht ohne doppelte Versionshistorie"},
     {"path":"TODO.md","release":false,"purpose":"Aktueller Freigabe- und Entwicklungsplan"},
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
+    {"path":"scripts/wayland_smoke.py","release":false,"purpose":"CI-Smoke für echten nativen Qt-Wayland-Fensterstart"},
+    {"path":"tests/test_wayland_smoke.py","release":false,"purpose":"Regression für importierbaren Wayland-Smoke-Helfer"},
     {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
     {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
     {"path":"tests/test_navigation_ux_gui.py","release":false,"purpose":"Regression für Menü-Hierarchie, Auf-/Zuklappen, Laptop-/Hochzoom-Zustand und Accessibility"},
@@ -373,6 +408,7 @@
     {"path":"docs/ITERATION24_ACCESSIBILITY_THEMES.md","release":false,"purpose":"Barrierefreiheits-, Theme-, Kontrast- und Abnahmebericht"},
     {"path":"docs/ITERATION25_LAPTOP_LAYOUT.md","release":false,"purpose":"Laptop-Kompaktlayout, Regression, Fehlerkorrektur und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION26_RELEASE_IO_HARDENING.md","release":false,"purpose":"Release-/Bericht-I/O-Audit, zentraler Publish-Pfad und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION27_NAVIGATION_UX.md","release":false,"purpose":"Menü-Hierarchie, Laiennavigation, Synchronisationsfehler und CI-/Restore-Evidence"}
+    {"path":"docs/ITERATION27_NAVIGATION_UX.md","release":false,"purpose":"Menü-Hierarchie, Laiennavigation, Synchronisationsfehler und CI-/Restore-Evidence"},
+    {"path":"docs/ITERATION28_KUBUNTU_2604_WAYLAND.md","release":false,"purpose":"Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"}
   ]
 }
