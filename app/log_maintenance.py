@@ -8,12 +8,35 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-from app.atomic_io import atomic_write_text
+from app.atomic_io import atomic_write_json, atomic_write_text
 from app.redaction import redact
 
 DEFAULT_MAX_BYTES = 2 * 1024 * 1024
 DEFAULT_MAX_AGE_DAYS = 30
 DEFAULT_KEEP = 5
+_SECONDS_PER_DAY = 24 * 60 * 60
+
+
+def _utc_now() -> datetime:
+    """Liefert einen einzigen, zeitzonenbewussten UTC-Zeitpunkt pro Operation."""
+    return datetime.now(timezone.utc)
+
+
+def _needs_rotation(*, size: int, modified_at: float, now: datetime,
+                    max_bytes: int, max_age_days: int) -> bool:
+    """Entscheidet ohne Dateisystemzugriff, ob Größen- oder Altersgrenze überschritten ist."""
+    age_seconds = max(0.0, now.timestamp() - modified_at)
+    too_large = max_bytes >= 0 and size > max_bytes
+    too_old = max_age_days >= 0 and age_seconds > max_age_days * _SECONDS_PER_DAY
+    return too_large or too_old
+
+
+def _archive_mtime(path: Path) -> float:
+    """Liefert eine robuste Sortierzeit; parallel verschwundene Archive landen hinten."""
+    try:
+        return path.stat().st_mtime
+    except OSError:
+        return float("-inf")
 
 
 def quarantine_corrupt_jsonl(path: Path, quarantine_dir: Path) -> int:
@@ -39,17 +62,19 @@ def quarantine_corrupt_jsonl(path: Path, quarantine_dir: Path) -> int:
             })
     if not corrupt:
         return 0
+
+    now = _utc_now()
     quarantine_dir.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
+    stamp = now.strftime("%Y%m%d_%H%M%S_%f")
     quarantine = quarantine_dir / f"{path.stem}_BESCHAEDIGT_{stamp}.json"
     payload = {
         "schema_version": 1,
         "source": path.name,
-        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "created_utc": now.isoformat(),
         "corrupt_count": len(corrupt),
         "items": corrupt,
     }
-    atomic_write_text(quarantine, json.dumps(payload, ensure_ascii=False, indent=2))
+    atomic_write_json(quarantine, payload)
     atomic_write_text(path, "\n".join(valid) + ("\n" if valid else ""))
     return len(corrupt)
 
@@ -59,18 +84,29 @@ def rotate_log(path: Path, *, max_bytes: int = DEFAULT_MAX_BYTES,
     """Rotiert nur bei Größen- oder Altersgrenze und hält eine feste Zahl Archive."""
     if not path.exists() or keep < 1:
         return None
+
     stat = path.stat()
-    age_seconds = max(0.0, datetime.now(timezone.utc).timestamp() - stat.st_mtime)
-    too_large = max_bytes >= 0 and stat.st_size > max_bytes
-    too_old = max_age_days >= 0 and age_seconds > max_age_days * 86400
-    if not (too_large or too_old):
+    now = _utc_now()
+    if not _needs_rotation(
+        size=stat.st_size,
+        modified_at=stat.st_mtime,
+        now=now,
+        max_bytes=max_bytes,
+        max_age_days=max_age_days,
+    ):
         return None
+
     archive_dir = path.parent / "archiv"
     archive_dir.mkdir(parents=True, exist_ok=True)
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
+    stamp = now.strftime("%Y%m%d_%H%M%S_%f")
     target = archive_dir / f"{path.stem}_{stamp}{path.suffix}"
     os.replace(path, target)
-    archives = sorted(archive_dir.glob(f"{path.stem}_*{path.suffix}"), key=lambda p: p.stat().st_mtime, reverse=True)
+
+    archives = sorted(
+        archive_dir.glob(f"{path.stem}_*{path.suffix}"),
+        key=_archive_mtime,
+        reverse=True,
+    )
     for old in archives[keep:]:
         old.unlink(missing_ok=True)
     return target
