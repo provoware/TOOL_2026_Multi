@@ -3,11 +3,13 @@
 ## 0.16.1 – 2026-09-10 – Präsentationspolicy und Architekturhärtung
 
 ### Geändert
-- neue Qt-unabhängige `app/presentation_policy.py` als einzige deterministische Klassifikation für Dashboard-Laptopmodus, breite Ansicht und Hochzoom ergänzt,
+- neue Qt-unabhängige `app/presentation_policy.py` als deterministische Klassifikation für Dashboard-Laptopmodus, breite Ansicht und Hochzoom ergänzt,
 - Darstellungsgrenzen als benannte Policy-Konstanten zusammengeführt,
 - unveränderlichen `PresentationState` für `wide`, `high_zoom`, `laptop_compact` und `restricted_navigation` eingeführt,
 - `app/laptop_layout.py` auf die zentrale Policy umgestellt; bisherige private Helfer bleiben nur als Kompatibilitätsadapter,
 - `app/navigation_ux.py` von der privaten Laptop-Hilfsfunktion entkoppelt und die bisher doppelte Hochzoom-Entscheidung entfernt,
+- in der strengen Nachprüfung auch `app/ui_standards.py` an `WIDE_MIN_WIDTH_PX`, `HIGH_ZOOM_MIN_PERCENT` und die gemeinsame Zoomnormalisierung angebunden; Schwellen und Layoutverhalten bleiben unverändert,
+- den eigenständigen Responsive-Breakpoint `compact < 1100 px` bewusst lokal belassen, da er eine andere Layoutklasse beschreibt,
 - reine Grenzwerttests ohne QApplication/Eventloop für Referenz-Laptop, Großansicht, Breitengrenze, Hochzoom, Mindestgröße und Nicht-Dashboard-Fenster ergänzt,
 - Release-Regression erweitert: jedes produktive `app/*.py`-Modul muss mit `release=true` im Manifest erfasst sein,
 - Vollprüfung um Präsentationspolicy, neue Tests und Iteration-29-Dokumentation erweitert.
@@ -16,18 +18,19 @@
 - erste Grundprüfung #598 deckte durch den neuen Release-Invariant unmittelbar auf, dass `app/presentation_policy.py` noch nicht im Release-Manifest stand,
 - der fehlende Runtime-Eintrag wurde vor Freigabe ergänzt; damit kann derselbe Fehler bei späteren `app/*.py`-Modulen nicht mehr unbemerkt bleiben,
 - alle 56 GUI-Tests waren bereits im ersten Lauf grün; der gefundene Fehler betraf ausschließlich Release-Vollständigkeit,
+- die akademische Nachprüfung nach PR #37 fand noch rohe Duplikate der gemeinsam verwendeten Grenzen `1450` und `175` in `app/ui_standards.py`; diese wurden isoliert ohne Verhaltensänderung zentralisiert,
 - keine Song-, Profil-, Todo- oder Kalenderdaten verändert,
 - keine Speicherformate, atomaren Schreiber, Backup- oder Restore-Fachlogik verändert,
 - keine neue externe Laufzeitabhängigkeit eingeführt,
 - sichtbare Nutzerführung und Kubuntu-26.04-/Wayland-Verhalten bleiben funktional unverändert.
 
 ### Abnahme
-- korrigierter technischer Head `117aa0eee4e3422804506d9bc1c1fc50f75d4591` in Grundprüfung **#600** vollständig erfolgreich,
-- **94 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich,
-- Release-Manifest mit **39 freigegebenen Betriebsdateien** erfolgreich,
-- Headless-Start und nativer Qt-Wayland-Smoke erfolgreich,
-- Vollprojekt-Restore `OK`, SHA-256 `064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624`,
-- der vollständig synchronisierte 0.16.1-Endstand wird vor Merge nochmals durch dasselbe Voll-/Wayland-/Restore-Gate geprüft.
+- korrigierter technischer Head `117aa0eee4e3422804506d9bc1c1fc50f75d4591` in Grundprüfung **#600** vollständig erfolgreich; Restore-SHA-256 `064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624`,
+- vollständig synchronisierter 0.16.1-Head `306eb551234882401d98114182b51c2ecdbdfdcb` in Grundprüfung **#612** erneut vollständig erfolgreich: **94 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **39 Release-Betriebsdateien**, Headless-Start, nativer Qt-Wayland-Smoke und Restore `OK`; Restore-SHA-256 `78813816a492133dab8687112f80479bd7eff7309577ab2853833b9baf5b479f`,
+- PR #37 anschließend ausschließlich für den geprüften Head per SHA-geschütztem Squash-Merge übernommen; resultierender Produkt-Main-Commit `608f7236f68161436b5d77e6e4c907ff6c1aa1a0`,
+- isolierter Single-Source-of-Truth-Konsistenzhead `5d0eb33165bfe721a380912cd528981c51a88042` in Grundprüfung **#616** vollständig erfolgreich: erneut **94 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **39 Release-Betriebsdateien**, Headless-Start, nativer Qt-Wayland-Smoke und Restore `OK`; Restore-SHA-256 `f745cfd8ae287ecfe7b34340f695959317f7a19901dae3cee9131133d5f90c82`,
+- PR #38 anschließend mit exaktem Head-SHA-Schutz per Squash-Merge übernommen; resultierender Main-Commit `e74d0ddc45258dc51926c94662ab23303f80e5f2`,
+- Iteration 29 ist damit unter der strengeren Architekturdefinition technisch abgeschlossen; die reale sichtbare Kubuntu-26.04-/KDE-Plasma-Wayland-Abnahme bleibt ein separates Projektgate.
 
 ## 0.16.0 – 2026-09-10 – Kubuntu 26.04 / native Wayland-Unterstützung
 
@@ -115,7 +118,7 @@
 - Release-Manifest mit **37 freigegebenen Betriebsdateien** erfolgreich,
 - Headless-Start erfolgreich,
 - Vollprojekt-Restore `OK`, finale SHA-256 `560b9d9ca46ec3e0964f03b385941782e18e892d734c1b5e208dd69c6d4b5bf3`,
-- PR #31 anschließend per SHA-geschütztem Squash-Merge übernommen; resultierender Main-Commit `00513bbaaee124da1e04a963aa70ce9e4757108e`.
+- PR #31 anschließend per SHA-geschütztem Squash-Merge in `main` übernommen; resultierender Main-Commit `00513bbaaee124da1e04a963aa70ce9e4757108e`.
 
 ## 0.15.1 – 2026-09-09 – Laptop-Kompaktlayout
 
