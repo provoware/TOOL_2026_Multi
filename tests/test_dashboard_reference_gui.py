@@ -7,7 +7,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QFrame, QLabel, QPushButton
+from PySide6.QtWidgets import QApplication, QFrame, QLabel, QPushButton, QWidget
 
 from app.ui import Dashboard, _open_managed_window
 from app.laptop_layout import install_laptop_layout
@@ -52,6 +52,25 @@ class FakeManagedWindow:
     def show(self) -> None:
         self.visible = True
         self.show_calls += 1
+
+    def refresh(self) -> None:
+        self.refresh_calls += 1
+
+
+class FakeDashboardManagedWindow(QWidget):
+    """Minimales QWidget für Registry-, Zoom- und Refresh-Regressionen."""
+
+    def __init__(self, *, visible: bool = True) -> None:
+        super().__init__()
+        self._test_visible = visible
+        self.zoom_calls: list[int] = []
+        self.refresh_calls = 0
+
+    def isVisible(self) -> bool:
+        return self._test_visible
+
+    def set_zoom(self, percent: int) -> None:
+        self.zoom_calls.append(percent)
 
     def refresh(self) -> None:
         self.refresh_calls += 1
@@ -159,6 +178,82 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.dashboard.close()
         self.app.processEvents()
         self.temp.cleanup()
+
+    @staticmethod
+    def _close_fake_windows(*windows: QWidget) -> None:
+        for window in windows:
+            window.close()
+            window.deleteLater()
+
+    def test_managed_window_registry_is_single_source_for_current_windows(self):
+        song_editor = FakeDashboardManagedWindow()
+        song_library = FakeDashboardManagedWindow()
+        recovery = FakeDashboardManagedWindow()
+        profile = FakeDashboardManagedWindow()
+        todo = FakeDashboardManagedWindow()
+        calendar = FakeDashboardManagedWindow()
+        self.dashboard._song_editors = [song_editor]  # type: ignore[list-item]
+        self.dashboard._song_library = song_library  # type: ignore[assignment]
+        self.dashboard._recovery_center = recovery  # type: ignore[assignment]
+        self.dashboard._profile_editor = profile  # type: ignore[assignment]
+        self.dashboard._todo_window = todo  # type: ignore[assignment]
+        self.dashboard._calendar_window = calendar  # type: ignore[assignment]
+
+        registrations = self.dashboard._managed_window_registry()
+        registered_windows = [registration.window for registration in registrations]
+        self.assertEqual(
+            registered_windows,
+            [self.dashboard, song_editor, song_library, recovery, profile, todo, calendar],
+        )
+        self.assertEqual(len({id(window) for window in registered_windows}), len(registered_windows))
+        self.assertTrue(self.dashboard._is_managed_widget(todo))
+        outsider = QWidget()
+        self.assertFalse(self.dashboard._is_managed_widget(outsider))
+        outsider.close()
+        outsider.deleteLater()
+        self._close_fake_windows(song_editor, song_library, recovery, profile, todo, calendar)
+
+    def test_managed_window_registry_drives_zoom_for_every_current_side_window(self):
+        song_editor = FakeDashboardManagedWindow()
+        song_library = FakeDashboardManagedWindow()
+        recovery = FakeDashboardManagedWindow()
+        profile = FakeDashboardManagedWindow()
+        todo = FakeDashboardManagedWindow()
+        calendar = FakeDashboardManagedWindow()
+        self.dashboard._song_editors = [song_editor]  # type: ignore[list-item]
+        self.dashboard._song_library = song_library  # type: ignore[assignment]
+        self.dashboard._recovery_center = recovery  # type: ignore[assignment]
+        self.dashboard._profile_editor = profile  # type: ignore[assignment]
+        self.dashboard._todo_window = todo  # type: ignore[assignment]
+        self.dashboard._calendar_window = calendar  # type: ignore[assignment]
+
+        self.dashboard.set_zoom(150)
+
+        self.assertEqual(song_editor.zoom_percent, 150)
+        for window in (song_library, recovery, profile, todo, calendar):
+            self.assertEqual(window.zoom_calls, [150])
+        self._close_fake_windows(song_editor, song_library, recovery, profile, todo, calendar)
+
+    def test_managed_window_registry_preserves_dashboard_refresh_scope(self):
+        song_library = FakeDashboardManagedWindow(visible=True)
+        recovery = FakeDashboardManagedWindow(visible=True)
+        profile = FakeDashboardManagedWindow(visible=True)
+        todo = FakeDashboardManagedWindow(visible=True)
+        calendar = FakeDashboardManagedWindow(visible=True)
+        self.dashboard._song_library = song_library  # type: ignore[assignment]
+        self.dashboard._recovery_center = recovery  # type: ignore[assignment]
+        self.dashboard._profile_editor = profile  # type: ignore[assignment]
+        self.dashboard._todo_window = todo  # type: ignore[assignment]
+        self.dashboard._calendar_window = calendar  # type: ignore[assignment]
+
+        self.dashboard.refresh()
+
+        self.assertEqual(song_library.refresh_calls, 0)
+        self.assertEqual(profile.refresh_calls, 0)
+        self.assertEqual(recovery.refresh_calls, 1)
+        self.assertEqual(todo.refresh_calls, 1)
+        self.assertEqual(calendar.refresh_calls, 1)
+        self._close_fake_windows(song_library, recovery, profile, todo, calendar)
 
     def test_reference_title_framework_and_modern_dark_accent_theme(self):
         self.assertEqual(self.dashboard.windowTitle(), "Provoware-Datenbank-Dashboard 2026")
