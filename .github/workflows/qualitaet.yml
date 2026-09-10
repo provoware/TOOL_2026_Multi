@@ -44,3 +44,31 @@ jobs:
           python3 scripts/wayland_smoke.py
       - name: Vollprojekt wiederherstellen und prüfen
         run: python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"
+
+      - name: Finalen main 0.16.0 exakt verpacken
+        if: github.ref == 'refs/heads/package-0.16.0-artifact'
+        run: |
+          set -Eeuo pipefail
+          FINAL_SHA='aeb4086e1d20f68a753e9a204ee8bf0d29ddf746'
+          OUT="$RUNNER_TEMP/provoware_final"
+          mkdir -p "$OUT"
+          git fetch --no-tags --depth=1 origin "$FINAL_SHA"
+          git archive --format=zip --prefix='TOOL_2026_Multi_0.16.0/' "$FINAL_SHA" > "$OUT/TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip"
+          (cd "$OUT" && sha256sum TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip > TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip.sha256)
+          unzip -t "$OUT/TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip"
+          unzip -p "$OUT/TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip" 'TOOL_2026_Multi_0.16.0/MANIFEST.json' | python3 -c "import json,sys; m=json.load(sys.stdin); assert m['tool']['version']=='0.16.0'; assert m['iteration']['number']==28; assert sum(1 for f in m['files'] if f.get('release'))==38"
+          git ls-tree -r --name-only "$FINAL_SHA" | LC_ALL=C sort > "$OUT/expected.txt"
+          unzip -Z1 "$OUT/TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip" | sed 's#^TOOL_2026_Multi_0.16.0/##' | sed '/^$/d' | LC_ALL=C sort > "$OUT/actual.txt"
+          diff -u "$OUT/expected.txt" "$OUT/actual.txt"
+          rm "$OUT/expected.txt" "$OUT/actual.txt"
+
+      - name: ZIP und Prüfsumme bereitstellen
+        if: github.ref == 'refs/heads/package-0.16.0-artifact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland
+          path: |
+            ${{ runner.temp }}/provoware_final/TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip
+            ${{ runner.temp }}/provoware_final/TOOL_2026_Multi_0.16.0_Kubuntu-26.04_Wayland.zip.sha256
+          if-no-files-found: error
+          compression-level: 0
