@@ -1,16 +1,16 @@
 {
-  "schema_version": 24,
+  "schema_version": 25,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.16.0",
+    "version": "0.16.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-10"
   },
   "iteration": {
-    "number": 28,
-    "goal": "Kubuntu 26.04 LTS mit KDE Plasma Wayland als offizielles Zielsystem pruefen und absichern",
-    "completed": 12,
+    "number": 29,
+    "goal": "Darstellungszustände zentral, deterministisch und Qt-unabhängig klassifizieren und Runtime-Release-Vollständigkeit erzwingen",
+    "completed": 10,
     "open_next": 1
   },
   "runtime": {
@@ -42,9 +42,10 @@
     "bounded": true,
     "qt_platform_for_ci": "offscreen",
     "native_wayland_smoke_command": "QT_QPA_PLATFORM=wayland python3 scripts/wayland_smoke.py",
-    "targeted_tests": "python3 -m unittest tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_kubuntu_acceptance tests.test_wayland_smoke; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui",
+    "targeted_tests": "python3 -m unittest tests.test_presentation_policy tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_kubuntu_acceptance tests.test_wayland_smoke; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui",
     "repo_hygiene_test": "python3 -m unittest tests.test_repo_hygiene",
     "layman_ux_test": "QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui",
+    "release_runtime_module_completeness_test": "python3 -m unittest tests.test_release_builder.ReleaseBuilderTests.test_all_runtime_app_modules_are_release_listed",
     "write_failure_simulation": "python3 scripts/schreibfehler_simulieren.py",
     "write_failure_simulation_uses_production_writer": true,
     "iteration18_ci_run": 294,
@@ -182,7 +183,20 @@
     "iteration28_final_restore_sha256": "23792d1c96db0b0fd61eaf74630593fbbf37578b64c4f82fd1f6644d2efa103e",
     "iteration28_final_tested_head_sha": "2536bd3183e39ad1566496a067b817dd3ad30b07",
     "iteration28_final_head_gate": "success",
-    "iteration28_merged_main_sha": "3b829e799536cc1464e760f77ac7c28295c6ea70"
+    "iteration28_merged_main_sha": "3b829e799536cc1464e760f77ac7c28295c6ea70",
+    "iteration29_initial_ci_run": 598,
+    "iteration29_initial_ci_result": "failure",
+    "iteration29_initial_ci_cause": "Neuer Release-Vollständigkeitstest erkannte app/presentation_policy.py als noch nicht im Release-Manifest eingetragen",
+    "iteration29_technical_ci_run": 600,
+    "iteration29_technical_ci_result": "success",
+    "iteration29_technical_logic_tests": 94,
+    "iteration29_technical_gui_tests": 56,
+    "iteration29_technical_release_files": 39,
+    "iteration29_technical_native_wayland_smoke": true,
+    "iteration29_technical_restore_gate": true,
+    "iteration29_technical_restore_status": "OK",
+    "iteration29_technical_restore_sha256": "064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624",
+    "iteration29_technical_tested_head_sha": "117aa0eee4e3422804506d9bc1c1fc50f75d4591"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -231,6 +245,9 @@
     "project_note_label": "Projekt-Notiz",
     "silent_no_selection_actions": false,
     "core_text_contrast_minimum": 4.5,
+    "presentation_policy": "app/presentation_policy.py",
+    "presentation_policy_qt_independent": true,
+    "presentation_policy_shared_by": ["laptop_layout", "navigation_ux"],
     "laptop_compact_mode": true,
     "laptop_compact_scope": "dashboard_only",
     "laptop_compact_zoom_percent": [125, 150],
@@ -362,6 +379,7 @@
     {"path":"kubuntu_abnahme.sh","release":true,"purpose":"Klickstart für reale Kubuntu-26.04-/KDE-Plasma-Wayland-Endabnahme"},
     {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
     {"path":"app/main.py","release":true,"purpose":"Programmeinstieg mit Einzelinstanz-Schutz und verständlichen Startmeldungen"},
+    {"path":"app/presentation_policy.py","release":true,"purpose":"Qt-unabhängige deterministische Präsentationspolicy für Laptop-, Groß- und Hochzoomzustände"},
     {"path":"app/laptop_layout.py","release":true,"purpose":"Reversibler Laptop-Kompaktmodus fuer das Dashboard bei knapper Flaeche"},
     {"path":"app/navigation_ux.py","release":true,"purpose":"Laienfreundliche Menü-Hierarchie mit einklappbaren geplanten Bereichen"},
     {"path":"app/atomic_io.py","release":true,"purpose":"Zentraler atomarer Schreib- und Prepared-File-Publish-Weg"},
@@ -398,6 +416,7 @@
     {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
     {"path":"scripts/wayland_smoke.py","release":false,"purpose":"CI-Smoke für echten nativen Qt-Wayland-Fensterstart"},
     {"path":"tests/test_wayland_smoke.py","release":false,"purpose":"Regression für importierbaren Wayland-Smoke-Helfer"},
+    {"path":"tests/test_presentation_policy.py","release":false,"purpose":"Reine Grenzwert- und Determinismusregression der zentralen Präsentationspolicy"},
     {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
     {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
     {"path":"tests/test_navigation_ux_gui.py","release":false,"purpose":"Regression für Menü-Hierarchie, Auf-/Zuklappen, Laptop-/Hochzoom-Zustand und Accessibility"},
@@ -416,6 +435,7 @@
     {"path":"docs/ITERATION25_LAPTOP_LAYOUT.md","release":false,"purpose":"Laptop-Kompaktlayout, Regression, Fehlerkorrektur und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION26_RELEASE_IO_HARDENING.md","release":false,"purpose":"Release-/Bericht-I/O-Audit, zentraler Publish-Pfad und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION27_NAVIGATION_UX.md","release":false,"purpose":"Menü-Hierarchie, Laiennavigation, Synchronisationsfehler und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION28_KUBUNTU_2604_WAYLAND.md","release":false,"purpose":"Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"}
+    {"path":"docs/ITERATION28_KUBUNTU_2604_WAYLAND.md","release":false,"purpose":"Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"},
+    {"path":"docs/ITERATION29_PRESENTATION_POLICY.md","release":false,"purpose":"Architekturanalyse, Präsentationspolicy, Release-Vollständigkeit und CI-/Restore-Evidence"}
   ]
 }

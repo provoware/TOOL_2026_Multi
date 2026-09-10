@@ -58,6 +58,25 @@ class ReleaseBuilderTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 release_files(root, manifest)
 
+    def test_all_runtime_app_modules_are_release_listed(self):
+        root = Path(__file__).resolve().parent.parent
+        manifest = json.loads((root / "MANIFEST.json").read_text(encoding="utf-8"))
+        released = {
+            entry["path"] for entry in manifest.get("files", [])
+            if entry.get("release") is True and isinstance(entry.get("path"), str)
+        }
+        app_modules = {
+            path.relative_to(root).as_posix()
+            for path in (root / "app").glob("*.py")
+            if path.is_file()
+        }
+        missing = sorted(app_modules - released)
+        self.assertEqual(
+            missing,
+            [],
+            "Runtime-App-Module fehlen im Release-Manifest: " + ", ".join(missing),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

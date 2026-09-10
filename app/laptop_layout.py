@@ -9,24 +9,17 @@ from __future__ import annotations
 from PySide6.QtCore import QEvent, QObject, QTimer
 from PySide6.QtWidgets import QComboBox, QFrame, QLabel, QPushButton, QWidget
 
+from app.presentation_policy import presentation_state
+
 
 def _zoom_percent(window: QWidget) -> int:
-    try:
-        return max(100, min(200, int(getattr(window, "zoom_percent", 100))))
-    except (TypeError, ValueError):
-        return 100
+    """Kompatibilitätshelfer; die eigentliche Normalisierung liegt zentral."""
+    return presentation_state(window).zoom_percent
 
 
 def _is_laptop_compact(window: QWidget) -> bool:
-    if window.__class__.__name__ != "Dashboard":
-        return False
-    width = max(window.width(), window.minimumWidth())
-    height = max(window.height(), window.minimumHeight())
-    zoom = _zoom_percent(window)
-    if width >= 1450 or not 125 <= zoom < 175:
-        return False
-    effective_height = height * 100 / zoom
-    return height < 820 or effective_height < 700
+    """Kompatibilitätshelfer; die eigentliche Modusentscheidung liegt zentral."""
+    return presentation_state(window).laptop_compact
 
 
 def _card_title(card: QFrame) -> str:
@@ -38,7 +31,8 @@ def _card_title(card: QFrame) -> str:
 
 def apply_laptop_layout(window: QWidget) -> None:
     """Verdichtet nur die kleine Dashboard-Ansicht und stellt sie reversibel wieder her."""
-    compact = _is_laptop_compact(window)
+    state = presentation_state(window)
+    compact = state.laptop_compact
     was_compact = bool(window.property("provowareLaptopCompact"))
 
     # Ist der Laptop-Modus weder aktiv noch zu restaurieren, darf diese Schicht
@@ -59,7 +53,7 @@ def apply_laptop_layout(window: QWidget) -> None:
                 button.setVisible(not nav_collapsed)
         if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
             button.setText("Profile" if compact else (
-                "Profile & Werte bearbeiten" if window.width() >= 1450 else "Profile bearbeiten"
+                "Profile & Werte bearbeiten" if state.wide else "Profile bearbeiten"
             ))
 
     for label in window.findChildren(QLabel):

@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.16.0 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore- und native Wayland-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
+> **Version:** 0.16.1 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore- und native Wayland-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -50,6 +50,8 @@ Die Oberfläche verwendet zentrale wiederverwendbare UI-Standards statt einzelne
 - Zustände werden zusätzlich durch Text, Symbole und Konturen vermittelt – nicht nur durch Farbe.
 
 Die normale Responsive-Logik unterscheidet zwischen kompakter, normaler und breiter Fensterdarstellung. Auf typischen kleinen Laptop-Bildschirmen wie **1366×768** wird bei **125/150 %** zusätzlich ein reversibler Laptop-Kompaktmodus verwendet: redundante reine Planungselemente verschwinden vorübergehend, während Songtexte, Vorgaben, Todo, Kalender, Fehlerhilfe, Zoom und Farbtheme erreichbar bleiben. Ab **1450 px Breite** wird automatisch wieder die vollständige große Darstellung verwendet.
+
+Seit 0.16.1 werden Laptop-, Breit- und Hochzoomzustand zusätzlich über eine **zentrale Qt-unabhängige Präsentationspolicy** klassifiziert. Navigation und Laptoplayout greifen damit auf dieselbe deterministische Zustandsentscheidung zurück, statt private Hilfsfunktionen oder doppelte Schwellenwerte zu verwenden. Die sichtbare Bedienung bleibt dabei unverändert; verbessert wurden Wartbarkeit, Testbarkeit und Regressionsschutz.
 
 ### Farbthemes
 
@@ -192,6 +194,7 @@ Wichtige Schutzmechanismen:
 - Append-only-Protokolle bleiben bewusst Append-only statt unnötig per Dateiersatz umgebaut zu werden
 - ENOSPC-/EROFS-Schreibfehlersimulation ohne echten Datenträgerverbrauch
 - Repository-Hygiene-Test
+- automatischer Release-Invariant: jedes produktive `app/*.py`-Modul muss im Release-Manifest enthalten sein
 
 ## Anzeige und Tastatur
 
@@ -230,12 +233,14 @@ Sie prüft unter anderem:
 - Fehlerhilfe
 - PySide6-Bedienwege im Offscreen-Test
 - Zoom, Fokus und Hochzoom
+- reine deterministische Präsentationspolicy und ihre Grenzwerte
 - Laptop-Kompaktmodus und Rückkehr zur großen Ansicht
 - Farbthemes und Screenreader-Grundwerte
 - Kontraste aller Theme-Kernfarben mit mindestens 4,5:1
 - Laienführung und Nicht-Silent-Fail-Verhalten
-- neue Menü-Hierarchie, Planungs-Aufklappzustand und Rückkehr aus Laptop-/Hochzoom-Modi
+- Menü-Hierarchie, Planungs-Aufklappzustand und Rückkehr aus Laptop-/Hochzoom-Modi
 - responsive Breiten- und Tabellenverteilung
+- Vollständigkeit aller produktiven `app/*.py`-Module im Release
 - direkte Startbarkeit wichtiger Skripte
 - Kubuntu-26.04-/Wayland-Erkennung und Abnahmeberichte
 - tatsächlichen nativen Qt-Wayland-Start in einem isolierten headless Wayland-Compositor
@@ -245,6 +250,8 @@ Sie prüft unter anderem:
 Iteration 27 wurde mit dem finalen 0.15.3-Head `9cd8101ba19c5e28b41fa7793d35860462d38864` in **Grundprüfung #554** vollständig abgenommen: **81 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **38 Release-Betriebsdateien**, Headless-Start und Restore `OK`; Restore-SHA-256 `add4af04204e694427aa2332edea4136c2816e0c196676391a5763e044be3718`. PR #34 wurde danach sicher gemergt; Main-Commit `e7027e57c3c8709263b73543fd2b01be84e6639d`.
 
 Der technische Iteration-28-Head `a7f2c168ecc3f0a2310fbff874cea33d30793d25` bestand **Grundprüfung #567** mit **86 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **38 Release-Betriebsdateien**, Headless-Start, einem echten nativen Qt-Wayland-Smoke (`QApplication.platformName() = wayland`) und Vollprojekt-Restore `OK`. Restore-SHA-256: `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`. Der CI-Compositor läuft isoliert und ersetzt ausdrücklich nicht die reale sichtbare Kubuntu-26.04-/Plasma-Endabnahme.
+
+Der korrigierte technische Iteration-29-Head `117aa0eee4e3422804506d9bc1c1fc50f75d4591` bestand **Grundprüfung #600** mit **94 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **39 Release-Betriebsdateien**, Headless-Start, nativem Qt-Wayland-Smoke und Vollprojekt-Restore `OK`. Restore-SHA-256: `064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624`. Zuvor hatte der neu eingeführte Release-Vollständigkeitstest den fehlenden Manifest-Eintrag für `app/presentation_policy.py` korrekt blockiert.
 
 Vollständiges Restore-Gate:
 
@@ -293,6 +300,7 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION26_RELEASE_IO_HARDENING.md` – Release-/Bericht-I/O-Audit und Abnahme
 - `docs/ITERATION27_NAVIGATION_UX.md` – Menü-Hierarchie, Laiennavigation und Abnahme
 - `docs/ITERATION28_KUBUNTU_2604_WAYLAND.md` – Kubuntu-26.04-/Wayland-Umstellung und Plattformabnahme
+- `docs/ITERATION29_PRESENTATION_POLICY.md` – Architekturhärtung, zentrale Präsentationspolicy und Release-Vollständigkeit
 
 ## Noch offen
 
