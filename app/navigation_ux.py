@@ -138,6 +138,8 @@ class NavigationUxController(QObject):
 
         overview = _find_button(widgets, "Übersicht")
         song = _find_button(widgets, "Songtexte")
+        text_editor = _find_button(widgets, "Texteditor")
+        characters = _find_button(widgets, "Charakterfibel")
         genres = _find_button(widgets, "Genres")
         todo = _find_button(widgets, "Todo-Liste")
         calendar = _find_button(widgets, "Kalender")
@@ -148,6 +150,8 @@ class NavigationUxController(QObject):
         overview.show()
         self.ready_buttons = [
             self._set_ready_button(song, "♫  Songtexte"),
+            self._set_ready_button(text_editor, "✎  Texteditor"),
+            self._set_ready_button(characters, "♙  Charakterfibel"),
             self._set_ready_button(
                 genres, f"▦  {self._t('navigation.ready.profile', 'Genres & Vorgaben')}"
             ),
@@ -242,6 +246,8 @@ class NavigationUxController(QObject):
         ]
         self.dashboard._nav_entries = self.core_entries  # type: ignore[attr-defined]
         self.dashboard.song_nav_button = song  # type: ignore[attr-defined]
+        self.dashboard.text_editor_nav_button = text_editor  # type: ignore[attr-defined]
+        self.dashboard.character_nav_button = characters  # type: ignore[attr-defined]
         self.dashboard.profile_nav_button = genres  # type: ignore[attr-defined]
         self.dashboard.todo_nav_button = todo  # type: ignore[attr-defined]
         self.dashboard.calendar_nav_button = calendar  # type: ignore[attr-defined]
@@ -269,6 +275,8 @@ class NavigationUxController(QObject):
         """Verwendet bei 175/200 % kurze sichtbare Labels ohne Informationsverlust."""
         labels = (
             "♫  Songtexte",
+            "✎  Editor" if high_zoom else "✎  Texteditor",
+            "♙  Charaktere" if high_zoom else "♙  Charakterfibel",
             "▦  Vorgaben" if high_zoom else f"▦  {self._t('navigation.ready.profile', 'Genres & Vorgaben')}",
             "✓  Todo-Liste",
             "▦  Kalender",

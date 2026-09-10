@@ -6,11 +6,23 @@ import json
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
-from uuid import uuid4
+from uuid import NAMESPACE_URL, uuid4, uuid5
 
 from app.atomic_io import atomic_write_json
 
 SCHEMA_VERSION = 1
+
+PROJECT_MODULE_BACKLOG: tuple[tuple[str, str], ...] = (
+    ("01 · Charakterfibel", "Ziel: konsistente, detaillierte Charaktere zentral pflegen.\n☐ Datenmodell und atomare Speicherung\n☐ Such-/Bearbeitungsoberfläche\n☐ wiederverwendbare Charakter-IDs/API für andere Module\n☐ Rollen, Aussehen, Persönlichkeit, Motivation, Hintergrund, Beziehungen, Sprache, Stärken, Schwächen, Tags und Notizen\n☐ Zoom/Wayland/Recovery-Abnahme"),
+    ("02 · Profil- & Accountmanager", "Ziel: Webseiten-/Profilzugänge strukturiert und schnell wiederfinden.\n☐ Webseite/URL, Profilname optional, verwendete E-Mail-Adresse, Passworthinweis und Sonstiges\n☐ frei ergänzbare eigene Felder\n☐ Gruppen, Suche und Filter\n☐ Passwörter selbst nicht unverschlüsselt speichern; Schutzkonzept vor Umsetzung festlegen\n☐ Import/Export, Backup, Restore und Datenschutzprüfung"),
+    ("03 · Universeller Texteditor", "Ziel: allgemeiner, farblich unterstützter Editor.\n☐ Titel bestimmt sicheren Dateinamen\n☐ große Schreibfläche und abschließendes Notizenfeld\n☐ atomare Speicherung und Versionen\n☐ Zugriff auf Charakterfibel\n☐ einheitliche UI-/Zoom-/Wayland-Standards"),
+    ("04 · Textfragment- und Ideenarchiv", "Ziel: unvollendete Verse, Sätze, Textstücke und Schlagworte wiederverwerten.\n☐ Fragmente einzeln oder gesammelt speichern\n☐ Tags, Herkunft und Suche\n☐ übersichtliche Karten-/Listenansicht\n☐ Drag-and-drop in einen seitlichen Kompositionsbereich\n☐ neue Texte aus mehreren Fragmenten zusammensetzen, ohne Originale zu löschen"),
+    ("05 · Autonomes Updatemodul", "Ziel: Updates weitgehend automatisch, aber datensicher durchführen.\n☐ ZIP-Dateien prüfen und sicher entpacken\n☐ Manifest, Version und Integrität vor Änderung validieren\n☐ vollständiges Backup/Checkpoint vor Umsetzung\n☐ Update in Staging testen, erst danach aktivieren\n☐ automatischer Rollback bei Fehler\n☐ Rechte-/Bestätigungsdialog für riskante Änderungen; kein blindes Systemüberschreiben"),
+    ("06 · Projektmodulbaukasten / Plugin-System", "Ziel: Projektstrukturen erstellen und dauerhaft erweiterbar halten.\n☐ standardisierte Projektvorlagen\n☐ Manifest für Module/Plugins\n☐ definierte Plugin-Schnittstellen statt Direktzugriff\n☐ Aktivieren/Deaktivieren ohne Kerncode zu beschädigen\n☐ Abhängigkeits-, Versions- und Kompatibilitätsprüfung\n☐ Test-/Stagingbereich für neue Module"),
+    ("07 · Rechte Schnellstarter-Symbolleiste", "Ziel: schmale persistente Symbolleiste für häufige Webziele.\n☐ Starter hinzufügen/bearbeiten/entfernen\n☐ URL validieren\n☐ Name, Symbol und Gruppe speichern\n☐ Beispiele YouTube, Suno und eigene Seiten\n☐ Tastatur/Tooltip/Screenreader und sichere externe Browseröffnung"),
+    ("08 · Wikimodul", "Ziel: mehrere getrennte Wissensbasen verwalten.\n☐ Wissensbasis anlegen/umbenennen\n☐ Artikel mit Titel, Text, Tags und Verknüpfungen\n☐ Volltextsuche und Querverweise\n☐ Import/Export in dokumentiertem Format\n☐ Versionen, Backup und Zugriff anderer Module"),
+    ("09 · Arbeitsverzeichnis- und Entwicklungspool", "Ziel: häufige Projektordner dateimanagerartig persistent verwalten.\n☐ mehrere Arbeits-/Poolordner speichern und direkt öffnen\n☐ Status wie Entwicklung, Beta, stabil und archiviert\n☐ funktionierende Beta-/Release-Stände sicher ins Archiv duplizieren\n☐ niemals bestehende Archive überschreiben; eindeutige Namen/Versionen\n☐ organisieren, umbenennen und Metadaten bearbeiten\n☐ Vor-/Nachprüfung sowie nachvollziehbares Protokoll"),
+)
 
 
 def store_path(root: Path) -> Path:
@@ -137,6 +149,32 @@ def complete_task(root: Path, task_id: str) -> dict[str, object]:
             save_state(root, state)
             return deepcopy(moved)
     raise ValueError("Aufgabe wurde nicht in den aktiven Todos gefunden.")
+
+
+def ensure_project_module_backlog(root: Path) -> int:
+    """Ergänzt die neun gewünschten Modulvorhaben genau einmal, ohne bestehende Todos anzutasten."""
+    state = load_state(root)
+    active = list(state["active"])
+    archive = list(state["archive"])
+    existing_titles = {str(item["title"]).casefold() for item in [*active, *archive]}
+    existing_ids = {str(item["id"]) for item in [*active, *archive]}
+    added = 0
+    now = _now_utc()
+    for title, note in PROJECT_MODULE_BACKLOG:
+        task_id = uuid5(NAMESPACE_URL, f"provoware-projektmodul:{title}").hex
+        if title.casefold() in existing_titles or task_id in existing_ids:
+            continue
+        active.append({
+            "id": task_id, "title": title, "note": note, "due": None,
+            "created_at": now, "completed_at": None,
+        })
+        existing_titles.add(title.casefold())
+        existing_ids.add(task_id)
+        added += 1
+    if added:
+        state["active"] = active
+        save_state(root, state)
+    return added
 
 
 def active_tasks(root: Path) -> list[dict[str, object]]:

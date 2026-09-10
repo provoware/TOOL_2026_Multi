@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 )
 
 from app.event_log import EventLogger
+from app.import_schema import song_import_help_text, song_import_template_text
 from app.recovery_ui import ZOOM_LEVELS, available_areas, filter_events, repetition_summary, technical_details
 from app.texts import TextRegistry
 from app.ui_standards import apply_global_style, severity_display
@@ -44,6 +45,10 @@ class RecoveryCenter(QWidget):
         title.setObjectName("sectionTitle")
         header.addWidget(title)
         header.addStretch(1)
+        import_button = QPushButton("JSON-Importvorlage")
+        import_button.setToolTip("Zeigt die exakte JSON-Struktur für extern vorbereitete Songtexte.")
+        import_button.clicked.connect(self.show_import_template)
+        header.addWidget(import_button)
         refresh_button = QPushButton("Meldungen aktualisieren")
         refresh_button.clicked.connect(self.refresh)
         header.addWidget(refresh_button)
@@ -105,6 +110,40 @@ class RecoveryCenter(QWidget):
         self.status.setObjectName("muted")
         actions.addWidget(self.status)
         body.addLayout(actions)
+
+    def show_import_template(self) -> None:
+        from PySide6.QtWidgets import QApplication
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("JSON-Importvorlage · Songtexte")
+        dialog.resize(860, 680)
+        layout = QVBoxLayout(dialog)
+        title = QLabel("JSON-Importvorlage für Songtexte")
+        title.setObjectName("sectionTitle")
+        layout.addWidget(title)
+        help_label = QLabel(
+            "Diese Struktur kann an außenstehende Personen weitergegeben werden. "
+            "Feldnamen und Datentypen müssen für einen späteren Import exakt eingehalten werden."
+        )
+        help_label.setObjectName("muted")
+        help_label.setWordWrap(True)
+        layout.addWidget(help_label)
+        text = QTextEdit()
+        text.setReadOnly(True)
+        text.setPlainText(song_import_help_text())
+        layout.addWidget(text, 1)
+        buttons = QHBoxLayout()
+        copy_button = QPushButton("JSON in Zwischenablage kopieren")
+        copy_button.setObjectName("primaryButton")
+        copy_button.clicked.connect(lambda: QApplication.clipboard().setText(song_import_template_text()))
+        buttons.addWidget(copy_button)
+        buttons.addStretch(1)
+        close = QPushButton("Schließen")
+        close.clicked.connect(dialog.accept)
+        buttons.addWidget(close)
+        layout.addLayout(buttons)
+        apply_global_style(dialog, self.zoom_percent)
+        dialog.exec()
 
     def refresh(self) -> None:
         self._all_events = self.logger.recent(100)

@@ -22,7 +22,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFD66B", "red": "#FF7180", "red_soft": "#35171E",
         "blocked": "#93A8BA", "border": "#52718C", "border_soft": "#38546B",
         "hover": "#19354B", "active_nav": "#18344A", "header_section": "#173149",
-        "inverse_text": "#07111A",
+        "inverse_text": "#07111A", "input_bg": "#50657A", "input_border": "#FFB11B",
     },
     "Türkis": {
         "background": "#051419", "surface": "#0A2026", "surface_alt": "#103038",
@@ -32,7 +32,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFE06A", "red": "#FF7A8A", "red_soft": "#3A1B22",
         "blocked": "#9BC2C7", "border": "#3F7C86", "border_soft": "#2F5E66",
         "hover": "#143B43", "active_nav": "#143A42", "header_section": "#153D45",
-        "inverse_text": "#041012",
+        "inverse_text": "#041012", "input_bg": "#426970", "input_border": "#40F2E2",
     },
     "Lila": {
         "background": "#120B1B", "surface": "#1B1028", "surface_alt": "#2B1840",
@@ -42,7 +42,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFD86A", "red": "#FF7C92", "red_soft": "#431C2B",
         "blocked": "#C0A6D0", "border": "#80609B", "border_soft": "#5B4070",
         "hover": "#3B2251", "active_nav": "#38204D", "header_section": "#3D2353",
-        "inverse_text": "#13081A",
+        "inverse_text": "#13081A", "input_bg": "#725184", "input_border": "#DFA0FF",
     },
     "Kontrast": {
         "background": "#000000", "surface": "#0A0A0A", "surface_alt": "#161616",
@@ -52,7 +52,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFEA00", "red": "#FF5252", "red_soft": "#3A0000",
         "blocked": "#C7C7C7", "border": "#FFFFFF", "border_soft": "#BDBDBD",
         "hover": "#242424", "active_nav": "#1B1B1B", "header_section": "#202020",
-        "inverse_text": "#000000",
+        "inverse_text": "#000000", "input_bg": "#606060", "input_border": "#FFFFFF",
     },
 }
 THEME_NAMES = tuple(THEMES)
@@ -194,7 +194,13 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
     QPushButton#closeWindowButton:hover {{ border-color:{colors['accent']}; background:{colors['hover']}; }}
     QPushButton#featureButton {{ min-height:{geometry_scaled(82, zoom_percent)}px; font-weight:600; }}
 
-    QLineEdit, QTextEdit, QPlainTextEdit, QListWidget, QTreeWidget, QTableWidget {{
+    QLineEdit, QTextEdit, QPlainTextEdit {{
+        background:{colors['input_bg']}; color:{colors['text']};
+        border:1px solid {colors['input_border']}; border-radius:{radius}px;
+        padding:{geometry_scaled(5, zoom_percent)}px;
+        selection-background-color:{colors['accent_soft']}; selection-color:{colors['text']};
+    }}
+    QListWidget, QTreeWidget, QTableWidget {{
         background:{colors['surface']}; color:{colors['text']};
         border:1px solid {colors['border']}; border-radius:{radius}px;
         padding:{geometry_scaled(5, zoom_percent)}px;
@@ -202,8 +208,8 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
     }}
     QLineEdit {{ min-height:{control_height}px; }}
     QComboBox {{
-        background:{colors['surface']}; color:{colors['text']};
-        border:1px solid {colors['border']}; border-radius:{radius}px;
+        background:{colors['input_bg']}; color:{colors['text']};
+        border:1px solid {colors['input_border']}; border-radius:{radius}px;
         padding:{geometry_scaled(3, zoom_percent)}px {geometry_scaled(6, zoom_percent)}px;
         min-height:{control_height}px;
         selection-background-color:{colors['accent_soft']}; selection-color:{colors['text']};

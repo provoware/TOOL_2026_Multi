@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QTextEdit, QToolButton, QVBoxLayout, QWidget,
 )
 
-from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, save_song
+from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song
 from app.ui_standards import SPACING, apply_global_style
 
 AUTOSAVE_MS = 5 * 60 * 1000
@@ -141,6 +141,11 @@ class SongEditor(QWidget):
         section_bar.addWidget(QLabel("Songbereich:"))
         self.section_type = QComboBox()
         self.section_type.addItems(SECTION_TYPES)
+        self.section_type.setEditable(True)
+        self.section_type.setInsertPolicy(QComboBox.NoInsert)
+        self.section_type.setToolTip("Standardbereich wählen oder einen eigenen Bereichsnamen eintippen.")
+        if self.section_type.lineEdit() is not None:
+            self.section_type.lineEdit().setPlaceholderText("Standard wählen oder eigenen Namen eingeben")
         self.section_type.setCurrentText("Strophe")
         section_bar.addWidget(self.section_type)
         add_button = QPushButton("Bereich hinzufügen")
@@ -270,7 +275,15 @@ class SongEditor(QWidget):
 
     def add_section(self) -> None:
         self._store_current_section()
-        self.document.sections.append(SongSection(self.section_type.currentText() or "Strophe"))
+        try:
+            kind = normalize_section_name(self.section_type.currentText() or "Strophe")
+        except ValueError as error:
+            QMessageBox.information(self, "Bereich nicht angelegt", str(error))
+            return
+        self.document.sections.append(SongSection(kind))
+        if self.section_type.findText(kind) < 0:
+            self.section_type.addItem(kind)
+        self.section_type.setCurrentText(kind)
         self._refresh_section_list()
         self._load_section(len(self.document.sections) - 1)
         self._update_preview()
