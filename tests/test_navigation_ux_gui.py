@@ -6,7 +6,7 @@ from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QPushButton
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 
 from app.laptop_layout import install_laptop_layout
 from app.navigation_ux import PLANNED_COUNT, install_navigation_ux
@@ -122,6 +122,30 @@ class NavigationUxGuiTests(unittest.TestCase):
         self._events()
         self.assertTrue(self.dashboard.planned_menu_toggle.isVisible())
         self.assertTrue(self.dashboard.planned_menu_container.isVisible())
+
+    def test_transition_from_laptop_compact_to_200_percent_does_not_revive_legacy_labels(self):
+        self.dashboard.resize(1366, 768)
+        self.dashboard.set_zoom(150)
+        self._events()
+        self.assertTrue(self.dashboard.property("provowareLaptopCompact"))
+
+        self.dashboard.set_zoom(200)
+        self._events()
+        legacy = [
+            label for label in self.dashboard.findChildren(QLabel)
+            if label.text() in {"⌄  Funktionen", "⌄  Dateien & Werkzeuge"}
+        ]
+        self.assertTrue(legacy)
+        self.assertTrue(all(not label.isVisible() for label in legacy))
+        self.assertEqual(self.dashboard.profile_nav_button.text(), "▦  Vorgaben")
+        self.assertEqual(self.dashboard.profile_nav_button.accessibleName(), "Genres & Vorgaben")
+        self.assertEqual(self.dashboard.recovery_nav_button.text(), "⚕  Fehlerhilfe")
+        self.assertIn("Recovery", self.dashboard.recovery_nav_button.accessibleName())
+
+        self.dashboard.set_zoom(100)
+        self._events()
+        self.assertEqual(self.dashboard.profile_nav_button.text(), "▦  Genres & Vorgaben")
+        self.assertEqual(self.dashboard.recovery_nav_button.text(), "⚕  Fehlerhilfe (Recovery)")
 
     def test_sidebar_collapse_keeps_clear_reversible_state_and_accessibility(self):
         self.assertEqual(self.dashboard.planned_menu_toggle.focusPolicy(), Qt.StrongFocus)

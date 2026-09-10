@@ -42,6 +42,7 @@ def apply_laptop_layout(window: QWidget) -> None:
         return
 
     nav_collapsed = bool(getattr(window, "nav_collapsed", False))
+    navigation_owns_sidebar = getattr(window, "_provoware_navigation_ux", None) is not None
 
     for button in window.findChildren(QPushButton):
         if button.objectName() == "navButton" and button.property("planned") is True:
@@ -59,7 +60,11 @@ def apply_laptop_layout(window: QWidget) -> None:
     for label in window.findChildren(QLabel):
         text = label.text()
         if text in {"⌄  Funktionen", "⌄  Dateien & Werkzeuge"}:
-            label.setVisible(not compact and not nav_collapsed)
+            # Nach Installation der neuen Navigation gehören diese alten Labels
+            # nicht mehr zum sichtbaren Menü. Beim Wechsel 150 % -> 175/200 %
+            # dürfen sie daher nicht versehentlich wieder eingeblendet werden.
+            if not navigation_owns_sidebar:
+                label.setVisible(not compact and not nav_collapsed)
         elif text.startswith("Tipp: Für Genres, Stimmung, Stil oder Stimme"):
             label.setVisible(not compact)
         elif text == "GitHub-Repositories und Prompts: In Planung":

@@ -9,6 +9,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QFrame, QLabel, QPushButton, QWidget
 
+from app.song_document import SongDocument, save_song
 from app.ui import Dashboard, _open_managed_window
 from app.laptop_layout import install_laptop_layout
 from app.ui_standards import (
@@ -390,13 +391,95 @@ class DashboardReferenceGuiTests(unittest.TestCase):
             if button.objectName() == "tileButton"
         ]
         self.assertEqual(len(tiles), 7)
-        self.assertTrue(all(button.isVisible() for button in tiles))
+        ready_tiles = [button for button in tiles if button.property("ready") is True]
+        planned_tiles = [button for button in tiles if button.property("planned") is True]
+        self.assertEqual(len(ready_tiles), 2)
+        self.assertTrue(all(button.isVisible() for button in ready_tiles))
+        self.assertTrue(all(not button.isVisible() for button in planned_tiles))
         self.assertTrue(self.dashboard.theme_combo.isVisible())
 
         self.dashboard.set_zoom(100)
         self.app.processEvents()
         self.assertTrue(all(button.isVisible() for button in planned_nav))
+        self.assertTrue(all(button.isVisible() for button in tiles))
         self.assertEqual(len([card for card in cards if card.isVisible()]), 4)
+
+    def test_200_percent_laptop_reflows_recent_songs_without_clipping_categories(self):
+        for index in range(5):
+            save_song(
+                Path(self.temp.name),
+                SongDocument(
+                    title=f"Sehr langer häufig verwendeter Songtitel Nummer {index + 1}",
+                    genre="HardTechno",
+                ),
+            )
+        self.dashboard.refresh_recent_songs()
+        self.dashboard.resize(1446, 794)
+        self.dashboard.set_zoom(200)
+        self.app.processEvents()
+        self.app.processEvents()
+
+        self.assertEqual(self.dashboard.app_title_label.text(), "Provoware Dashboard 2026")
+        self.assertFalse(self.dashboard.header_subtitle.isVisible())
+        self.assertTrue(self.dashboard.recent_combo.isVisible())
+        self.assertTrue(self.dashboard.recent_open_button.isVisible())
+        self.assertEqual(self.dashboard.recent_combo.count(), 5)
+        self.assertTrue(all(not widget.isVisible() for widget in self.dashboard._recent_widgets))
+        self.assertTrue(self.dashboard.recent_all_button.isVisible())
+
+        for label in self.dashboard.findChildren(QLabel):
+            if label.text() in {"Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"}:
+                with self.subTest(label=label.text()):
+                    required = label.fontMetrics().horizontalAdvance(label.text()) + 12
+                    self.assertGreaterEqual(label.width(), required)
+
+    def test_managed_child_window_is_promoted_to_nonmodal_top_level_module(self):
+        child = FakeDashboardManagedWindow()
+        child.setParent(self.dashboard)
+        self.assertFalse(child.isWindow())
+
+        result = _open_managed_window(None, lambda: child)
+        self.app.processEvents()
+
+        self.assertIs(result, child)
+        self.assertTrue(result.isWindow())
+        self.assertEqual(result.windowModality(), Qt.NonModal)
+        self.assertTrue(result.property("provowareModuleWindow"))
+        self._close_fake_windows(child)
+
+    def test_all_dashboard_modules_open_as_independent_windows(self):
+        openers = (
+            (lambda: self.dashboard.open_profile_editor("Genres"), "_profile_editor"),
+            (self.dashboard.open_todo, "_todo_window"),
+            (self.dashboard.open_calendar, "_calendar_window"),
+            (self.dashboard.open_song_library, "_song_library"),
+            (self.dashboard.open_recovery, "_recovery_center"),
+        )
+        opened = []
+        for opener, attribute in openers:
+            opener()
+            self.app.processEvents()
+            window = getattr(self.dashboard, attribute)
+            self.assertIsNotNone(window)
+            with self.subTest(module=attribute):
+                self.assertTrue(window.isWindow())
+                self.assertEqual(window.windowModality(), Qt.NonModal)
+                self.assertTrue(window.property("provowareModuleWindow"))
+            opened.append(window)
+        for window in opened:
+            window.close()
+            window.deleteLater()
+        self.app.processEvents()
+
+    def test_direct_song_editor_is_also_an_independent_module_window(self):
+        self.dashboard.open_song_editor()
+        self.app.processEvents()
+        editor = self.dashboard._song_editors[-1]
+        self.assertTrue(editor.isWindow())
+        self.assertEqual(editor.windowModality(), Qt.NonModal)
+        self.assertTrue(editor.property("provowareModuleWindow"))
+        editor.close()
+        self.app.processEvents()
 
     def test_four_themes_keep_core_colors_wcag_readable(self):
         self.assertEqual(THEME_NAMES, ("Amber", "Türkis", "Lila", "Kontrast"))
@@ -404,6 +487,8 @@ class DashboardReferenceGuiTests(unittest.TestCase):
             for key in ("text", "muted", "accent", "cyan", "green", "yellow", "red"):
                 with self.subTest(theme=theme_name, color=key):
                     self.assertGreaterEqual(_contrast(palette[key], palette["background"]), 4.5)
+            with self.subTest(theme=theme_name, component_border="surface"):
+                self.assertGreaterEqual(_contrast(palette["border"], palette["surface"]), 3.0)
 
     def test_theme_selector_is_keyboard_and_screenreader_accessible(self):
         self.assertEqual(self.dashboard.theme_combo.count(), 4)
