@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Protocol, TypeVar
 
 from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
@@ -27,6 +27,51 @@ from app.song_library import SongLibrary
 from app.texts import TextRegistry
 from app.todo_window import TodoWindow
 from app.ui_standards import COLORS, SPACING, apply_global_style
+
+
+class _ManagedWindow(Protocol):
+    """Kleinster gemeinsamer Lebenszyklus der vom Dashboard verwalteten Fenster."""
+
+    def isVisible(self) -> bool: ...
+    def raise_(self) -> None: ...
+    def activateWindow(self) -> None: ...
+    def show(self) -> None: ...
+    def refresh(self) -> None: ...
+
+
+ManagedWindowT = TypeVar("ManagedWindowT", bound=_ManagedWindow)
+
+
+def _open_managed_window(
+    current: ManagedWindowT | None,
+    factory: Callable[[], ManagedWindowT],
+    *,
+    prepare_visible: Callable[[ManagedWindowT], None] | None = None,
+    prepare_before_show: Callable[[ManagedWindowT], None] | None = None,
+    reuse_hidden: bool = False,
+    refresh_after_show: bool = False,
+) -> ManagedWindowT:
+    """Aktiviert ein sichtbares Fenster oder zeigt exakt den vorgesehenen Ersatz.
+
+    Standardmäßig wird ein nur noch verborgenes Fenster wie bisher durch ein neues
+    ersetzt. Fenster mit bewusst persistentem Zustand, derzeit der Kalender, können
+    über ``reuse_hidden`` denselben verdeckten Zustand erneut anzeigen.
+    """
+    if current is not None and current.isVisible():
+        if prepare_visible is not None:
+            prepare_visible(current)
+        current.raise_()
+        current.activateWindow()
+        current.refresh()
+        return current
+
+    window = current if reuse_hidden and current is not None else factory()
+    if prepare_before_show is not None:
+        prepare_before_show(window)
+    window.show()
+    if refresh_after_show:
+        window.refresh()
+    return window
 
 
 class Dashboard(QWidget):
@@ -518,41 +563,35 @@ class Dashboard(QWidget):
                 combo.setCurrentText(selected)
 
     def open_profile_editor(self, initial_category: str | None = None) -> None:
-        if self._profile_editor is not None and self._profile_editor.isVisible():
+        def prepare_visible(window: ProfileEditor) -> None:
             if initial_category in CATEGORIES:
-                self._profile_editor.category_combo.setCurrentText(initial_category)
-            self._profile_editor.raise_()
-            self._profile_editor.activateWindow()
-            self._profile_editor.refresh()
-            return
-        self._profile_editor = ProfileEditor(
-            self.project_root, self.zoom_percent, initial_category,
-            on_changed=self.refresh_db_profiles, parent=self,
+                window.category_combo.setCurrentText(initial_category)
+
+        self._profile_editor = _open_managed_window(
+            self._profile_editor,
+            lambda: ProfileEditor(
+                self.project_root, self.zoom_percent, initial_category,
+                on_changed=self.refresh_db_profiles, parent=self,
+            ),
+            prepare_visible=prepare_visible,
         )
-        self._profile_editor.show()
 
     def open_todo(self) -> None:
-        if self._todo_window is not None and self._todo_window.isVisible():
-            self._todo_window.raise_()
-            self._todo_window.activateWindow()
-            self._todo_window.refresh()
-            return
-        self._todo_window = TodoWindow(self.project_root, self.zoom_percent, parent=self)
-        self._todo_window.show()
+        self._todo_window = _open_managed_window(
+            self._todo_window,
+            lambda: TodoWindow(self.project_root, self.zoom_percent, parent=self),
+        )
 
     def open_calendar(self) -> None:
-        if self._calendar_window is not None and self._calendar_window.isVisible():
-            self._calendar_window.raise_()
-            self._calendar_window.activateWindow()
-            self._calendar_window.refresh()
-            return
-        if self._calendar_window is None:
-            self._calendar_window = CalendarWindow(
+        self._calendar_window = _open_managed_window(
+            self._calendar_window,
+            lambda: CalendarWindow(
                 self.project_root, self.zoom_percent,
                 on_changed=self._calendar_changed, parent=self,
-            )
-        self._calendar_window.show()
-        self._calendar_window.refresh()
+            ),
+            reuse_hidden=True,
+            refresh_after_show=True,
+        )
 
     def _calendar_changed(self) -> None:
         if self._calendar_window is not None:
@@ -593,26 +632,24 @@ class Dashboard(QWidget):
         editor.show()
 
     def open_song_library(self, initial_search: str = "") -> None:
-        if self._song_library is not None and self._song_library.isVisible():
+        def apply_search(window: SongLibrary) -> None:
             if initial_search:
-                self._song_library.set_search(initial_search)
-            self._song_library.raise_()
-            self._song_library.activateWindow()
-            self._song_library.refresh()
-            return
-        self._song_library = SongLibrary(self.project_root, self.zoom_percent, self.open_song_path, parent=self)
-        if initial_search:
-            self._song_library.set_search(initial_search)
-        self._song_library.show()
+                window.set_search(initial_search)
+
+        self._song_library = _open_managed_window(
+            self._song_library,
+            lambda: SongLibrary(
+                self.project_root, self.zoom_percent, self.open_song_path, parent=self,
+            ),
+            prepare_visible=apply_search,
+            prepare_before_show=apply_search,
+        )
 
     def open_recovery(self) -> None:
-        if self._recovery_center is not None and self._recovery_center.isVisible():
-            self._recovery_center.raise_()
-            self._recovery_center.activateWindow()
-            self._recovery_center.refresh()
-            return
-        self._recovery_center = RecoveryCenter(self.texts, self.logger, self.zoom_percent, parent=self)
-        self._recovery_center.show()
+        self._recovery_center = _open_managed_window(
+            self._recovery_center,
+            lambda: RecoveryCenter(self.texts, self.logger, self.zoom_percent, parent=self),
+        )
 
     def _song_saved(self, _path: Path) -> None:
         self.refresh_recent_songs()
