@@ -1,5 +1,34 @@
 # Änderungsverlauf
 
+## 0.16.1 – 2026-09-10 – Präsentationspolicy und Architekturhärtung
+
+### Geändert
+- neue Qt-unabhängige `app/presentation_policy.py` als einzige deterministische Klassifikation für Dashboard-Laptopmodus, breite Ansicht und Hochzoom ergänzt,
+- Darstellungsgrenzen als benannte Policy-Konstanten zusammengeführt,
+- unveränderlichen `PresentationState` für `wide`, `high_zoom`, `laptop_compact` und `restricted_navigation` eingeführt,
+- `app/laptop_layout.py` auf die zentrale Policy umgestellt; bisherige private Helfer bleiben nur als Kompatibilitätsadapter,
+- `app/navigation_ux.py` von der privaten Laptop-Hilfsfunktion entkoppelt und die bisher doppelte Hochzoom-Entscheidung entfernt,
+- reine Grenzwerttests ohne QApplication/Eventloop für Referenz-Laptop, Großansicht, Breitengrenze, Hochzoom, Mindestgröße und Nicht-Dashboard-Fenster ergänzt,
+- Release-Regression erweitert: jedes produktive `app/*.py`-Modul muss mit `release=true` im Manifest erfasst sein,
+- Vollprüfung um Präsentationspolicy, neue Tests und Iteration-29-Dokumentation erweitert.
+
+### Fehlerbehebung / Schutz
+- erste Grundprüfung #598 deckte durch den neuen Release-Invariant unmittelbar auf, dass `app/presentation_policy.py` noch nicht im Release-Manifest stand,
+- der fehlende Runtime-Eintrag wurde vor Freigabe ergänzt; damit kann derselbe Fehler bei späteren `app/*.py`-Modulen nicht mehr unbemerkt bleiben,
+- alle 56 GUI-Tests waren bereits im ersten Lauf grün; der gefundene Fehler betraf ausschließlich Release-Vollständigkeit,
+- keine Song-, Profil-, Todo- oder Kalenderdaten verändert,
+- keine Speicherformate, atomaren Schreiber, Backup- oder Restore-Fachlogik verändert,
+- keine neue externe Laufzeitabhängigkeit eingeführt,
+- sichtbare Nutzerführung und Kubuntu-26.04-/Wayland-Verhalten bleiben funktional unverändert.
+
+### Abnahme
+- korrigierter technischer Head `117aa0eee4e3422804506d9bc1c1fc50f75d4591` in Grundprüfung **#600** vollständig erfolgreich,
+- **94 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich,
+- Release-Manifest mit **39 freigegebenen Betriebsdateien** erfolgreich,
+- Headless-Start und nativer Qt-Wayland-Smoke erfolgreich,
+- Vollprojekt-Restore `OK`, SHA-256 `064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624`,
+- der vollständig synchronisierte 0.16.1-Endstand wird vor Merge nochmals durch dasselbe Voll-/Wayland-/Restore-Gate geprüft.
+
 ## 0.16.0 – 2026-09-10 – Kubuntu 26.04 / native Wayland-Unterstützung
 
 ### Geändert
