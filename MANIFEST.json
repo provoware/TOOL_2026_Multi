@@ -10,7 +10,7 @@
   "iteration": {
     "number": 28,
     "goal": "Kubuntu 26.04 LTS mit KDE Plasma Wayland als offizielles Zielsystem pruefen und absichern",
-    "completed": 10,
+    "completed": 12,
     "open_next": 1
   },
   "runtime": {
@@ -171,11 +171,18 @@
     "iteration28_initial_restore_status": "OK",
     "iteration28_initial_restore_sha256": "1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579",
     "iteration28_initial_tested_head_sha": "a7f2c168ecc3f0a2310fbff874cea33d30793d25",
-    "iteration28_final_ci_run": null,
-    "iteration28_final_ci_result": "pending",
-    "iteration28_final_native_wayland_smoke": false,
-    "iteration28_final_restore_gate": false,
-    "iteration28_final_tested_head_sha": null
+    "iteration28_final_ci_run": 579,
+    "iteration28_final_ci_result": "success",
+    "iteration28_final_logic_tests": 86,
+    "iteration28_final_gui_tests": 56,
+    "iteration28_final_release_files": 38,
+    "iteration28_final_native_wayland_smoke": true,
+    "iteration28_final_restore_gate": true,
+    "iteration28_final_restore_status": "OK",
+    "iteration28_final_restore_sha256": "23792d1c96db0b0fd61eaf74630593fbbf37578b64c4f82fd1f6644d2efa103e",
+    "iteration28_final_tested_head_sha": "2536bd3183e39ad1566496a067b817dd3ad30b07",
+    "iteration28_final_head_gate": "success",
+    "iteration28_merged_main_sha": "3b829e799536cc1464e760f77ac7c28295c6ea70"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
