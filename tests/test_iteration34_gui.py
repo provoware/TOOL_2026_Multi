@@ -15,7 +15,18 @@ from app.song_document import SongSection
 from app.song_editor import SongEditor
 from app.text_editor_store import list_text_documents, load_text_document
 from app.text_editor_window import TextEditorWindow
-from app.ui_standards import app_stylesheet, theme_colors
+from app.ui_standards import THEMES, app_stylesheet, theme_colors
+
+
+def _luminance(hex_color: str) -> float:
+    values = [int(hex_color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
+    values = [value / 12.92 if value <= 0.04045 else ((value + 0.055) / 1.055) ** 2.4 for value in values]
+    return 0.2126 * values[0] + 0.7152 * values[1] + 0.0722 * values[2]
+
+
+def _contrast(first: str, second: str) -> float:
+    light, dark = sorted((_luminance(first), _luminance(second)), reverse=True)
+    return (light + 0.05) / (dark + 0.05)
 
 
 class Iteration34GuiTests(unittest.TestCase):
@@ -92,6 +103,8 @@ class Iteration34GuiTests(unittest.TestCase):
         css = app_stylesheet(100, "Amber")
         self.assertIn(colors["input_bg"], css)
         self.assertIn(colors["input_border"], css)
+        for palette in THEMES.values():
+            self.assertGreaterEqual(_contrast(palette["text"], palette["input_bg"]), 4.5)
         sample = CharacterWindow(self.root, 100)
         line = sample.findChild(QLineEdit)
         text = sample.findChild(QTextEdit)

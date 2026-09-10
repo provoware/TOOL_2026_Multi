@@ -128,9 +128,9 @@ def split_input_values(value: str) -> list[str]:
     result: list[str] = []
     seen: set[str] = set()
     for raw in str(value).split(","):
-        cleaned = " ".join(raw.strip().split())
-        if not cleaned:
+        if not raw.strip():
             continue
+        cleaned = _normalize_value(raw)
         key = cleaned.casefold()
         if key in seen:
             continue

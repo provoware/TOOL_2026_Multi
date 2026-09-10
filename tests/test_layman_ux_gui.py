@@ -83,8 +83,12 @@ class LaymanUxGuiTests(unittest.TestCase):
         ]
         self.assertEqual(len(tiles), 7)
         planned = [button for button in tiles if button.property("planned") is True]
-        self.assertEqual(len(planned), 5)
+        self.assertEqual(len(planned), 3)
+        ready = [button for button in tiles if button.property("ready") is True]
+        self.assertEqual(len(ready), 4)
         self.assertTrue(all("In Planung" in button.text() for button in planned))
+        self.assertTrue(any("Charakterfibel" in button.text() for button in ready))
+        self.assertTrue(any("Texteditor" in button.text() for button in ready))
 
     def test_empty_song_library_has_visible_new_song_entry(self):
         self.dashboard.open_song_library()

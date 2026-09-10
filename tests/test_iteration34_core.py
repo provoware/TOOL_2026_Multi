@@ -9,7 +9,7 @@ from app.profile_store import add_values, load_profiles
 from app.song_document import normalize_section_name
 from app.startup_validation import ensure_runtime_folders, missing_paths
 from app.text_editor_store import TextDocument, load_text_document, save_text_document
-from app.todo_store import PROJECT_MODULE_BACKLOG, ensure_project_module_backlog, load_state
+from app.todo_store import PROJECT_MODULE_BACKLOG, PROJECT_MODULE_SUBTASKS, PROJECT_MODULE_TASK_COUNT, ensure_project_module_backlog, load_state
 
 
 class Iteration34CoreTests(unittest.TestCase):
@@ -84,10 +84,11 @@ class Iteration34CoreTests(unittest.TestCase):
             root = Path(temp)
             first = ensure_project_module_backlog(root)
             second = ensure_project_module_backlog(root)
-            self.assertEqual(first, len(PROJECT_MODULE_BACKLOG))
+            self.assertEqual(first, PROJECT_MODULE_TASK_COUNT)
             self.assertEqual(second, 0)
             state = load_state(root)
-            self.assertEqual(len(state["active"]), len(PROJECT_MODULE_BACKLOG))
+            self.assertEqual(len(state["active"]), PROJECT_MODULE_TASK_COUNT)
+            self.assertGreater(len(PROJECT_MODULE_SUBTASKS), 40)
             titles = {task["title"] for task in state["active"]}
             self.assertTrue(any("Charakterfibel" in title for title in titles))
             self.assertTrue(any("Wikimodul" in title for title in titles))
