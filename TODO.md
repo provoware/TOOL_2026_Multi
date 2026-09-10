@@ -172,15 +172,18 @@ Stand: 2026-09-10
 - 🟢 reale Sichtabnahme prüft zusätzlich Laptoplayout 125/150 %, Hochzoom 175/200 %, Tastaturfokus, Kontrasttheme sowie Fenster-/Menü-/Eingabeverhalten unter Wayland.
 - 🟢 keine Nutzerdaten-, Speicher-, Backup- oder Restore-Fachlogik verändert.
 
-### Technische Abnahme
+### Abnahme
 
 - 🟢 technischer Head `a7f2c168ecc3f0a2310fbff874cea33d30793d25` in Grundprüfung **#567** vollständig erfolgreich.
+- 🟢 finaler 0.16.0-Head `2536bd3183e39ad1566496a067b817dd3ad30b07` in Grundprüfung **#579** erneut vollständig erfolgreich.
 - 🟢 **86 Logik-/Regressionstests** und **56 PySide6-GUI-Tests** erfolgreich.
-- 🟢 nativer Qt-Wayland-Start unter isoliertem Weston erfolgreich; gemeldete Qt-Plattform: `wayland`.
+- 🟢 nativer Qt-Wayland-Start unter isoliertem Weston in beiden vollständigen Abnahmen erfolgreich; Qt meldet Plattform `wayland`.
 - 🟢 Release-Manifest mit **38 freigegebenen Betriebsdateien** erfolgreich.
 - 🟢 Headless-Start erfolgreich.
-- 🟢 Vollprojekt-Restore `OK`, SHA-256 `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`.
-- 🟡 Version 0.16.0 und Projektdokumentation werden jetzt synchronisiert; der daraus entstehende finale PR-Head muss denselben Voll-/Wayland-/Restore-Block erneut bestehen.
+- 🟢 Vollprojekt-Restore `OK`, finale Feature-SHA-256 `23792d1c96db0b0fd61eaf74630593fbbf37578b64c4f82fd1f6644d2efa103e`.
+- 🟢 PR #35 ausschließlich für den geprüften Head per SHA-geschütztem Squash-Merge in `main` übernommen.
+- 🟢 resultierender Produkt-Main-Commit: `3b829e799536cc1464e760f77ac7c28295c6ea70`.
+- 🟡 ein reiner Evidence-Sync wird vor endgültigem Projekt-ZIP nochmals vollständig mit Vollprüfung, nativem Wayland-Smoke und Restore geprüft.
 
 ## Danach
 
