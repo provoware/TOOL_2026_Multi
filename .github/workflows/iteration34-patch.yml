@@ -1,0 +1,33 @@
+name: Iteration 34 Patch anwenden
+
+on:
+  push:
+    branches:
+      - iteration-34-core-modules-data-standards
+    paths:
+      - scripts/iteration34_apply.py
+      - .github/workflows/iteration34-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Iteration 34 Patchlauf starten'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Projekt holen
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: iteration-34-core-modules-data-standards
+      - name: Exakten Integrationspatch anwenden
+        run: python3 scripts/iteration34_apply.py
+      - name: Ergebnis committen
+        run: |
+          set -Eeuo pipefail
+          git config user.name "provoware"
+          git config user.email "provoware.one@gmail.com"
+          git add app tests scripts
+          git diff --cached --check
+          git commit -m "Iteration 34: Kernmodule und Datenstandards implementieren"
+          git push origin HEAD:iteration-34-core-modules-data-standards
