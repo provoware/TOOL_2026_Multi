@@ -5,14 +5,36 @@ import tempfile
 import types
 import unittest
 import zipfile
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
-from app.log_maintenance import quarantine_corrupt_jsonl, rotate_log
+from app.log_maintenance import _needs_rotation, quarantine_corrupt_jsonl, rotate_log
 from scripts.diagnosepaket import build_diagnostic
 
 
 class DiagnosticsLoggingTests(unittest.TestCase):
+    def test_rotation_policy_has_explicit_boundary_and_disable_semantics(self):
+        now = datetime(2026, 9, 10, 12, 0, tzinfo=timezone.utc)
+        modified_now = now.timestamp()
+
+        self.assertFalse(_needs_rotation(
+            size=10, modified_at=modified_now, now=now,
+            max_bytes=10, max_age_days=0,
+        ))
+        self.assertTrue(_needs_rotation(
+            size=11, modified_at=modified_now, now=now,
+            max_bytes=10, max_age_days=0,
+        ))
+        self.assertFalse(_needs_rotation(
+            size=999, modified_at=modified_now - 999 * 86400, now=now,
+            max_bytes=-1, max_age_days=-1,
+        ))
+        self.assertTrue(_needs_rotation(
+            size=0, modified_at=modified_now - 86401, now=now,
+            max_bytes=-1, max_age_days=1,
+        ))
+
     def test_corrupt_jsonl_is_quarantined_and_valid_lines_survive(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -25,6 +47,25 @@ class DiagnosticsLoggingTests(unittest.TestCase):
             files = list((root / "logs" / "quarantaene").glob("*.json"))
             self.assertEqual(len(files), 1)
             self.assertNotIn("meinpasswort", files[0].read_text(encoding="utf-8"))
+
+    def test_quarantine_uses_one_utc_snapshot_for_name_and_metadata(self):
+        fixed = datetime(2026, 9, 10, 12, 34, 56, 789012, tzinfo=timezone.utc)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            log = root / "logs" / "ereignisse.jsonl"
+            quarantine = root / "logs" / "quarantaene"
+            log.parent.mkdir()
+            log.write_text('{"ok":1}\nkaputt\n', encoding="utf-8")
+
+            with patch("app.log_maintenance._utc_now", return_value=fixed):
+                self.assertEqual(quarantine_corrupt_jsonl(log, quarantine), 1)
+
+            files = list(quarantine.glob("*.json"))
+            self.assertEqual(len(files), 1)
+            self.assertIn("20260910_123456_789012", files[0].name)
+            payload = json.loads(files[0].read_text(encoding="utf-8"))
+            self.assertEqual(payload["created_utc"], fixed.isoformat())
+            self.assertEqual(payload["corrupt_count"], 1)
 
     def test_quarantine_replace_failure_preserves_original_log_and_cleans_temp(self):
         with tempfile.TemporaryDirectory() as temp:
