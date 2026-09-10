@@ -196,6 +196,8 @@ Stand: 2026-09-10
 - 🟢 Schwellenwerte für 125/150 %, 175 %, 1450 px, 820 px und 700 px als benannte Policy-Konstanten gebündelt.
 - 🟢 `app/laptop_layout.py` verwendet die zentrale Policy; private Helfer bleiben nur als Kompatibilitätsadapter.
 - 🟢 `app/navigation_ux.py` importiert keine private Laptopfunktion mehr und dupliziert `zoom >= 175` nicht mehr.
+- 🟢 `app/ui_standards.py` verwendet nach der strengen Konsistenzrunde dieselben Policy-Konstanten für 1450 px und 175 % sowie die gemeinsame Zoomnormalisierung; keine Schwelle und keine Geometrie wurde verändert.
+- 🟢 `compact < 1100 px` bleibt bewusst als eigene Responsive-Klasse lokal, weil er nicht dieselbe Semantik wie der Laptop-Kompaktmodus hat.
 - 🟢 reine Grenzwerttests für 1366×768@125 %, 1594×926@125 %, 1450-px-Grenze, 175-%-Hochzoom, Mindestgröße und Nicht-Dashboard-Fenster ergänzt.
 - 🟢 Release-Invariant ergänzt: jedes produktive `app/*.py`-Modul muss als `release=true` im Manifest stehen.
 - 🟢 neuer Runtime-Pfad ist in Vollprüfung und Release-Manifest aufgenommen.
@@ -205,10 +207,13 @@ Stand: 2026-09-10
 
 - 🟠 erste Grundprüfung **#598** blockierte korrekt, weil der neue Release-Invariant `app/presentation_policy.py` als noch fehlenden Release-Manifest-Eintrag erkannte; alle 56 GUI-Tests waren bereits grün.
 - 🟢 Manifest-Lücke ursächlich behoben; der Schutztest bleibt dauerhaft aktiv.
-- 🟢 korrigierter technischer Head `117aa0eee4e3422804506d9bc1c1fc50f75d4591` in Grundprüfung **#600** vollständig erfolgreich.
-- 🟢 **94 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **39 Release-Betriebsdateien**, Headless-Start und nativer Qt-Wayland-Smoke erfolgreich.
-- 🟢 Vollprojekt-Restore `OK`, SHA-256 `064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624`.
-- 🟡 Version-/Doku-/Manifest-Endstand 0.16.1 wird vor Merge nochmals vollständig durch dasselbe Gate geprüft.
+- 🟢 korrigierter technischer Head `117aa0eee4e3422804506d9bc1c1fc50f75d4591` in Grundprüfung **#600** vollständig erfolgreich; Restore `OK`, SHA-256 `064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624`.
+- 🟢 vollständig synchronisierter 0.16.1-Head `306eb551234882401d98114182b51c2ecdbdfdcb` in Grundprüfung **#612** vollständig erfolgreich: **94 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **39 Release-Betriebsdateien**, Headless-Start, nativer Qt-Wayland-Smoke und Restore `OK`; Restore-SHA-256 `78813816a492133dab8687112f80479bd7eff7309577ab2853833b9baf5b479f`.
+- 🟢 PR #37 ausschließlich für den geprüften Head per SHA-geschütztem Squash-Merge übernommen; resultierender Produkt-Main `608f7236f68161436b5d77e6e4c907ff6c1aa1a0`.
+- 🟢 anschließende strenge Single-Source-of-Truth-Prüfung fand noch zwei rohe gemeinsame Grenzen (`1450`, `175`) in `app/ui_standards.py`; isolierter Konsistenzhead `5d0eb33165bfe721a380912cd528981c51a88042` beseitigte nur diese Duplikation und vereinheitlichte die Zoomnormalisierung.
+- 🟢 Grundprüfung **#616** für genau diesen isolierten Head vollständig erfolgreich: erneut **94 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **39 Release-Betriebsdateien**, Headless-Start, nativer Qt-Wayland-Smoke und Vollprojekt-Restore `OK`; Restore-SHA-256 `f745cfd8ae287ecfe7b34340f695959317f7a19901dae3cee9131133d5f90c82`.
+- 🟢 PR #38 mit exaktem Head-SHA-Schutz per Squash-Merge übernommen; resultierender Main `e74d0ddc45258dc51926c94662ab23303f80e5f2`.
+- 🟢 Iteration 29 ist damit unter der strengeren Architekturdefinition technisch abgeschlossen; die reale sichtbare Zielsystemabnahme bleibt bewusst ein separates Projektgate.
 
 ## Danach
 
