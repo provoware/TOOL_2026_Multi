@@ -1,5 +1,5 @@
 {
-  "schema_version": 25,
+  "schema_version": 26,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
@@ -8,9 +8,9 @@
     "date": "2026-09-10"
   },
   "iteration": {
-    "number": 29,
-    "goal": "Darstellungszustände zentral, deterministisch und Qt-unabhängig klassifizieren und Runtime-Release-Vollständigkeit erzwingen",
-    "completed": 10,
+    "number": 32,
+    "goal": "Codequalität der Log- und Dashboard-Infrastruktur durch deterministische Wartungslogik, typisierten Fenster-Lebenszyklus und zentrale Managed-Window-Registry konsolidieren",
+    "completed": 3,
     "open_next": 1
   },
   "runtime": {
@@ -219,7 +219,41 @@
     "iteration29_consistency_restore_sha256": "f745cfd8ae287ecfe7b34340f695959317f7a19901dae3cee9131133d5f90c82",
     "iteration29_consistency_tested_head_sha": "5d0eb33165bfe721a380912cd528981c51a88042",
     "iteration29_policy_consistency_merged_main_sha": "e74d0ddc45258dc51926c94662ab23303f80e5f2",
-    "iteration29_final_head_gate": "success"
+    "iteration29_final_head_gate": "success",
+    "iteration30_ci_run": 628,
+    "iteration30_ci_result": "success",
+    "iteration30_logic_tests": 96,
+    "iteration30_gui_tests": 56,
+    "iteration30_release_files": 39,
+    "iteration30_native_wayland_smoke": true,
+    "iteration30_restore_gate": true,
+    "iteration30_restore_status": "OK",
+    "iteration30_restore_sha256": "c45fa475055dfb1b5d3e5904321f4d967c96a3ea5d3f82bba46bdb6538ad574c",
+    "iteration30_tested_head_sha": "2c76d6a1ec8bd86c00125094809fcedc315775da",
+    "iteration30_merged_main_sha": "20a9106616e4f32677c271906f345f02652b7cdd",
+    "iteration31_ci_run": 633,
+    "iteration31_ci_result": "success",
+    "iteration31_logic_tests": 96,
+    "iteration31_gui_tests": 59,
+    "iteration31_release_files": 39,
+    "iteration31_native_wayland_smoke": true,
+    "iteration31_restore_gate": true,
+    "iteration31_restore_status": "OK",
+    "iteration31_restore_sha256": "8d6f15df599d92ad60be71fab18c171243cbdfbf5fb55e4d236d23cbec79819a",
+    "iteration31_tested_head_sha": "6f69c163b88f3d024b670298d70c755a0c1bb82d",
+    "iteration31_merged_main_sha": "c4df362e8518acab07d4aac987ce08b5ff7e60b6",
+    "iteration32_ci_run": 638,
+    "iteration32_ci_result": "success",
+    "iteration32_logic_tests": 96,
+    "iteration32_gui_tests": 62,
+    "iteration32_release_files": 39,
+    "iteration32_native_wayland_smoke": true,
+    "iteration32_restore_gate": true,
+    "iteration32_restore_status": "OK",
+    "iteration32_restore_sha256": "64c3d081f652abcb29623375336c4d71b5ffd55ebce72e2c33cae64e83cef51b",
+    "iteration32_tested_head_sha": "873401955bfb4805b4cdfc09c836de6818601709",
+    "iteration32_merged_main_sha": "a0032bc7977e21d830297828610d9b6d3ac68ea3",
+    "iteration32_final_head_gate": "success"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -286,7 +320,11 @@
     "navigation_planned_default_expanded": false,
     "navigation_planned_count": 10,
     "navigation_planned_groups": ["Kreativ & Inhalte", "Dateien & Werkzeuge", "Projekte"],
-    "navigation_planned_hidden_in_laptop_and_high_zoom": true
+    "navigation_planned_hidden_in_laptop_and_high_zoom": true,
+    "managed_window_registry": "app.ui.Dashboard._managed_window_registry",
+    "managed_window_registry_single_source": true,
+    "managed_window_registry_scope": ["managed_widget_detection", "zoom_distribution", "visible_refresh"],
+    "managed_window_refresh_scope": ["recovery", "todo", "calendar"]
   },
   "process_consistency": {
     "atomic_writer": "app/atomic_io.py",
@@ -459,6 +497,9 @@
     {"path":"docs/ITERATION26_RELEASE_IO_HARDENING.md","release":false,"purpose":"Release-/Bericht-I/O-Audit, zentraler Publish-Pfad und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION27_NAVIGATION_UX.md","release":false,"purpose":"Menü-Hierarchie, Laiennavigation, Synchronisationsfehler und CI-/Restore-Evidence"},
     {"path":"docs/ITERATION28_KUBUNTU_2604_WAYLAND.md","release":false,"purpose":"Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION29_PRESENTATION_POLICY.md","release":false,"purpose":"Architekturanalyse, Präsentationspolicy, Release-Vollständigkeit und CI-/Restore-Evidence"}
+    {"path":"docs/ITERATION29_PRESENTATION_POLICY.md","release":false,"purpose":"Architekturanalyse, Präsentationspolicy, Release-Vollständigkeit und CI-/Restore-Evidence"},
+    {"path":"docs/ITERATION30_LOG_MAINTENANCE_CODE_QUALITY.md","release":false,"purpose":"Codequalitäts-Härtung der Log-Wartung und CI-/Restore-Evidence"},
+    {"path":"docs/ITERATION31_WINDOW_LIFECYCLE.md","release":false,"purpose":"Typisierter Fenster-Lebenszyklus, Regression und CI-/Restore-Evidence"},
+    {"path":"docs/ITERATION32_MANAGED_WINDOW_REGISTRY.md","release":false,"purpose":"Zentrale Managed-Window-Registry, Zoom-/Refresh-Konsistenz und CI-/Restore-Evidence"}
   ]
 }

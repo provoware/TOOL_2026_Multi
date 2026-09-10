@@ -215,6 +215,43 @@ Stand: 2026-09-10
 - 🟢 PR #38 mit exaktem Head-SHA-Schutz per Squash-Merge übernommen; resultierender Main `e74d0ddc45258dc51926c94662ab23303f80e5f2`.
 - 🟢 Iteration 29 ist damit unter der strengeren Architekturdefinition technisch abgeschlossen; die reale sichtbare Zielsystemabnahme bleibt bewusst ein separates Projektgate.
 
+## Iteration 30 – Codequalität der Log-Wartung
+
+**Hauptziel:** Log-Wartung deterministischer, kohärenter und besser testbar machen, ohne Produkt- oder Nutzerdatenlogik zu verändern.
+
+- 🟢 Zeitlogik pro Wartungsoperation auf einen UTC-Snapshot begrenzt.
+- 🟢 Rotationsentscheidung als reine, dateisystemunabhängige Funktion getrennt.
+- 🟢 Quarantäne-JSON auf den zentralen atomaren JSON-Schreiber umgestellt.
+- 🟢 Archivsortierung gegen parallel verschwundene Dateien robuster gemacht.
+- 🟢 Grundprüfung **#628**: 96 Logiktests, 56 GUI-Tests, 39 Release-Dateien, Headless-Start, nativer Wayland-Smoke und Restore `OK`.
+- 🟢 Restore-SHA-256 `c45fa475055dfb1b5d3e5904321f4d967c96a3ea5d3f82bba46bdb6538ad574c`.
+- 🟢 PR #40 gemergt; Main-Commit `20a9106616e4f32677c271906f345f02652b7cdd`.
+
+## Iteration 31 – Fenster-Lebenszyklus zentralisieren
+
+**Hauptziel:** Wiederholte Öffnen-/Aktivieren-/Aktualisieren-Logik der Dashboard-Nebenfenster in einen typisierten Helfer überführen.
+
+- 🟢 generischen `_open_managed_window()`-Helfer eingeführt.
+- 🟢 sichtbare Fenster werden zentral vorbereitet, aktiviert und aktualisiert.
+- 🟢 bisherige Unterschiede bleiben erhalten: Kalender darf verborgenen Zustand wiederverwenden; Profile, Todo, Songbibliothek und Recovery behalten ihre bisherige Neuerzeugungssemantik.
+- 🟢 drei deterministische Lebenszyklus-Regressionen ergänzt.
+- 🟢 Grundprüfung **#633**: 96 Logiktests, 59 GUI-Tests, 39 Release-Dateien, Headless-Start, nativer Wayland-Smoke und Restore `OK`.
+- 🟢 Restore-SHA-256 `8d6f15df599d92ad60be71fab18c171243cbdfbf5fb55e4d236d23cbec79819a`.
+- 🟢 PR #41 gemergt; Main-Commit `c4df362e8518acab07d4aac987ce08b5ff7e60b6`.
+
+## Iteration 32 – Managed-Window-Registry zentralisieren
+
+**Hauptziel:** Alle aktuell verwalteten Dashboard-Fenster als gemeinsame Quelle für Erkennung, Zoom-Verteilung und selektiven Refresh führen.
+
+- 🟢 `_managed_window_registry()` als Single Source of Truth eingeführt.
+- 🟢 Ctrl+Mausrad-/Fenstererkennung und Zoom-Verteilung verwenden dieselbe Registry.
+- 🟢 Dashboard-Refresh verwendet die Registry mit explizitem `refresh_when_visible`; automatisch aktualisiert werden unverändert Recovery, Todo und Kalender.
+- 🟢 Songeditor-Sonderbehandlung bleibt als eigener Zoom-Adapter erhalten.
+- 🟢 drei neue GUI-Regressionen prüfen Registry-Vollständigkeit, Zoom-Verteilung und unveränderten Refresh-Scope.
+- 🟢 Grundprüfung **#638**: 96 Logiktests, 62 GUI-Tests, 39 Release-Dateien, Headless-Start, nativer Wayland-Smoke und Restore `OK`.
+- 🟢 Restore-SHA-256 `64c3d081f652abcb29623375336c4d71b5ffd55ebce72e2c33cae64e83cef51b`.
+- 🟢 PR #42 gemergt; technischer Main-Commit vor diesem Evidence-Sync: `a0032bc7977e21d830297828610d9b6d3ac68ea3`.
+
 ## Danach
 
 1. 🟡 reale sichtbare **Kubuntu 26.04 / KDE Plasma Wayland**-Abnahme mit `bash kubuntu_abnahme.sh` auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und Theme `Kontrast`.

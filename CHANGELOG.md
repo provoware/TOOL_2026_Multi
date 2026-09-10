@@ -1,5 +1,33 @@
 # Änderungsverlauf
 
+## 0.16.1 – 2026-09-10 – Codequalitäts-Nachhärtung (Iterationen 30–32)
+
+### Iteration 30 – Log-Wartung
+- Zeitermittlung pro Wartungsoperation auf einen UTC-Snapshot vereinheitlicht,
+- Rotationsentscheidung als reine Logik getrennt,
+- Quarantäne-JSON auf den zentralen atomaren JSON-Schreiber umgestellt,
+- Archivsortierung robuster gegen parallel verschwundene Dateien gemacht,
+- Grenzwert- und Zeitkonsistenzregressionen ergänzt.
+
+### Iteration 31 – Fenster-Lebenszyklus
+- wiederholte Dashboard-Fensterverwaltung in den generischen, typisierten `_open_managed_window()`-Helfer zusammengeführt,
+- sichtbare Wiederverwendung, standardmäßige Neuerzeugung und bewusste Kalender-Hidden-Reuse-Semantik explizit erhalten,
+- drei deterministische Lebenszyklus-Regressionen ergänzt.
+
+### Iteration 32 – Managed-Window-Registry
+- `_managed_window_registry()` als zentrale Quelle der aktuell verwalteten Dashboard-Fenster eingeführt,
+- Fenstererkennung für Ctrl+Mausrad, Zoom-Verteilung und selektiven sichtbaren Refresh auf dieselbe Registry vereinheitlicht,
+- Recovery, Todo und Kalender bleiben der bewusste automatische Refresh-Scope; Songeditoren behalten ihren speziellen Zoom-Adapter,
+- drei GUI-Regressionen für Registry-Vollständigkeit, Zoom-Verteilung und Refresh-Semantik ergänzt.
+
+### Schutz und Abnahme
+- keine sichtbaren Texte, Layouts, Themes oder Bedienpfade verändert,
+- keine Song-, Profil-, Todo- oder Kalenderdaten oder Speicherformate verändert,
+- keine Backup-, Restore- oder Release-Fachlogik verändert und keine neue Abhängigkeit eingeführt,
+- Iteration 30: Grundprüfung **#628** vollständig grün – 96 Logiktests, 56 GUI-Tests, 39 Release-Dateien, nativer Qt-Wayland-Smoke und Restore `OK`; Restore-SHA-256 `c45fa475055dfb1b5d3e5904321f4d967c96a3ea5d3f82bba46bdb6538ad574c`; PR #40 → Main `20a9106616e4f32677c271906f345f02652b7cdd`,
+- Iteration 31: Grundprüfung **#633** vollständig grün – 96 Logiktests, 59 GUI-Tests, 39 Release-Dateien, nativer Qt-Wayland-Smoke und Restore `OK`; Restore-SHA-256 `8d6f15df599d92ad60be71fab18c171243cbdfbf5fb55e4d236d23cbec79819a`; PR #41 → Main `c4df362e8518acab07d4aac987ce08b5ff7e60b6`,
+- Iteration 32: Grundprüfung **#638** vollständig grün – 96 Logiktests, 62 GUI-Tests, 39 Release-Dateien, nativer Qt-Wayland-Smoke und Restore `OK`; Restore-SHA-256 `64c3d081f652abcb29623375336c4d71b5ffd55ebce72e2c33cae64e83cef51b`; PR #42 → Main `a0032bc7977e21d830297828610d9b6d3ac68ea3`.
+
 ## 0.16.1 – 2026-09-10 – Präsentationspolicy und Architekturhärtung
 
 ### Geändert
