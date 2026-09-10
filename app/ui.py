@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Callable, Protocol, TypeVar
@@ -72,6 +73,15 @@ def _open_managed_window(
     if refresh_after_show:
         window.refresh()
     return window
+
+
+@dataclass(frozen=True)
+class _ManagedWindowRegistration:
+    """Eine aktuelle Fensterreferenz mit zentral definierten gemeinsamen Aktionen."""
+
+    window: QWidget
+    apply_zoom: Callable[[int], None] | None = None
+    refresh_when_visible: Callable[[], None] | None = None
 
 
 class Dashboard(QWidget):
@@ -452,22 +462,54 @@ class Dashboard(QWidget):
         QShortcut(QKeySequence("Ctrl+0"), self, activated=lambda: self.set_zoom(100))
         QShortcut(QKeySequence("Ctrl+R"), self, activated=self.open_recovery)
 
+    @staticmethod
+    def _set_song_editor_zoom(editor: SongEditor, percent: int) -> None:
+        """Wendet den bestehenden Songeditor-Zoom über denselben Registry-Vertrag an."""
+        editor.zoom_percent = percent
+        apply_global_style(editor, percent)
+
+    def _managed_window_registry(self) -> tuple[_ManagedWindowRegistration, ...]:
+        """Liefert alle aktuell vom Dashboard verwalteten Fenster aus einer Quelle.
+
+        Neben der Fensterreferenz enthält der Eintrag nur die gemeinsamen Aktionen,
+        die für genau dieses Fenster gelten. Dadurch bleiben Sonderfälle explizit,
+        während Fenstererkennung, Zoom und Dashboard-Refresh dieselbe Registry nutzen.
+        """
+        registrations: list[_ManagedWindowRegistration] = [
+            _ManagedWindowRegistration(self),
+        ]
+        for editor in tuple(self._song_editors):
+            registrations.append(
+                _ManagedWindowRegistration(
+                    editor,
+                    apply_zoom=lambda percent, editor=editor: self._set_song_editor_zoom(editor, percent),
+                )
+            )
+
+        optional_windows = (
+            (self._song_library, False),
+            (self._recovery_center, True),
+            (self._profile_editor, False),
+            (self._todo_window, True),
+            (self._calendar_window, True),
+        )
+        for window, refresh_with_dashboard in optional_windows:
+            if window is None:
+                continue
+            registrations.append(
+                _ManagedWindowRegistration(
+                    window,
+                    apply_zoom=window.set_zoom,
+                    refresh_when_visible=window.refresh if refresh_with_dashboard else None,
+                )
+            )
+        return tuple(registrations)
+
     def _is_managed_widget(self, watched: object) -> bool:
         if not isinstance(watched, QWidget):
             return False
         window = watched.window()
-        managed = [self, *self._song_editors]
-        if self._song_library is not None:
-            managed.append(self._song_library)
-        if self._recovery_center is not None:
-            managed.append(self._recovery_center)
-        if self._profile_editor is not None:
-            managed.append(self._profile_editor)
-        if self._todo_window is not None:
-            managed.append(self._todo_window)
-        if self._calendar_window is not None:
-            managed.append(self._calendar_window)
-        return window in managed
+        return any(window is registration.window for registration in self._managed_window_registry())
 
     def eventFilter(self, watched: object, event: QEvent) -> bool:
         if (event.type() == QEvent.Type.Wheel
@@ -714,12 +756,10 @@ class Dashboard(QWidget):
         self.refresh_recent_songs()
         self.refresh_db_profiles()
         self.quick_status.setText("Bereit · Wähle Songtexte, Todo-Liste oder Kalender.")
-        if self._recovery_center is not None and self._recovery_center.isVisible():
-            self._recovery_center.refresh()
-        if self._todo_window is not None and self._todo_window.isVisible():
-            self._todo_window.refresh()
-        if self._calendar_window is not None and self._calendar_window.isVisible():
-            self._calendar_window.refresh()
+        for registration in self._managed_window_registry():
+            if (registration.refresh_when_visible is not None
+                    and registration.window.isVisible()):
+                registration.refresh_when_visible()
 
     def _step_zoom(self, direction: int) -> None:
         current = ZOOM_LEVELS.index(self.zoom_percent)
@@ -732,19 +772,9 @@ class Dashboard(QWidget):
         self.zoom_percent = percent
         apply_global_style(self, percent)
         self.zoom_label.setText(f"{percent} %")
-        for editor in list(self._song_editors):
-            editor.zoom_percent = percent
-            apply_global_style(editor, percent)
-        if self._song_library is not None:
-            self._song_library.set_zoom(percent)
-        if self._recovery_center is not None:
-            self._recovery_center.set_zoom(percent)
-        if self._profile_editor is not None:
-            self._profile_editor.set_zoom(percent)
-        if self._todo_window is not None:
-            self._todo_window.set_zoom(percent)
-        if self._calendar_window is not None:
-            self._calendar_window.set_zoom(percent)
+        for registration in self._managed_window_registry():
+            if registration.apply_zoom is not None:
+                registration.apply_zoom(percent)
 
 
 def install_exception_handler(app, logger: EventLogger, refresh: Callable[[], None], parent: QWidget) -> None:
