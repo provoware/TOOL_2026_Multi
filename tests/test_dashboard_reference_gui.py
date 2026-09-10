@@ -9,7 +9,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QFrame, QLabel, QPushButton
 
-from app.ui import Dashboard
+from app.ui import Dashboard, _open_managed_window
 from app.laptop_layout import install_laptop_layout
 from app.ui_standards import (
     COLORS, DEFAULT_THEME, THEMES, THEME_NAMES, geometry_scaled, scaled,
@@ -31,6 +31,32 @@ class FakeLogger:
         return str(event)
 
 
+class FakeManagedWindow:
+    def __init__(self, *, visible: bool = False) -> None:
+        self.visible = visible
+        self.raise_calls = 0
+        self.activate_calls = 0
+        self.show_calls = 0
+        self.refresh_calls = 0
+        self.preparations: list[str] = []
+
+    def isVisible(self) -> bool:
+        return self.visible
+
+    def raise_(self) -> None:
+        self.raise_calls += 1
+
+    def activateWindow(self) -> None:
+        self.activate_calls += 1
+
+    def show(self) -> None:
+        self.visible = True
+        self.show_calls += 1
+
+    def refresh(self) -> None:
+        self.refresh_calls += 1
+
+
 def _luminance(hex_color: str) -> float:
     channels = [int(hex_color[index:index + 2], 16) / 255 for index in (1, 3, 5)]
 
@@ -44,6 +70,73 @@ def _luminance(hex_color: str) -> float:
 def _contrast(first: str, second: str) -> float:
     light, dark = sorted((_luminance(first), _luminance(second)), reverse=True)
     return (light + 0.05) / (dark + 0.05)
+
+
+class ManagedWindowLifecycleTests(unittest.TestCase):
+    def test_visible_window_is_prepared_activated_and_refreshed_without_recreation(self):
+        current = FakeManagedWindow(visible=True)
+        factory_calls = 0
+
+        def factory() -> FakeManagedWindow:
+            nonlocal factory_calls
+            factory_calls += 1
+            return FakeManagedWindow()
+
+        result = _open_managed_window(
+            current,
+            factory,
+            prepare_visible=lambda window: window.preparations.append("sichtbar"),
+            prepare_before_show=lambda window: window.preparations.append("zeigen"),
+        )
+
+        self.assertIs(result, current)
+        self.assertEqual(factory_calls, 0)
+        self.assertEqual(current.preparations, ["sichtbar"])
+        self.assertEqual(current.raise_calls, 1)
+        self.assertEqual(current.activate_calls, 1)
+        self.assertEqual(current.refresh_calls, 1)
+        self.assertEqual(current.show_calls, 0)
+
+    def test_hidden_window_is_recreated_by_default_and_only_show_path_is_prepared(self):
+        hidden = FakeManagedWindow(visible=False)
+        replacement = FakeManagedWindow(visible=False)
+        result = _open_managed_window(
+            hidden,
+            lambda: replacement,
+            prepare_visible=lambda window: window.preparations.append("sichtbar"),
+            prepare_before_show=lambda window: window.preparations.append("zeigen"),
+        )
+
+        self.assertIs(result, replacement)
+        self.assertEqual(hidden.show_calls, 0)
+        self.assertEqual(replacement.preparations, ["zeigen"])
+        self.assertEqual(replacement.show_calls, 1)
+        self.assertEqual(replacement.refresh_calls, 0)
+        self.assertEqual(replacement.raise_calls, 0)
+        self.assertEqual(replacement.activate_calls, 0)
+
+    def test_hidden_window_can_be_reused_and_refreshed_after_show(self):
+        hidden = FakeManagedWindow(visible=False)
+        factory_calls = 0
+
+        def factory() -> FakeManagedWindow:
+            nonlocal factory_calls
+            factory_calls += 1
+            return FakeManagedWindow()
+
+        result = _open_managed_window(
+            hidden,
+            factory,
+            reuse_hidden=True,
+            refresh_after_show=True,
+        )
+
+        self.assertIs(result, hidden)
+        self.assertEqual(factory_calls, 0)
+        self.assertEqual(hidden.show_calls, 1)
+        self.assertEqual(hidden.refresh_calls, 1)
+        self.assertEqual(hidden.raise_calls, 0)
+        self.assertEqual(hidden.activate_calls, 0)
 
 
 class DashboardReferenceGuiTests(unittest.TestCase):
