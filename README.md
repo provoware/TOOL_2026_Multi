@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.17.1 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit standardisiertem Charakterzugriff in Text- und Songeditor; automatische Voll-/Restore-, native Wayland- und ZIP-Artefakt-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
+> **Version:** 0.17.2 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit durchsuchbarer Hilfe, automatischer Testentdeckung und gehärteter Repository-Hygiene; Voll-/Restore-, native Wayland- und ZIP-Artefakt-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -31,7 +31,7 @@ ANLEITUNG_LAIEN.md
 - 🟢 **Profile & Vorgaben** – Genres, Stimmungen, Stil, Stimme und Besonderheiten je Profil verwalten
 - 🟢 **Todo-Liste** – Aufgaben mit optionalem Termin anlegen und erledigte Aufgaben sicher archivieren
 - 🟢 **Kalender** – Tag/Woche/Monat/Jahr, Termine und Erinnerungen
-- 🟢 **Fehlerhilfe (Recovery)** – einfache Erklärung, Schutzmaßnahme und nächster Schritt
+- 🟢 **Hilfe & Fehlerhilfe** – durchsuchbare Schritt-für-Schritt-Hilfe plus verständliche Fehlermeldungen, Schutzmaßnahme und nächster Schritt
 - 🟢 **Zoom 100–200 %** – gemeinsam für alle Hauptfenster
 - 🟢 **Farbthemes** – Amber, Türkis, Lila und Kontrast
 
@@ -51,7 +51,7 @@ Die Oberfläche verwendet zentrale wiederverwendbare UI-Standards statt einzelne
 - `Qt.StrongFocus` für Buttons, Eingaben, Auswahlfelder, Listen und Tabellen,
 - Zustände werden zusätzlich durch Text, Symbole und Konturen vermittelt – nicht nur durch Farbe.
 
-Die normale Responsive-Logik unterscheidet zwischen kompakter, normaler und breiter Fensterdarstellung. Auf typischen kleinen Laptop-Bildschirmen wie **1366×768** wird bei **125/150 %** zusätzlich ein reversibler Laptop-Kompaktmodus verwendet: redundante reine Planungselemente verschwinden vorübergehend, während Songtexte, Vorgaben, Todo, Kalender, Fehlerhilfe, Zoom und Farbtheme erreichbar bleiben. Ab **1450 px Breite** wird automatisch wieder die vollständige große Darstellung verwendet.
+Die normale Responsive-Logik unterscheidet zwischen kompakter, normaler und breiter Fensterdarstellung. Auf typischen kleinen Laptop-Bildschirmen wie **1366×768** wird bei **125/150 %** zusätzlich ein reversibler Laptop-Kompaktmodus verwendet: redundante reine Planungselemente verschwinden vorübergehend, während Songtexte, Vorgaben, Todo, Kalender, Hilfe & Fehlerhilfe, Zoom und Farbtheme erreichbar bleiben. Ab **1450 px Breite** wird automatisch wieder die vollständige große Darstellung verwendet.
 
 Seit 0.16.1 werden Laptop-, Breit- und Hochzoomzustand zusätzlich über eine **zentrale Qt-unabhängige Präsentationspolicy** klassifiziert. Navigation und Laptoplayout greifen damit auf dieselbe deterministische Zustandsentscheidung zurück, statt private Hilfsfunktionen oder doppelte Schwellenwerte zu verwenden. Die sichtbare Bedienung bleibt dabei unverändert; verbessert wurden Wartbarkeit, Testbarkeit und Regressionsschutz.
 
@@ -67,6 +67,16 @@ Unten im Dashboard befindet sich die Auswahl **Farben**:
 Der Theme-Wechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswahl ist **sitzungsbezogen** und erzeugt bewusst keinen neuen Nutzerdaten- oder Konfigurationsschreibweg.
 
 Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast gegen den jeweiligen Hintergrund geprüft.
+
+## Neu in 0.17.2 – Wartbarkeit, Entwicklungseffizienz und Hilfe
+
+- **Hilfe & Fehlerhilfe:** F1 öffnet jetzt ein eigenes Hilfezentrum mit durchsuchbaren Alltagsthemen und einem getrennten Reiter für Fehlermeldungen.
+- **Schnellere Entwicklung:** `bash scripts/pruefen.sh --quick` prüft Syntax, JSON, alle automatisch gefundenen Logiktests, Schreibfehlersimulation und Headless-Start ohne den langsameren GUI-/Release-Block.
+- **Weniger Pflegeaufwand:** `--full` findet neue `tests/test_*.py` und `*_gui.py` automatisch; die freigegebenen Betriebsdateien kommen direkt aus `MANIFEST.json`. Neue Tests müssen nicht mehr in mehreren Shell-Listen nachgetragen werden.
+- **Repo-Hygiene:** einmalige Migrations-/Finalisierungshilfen wie `scripts/_iter…`, `scripts/finalize_…` oder temporäre Finalizer-Workflows werden künftig automatisch als Überrest blockiert.
+- **Bereinigung:** der nicht mehr benötigte Einmal-Helfer `scripts/_iter33_docs_apply.py` wurde entfernt.
+- **Versionsdisziplin:** der vollständig grüne Main-Lauf #750 bleibt der unveränderte Referenzstand für 0.17.1/Iteration 36; diese Wartungsrunde wird getrennt als 0.17.2/Iteration 37 geführt.
+- **Technischer Gate:** Grundprüfung #769 bestätigte 113 Logiktests, 77 GUI-Tests, 47 Release-Dateien, nativen Wayland-Start, Restore `OK` und ZIP-Erzeugung; der versionierte 0.17.2-Head wird vor Merge erneut vollständig geprüft.
 
 ## Neu in 0.17.1 – Charakterzugriff in Schreibmodulen
 
@@ -189,18 +199,20 @@ daten/kalender/termine.json
 
 Es läuft bewusst kein versteckter Erinnerungsdienst weiter, wenn Provoware vollständig beendet wurde.
 
-## Fehlerhilfe
+## Hilfe & Fehlerhilfe
 
-Die Fehlerhilfe befindet sich unter **Direkt nutzbar → Fehlerhilfe (Recovery)**.
+Öffnen über **Direkt nutzbar → Hilfe & Fehlerhilfe**, `F1` oder weiterhin `Strg+R`.
 
-Sie zeigt zuerst:
+Der erste Reiter **Schnellhilfe** enthält durchsuchbare Themen wie Start, Songtexte, Texteditor/Charakterfibel, Daten, Fehler, Kubuntu/Wayland sowie Zoom/Tastatur. Jedes Thema nennt konkrete Schritte, eine Alternative und – wo nötig – einen Sicherheitshinweis.
+
+Der zweite Reiter **Fehlermeldungen** behält die Recovery-Funktionen bei und zeigt zuerst:
 
 - Was ist passiert?
 - Was wurde geschützt?
 - Was soll ich jetzt tun?
-- Wie oft trat es auf?
+- Wie oft ist es passiert?
 
-Technische Details bleiben standardmäßig ausgeblendet. Über **JSON-Importvorlage** lässt sich zusätzlich die exakte Struktur für extern vorbereitete Songtexte anzeigen und kopieren.
+Technische Details bleiben zunächst ausgeblendet.
 
 ## Datensicherheit
 
@@ -237,47 +249,31 @@ Bedienung:
 - `Strg++` / `Strg+-`
 - `Strg+0` = 100 %
 - `Strg+S` = Song sofort speichern
-- `Strg+R` = Fehlerhilfe öffnen
+- `F1` = Hilfe & Fehlerhilfe öffnen
+- `Strg+R` = Hilfe & Fehlerhilfe öffnen
 - `F5` = aktuelle Liste/Ansicht neu laden
 
 ## Automatische Qualitätsprüfung
 
-Vollprüfung:
+Für schnelle Entwicklungsrunden:
+
+```bash
+bash scripts/pruefen.sh --quick
+```
+
+`--quick` prüft Manifest-Dateien, Shell-/JSON-/Python-Syntax, **alle automatisch gefundenen Logik-/Regressionstests**, die Schreibfehlersimulation und den Headless-Start. So muss für kleine Änderungen nicht jedes Mal der deutlich langsamere GUI-/Release-Block laufen.
+
+Vor Merge oder Release bleibt zwingend:
 
 ```bash
 bash scripts/pruefen.sh --full
 ```
 
-Sie prüft unter anderem:
+`--full` ergänzt automatisch **alle `*_gui.py`-Tests**, Release-Vollständigkeit und die komplette Entwicklerprüfung. Neue Testdateien werden über ihr Namensschema entdeckt; eine manuelle Testliste in `scripts/pruefen.sh` ist nicht mehr nötig. Die Runtime-Dateien stammen direkt aus `MANIFEST.json`, damit Manifest, Prüfung und Release nicht auseinanderlaufen.
 
-- Syntax und Startfähigkeit
-- Fachlogik und bekannte Rückfälle
-- Datensicherheit und Restore
-- Songeditor und Songbibliothek
-- Profile, Charakterfibel, Texteditor, Todo und Kalender
-- Komma-Eingaben, freie Songbereiche, JSON-Importstruktur und Startordner-Validierung
-- Fehlerhilfe
-- PySide6-Bedienwege im Offscreen-Test
-- Zoom, Fokus und Hochzoom
-- reine deterministische Präsentationspolicy und ihre Grenzwerte
-- Laptop-Kompaktmodus und Rückkehr zur großen Ansicht
-- Farbthemes und Screenreader-Grundwerte
-- Kontraste aller Theme-Kernfarben mit mindestens 4,5:1
-- Laienführung und Nicht-Silent-Fail-Verhalten
-- Menü-Hierarchie, Planungs-Aufklappzustand und Rückkehr aus Laptop-/Hochzoom-Modi
-- responsive Breiten- und Tabellenverteilung
-- Vollständigkeit aller produktiven `app/*.py`-Module im Release
-- direkte Startbarkeit wichtiger Skripte
-- Kubuntu-26.04-/Wayland-Erkennung und Abnahmeberichte
-- tatsächlichen nativen Qt-Wayland-Start in einem isolierten headless Wayland-Compositor
-- Release-/Diagnose-Publish-Fehler und Temp-Cleanup
-- Repository-Hygiene
+Die Vollprüfung deckt unter anderem Fachlogik, Datensicherheit, Restore, Song-/Text-/Charakterfunktionen, Todo/Kalender, Hilfe & Fehlerhilfe, Zoom/Fokus, Themes/Kontraste, Navigation, Kubuntu-/Wayland-Erkennung, Release-Publish und Repository-Hygiene ab. Ein Hygiene-Rückfalltest blockiert zusätzlich bekannte lokale Artefakte und einmalige Entwicklungshelfer, bevor sie dauerhaft im Projekt bleiben.
 
-Iteration 27 wurde mit dem finalen 0.15.3-Head `9cd8101ba19c5e28b41fa7793d35860462d38864` in **Grundprüfung #554** vollständig abgenommen: **81 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **38 Release-Betriebsdateien**, Headless-Start und Restore `OK`; Restore-SHA-256 `add4af04204e694427aa2332edea4136c2816e0c196676391a5763e044be3718`. PR #34 wurde danach sicher gemergt; Main-Commit `e7027e57c3c8709263b73543fd2b01be84e6639d`.
-
-Der technische Iteration-28-Head `a7f2c168ecc3f0a2310fbff874cea33d30793d25` bestand **Grundprüfung #567** mit **86 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **38 Release-Betriebsdateien**, Headless-Start, einem echten nativen Qt-Wayland-Smoke (`QApplication.platformName() = wayland`) und Vollprojekt-Restore `OK`. Restore-SHA-256: `1283f1399a5d4a675bdc06720ebf5435df38fccbf36d64fb74fd5e1e9748b579`. Der CI-Compositor läuft isoliert und ersetzt ausdrücklich nicht die reale sichtbare Kubuntu-26.04-/Plasma-Endabnahme.
-
-Der korrigierte technische Iteration-29-Head `117aa0eee4e3422804506d9bc1c1fc50f75d4591` bestand **Grundprüfung #600** mit **94 Logik-/Regressionstests**, **56 PySide6-GUI-Tests**, **39 Release-Betriebsdateien**, Headless-Start, nativem Qt-Wayland-Smoke und Vollprojekt-Restore `OK`. Restore-SHA-256: `064caec2bca6423922ae7bed63fe7d2684a403c69f03a3c5674e3708b5f86624`. Zuvor hatte der neu eingeführte Release-Vollständigkeitstest den fehlenden Manifest-Eintrag für `app/presentation_policy.py` korrekt blockiert.
+**Referenz vor Iteration 37:** Main-Grundprüfung **#750** auf `d34e5fd643d086f6737eb42448a9a126a6bd3214` war vollständig grün: **111 Logik-/Regressionstests**, **76 GUI-Tests**, **46 Release-Betriebsdateien**, nativer Qt-Wayland-Start und Restore `OK`. Restore-SHA-256: `7b519b36dcb610c125a87d632bfe61ab05131b3c7e99912798f46071fe0804c2`.
 
 Vollständiges Restore-Gate:
 

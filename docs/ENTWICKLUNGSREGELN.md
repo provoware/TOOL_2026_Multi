@@ -26,6 +26,14 @@ Ein Prüfblock darf nicht ohne Anlass wiederholt werden. Er wird erneut ausgefü
 - eine vorherige Prüfung fehlgeschlagen ist und die Ursache verändert wurde,
 - neue Evidenz einen zusätzlichen Fehlerweg zeigt.
 
+## Zweistufige Prüfung für schnellere Entwicklung
+
+- Nach kleinen Codeänderungen zuerst `bash scripts/pruefen.sh --quick`: Syntax, Manifest/JSON, automatisch erkannte Logiktests, Schreibfehler-Simulation und Headless-Start.
+- `bash scripts/pruefen.sh --full` bleibt Pflicht vor PR-Merge, Release und nach Änderungen an GUI, Release, Restore oder CI.
+- Neue `tests/test_*.py` und `tests/*_gui.py` werden automatisch entdeckt. Sie dürfen nicht zusätzlich in manuellen Shell-Testlisten gepflegt werden.
+- Freigegebene Betriebsdateien werden aus `MANIFEST.json` gelesen; parallele manuelle Runtime-Dateilisten sind zu vermeiden.
+- Einmalige Patch-/Finalisierungshilfen müssen sich entfernen oder dürfen gar nicht erst committed werden; der Hygiene-Test blockiert bekannte Einmal-Helfer-Präfixe.
+
 ## Nutzerbeteiligung minimieren
 
 Die Entwicklung trifft reversible technische Entscheidungen autonom. Fehlende reale Geräte-/Oberflächenprüfungen werden klar als externe Abnahme markiert, statt den Nutzer für jeden Zwischenschritt zum Testen einzuspannen.

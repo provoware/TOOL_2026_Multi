@@ -1,5 +1,31 @@
 # Änderungsverlauf
 
+## 0.17.2 – 2026-09-12 – Wartbarkeit, Entwicklungseffizienz und Hilfe
+
+### Neu
+- durchsuchbare **Hilfe & Fehlerhilfe** mit F1-Schnellzugriff, acht alltagsnahen Hilfethemen und getrenntem Fehlermeldungs-Reiter,
+- `scripts/pruefen.sh --quick` als kurze Entwicklungsprüfung; `--full` bleibt verbindliches Merge-/Release-Gate,
+- automatische Entdeckung aller Logik- und GUI-Testdateien anhand des Namensschemas.
+
+### Geändert / bereinigt
+- freigegebene Betriebsdateien werden in der Prüfung direkt aus `MANIFEST.json` gelesen statt in einer zweiten langen Shell-Liste gepflegt,
+- zentrale UI-unabhängige Hilfetexte in `app/help_content.py`,
+- Einmal-Helfer `scripts/_iter33_docs_apply.py` entfernt,
+- Repo-Hygiene blockiert künftig bekannte Einmal-Patch-/Finalizer-Präfixe,
+- README-Qualitätsabschnitt von veralteten Iterations-Einzelnachweisen auf den aktuellen Referenz-Gate und das zweistufige Prüfverfahren verdichtet.
+
+### Schutz
+- keine Nutzerdaten oder Speicherformate geändert,
+- keine neue externe Laufzeitabhängigkeit,
+- Recovery-Funktionalität bleibt vollständig erhalten, jetzt als zweiter Reiter innerhalb von Hilfe & Fehlerhilfe,
+- Version 0.17.1 / Iteration 36 bleibt über Main-Grundprüfung #750 als unveränderte Referenzbasis dokumentiert.
+
+### Technische Abnahme
+- erster technischer PR-Gate **#764** blockierte korrekt: das neue Runtime-Modul `app/help_content.py` fehlte noch im Release-Manifest; zusätzlich wurde die noch fehlende Iteration-37-Dokumentation erkannt. Die 77 GUI-Tests waren bereits vollständig grün.
+- korrigierter technischer Head `7368488c601160506a7b95a057c3e340bef64e8f` in Grundprüfung **#769** vollständig grün: **113 Logik-/Regressionstests**, **77 PySide6-GUI-Tests**, **47 Release-Betriebsdateien**, Headless-Start und nativer Qt-Wayland-Smoke erfolgreich.
+- Vollprojekt-Restore `OK`, SHA-256 `000b03420cb2a7cddc4ce80885e27aa9f96bdf62aa43a571116f099c16fbb177`; Runtime-Release-SHA-256 `993786558ce564dfbd5deee90ac9b7f1fe0067a321d5e12a7c0859f97cb6f28a`.
+- der vollständig auf **0.17.2 / Iteration 37** synchronisierte Freigabe-Head wird vor dem Merge erneut durch denselben Voll-Gate geprüft.
+
 ## 0.17.1 – 2026-09-12 – Charakterzugriff in Schreibmodulen und vollständige CI-ZIPs
 
 ### Neu

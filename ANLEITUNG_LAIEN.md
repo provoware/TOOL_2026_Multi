@@ -43,7 +43,7 @@ Aktuell direkt nutzbar sind vor allem:
 - **Genres & Vorgaben**
 - **Todo-Liste**
 - **Kalender**
-- **Fehlerhilfe (Recovery)**
+- **Hilfe & Fehlerhilfe**
 
 ---
 
@@ -70,7 +70,7 @@ Unter **Direkt nutzbar** stehen zuerst die Bereiche, mit denen du sofort arbeite
 - **Genres & Vorgaben**
 - **Todo-Liste**
 - **Kalender**
-- **Fehlerhilfe (Recovery)**
+- **Hilfe & Fehlerhilfe**
 
 Darunter steht **Noch nicht fertig**. Die geplanten Bereiche sind normalerweise eingeklappt, damit das Menü ruhig und übersichtlich bleibt.
 
@@ -309,18 +309,16 @@ daten/kalender/termine.json
 
 ---
 
-# Fehlerhilfe (Recovery)
+# Hilfe & Fehlerhilfe
 
 Öffnen über:
 
-**Direkt nutzbar → Fehlerhilfe (Recovery)**
+**Direkt nutzbar → Hilfe & Fehlerhilfe**, `F1` oder `Strg+R`.
 
-Die Fehlerhilfe zeigt zuerst einfache Informationen:
+Oben gibt es zwei Reiter:
 
-- **Was ist passiert?**
-- **Was wurde geschützt?**
-- **Was soll ich jetzt tun?**
-- **Wie oft ist das passiert?**
+1. **Schnellhilfe** – tippe ein einfaches Wort wie `speichern`, `Songtexte`, `Daten`, `Fehler` oder `Wayland` ein. Links wählst du ein Thema, rechts stehen die konkreten Schritte.
+2. **Fehlermeldungen** – zeigt verständlich **Was ist passiert?**, **Was wurde geschützt?**, **Was soll ich jetzt tun?** und **Wie oft ist das passiert?**
 
 Technische Details bleiben zunächst ausgeblendet und können bei Bedarf geöffnet werden. Mit **JSON-Importvorlage** kannst du zusätzlich die exakte Struktur für extern vorbereitete Songtexte anzeigen und in die Zwischenablage kopieren. Dieselbe Vorlage liegt unter `vorlagen/songtext_import_vorlage.json`.
 
@@ -374,9 +372,10 @@ Die Kernfarben aller vier Themes werden automatisch auf einen Kontrast von minde
 
 - `Tab` – zum nächsten bedienbaren Element
 - `Enter` – Eingabe bestätigen
-- `F5` – Liste / Fehlerhilfe aktualisieren
+- `F1` – Hilfe & Fehlerhilfe öffnen
+- `F5` – aktuelle Liste / Fehlermeldungen aktualisieren
 - `Strg+S` – Song sofort speichern
-- `Strg+R` – Fehlerhilfe öffnen
+- `Strg+R` – Hilfe & Fehlerhilfe öffnen
 - `Strg+0` – Anzeige auf 100 %
 - `Escape` – untergeordnetes Fenster schließen
 
@@ -442,6 +441,21 @@ Nur wenn **alle automatischen und sichtbaren Punkte** bestätigt sind, bekommt d
 
 # Technische Prüfung für Entwickler
 
+Für kleine Änderungen zuerst:
+
+```bash
+bash scripts/pruefen.sh --quick
+```
+
+Vor Merge/Release immer vollständig:
+
+```bash
+bash scripts/pruefen.sh --full
+```
+
+Neue Testdateien mit Namen `tests/test_*.py` beziehungsweise `*_gui.py` werden automatisch erkannt.
+
+
 Die vollständige automatische Prüfung lautet:
 
 ```bash
@@ -455,7 +469,7 @@ Sie prüft unter anderem:
 - Songbibliothek und Songeditor,
 - Profile,
 - Todo und Kalender,
-- Fehlerhilfe,
+- Hilfe & Fehlerhilfe,
 - Zoom und Tastaturwege,
 - Farbthemes, Screenreader-Grundwerte und Fokus,
 - Laienführung, Menü-Hierarchie und sichtbare Statushinweise,
