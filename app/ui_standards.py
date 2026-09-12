@@ -259,7 +259,7 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
     QScrollBar:horizontal {{ background:{colors['surface_soft']}; height:{geometry_scaled(10, zoom_percent)}px; margin:0; }}
     QScrollBar::handle:horizontal {{ background:{colors['border']}; min-width:{geometry_scaled(28, zoom_percent)}px; border-radius:{geometry_scaled(5, zoom_percent)}px; }}
     QScrollBar::handle:horizontal:hover {{ background:{colors['accent']}; }}
-    QScrollBar:add-line:horizontal, QScrollBar::sub-line:horizontal {{ width:0; }}
+    QScrollBar:add-line:horizontal, QScrollBar:sub-line:horizontal {{ width:0; }}
     """
 
 
