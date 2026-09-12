@@ -1,17 +1,17 @@
 {
-  "schema_version": 31,
+  "schema_version": 32,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.17.3",
+    "version": "0.17.4",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-12"
   },
   "iteration": {
-    "number": 38,
-    "goal": "Fensterführung, kleine Displays, Fokuskontrast und gespeicherte Fensterzustände der Song-Arbeitswege professionalisieren",
-    "completed": 8,
-    "open_next": 1
+    "number": 39,
+    "goal": "Lokale UI-Sichttests durch einen automatischen, diagnostizierenden Shadow-Gate mit zentralen UI-Verträgen und Testmatrix minimieren",
+    "completed": 7,
+    "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -352,7 +352,14 @@
     "iteration38_restore_sha256": "900e08dbad15d13e005f559715ec2f41c4260f6e53ad1395a3f3c4c243912bd9",
     "iteration38_runtime_release_sha256": "a626f93eade99b5ba4b486b1e9bd60552f17f231ab8c23a4e0adb2b39d39158c",
     "iteration38_technical_artifact_id": 10291505732,
-    "iteration38_final_head_gate": "required_after_evidence_sync"
+    "iteration38_final_head_gate": "required_after_evidence_sync",
+    "iteration39_shadow_mode": true,
+    "iteration39_shadow_blocks_release": false,
+    "iteration39_pr_matrix_cases": 8,
+    "iteration39_release_matrix_cases": 60,
+    "iteration39_external_ci_evidence": true,
+    "iteration39_promotion_policy": "mindestens 3 reproduzierbar saubere Läufe, keine Infrastrukturfehler, keine bestätigten Fehlalarme, 100% Erkennung injizierter Fehler",
+    "iteration39_final_gate": "pending_shadow_calibration"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -1056,6 +1063,26 @@
       "path": "docs/ITERATION38_WINDOW_UX.md",
       "release": false,
       "purpose": "Sichtbefund, Fensterführung, Kompaktmodus, Kontrast und Abnahme Iteration 38"
+    },
+    {
+      "path": "app/ui_quality_contracts.py",
+      "release": true,
+      "purpose": "Qt-unabhängige UI-Verträge, Matrix-, Raster-, Kontrast- und Promotion-Regeln"
+    },
+    {
+      "path": "scripts/ui_shadow_gate.py",
+      "release": false,
+      "purpose": "Nicht blockierender automatischer UI-Matrix-/Fuzz-/Diagnose-Gate für CI"
+    },
+    {
+      "path": "tests/test_ui_quality_contracts.py",
+      "release": false,
+      "purpose": "Meta- und Regressionstests für UI-Verträge und Shadow-Gate-Kernlogik"
+    },
+    {
+      "path": "docs/ITERATION39_UI_QUALITY_SHADOW.md",
+      "release": false,
+      "purpose": "Architektur, Schutzgrenzen und Kalibrierungsplan des UI-Shadow-Gates"
     }
   ]
 }

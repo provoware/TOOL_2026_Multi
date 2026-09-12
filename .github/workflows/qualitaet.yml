@@ -42,6 +42,22 @@ jobs:
           fi
           export WAYLAND_DISPLAY=wayland-ci
           python3 scripts/wayland_smoke.py
+      - name: UI-Qualitätsgate im Shadow-Modus
+        id: ui_shadow
+        continue-on-error: true
+        run: |
+          set -Eeuo pipefail
+          PROFILE="pr"
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then PROFILE="release"; fi
+          python3 scripts/ui_shadow_gate.py --profile "$PROFILE" --output-dir "$RUNNER_TEMP/ui-shadow"
+      - name: UI-Shadow-Evidenz bereitstellen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TOOL_2026_Multi-ui-shadow-${{ github.run_number }}
+          path: ${{ runner.temp }}/ui-shadow/**
+          if-no-files-found: warn
+          retention-days: 30
       - name: Vollprojekt wiederherstellen und prüfen
         run: python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"
       - name: Geprüfte ZIP-Pakete erzeugen
