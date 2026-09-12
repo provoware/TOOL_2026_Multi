@@ -1,0 +1,67 @@
+name: Iteration 38 Patch anwenden
+
+on:
+  push:
+    branches:
+      - iteration-38-window-ux
+    paths:
+      - '.github/workflows/apply-iteration38.yml'
+      - '.iteration38-parts/**'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Projekt holen
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: iteration-38-window-ux
+          fetch-depth: 0
+
+      - name: Transportteile exakt prüfen
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          printf '%s  %s\n' 'bcea71e92060dda11a4dbefb0c7f7d8a04b79538fd9a5376b9733864b63bb8f5' '.iteration38-parts/part1.patch' | sha256sum -c -
+          printf '%s  %s\n' '98c8924f3c732e74c7df09204ab566ff64282e9a1a3342daacd6db009e7404c8' '.iteration38-parts/part2.patch' | sha256sum -c -
+          printf '%s  %s\n' 'ff12503a245041df6cf85a02e860417f2234b343dda9de1d12341ec608fc3295' '.iteration38-parts/part3.patch' | sha256sum -c -
+          printf '%s  %s\n' 'b6783162059b1ac6830f57f10b0f178533db9b73a12301235c638bf75a7814de' '.iteration38-parts/part4.patch' | sha256sum -c -
+          cat .iteration38-parts/part{1,2,3,4}.patch > /tmp/iteration38.patch
+          printf '%s  %s\n' '704bb04be868f052b2870542bfab251c19e7a2b25f6a1d5df575569ad92a7442' '/tmp/iteration38.patch' | sha256sum -c -
+          git apply --check /tmp/iteration38.patch
+
+      - name: Patch atomar anwenden und Metadaten korrigieren
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git apply /tmp/iteration38.patch
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('MANIFEST.json')
+          text = path.read_text(encoding='utf-8')
+          old = '"iteration38_expected_gui_tests": 82'
+          new = '"iteration38_expected_gui_tests": 83'
+          if text.count(old) != 1:
+              raise SystemExit('Guard: erwartete GUI-Testzahl 82 nicht genau einmal gefunden')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+
+      - name: Transportreste entfernen und Ergebnis schreiben
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          rm -rf .iteration38-parts
+          rm -f .github/workflows/apply-iteration38.yml
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo 'Keine Änderungen zum Committen.' >&2
+            exit 1
+          fi
+          git config user.name 'provoware-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'Iteration 38: Fensterführung und Kompaktmodus verbessern'
+          git push origin HEAD:iteration-38-window-ux
