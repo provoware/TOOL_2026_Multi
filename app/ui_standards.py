@@ -287,7 +287,11 @@ def _apply_dashboard_high_zoom(window: QWidget, high_zoom: bool) -> None:
 
     nav_collapsed = bool(getattr(window, "nav_collapsed", False))
     for button in window.findChildren(QPushButton):
-        if button.objectName() == "navButton" and button.property("planned") is True:
+        if button.accessibleName() == "Übersicht":
+            # Das Dashboard ist bereits die Übersicht. Bei 175/200 % gibt der
+            # redundante Eintrag seine Höhe vollständig an die Arbeitswege ab.
+            button.setMaximumHeight(0 if high_zoom else 16777215)
+        elif button.objectName() == "navButton" and button.property("planned") is True:
             button.setMaximumHeight(0 if high_zoom else 16777215)
             button.setVisible(not high_zoom and not nav_collapsed)
         elif button.objectName() == "tileButton" and button.property("planned") is True:
@@ -466,9 +470,10 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         for button in window.findChildren(QPushButton):
             if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
-                if high_zoom:
-                    button.setText("Profile")
-                else:
+                # Im Hochzoom ist dieselbe Bearbeitung über „Vorgaben“ in der
+                # Sidebar erreichbar. Die Profil-Auswahl erhält den Platz.
+                button.setVisible(not high_zoom)
+                if not high_zoom:
                     button.setText("Profile & Werte bearbeiten" if wide else "Profile bearbeiten")
 
         if window.__class__.__name__ == "CalendarWindow":
