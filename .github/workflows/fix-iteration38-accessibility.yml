@@ -1,0 +1,46 @@
+name: Iteration 38 Accessibility-Fix
+
+on:
+  push:
+    branches:
+      - iteration-38-window-ux
+    paths:
+      - '.github/workflows/fix-iteration38-accessibility.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Projekt holen
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: iteration-38-window-ux
+          fetch-depth: 0
+      - name: Accessibility-Bereinigung gezielt korrigieren
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('app/ui_standards.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''def _clean_accessible_text(text: str) -> str:\n    compact = " ".join((text or "").replace("\\n", " ").split())\n    return compact.lstrip("♫▣▤▥?⌕≡◈✎◫▦⚕✓●①②③ ·") or compact\n'''
+          new = '''def _clean_accessible_text(text: str) -> str:\n    compact = " ".join((text or "").replace("&&", "&").replace("\\n", " ").split())\n    return compact.lstrip("♫▣▤▥?⌕≡◈✎◫▦⚕ⓘ✓●①②③ ·") or compact\n'''
+          if text.count(old) != 1:
+              raise SystemExit('Guard: Accessibility-Ausgangscode nicht genau einmal gefunden')
+          path.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+      - name: Einmal-Workflow entfernen und Fix schreiben
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          rm -f .github/workflows/fix-iteration38-accessibility.yml
+          git add -A
+          git diff --cached --check
+          git config user.name 'provoware-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'Iteration 38: Screenreader-Namen für Qt-Ampersand korrigieren'
+          git push origin HEAD:iteration-38-window-ux
