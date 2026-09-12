@@ -36,4 +36,4 @@ Weil der erste Gate bei den zwei GUI-Regressionen stoppte, wurden Wayland-Smoke,
 
 ## Abnahme
 
-Der erneute vollständige CI-/Wayland-/Restore-/ZIP-Gate auf dem korrigierten Iteration-38-Head ist noch ausstehend. Eine reale Sichtprüfung auf Kubuntu 26.04 / Plasma Wayland bleibt zusätzlich erforderlich, besonders bei 1366×768 und 125/150/175/200 %.
+Der korrigierte technische Head `0c77b8143a7bde8e7b93134bb376726b7373c464` wurde in Grundprüfung **#799** vollständig bestätigt: **113 Logik-/Regressionstests**, **83 GUI-Tests**, **48 Release-Dateien**, Headless-Start und nativer Qt-Wayland-Smoke waren grün. Der Vollprojekt-Restore meldete `OK` mit SHA-256 `900e08dbad15d13e005f559715ec2f41c4260f6e53ad1395a3f3c4c243912bd9`; das Runtime-Release hat SHA-256 `a626f93eade99b5ba4b486b1e9bd60552f17f231ab8c23a4e0adb2b39d39158c`. Nach Synchronisierung dieser Evidenz bleibt ein finaler Head-Gate vor dem Merge verpflichtend. Eine reale Sichtprüfung auf Kubuntu 26.04 / Plasma Wayland bleibt zusätzlich erforderlich, besonders bei 1366×768 und 125/150/175/200 %.

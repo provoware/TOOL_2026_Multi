@@ -12,7 +12,7 @@ Stand: 2026-09-12
 - [x] Songeditor: einklappbare optionale Angaben und Kompaktmodus
 - [x] Songbibliothek: einklappbare Filter/Sortierung/Gruppierung
 - [x] portable, validierte Fensterzustände ergänzen
-- [ ] Iteration-38-CI, nativer Wayland-Smoke, Restore und ZIP-Artefakte vollständig grün bestätigen
+- [x] technischer Iteration-38-Gate #799: 113 Logiktests, 83 GUI-Tests, 48 Release-Dateien, nativer Wayland-Smoke, Restore und ZIP-Artefakte vollständig grün
 - [ ] reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme bei 1366×768 und 125/150/175/200 % durchführen
 
 
