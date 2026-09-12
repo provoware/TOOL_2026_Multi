@@ -162,14 +162,46 @@ def validate_evidence(path: Path) -> tuple[bool, tuple[str, ...]]:
     return not problems, tuple(problems)
 
 
-def _run_target(argv: Sequence[str]) -> int:
+def _load_shadow_runtime() -> dict[str, object]:
+    """Lädt den Gate-Code ohne ihn sofort zu starten und gleicht ihn an Produktion an."""
     if not TARGET.is_file():
         raise FileNotFoundError(f"Shadow-Gate-Ziel fehlt: {TARGET}")
+
+    namespace = runpy.run_path(str(TARGET), run_name="provoware_ui_shadow_gate_runtime")
+    original_core = namespace.get("_core_factories")
+    dashboard_type = namespace.get("Dashboard")
+    fake_texts = namespace.get("FakeTexts")
+    fake_logger = namespace.get("FakeLogger")
+    if not callable(original_core) or not callable(dashboard_type) or not callable(fake_texts) or not callable(fake_logger):
+        raise RuntimeError("Shadow-Gate stellt den erwarteten Dashboard-Vertrag nicht bereit.")
+
+    from app.main import configure_dashboard_presentation
+
+    def production_dashboard(root: Path):
+        dashboard = dashboard_type(fake_texts(), fake_logger(), root)
+        return configure_dashboard_presentation(dashboard)
+
+    def production_core_factories(root: Path, zoom: int):
+        factories = tuple(original_core(root, zoom))
+        if len(factories) != 3:
+            raise RuntimeError("Shadow-Gate muss exakt drei Kernfenster-Fabriken bereitstellen.")
+        return (lambda: production_dashboard(root), *factories[1:])
+
+    namespace["_core_factories"] = production_core_factories
+    namespace["_provoware_production_dashboard_factory"] = production_dashboard
+    return namespace
+
+
+def _run_target(argv: Sequence[str]) -> int:
     old_argv = sys.argv[:]
     try:
         sys.argv = [str(TARGET), *argv]
+        namespace = _load_shadow_runtime()
+        target_main = namespace.get("main")
+        if not callable(target_main):
+            raise RuntimeError("Shadow-Gate besitzt keinen aufrufbaren Programmeinstieg.")
         try:
-            runpy.run_path(str(TARGET), run_name="__main__")
+            code = target_main()
         except SystemExit as exc:
             code = exc.code
             if code is None:
@@ -178,7 +210,7 @@ def _run_target(argv: Sequence[str]) -> int:
                 return code
             print(code, file=sys.stderr)
             return 1
-        return 0
+        return int(code or 0)
     finally:
         sys.argv = old_argv
 
