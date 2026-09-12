@@ -27,11 +27,18 @@ jobs:
           from pathlib import Path
           path = Path('scripts/sync_iteration37_metadata.py')
           text = path.read_text(encoding='utf-8')
-          old = 'end = r.index("\\n## Anzeige und Zoom\\n", start)'
-          new = 'end = r.index("\\n## Datensicherheit\\n", start)'
-          if text.count(old) != 1:
-              raise SystemExit(f'README-Endmarker im Syncskript nicht eindeutig: {text.count(old)} Treffer')
-          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          old_marker = 'end = r.index("\\n## Anzeige und Zoom\\n", start)'
+          new_marker = 'end = r.index("\\n## Datensicherheit\\n", start)'
+          if text.count(old_marker) != 1:
+              raise SystemExit(f'README-Endmarker im Syncskript nicht eindeutig: {text.count(old_marker)} Treffer')
+          text = text.replace(old_marker, new_marker, 1)
+
+          old_pair = '''replace_once("ANLEITUNG_LAIEN.md", "- **Fehlerhilfe (Recovery)**", "- **Hilfe & Fehlerhilfe**")\nreplace_once("ANLEITUNG_LAIEN.md", "- **Fehlerhilfe (Recovery)**", "- **Hilfe & Fehlerhilfe**")'''
+          new_pair = '''menu_path = Path("ANLEITUNG_LAIEN.md")\nmenu_text = menu_path.read_text(encoding="utf-8")\nold_menu = "- **Fehlerhilfe (Recovery)**"\nif menu_text.count(old_menu) != 2:\n    raise SystemExit(f"ANLEITUNG: erwartet 2 Hilfe-Menüeinträge, gefunden {menu_text.count(old_menu)}")\nmenu_path.write_text(menu_text.replace(old_menu, "- **Hilfe & Fehlerhilfe**"), encoding="utf-8")'''
+          if text.count(old_pair) != 1:
+              raise SystemExit(f'ANLEITUNG-Ersetzungsblock im Syncskript nicht eindeutig: {text.count(old_pair)} Treffer')
+          path.write_text(text.replace(old_pair, new_pair, 1), encoding='utf-8')
           PY
           python3 scripts/sync_iteration37_metadata.py
 
