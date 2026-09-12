@@ -9,6 +9,7 @@ from PySide6.QtWidgets import QApplication, QCheckBox, QFrame, QLabel, QPushButt
 
 from app.main import configure_dashboard_presentation
 from app.song_editor import SongEditor
+from app.song_library import SongLibrary
 from app.ui import Dashboard
 from app.ui_standards import apply_global_style
 
@@ -98,6 +99,28 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                     self.assertTrue(editor.remove_section_button.toolTip())
                 finally:
                     editor.close()
+                    _settle(2)
+
+    def test_song_library_version_action_shorten_only_at_high_zoom_without_losing_semantics(self):
+        cases = (
+            (150, "Ältere Version ansehen / wiederherstellen"),
+            (175, "Versionen"),
+            (200, "Versionen"),
+        )
+        for zoom, expected_text in cases:
+            with self.subTest(zoom=zoom), tempfile.TemporaryDirectory() as tmp:
+                library = SongLibrary(Path(tmp), zoom, lambda _path: None)
+                try:
+                    library.show()
+                    _settle()
+                    self.assertEqual(library.version_button.text(), expected_text)
+                    self.assertEqual(
+                        library.version_button.accessibleName(),
+                        "Ältere Version ansehen oder wiederherstellen",
+                    )
+                    self.assertTrue(library.version_button.toolTip())
+                finally:
+                    library.close()
                     _settle(2)
 
     def test_dashboard_dense_mode_prioritizes_ready_workflows_on_short_height(self):
