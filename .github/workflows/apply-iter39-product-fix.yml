@@ -1,0 +1,55 @@
+name: Iteration 39 Produktfix anwenden
+
+on:
+  push:
+    branches:
+      - iteration-39-ui-quality-shadow
+    paths:
+      - '.iter39/product-ui-fix.patch'
+      - '.github/workflows/apply-iter39-product-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  anwenden:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Branch holen
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: iteration-39-ui-quality-shadow
+          fetch-depth: 0
+
+      - name: Transportumfang und Patch prüfen
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -f .iter39/product-ui-fix.patch
+          echo 'de1c41328cbe2c2c8443cb78befab89bfb7288ccce73cdd632cb2975bb6b8888  .iter39/product-ui-fix.patch' | sha256sum -c -
+          git apply --check .iter39/product-ui-fix.patch
+
+      - name: Produktfix anwenden und Nettoänderungen prüfen
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git apply .iter39/product-ui-fix.patch
+          rm -f .iter39/product-ui-fix.patch
+          rmdir .iter39 2>/dev/null || true
+          git add app/navigation_ux.py app/song_editor.py app/ui_standards.py tests/test_iteration39_product_ui_fixes_gui.py .iter39/product-ui-fix.patch
+          printf '%s\n' \
+            'app/navigation_ux.py' \
+            'app/song_editor.py' \
+            'app/ui_standards.py' \
+            'tests/test_iteration39_product_ui_fixes_gui.py' | sort > /tmp/expected.txt
+          git diff --cached --name-only | sort | grep -v '^.iter39/product-ui-fix.patch$' > /tmp/actual.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
+
+      - name: Produktfix sichern
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name 'provoware-ci'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'Iteration 39: bestätigte UI-Befunde gezielt korrigieren'
+          git push origin HEAD:iteration-39-ui-quality-shadow
