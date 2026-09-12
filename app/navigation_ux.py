@@ -148,6 +148,7 @@ class NavigationUxController(QObject):
         overview.setText("⌂  Übersicht")
         overview.setAccessibleName("Übersicht")
         overview.show()
+        self.overview_button = overview
         self.ready_buttons = [
             self._set_ready_button(song, "♫  Songtexte"),
             self._set_ready_button(text_editor, "✎  Texteditor"),
@@ -302,6 +303,7 @@ class NavigationUxController(QObject):
         self.menu_title.setVisible(sidebar_open)
         for widget in self.core_entries:
             widget.setVisible(sidebar_open)
+        self.overview_button.setVisible(sidebar_open and not state.high_zoom)
         self.ready_heading.setVisible(sidebar_open and not state.high_zoom)
         self.planned_heading.setVisible(sidebar_open and not restricted)
         self.planned_hint.setVisible(sidebar_open and not restricted)

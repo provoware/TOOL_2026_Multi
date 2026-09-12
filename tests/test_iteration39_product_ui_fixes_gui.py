@@ -129,6 +129,7 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                 dashboard.show()
                 _settle()
                 controller = dashboard._provoware_navigation_ux
+                self.assertFalse(controller.overview_button.isVisibleTo(dashboard))
                 self.assertFalse(controller.ready_heading.isVisibleTo(dashboard))
                 self.assertGreaterEqual(controller.layout.spacing(), 4)
                 visible = [button for button in controller.ready_buttons if button.isVisibleTo(dashboard)]
@@ -138,6 +139,28 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                     first_bottom = first.mapTo(dashboard, first.rect().bottomLeft()).y()
                     second_top = second.mapTo(dashboard, second.rect().topLeft()).y()
                     self.assertLess(first_bottom, second_top)
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
+    def test_high_zoom_profile_row_keeps_selector_without_redundant_edit_button(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
+                dashboard.zoom_percent = 200
+                dashboard.set_zoom(200)
+                apply_global_style(dashboard, 200, "Kontrast")
+                dashboard.resize(1334, 696)
+                dashboard.show()
+                _settle()
+                self.assertTrue(dashboard.db_profile_combo.isVisibleTo(dashboard))
+                profile_buttons = [
+                    button for button in dashboard.findChildren(QPushButton)
+                    if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}
+                ]
+                self.assertEqual(len(profile_buttons), 1)
+                self.assertFalse(profile_buttons[0].isVisibleTo(dashboard))
             finally:
                 dashboard._closing_after_save = True
                 dashboard.close()
