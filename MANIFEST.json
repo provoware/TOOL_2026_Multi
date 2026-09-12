@@ -1,16 +1,16 @@
 {
-  "schema_version": 30,
+  "schema_version": 31,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.17.2",
+    "version": "0.17.3",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-12"
   },
   "iteration": {
-    "number": 37,
-    "goal": "Entwicklungsprüfung automatisieren, Repository-Überreste blockieren und Hilfe & Fehlerhilfe durchsuchbar machen",
-    "completed": 5,
+    "number": 38,
+    "goal": "Fensterführung, kleine Displays, Fokuskontrast und gespeicherte Fensterzustände der Song-Arbeitswege professionalisieren",
+    "completed": 8,
     "open_next": 1
   },
   "runtime": {
@@ -336,7 +336,23 @@
     "iteration37_restore_status": "OK",
     "iteration37_restore_sha256": "000b03420cb2a7cddc4ce80885e27aa9f96bdf62aa43a571116f099c16fbb177",
     "iteration37_runtime_release_sha256": "993786558ce564dfbd5deee90ac9b7f1fe0067a321d5e12a7c0859f97cb6f28a",
-    "iteration37_final_head_gate": "pending_after_version_sync"
+    "iteration37_final_head_gate": "pending_after_version_sync",
+    "iteration38_initial_ci_run": 795,
+    "iteration38_initial_ci_result": "failure",
+    "iteration38_initial_ci_cause": "83 GUI-Tests liefen; zwei Screenreader-Prüfungen blockierten wegen nicht normalisiertem Qt-Text für Hilfe && Fehlerhilfe",
+    "iteration38_technical_ci_run": 799,
+    "iteration38_technical_ci_result": "success",
+    "iteration38_technical_tested_head_sha": "0c77b8143a7bde8e7b93134bb376726b7373c464",
+    "iteration38_logic_tests": 113,
+    "iteration38_gui_tests": 83,
+    "iteration38_release_files": 48,
+    "iteration38_native_wayland_smoke": true,
+    "iteration38_restore_gate": true,
+    "iteration38_restore_status": "OK",
+    "iteration38_restore_sha256": "900e08dbad15d13e005f559715ec2f41c4260f6e53ad1395a3f3c4c243912bd9",
+    "iteration38_runtime_release_sha256": "a626f93eade99b5ba4b486b1e9bd60552f17f231ab8c23a4e0adb2b39d39158c",
+    "iteration38_technical_artifact_id": 10291505732,
+    "iteration38_final_head_gate": "required_after_evidence_sync"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -572,6 +588,20 @@
     "new_song_entry_visible_in_library": true,
     "section_removal_requires_confirmation": true,
     "version_restore_requires_preview_and_confirmation": true
+  },
+  "window_ux": {
+    "library_editor_focus_flow": true,
+    "screen_fit_and_centering": true,
+    "portable_window_state": "daten/ui/fenster.json",
+    "state_restore_requires_visible_screen_intersection": true,
+    "song_editor_compact_optional_metadata": true,
+    "song_library_compact_filters": true,
+    "compact_thresholds": "Breite <1180 px oder Höhe <760 px oder Zoom >=150 %",
+    "input_border": "neutral",
+    "input_focus": "theme accent",
+    "input_error": "red",
+    "input_valid": "green",
+    "help_ampersand_qt_escaped": true
   },
   "kubuntu_acceptance": {
     "launcher": "kubuntu_abnahme.sh",
@@ -818,6 +848,11 @@
       "purpose": "Zentrale responsive UI-, Zoom-, Theme-, Fokus-, Screenreader- und Kontraststandards"
     },
     {
+      "path": "app/window_state.py",
+      "release": true,
+      "purpose": "Portable, bildschirmsichere Fenstergeometrie und Zustandswiederherstellung"
+    },
+    {
       "path": "scripts/pruefen.sh",
       "release": true,
       "purpose": "Laufzeit- und Vollprüfung inklusive aktueller Runtime-/Doku-Vollständigkeit"
@@ -1016,6 +1051,11 @@
       "path": "docs/ITERATION34_CORE_MODULES_DATA_STANDARDS.md",
       "release": false,
       "purpose": "Charakterfibel, Texteditor, Daten-/UI-Standards, Backlog und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION38_WINDOW_UX.md",
+      "release": false,
+      "purpose": "Sichtbefund, Fensterführung, Kompaktmodus, Kontrast und Abnahme Iteration 38"
     }
   ]
 }

@@ -52,7 +52,8 @@ class RecoveryUiGuiTests(unittest.TestCase):
         self.app.processEvents()
 
     def test_recovery_is_single_sidebar_entry_and_not_dashboard_table(self):
-        self.assertEqual(self.dashboard.recovery_nav_button.text().strip(), "ⓘ  Hilfe & Fehlerhilfe")
+        self.assertEqual(self.dashboard.recovery_nav_button.text().strip(), "ⓘ  Hilfe && Fehlerhilfe")
+        self.assertEqual(self.dashboard.recovery_nav_button.accessibleName(), "Hilfe & Fehlerhilfe")
         self.assertEqual(len(self.dashboard.findChildren(QTreeWidget)), 0)
 
     def test_searchable_quick_help_is_available_without_hiding_recovery(self):

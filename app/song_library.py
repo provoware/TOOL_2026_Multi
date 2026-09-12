@@ -7,10 +7,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QSize, Qt
+from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import (
-    QCheckBox, QComboBox, QDialog, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
-    QListWidget, QMessageBox, QPushButton, QTextEdit, QTreeWidget,
+    QCheckBox, QComboBox, QDialog, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
+    QListWidget, QMessageBox, QPushButton, QTextEdit, QToolButton, QTreeWidget,
     QTreeWidgetItem, QVBoxLayout, QWidget,
 )
 
@@ -18,6 +19,7 @@ from app.song_document import (
     SONG_STATUSES, SongDocument, list_songs, list_versions, load_song, restore_version,
 )
 from app.ui_standards import SPACING, apply_global_style
+from app.window_state import ensure_window_visible, restore_window_state, save_window_state
 
 FILTER_ALL = "Alle"
 SORT_OPTIONS = ("Zuletzt bearbeitet", "Titel", "Genre", "Tags", "Status")
@@ -95,11 +97,14 @@ class SongLibrary(QWidget):
         self.zoom_percent = zoom_percent
         self._rows: list[SongRow] = []
         self._path_by_item: dict[int, Path] = {}
+        self._compact_mode: bool | None = None
         self.setWindowTitle("Songbibliothek")
-        self.resize(1180, 720)
-        self.setMinimumSize(920, 580)
         self._build()
         apply_global_style(self, zoom_percent)
+        restore_window_state(
+            self, self.project_root, "song_library",
+            preferred=QSize(1180, 720), minimum=QSize(760, 520),
+        )
         self.refresh()
         self.search_entry.setFocus()
 
@@ -135,9 +140,22 @@ class SongLibrary(QWidget):
         self.search_entry.setPlaceholderText("Titel, Genre, Stimmung, Stil, Stimme oder Tag eingeben …")
         self.search_entry.textChanged.connect(self.apply_view)
         search_row.addWidget(self.search_entry, 1)
+        self.filter_toggle = QToolButton()
+        self.filter_toggle.setCheckable(True)
+        self.filter_toggle.setChecked(True)
+        self.filter_toggle.setToolTip("Filter, Sortierung und Gruppierung ein- oder ausblenden.")
+        self.filter_toggle.toggled.connect(self._toggle_filters)
+        search_row.addWidget(self.filter_toggle)
         outer.addLayout(search_row)
 
+        self.filters_frame = QFrame()
+        self.filters_frame.setObjectName("innerCard")
+        filter_outer = QVBoxLayout(self.filters_frame)
+        filter_outer.setContentsMargins(9, 7, 9, 7)
+        filter_outer.setSpacing(6)
         filters = QGridLayout()
+        filters.setHorizontalSpacing(8)
+        filters.setVerticalSpacing(4)
         self.filter_boxes: dict[str, QComboBox] = {}
         for index, label in enumerate(("Genre", "Stimmung", "Stil", "Stimme", "Tags", "Status")):
             filters.addWidget(QLabel(label), 0, index)
@@ -152,7 +170,7 @@ class SongLibrary(QWidget):
         reset = QPushButton("Suche und Filter zurücksetzen")
         reset.clicked.connect(self.reset_filters)
         filters.addWidget(reset, 2, 4, 1, 2)
-        outer.addLayout(filters)
+        filter_outer.addLayout(filters)
 
         view_row = QHBoxLayout()
         view_row.addWidget(QLabel("Sortieren nach:"))
@@ -166,7 +184,9 @@ class SongLibrary(QWidget):
         self.group_box.currentTextChanged.connect(self.apply_view)
         view_row.addWidget(self.group_box)
         view_row.addStretch(1)
-        outer.addLayout(view_row)
+        filter_outer.addLayout(view_row)
+        outer.addWidget(self.filters_frame)
+        self._toggle_filters(True)
 
         self.table = QTreeWidget()
         self.table.setHeaderLabels((
@@ -190,6 +210,24 @@ class SongLibrary(QWidget):
         self.status_label.setObjectName("muted")
         actions.addWidget(self.status_label)
         outer.addLayout(actions)
+
+    def ensure_on_screen(self) -> None:
+        ensure_window_visible(self, QSize(760, 520))
+
+    def _toggle_filters(self, checked: bool) -> None:
+        self.filters_frame.setVisible(bool(checked))
+        self.filter_toggle.setText("▾ Filter" if checked else "▸ Filter")
+
+    def set_compact_mode(self, compact: bool) -> None:
+        """Gibt auf kleinen/hoch gezoomten Ansichten der Songtabelle Vorrang."""
+        compact = bool(compact)
+        if self._compact_mode == compact:
+            return
+        self._compact_mode = compact
+        self.filter_toggle.blockSignals(True)
+        self.filter_toggle.setChecked(not compact)
+        self.filter_toggle.blockSignals(False)
+        self._toggle_filters(not compact)
 
     @staticmethod
     def _values(rows: list[SongRow], attr: str) -> tuple[str, ...]:
@@ -410,3 +448,7 @@ class SongLibrary(QWidget):
     def set_zoom(self, percent: int) -> None:
         self.zoom_percent = percent
         apply_global_style(self, percent)
+
+    def closeEvent(self, event: QCloseEvent) -> None:
+        save_window_state(self, self.project_root, "song_library")
+        event.accept()

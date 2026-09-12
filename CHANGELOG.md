@@ -1,5 +1,20 @@
 # Änderungsverlauf
 
+## 0.17.3 – Iteration 38: Fensterführung, Kompaktmodus und Fokuskontrast
+
+- Songbibliothek wird während einer Editor-Sitzung kontrolliert verborgen und nach dem letzten Editor wiederhergestellt.
+- gespeicherte Fensterpositionen werden nur bei aktuell sichtbarer Monitorüberschneidung übernommen; sonst sicher neu zentriert.
+- portable Fensterzustände in `daten/ui/fenster.json`, unabhängig von Songdaten.
+- Songeditor blendet optionale Metadaten im Kompaktmodus ein/aus; Songbibliothek bündelt Filter/Sortierung/Gruppierung.
+- Eingabefelder: neutraler Normalrand, Theme-Akzent bei Fokus, zentrale Rot-/Grün-Zustände sowie kontrastreichere Platzhalter.
+- sichtbares `&` in „Hilfe & Fehlerhilfe“ Qt-konform repariert.
+- neue GUI-Regressionen für 1366×768, Zoom/Kompaktmodus, Fokusfluss und Fensterzustand.
+- erster PR-Gate #795 blockierte korrekt wegen zwei Screenreader-Assertions; die zentrale Accessibility-Normalisierung wurde ursächlich korrigiert.
+- technischer Gate #799 vollständig grün: 113 Logik-/Regressionstests, 83 GUI-Tests, 48 Release-Dateien, nativer Qt-Wayland-Start und Restore `OK`.
+- Restore-SHA-256: `900e08dbad15d13e005f559715ec2f41c4260f6e53ad1395a3f3c4c243912bd9`; Runtime-Release-SHA-256: `a626f93eade99b5ba4b486b1e9bd60552f17f231ab8c23a4e0adb2b39d39158c`.
+- finaler Head-Gate nach Synchronisierung dieser Evidenz bleibt vor dem Merge verpflichtend.
+
+
 ## 0.17.2 – 2026-09-12 – Wartbarkeit, Entwicklungseffizienz und Hilfe
 
 ### Neu

@@ -25,7 +25,7 @@ PLANNED_COUNT = sum(len(items) for _key, items in PLANNED_GROUPS)
 
 def _text(widget: QWidget) -> str:
     value = widget.text() if hasattr(widget, "text") else ""
-    return " ".join(str(value).split())
+    return " ".join(str(value).replace("&&", "&").split())
 
 
 def _find_button(widgets: Iterable[QWidget], needle: str) -> QPushButton:
@@ -112,7 +112,7 @@ class NavigationUxController(QObject):
     def _set_ready_button(button: QPushButton, text: str) -> QPushButton:
         button.setText(text)
         button.setProperty("ready", True)
-        button.setAccessibleName(" ".join(text.split()[1:]) if "  " in text else text)
+        button.setAccessibleName((" ".join(text.split()[1:]) if "  " in text else text).replace("&&", "&"))
         button.setStyleSheet("font-weight: 600;")
         button.show()
         return button
@@ -157,7 +157,7 @@ class NavigationUxController(QObject):
             ),
             self._set_ready_button(todo, "✓  Todo-Liste"),
             self._set_ready_button(calendar, "▦  Kalender"),
-            self._set_ready_button(recovery, "ⓘ  Hilfe & Fehlerhilfe"),
+            self._set_ready_button(recovery, "ⓘ  Hilfe && Fehlerhilfe"),
         ]
 
         # Der frühere Sammelpunkt "Alle Bereiche" führte ebenfalls nur zu einer
@@ -280,7 +280,7 @@ class NavigationUxController(QObject):
             "▦  Vorgaben" if high_zoom else f"▦  {self._t('navigation.ready.profile', 'Genres & Vorgaben')}",
             "✓  Todo-Liste",
             "▦  Kalender",
-            "ⓘ  Hilfe" if high_zoom else "ⓘ  Hilfe & Fehlerhilfe",
+            "ⓘ  Hilfe" if high_zoom else "ⓘ  Hilfe && Fehlerhilfe",
         )
         for button, text in zip(self.ready_buttons, labels, strict=True):
             button.setText(text)
