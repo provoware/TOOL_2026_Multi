@@ -19,9 +19,10 @@
 - keine bestehenden Nutzerdaten gelöscht oder überschrieben,
 - neue Charakter-/Textdaten werden atomar gespeichert,
 - autonomes Updatemodul bewusst nur als Sicherheits-Backlog aufgenommen; kein blindes Selbstüberschreiben implementiert,
-- bereinigter Feature-Head `8b5525541cff430f9e820a02adf44f469acc43a7` in Grundprüfung **#685** vollständig grün: **104 Logiktests**, **74 GUI-Tests**, **46 Release-Dateien**, Headless-Start, nativer Qt-Wayland-Smoke und Restore `OK`,
-- Restore-SHA-256 `1f1f46f35d5e733385c77e39c45366a812ce6b92f5a0786faaf948dbfddb4d41`,
-- finale v0.17.0-Synchronisierung wird vor Merge erneut vollständig geprüft.
+- synchronisierter PR-Head `9d9b608b55a72311d65d627dbe274ab400a2c79d` in Grundprüfung **#696** vollständig grün: **104 Logiktests**, **74 GUI-Tests**, **46 Release-Dateien**, Headless-Start, nativer Qt-Wayland-Smoke und Restore `OK`,
+- PR #45 SHA-geschützt gemergt; Produkt-Main `f3fafe411f48a67e8eff83c07f7caf9e2ea753c7`,
+- gemergter Main in Grundprüfung **#697** erneut vollständig grün; Restore-SHA-256 `25a9ee8d06ae39a48d712ebf5c98c3451fe92b88abb4937705d7c17a18f1ab04`,
+- Version **0.17.0** technisch freigegeben; reale sichtbare Kubuntu-/Plasma-Wayland-Abnahme bleibt separat.
 
 ## 0.16.1 – 2026-09-10 – Codequalitäts-Nachhärtung (Iterationen 30–32)
 
