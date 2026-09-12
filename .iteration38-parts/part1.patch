@@ -1,0 +1,179 @@
+diff --git a/ANLEITUNG_LAIEN.md b/ANLEITUNG_LAIEN.md
+index 85f7dce..fe68bbd 100644
+--- a/ANLEITUNG_LAIEN.md
++++ b/ANLEITUNG_LAIEN.md
+@@ -123,7 +123,7 @@ Oben kann gesucht werden nach:
+ - Stimme
+ - Tags
+ 
+-Zusätzlich können Filter kombiniert werden.
++Zusätzlich können Filter kombiniert werden. Auf kleineren Fenstern oder bei höherem Zoom werden **Filter, Sortierung und Gruppierung** platzsparend eingeklappt. Mit **Filter** kannst du sie jederzeit wieder öffnen.
+ 
+ **Wichtig:** Suchen, Filtern, Sortieren und Gruppieren verändern keine Songdatei.
+ 
+@@ -154,6 +154,10 @@ Die Referenz sieht zum Beispiel so aus: `«Charakter: Nora (Erzählerin)»`. Die
+ 
+ Rechts steht die **Gesamtvorschau**.
+ 
++**Weitere Angaben:** Stil, Stimme, Besonderheiten und Tags sind optional. Auf kleinen Fenstern oder ab 150 % Zoom klappt Provoware diesen Bereich automatisch ein, damit mehr Platz zum Schreiben bleibt. Du kannst ihn jederzeit mit **Weitere Angaben** wieder öffnen.
++
++Wenn du einen Song aus der Bibliothek öffnest, wird die Bibliothek bewusst ausgeblendet. Nach dem Schließen des letzten Songeditors erscheint sie automatisch wieder. Fenstergröße, Position und „maximiert“ werden getrennt von deinen Songdaten gespeichert; ungültige Positionen auf einem nicht mehr vorhandenen Monitor werden nicht blind wiederhergestellt.
++
+ ## Speichern
+ 
+ Änderungen werden automatisch gespeichert:
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 3388826..e2505fc 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -1,5 +1,17 @@
+ # Änderungsverlauf
+ 
++## 0.17.3 – Iteration 38: Fensterführung, Kompaktmodus und Fokuskontrast
++
++- Songbibliothek wird während einer Editor-Sitzung kontrolliert verborgen und nach dem letzten Editor wiederhergestellt.
++- gespeicherte Fensterpositionen werden nur bei aktuell sichtbarer Monitorüberschneidung übernommen; sonst sicher neu zentriert.
++- portable Fensterzustände in `daten/ui/fenster.json`, unabhängig von Songdaten.
++- Songeditor blendet optionale Metadaten im Kompaktmodus ein/aus; Songbibliothek bündelt Filter/Sortierung/Gruppierung.
++- Eingabefelder: neutraler Normalrand, Theme-Akzent bei Fokus, zentrale Rot-/Grün-Zustände sowie kontrastreichere Platzhalter.
++- sichtbares `&` in „Hilfe & Fehlerhilfe“ Qt-konform repariert.
++- neue GUI-Regressionen für 1366×768, Zoom/Kompaktmodus, Fokusfluss und Fensterzustand.
++- CI-/Wayland-/Restore-/ZIP-Abnahme: ausstehend bis zum Iteration-38-Branch-Gate.
++
++
+ ## 0.17.2 – 2026-09-12 – Wartbarkeit, Entwicklungseffizienz und Hilfe
+ 
+ ### Neu
+diff --git a/MANIFEST.json b/MANIFEST.json
+index fb485c1..ce0705b 100644
+--- a/MANIFEST.json
++++ b/MANIFEST.json
+@@ -1,16 +1,16 @@
+ {
+-  "schema_version": 30,
++  "schema_version": 31,
+   "tool": {
+     "name": "TOOL_2026_Multi",
+     "repository": "provoware/TOOL_2026_Multi",
+-    "version": "0.17.2",
++    "version": "0.17.3",
+     "status": "AUSFUEHRBARER_KERN",
+     "date": "2026-09-12"
+   },
+   "iteration": {
+-    "number": 37,
+-    "goal": "Entwicklungsprüfung automatisieren, Repository-Überreste blockieren und Hilfe & Fehlerhilfe durchsuchbar machen",
+-    "completed": 5,
++    "number": 38,
++    "goal": "Fensterführung, kleine Displays, Fokuskontrast und gespeicherte Fensterzustände der Song-Arbeitswege professionalisieren",
++    "completed": 8,
+     "open_next": 1
+   },
+   "runtime": {
+@@ -336,7 +336,11 @@
+     "iteration37_restore_status": "OK",
+     "iteration37_restore_sha256": "000b03420cb2a7cddc4ce80885e27aa9f96bdf62aa43a571116f099c16fbb177",
+     "iteration37_runtime_release_sha256": "993786558ce564dfbd5deee90ac9b7f1fe0067a321d5e12a7c0859f97cb6f28a",
+-    "iteration37_final_head_gate": "pending_after_version_sync"
++    "iteration37_final_head_gate": "pending_after_version_sync",
++    "iteration38_initial_ci_result": "pending",
++    "iteration38_expected_logic_tests": 113,
++    "iteration38_expected_gui_tests": 82,
++    "iteration38_expected_release_files": 48
+   },
+   "ci": {
+     "workflow": ".github/workflows/qualitaet.yml",
+@@ -573,6 +577,20 @@
+     "section_removal_requires_confirmation": true,
+     "version_restore_requires_preview_and_confirmation": true
+   },
++  "window_ux": {
++    "library_editor_focus_flow": true,
++    "screen_fit_and_centering": true,
++    "portable_window_state": "daten/ui/fenster.json",
++    "state_restore_requires_visible_screen_intersection": true,
++    "song_editor_compact_optional_metadata": true,
++    "song_library_compact_filters": true,
++    "compact_thresholds": "Breite <1180 px oder Höhe <760 px oder Zoom >=150 %",
++    "input_border": "neutral",
++    "input_focus": "theme accent",
++    "input_error": "red",
++    "input_valid": "green",
++    "help_ampersand_qt_escaped": true
++  },
+   "kubuntu_acceptance": {
+     "launcher": "kubuntu_abnahme.sh",
+     "target": "Kubuntu 26.04 LTS / KDE Plasma Wayland",
+@@ -817,6 +835,11 @@
+       "release": true,
+       "purpose": "Zentrale responsive UI-, Zoom-, Theme-, Fokus-, Screenreader- und Kontraststandards"
+     },
++    {
++      "path": "app/window_state.py",
++      "release": true,
++      "purpose": "Portable, bildschirmsichere Fenstergeometrie und Zustandswiederherstellung"
++    },
+     {
+       "path": "scripts/pruefen.sh",
+       "release": true,
+@@ -1016,6 +1039,11 @@
+       "path": "docs/ITERATION34_CORE_MODULES_DATA_STANDARDS.md",
+       "release": false,
+       "purpose": "Charakterfibel, Texteditor, Daten-/UI-Standards, Backlog und CI-/Restore-Evidence"
++    },
++    {
++      "path": "docs/ITERATION38_WINDOW_UX.md",
++      "release": false,
++      "purpose": "Sichtbefund, Fensterführung, Kompaktmodus, Kontrast und Abnahme Iteration 38"
+     }
+   ]
+ }
+diff --git a/README.md b/README.md
+index ef33d2f..6585e4b 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,6 @@
+ # Provoware-Datenbank-Dashboard 2026
+ 
+-> **Version:** 0.17.2 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit durchsuchbarer Hilfe, automatischer Testentdeckung und gehärteter Repository-Hygiene; Voll-/Restore-, native Wayland- und ZIP-Artefakt-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
++> **Version:** 0.17.3 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit professioneller Song-Fensterführung, laptopgeeignetem Kompaktmodus, kontraststarkem Eingabefokus und portablen Fensterzuständen; technische Iteration-38-Abnahme läuft
+ 
+ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
+ 
+@@ -68,6 +68,17 @@ Der Theme-Wechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswa
+ 
+ Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast gegen den jeweiligen Hintergrund geprüft.
+ 
++## Neu in 0.17.3 – Fensterführung und kleine Displays
++
++- **Klare Song-Arbeitsfolge:** Beim Öffnen eines Songs aus der Bibliothek wird die Bibliothek vorübergehend ausgeblendet; nach dem Schließen des letzten Songeditors kehrt sie kontrolliert zurück.
++- **Bildschirmsicher:** Songeditor und Songbibliothek werden auf die aktuelle Arbeitsfläche begrenzt und bei ungültiger alter Position neu zentriert.
++- **Portable Fensterzustände:** Größe, Position und Maximiert-Status liegen getrennt von Songdaten in `daten/ui/fenster.json`.
++- **Kompakter Songeditor:** Stil, Stimme, Besonderheiten und Tags liegen unter **Weitere Angaben** und werden bei knapper Fläche oder ab 150 % Zoom automatisch eingeklappt.
++- **Kompakte Songbibliothek:** Filter, Sortierung und Gruppierung können gemeinsam eingeklappt werden; auf kleinen Ansichten bekommt die Songtabelle Vorrang.
++- **Eingabefokus:** normal = neutraler Rand, Fokus = Theme-Akzent, Fehler = Rot, gültiger Zustand = Grün. Platzhalter wurden kontrastreicher gemacht.
++- **Qt-Ampersand:** `Hilfe & Fehlerhilfe` wird sichtbar korrekt gezeichnet; der Screenreader-Name bleibt unverändert.
++- **Sicherheitsgrenze:** keine Song-, Profil-, Todo- oder Kalenderformate wurden verändert.
++
+ ## Neu in 0.17.2 – Wartbarkeit, Entwicklungseffizienz und Hilfe
+ 
+ - **Hilfe & Fehlerhilfe:** F1 öffnet jetzt ein eigenes Hilfezentrum mit durchsuchbaren Alltagsthemen und einem getrennten Reiter für Fehlermeldungen.
+diff --git a/TODO.md b/TODO.md
+index 3ad0597..1f51531 100644
+--- a/TODO.md
++++ b/TODO.md
+@@ -2,6 +2,20 @@
+ 
+ Stand: 2026-09-12
+ 
++## Iteration 38 – Fensterführung und kleine Displays
++
++- [x] Bibliothek→Editor→Bibliothek ohne gleichzeitigen Fensterstapel
++- [x] Bildschirmbegrenzung und sichere Zentrierung für Songeditor/Songbibliothek
++- [x] neutraler Eingaberand, Akzent nur im Fokus, Rot/Grün als Zustände
++- [x] Platzhalterkontrast erhöhen
++- [x] sichtbares `&` in Hilfe & Fehlerhilfe reparieren
++- [x] Songeditor: einklappbare optionale Angaben und Kompaktmodus
++- [x] Songbibliothek: einklappbare Filter/Sortierung/Gruppierung
++- [x] portable, validierte Fensterzustände ergänzen
++- [ ] Iteration-38-CI, nativer Wayland-Smoke, Restore und ZIP-Artefakte vollständig grün bestätigen
