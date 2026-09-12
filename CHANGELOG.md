@@ -1,5 +1,24 @@
 # Änderungsverlauf
 
+## 0.17.1 – 2026-09-12 – Charakterzugriff in Schreibmodulen und vollständige CI-ZIPs
+
+### Neu
+- zentrale UI-unabhängige Charakterauswahl für Schreibmodule mit stabiler ID, einheitlicher Beschriftung und wiederverwendbarer Referenz,
+- direkter Charakterfibel-Zugriff im Songtexteditor; ausgewählte Figuren werden an der aktuellen Schreibposition eingesetzt,
+- erfolgreicher CI-Lauf erzeugt nach Grundprüfung, nativem Qt-Wayland-Smoke und Restore zusätzlich ein vollständiges Projekt-ZIP sowie SHA-256 und lädt die geprüften Pakete als Artefakt hoch.
+
+### Fehlerbehebung / Schutz
+- der erste Iteration-35-Prüflauf **#716** blockierte korrekt: der zunächst verwendete Marker `[Charakter: …]` kollidierte mit der vorhandenen Songbereichssyntax `[Strophe]`, `[Refrain]` usw.,
+- der gemeinsame Marker wurde deshalb auf die klar lesbare und songformat-sichere Form `«Charakter: Name (Rolle)»` geändert,
+- Song- und Textdatenformate bleiben unverändert; keine Migration und keine neue Laufzeitabhängigkeit,
+- keine bestehenden Nutzerdaten gelöscht, konvertiert oder überschrieben.
+
+### Technische Abnahme
+- korrigierter Head `907e65df46ba31d2d5e7df03d137baf1448742b8` in Grundprüfung **#722** vollständig grün,
+- **106 Logik-/Regressionstests**, **76 PySide6-GUI-Tests**, **46 Release-Betriebsdateien**, Headless-Start und nativer Qt-Wayland-Smoke erfolgreich,
+- Vollprojekt-Restore `OK`, SHA-256 `2b1dc4413771643c7a83a9e7b991ed56062afd6da259150d64c5d77ea62bca3a`,
+- CI-Artefakt mit Runtime-Release-ZIP und vollständigem Projekt-ZIP samt Prüfsummen erfolgreich erzeugt.
+
 ## 0.17.0 – 2026-09-12 – Charakterfibel, Texteditor und gemeinsame Daten-/UI-Standards
 
 ### Neu

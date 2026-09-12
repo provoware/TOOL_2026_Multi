@@ -1,16 +1,16 @@
 {
-  "schema_version": 27,
+  "schema_version": 28,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.17.0",
+    "version": "0.17.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-12"
   },
   "iteration": {
-    "number": 34,
-    "goal": "Charakterfibel und Texteditor als nutzbare Module integrieren sowie Daten-, UI-, Import- und Startstandards vereinheitlichen",
-    "completed": 8,
+    "number": 35,
+    "goal": "Charakterzugriff in Schreibmodulen standardisieren und geprüfte Vollprojekt-ZIPs direkt aus CI bereitstellen",
+    "completed": 4,
     "open_next": 1
   },
   "runtime": {
@@ -44,7 +44,7 @@
     "bounded": true,
     "qt_platform_for_ci": "offscreen",
     "native_wayland_smoke_command": "QT_QPA_PLATFORM=wayland python3 scripts/wayland_smoke.py",
-    "targeted_tests": "python3 -m unittest tests.test_presentation_policy tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_iteration34_core tests.test_kubuntu_acceptance tests.test_wayland_smoke; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui tests.test_iteration34_gui",
+    "targeted_tests": "python3 -m unittest tests.test_presentation_policy tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_iteration34_core tests.test_iteration35_writing_context tests.test_kubuntu_acceptance tests.test_wayland_smoke; QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui tests.test_iteration34_gui tests.test_iteration35_writing_context_gui",
     "repo_hygiene_test": "python3 -m unittest tests.test_repo_hygiene",
     "layman_ux_test": "QT_QPA_PLATFORM=offscreen python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui",
     "release_runtime_module_completeness_test": "python3 -m unittest tests.test_release_builder.ReleaseBuilderTests.test_all_runtime_app_modules_are_release_listed",
@@ -287,7 +287,22 @@
     "iteration34_main_restore_gate": true,
     "iteration34_main_restore_status": "OK",
     "iteration34_main_restore_sha256": "25a9ee8d06ae39a48d712ebf5c98c3451fe92b88abb4937705d7c17a18f1ab04",
-    "iteration34_final_head_gate": "success"
+    "iteration34_final_head_gate": "success",
+    "iteration35_initial_ci_run": 716,
+    "iteration35_initial_ci_result": "failure",
+    "iteration35_initial_ci_cause": "Charaktermarker in eckigen Klammern kollidierte mit der Songbereichssyntax und wurde beim erneuten Laden als Bereich statt als Text interpretiert",
+    "iteration35_technical_ci_run": 722,
+    "iteration35_technical_ci_result": "success",
+    "iteration35_technical_logic_tests": 106,
+    "iteration35_technical_gui_tests": 76,
+    "iteration35_technical_release_files": 46,
+    "iteration35_technical_native_wayland_smoke": true,
+    "iteration35_technical_restore_gate": true,
+    "iteration35_technical_restore_status": "OK",
+    "iteration35_technical_restore_sha256": "2b1dc4413771643c7a83a9e7b991ed56062afd6da259150d64c5d77ea62bca3a",
+    "iteration35_technical_tested_head_sha": "907e65df46ba31d2d5e7df03d137baf1448742b8",
+    "iteration35_ci_full_project_artifact": true,
+    "iteration35_release_version": "0.17.1"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",

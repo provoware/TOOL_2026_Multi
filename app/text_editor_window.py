@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QSplitter, QTextEdit, QVBoxLayout, QWidget,
 )
 
-from app.character_store import list_characters
+from app.character_store import character_marker, character_options
 from app.text_editor_store import TextDocument, list_text_documents, load_text_document, save_text_document
 from app.ui_standards import SPACING, apply_global_style
 
@@ -149,13 +149,11 @@ class TextEditorWindow(QWidget):
         self.character_combo.clear()
         self.character_combo.addItem("Charakter auswählen …", "")
         try:
-            characters = list_characters(self.project_root)
+            options = character_options(self.project_root)
         except Exception:
-            characters = []
-        for character in characters:
-            role = str(character.get("role") or "").strip()
-            label = f"{character['name']} — {role}" if role else str(character["name"])
-            self.character_combo.addItem(label, str(character["id"]))
+            options = []
+        for option in options:
+            self.character_combo.addItem(option.label, option.character_id)
         if selected:
             index = self.character_combo.findData(selected)
             if index >= 0:
@@ -220,13 +218,18 @@ class TextEditorWindow(QWidget):
         if not character_id:
             QMessageBox.information(self, "Kein Charakter ausgewählt", "Bitte zuerst einen Charakter aus der Charakterfibel auswählen.")
             return
-        visible = self.character_combo.currentText().split(" — ", 1)[0]
+        try:
+            marker = character_marker(self.project_root, character_id)
+        except ValueError as error:
+            self.refresh_characters()
+            QMessageBox.information(self, "Charakter nicht mehr verfügbar", str(error))
+            return
         if character_id not in self.document.character_ids:
             self.document.character_ids.append(character_id)
         cursor = self.text_edit.textCursor()
-        cursor.insertText(f"[Charakter: {visible}]")
+        cursor.insertText(marker)
         self.text_edit.setTextCursor(cursor)
-        self.status_label.setText(f"Charakterreferenz „{visible}“ eingefügt.")
+        self.status_label.setText(f"Charakterreferenz „{marker}“ eingefügt.")
 
     def save(self) -> Path | None:
         title = self.title_entry.text().strip()
