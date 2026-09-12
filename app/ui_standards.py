@@ -372,7 +372,7 @@ def _apply_responsive_layout(window: QWidget) -> None:
         wide = width >= WIDE_MIN_WIDTH_PX
         high_zoom = zoom >= HIGH_ZOOM_MIN_PERCENT
         module_compact = width < 1180 or height < 760 or zoom >= 150
-        dashboard_dense = window.__class__.__name__ == "Dashboard" and (height < 820 or zoom >= 125)
+        dashboard_dense = window.__class__.__name__ == "Dashboard" and (height < 760 or high_zoom)
         width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
         gap = 6 if compact else (10 if wide else 8)
