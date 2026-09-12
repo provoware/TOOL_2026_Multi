@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QVBoxLayout, QWidget,
 )
 
-from app.profile_store import CATEGORIES, add_profile, add_value, load_profiles, remove_value
+from app.profile_store import CATEGORIES, add_profile, add_values, load_profiles, remove_value
 from app.ui_standards import apply_global_style
 
 
@@ -77,7 +77,8 @@ class ProfileEditor(QDialog):
 
         value_row = QHBoxLayout()
         self.value_entry = QLineEdit()
-        self.value_entry.setPlaceholderText("Neuen Wert eingeben …")
+        self.value_entry.setPlaceholderText("Einen oder mehrere Werte eingeben · mit Komma trennen …")
+        self.value_entry.setToolTip("Beispiel: düster, treibend, melodisch. Jeder Begriff wird einzeln gespeichert.")
         self.value_entry.returnPressed.connect(self.create_value)
         value_row.addWidget(self.value_entry, 1)
         add_button = QPushButton("Wert hinzufügen")
@@ -157,13 +158,16 @@ class ProfileEditor(QDialog):
         profile = self.profile_combo.currentText()
         category = self.category_combo.currentText()
         try:
-            value = add_value(self.project_root, profile, category, self.value_entry.text())
+            values = add_values(self.project_root, profile, category, self.value_entry.text())
         except Exception as error:
             QMessageBox.warning(self, "Wert nicht gespeichert", f"Es wurde kein Wert hinzugefügt.\n\nGrund: {error}")
             return
         self.value_entry.clear()
         self._changed()
-        self.status_label.setText(f"„{value}“ gespeichert.")
+        if values:
+            self.status_label.setText(f"{len(values)} Wert(e) einzeln gespeichert: {', '.join(values)}")
+        else:
+            self.status_label.setText("Alle eingegebenen Werte waren bereits vorhanden · keine Dubletten angelegt.")
         self.value_entry.setFocus()
 
     def delete_selected_value(self) -> None:

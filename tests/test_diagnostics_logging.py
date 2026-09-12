@@ -164,13 +164,14 @@ class DiagnosticsLoggingTests(unittest.TestCase):
         fake_standards = types.SimpleNamespace(configure_application=lambda *_args: None)
         fake_laptop = types.SimpleNamespace(install_laptop_layout=lambda *_args: None)
         fake_navigation = types.SimpleNamespace(install_navigation_ux=lambda *_args: None)
+        fake_startup = types.SimpleNamespace(ensure_runtime_folders_gui=lambda *_args: True)
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             (root / "texte").mkdir()
             (root / "MANIFEST.json").write_text(json.dumps({"tool":{"version":"0.10.0"}}), encoding="utf-8")
             (root / "texte" / "registry.json").write_text(json.dumps({"texts":{}}), encoding="utf-8")
             with patch.object(main_module, "ROOT", root), patch.object(main_module, "EventLogger", FakeLogger), \
-                 patch.dict(sys.modules, {"PySide6.QtWidgets": fake_widgets, "app.ui": fake_ui, "app.ui_standards": fake_standards, "app.laptop_layout": fake_laptop, "app.navigation_ux": fake_navigation}):
+                 patch.dict(sys.modules, {"PySide6.QtWidgets": fake_widgets, "app.ui": fake_ui, "app.ui_standards": fake_standards, "app.laptop_layout": fake_laptop, "app.navigation_ux": fake_navigation, "app.startup_validation": fake_startup}):
                 self.assertEqual(main_module.main(), 0)
         self.assertEqual(events[-1]["area"], "ENDE")
         self.assertIn("kontrolliert beendet", events[-1]["summary"])

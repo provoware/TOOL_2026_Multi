@@ -123,6 +123,46 @@ def add_value(root: Path, profile: str, category: str, value: str) -> str:
     return clean_value
 
 
+def split_input_values(value: str) -> list[str]:
+    """Zerlegt eine Komma-Eingabe in bereinigte, innerhalb der Eingabe eindeutige Werte."""
+    result: list[str] = []
+    seen: set[str] = set()
+    for raw in str(value).split(","):
+        if not raw.strip():
+            continue
+        cleaned = _normalize_value(raw)
+        key = cleaned.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(cleaned)
+    if not result:
+        raise ValueError("Bitte mindestens einen Wert eingeben.")
+    return result
+
+
+def add_values(root: Path, profile: str, category: str, value_text: str) -> list[str]:
+    """Speichert eine Komma-Liste als einzelne DB-Einträge in genau einem atomaren Schreibvorgang."""
+    if category not in CATEGORIES:
+        raise ValueError("Unbekannte Kategorie.")
+    candidates = split_input_values(value_text)
+    profiles = load_profiles(root)
+    if profile not in profiles:
+        raise ValueError("Profil wurde nicht gefunden.")
+    existing = {value.casefold() for value in profiles[profile][category]}
+    added: list[str] = []
+    for candidate in candidates:
+        key = candidate.casefold()
+        if key in existing:
+            continue
+        profiles[profile][category].append(candidate)
+        existing.add(key)
+        added.append(candidate)
+    if added:
+        save_profiles(root, profiles)
+    return added
+
+
 def remove_value(root: Path, profile: str, category: str, value: str) -> None:
     if category not in CATEGORIES:
         raise ValueError("Unbekannte Kategorie.")

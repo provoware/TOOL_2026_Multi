@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 
 from app.calendar_reminders import CalendarReminderController
 from app.calendar_window import CalendarWindow
+from app.character_window import CharacterWindow
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
 from app.profile_store import CATEGORIES, load_profiles
@@ -27,6 +28,7 @@ from app.song_editor import SongEditor
 from app.song_library import SongLibrary
 from app.texts import TextRegistry
 from app.todo_window import TodoWindow
+from app.text_editor_window import TextEditorWindow
 from app.ui_standards import COLORS, SPACING, apply_global_style
 
 
@@ -120,6 +122,8 @@ class Dashboard(QWidget):
         self._profile_editor: ProfileEditor | None = None
         self._todo_window: TodoWindow | None = None
         self._calendar_window: CalendarWindow | None = None
+        self._character_window: CharacterWindow | None = None
+        self._text_editor_window: TextEditorWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -216,8 +220,8 @@ class Dashboard(QWidget):
         strip.setSpacing(SPACING["xs"])
         tiles = (
             ("♫\nSongtexte", self.open_song_library, False, "Songtexte"),
-            ("▣\nHörspiele\nIn Planung", lambda: self._planned("Hörspiele"), True, "Hörspiele"),
-            ("▤\nBlogartikel\nIn Planung", lambda: self._planned("Blogartikel"), True, "Blogartikel"),
+            ("♙\nCharakterfibel", self.open_character_fibel, False, "Charakterfibel"),
+            ("✎\nTexteditor", self.open_text_editor, False, "Texteditor"),
             ("▥\nGenres", lambda: self.open_profile_editor("Genres"), False, "Genres"),
             ("?\nPrompts\nIn Planung", lambda: self._planned("Prompts"), True, "Prompts"),
             ("⌕\nDateisuche\nIn Planung", lambda: self._planned("Dateisuche"), True, "Dateisuche"),
@@ -259,6 +263,8 @@ class Dashboard(QWidget):
         self._add_nav(layout, "◈  Alle Bereiche · geplant", lambda: self._planned("Alle Bereiche"), planned=True)
         self._add_heading(layout, "Schreiben")
         self._add_nav(layout, "  ♫  Songtexte", self.open_song_library)
+        self._add_nav(layout, "  ✎  Texteditor", self.open_text_editor)
+        self._add_nav(layout, "  ♙  Charakterfibel", self.open_character_fibel)
         self._add_nav(layout, "  ▣  Hörspiele · geplant", lambda: self._planned("Hörspiele"), planned=True)
         self._add_nav(layout, "  ▤  Blogartikel · geplant", lambda: self._planned("Blogartikel"), planned=True)
         self._add_heading(layout, "Daten & Vorgaben")
@@ -535,6 +541,8 @@ class Dashboard(QWidget):
             (self._profile_editor, False),
             (self._todo_window, True),
             (self._calendar_window, True),
+            (self._character_window, False),
+            (self._text_editor_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -685,6 +693,19 @@ class Dashboard(QWidget):
                 on_changed=self.refresh_db_profiles, parent=self,
             ),
             prepare_visible=prepare_visible,
+        )
+
+    def open_character_fibel(self) -> None:
+        self._character_window = _open_managed_window(
+            self._character_window,
+            lambda: CharacterWindow(self.project_root, self.zoom_percent, parent=self),
+        )
+
+    def open_text_editor(self) -> None:
+        self._text_editor_window = _open_managed_window(
+            self._text_editor_window,
+            lambda: TextEditorWindow(self.project_root, self.zoom_percent, parent=self),
+            refresh_after_show=True,
         )
 
     def open_todo(self) -> None:

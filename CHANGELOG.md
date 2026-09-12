@@ -1,5 +1,28 @@
 # Änderungsverlauf
 
+## 0.17.0 – 2026-09-12 – Charakterfibel, Texteditor und gemeinsame Daten-/UI-Standards
+
+### Neu
+- Charakterfibel als eigenständiges Modul mit atomarem Datenbestand, stabilen Charakter-IDs, Suche/Bearbeitung und wiederverwendbaren Charakterreferenzen,
+- universeller Texteditor mit sicherem Titel/Dateinamen, Haupttext, Abschlussnotizen, Versionierung, Autosave und Charakterbezug,
+- frei benennbare, validierte Songtextbereiche zusätzlich zu den Standardbereichen,
+- exakte JSON-Songtext-Importvorlage in der Fehlerhilfe und als `vorlagen/songtext_import_vorlage.json`,
+- Startordner-Validierung mit ausdrücklicher Zustimmung vor dem Erstellen und anschließender Schreibbarkeitsprüfung.
+
+### Geändert
+- Genres, Stimmungen, Stil, Stimme und Besonderheiten zerlegen Komma-Eingaben in einzelne bereinigte Datenbankwerte und verhindern Dubletten,
+- Charakterfibel und Texteditor in Schnellkacheln, Navigation, Fensterregistry, Zoom/Theme und Accessibility integriert,
+- Eingabe- und Auswahlfelder erhalten zentral einen kontrastierenden Theme-Hintergrund mit kontrastgeprüfter Schrift,
+- Todo-Bestand wird idempotent um neun Projektmodule mit 48 separat abhakbaren Unteraufgaben ergänzt, ohne bestehende oder archivierte Aufgaben zu überschreiben.
+
+### Schutz und technische Abnahme
+- keine bestehenden Nutzerdaten gelöscht oder überschrieben,
+- neue Charakter-/Textdaten werden atomar gespeichert,
+- autonomes Updatemodul bewusst nur als Sicherheits-Backlog aufgenommen; kein blindes Selbstüberschreiben implementiert,
+- bereinigter Feature-Head `8b5525541cff430f9e820a02adf44f469acc43a7` in Grundprüfung **#685** vollständig grün: **104 Logiktests**, **74 GUI-Tests**, **46 Release-Dateien**, Headless-Start, nativer Qt-Wayland-Smoke und Restore `OK`,
+- Restore-SHA-256 `1f1f46f35d5e733385c77e39c45366a812ce6b92f5a0786faaf948dbfddb4d41`,
+- finale v0.17.0-Synchronisierung wird vor Merge erneut vollständig geprüft.
+
 ## 0.16.1 – 2026-09-10 – Codequalitäts-Nachhärtung (Iterationen 30–32)
 
 ### Iteration 30 – Log-Wartung

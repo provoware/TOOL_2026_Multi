@@ -1,16 +1,16 @@
 {
-  "schema_version": 26,
+  "schema_version": 27,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.16.1",
+    "version": "0.17.0",
     "status": "AUSFUEHRBARER_KERN",
-    "date": "2026-09-10"
+    "date": "2026-09-12"
   },
   "iteration": {
-    "number": 32,
-    "goal": "Codequalität der Log- und Dashboard-Infrastruktur durch deterministische Wartungslogik, typisierten Fenster-Lebenszyklus und zentrale Managed-Window-Registry konsolidieren",
-    "completed": 3,
+    "number": 34,
+    "goal": "Charakterfibel und Texteditor als nutzbare Module integrieren sowie Daten-, UI-, Import- und Startstandards vereinheitlichen",
+    "completed": 8,
     "open_next": 1
   },
   "runtime": {
@@ -33,7 +33,9 @@
     "song_exports": "daten/songtexte/export/",
     "runtime_logs": "logs/",
     "local_reports": "berichte/",
-    "local_backups": "backups/"
+    "local_backups": "backups/",
+    "character_data": "daten/charaktere/charaktere.json",
+    "text_editor_data": "daten/texte/"
   },
   "validation": {
     "command": "bash scripts/pruefen.sh --full",
@@ -253,7 +255,18 @@
     "iteration32_restore_sha256": "64c3d081f652abcb29623375336c4d71b5ffd55ebce72e2c33cae64e83cef51b",
     "iteration32_tested_head_sha": "873401955bfb4805b4cdfc09c836de6818601709",
     "iteration32_merged_main_sha": "a0032bc7977e21d830297828610d9b6d3ac68ea3",
-    "iteration32_final_head_gate": "success"
+    "iteration32_final_head_gate": "success",
+    "iteration34_technical_ci_run": 685,
+    "iteration34_technical_ci_result": "success",
+    "iteration34_technical_logic_tests": 104,
+    "iteration34_technical_gui_tests": 74,
+    "iteration34_technical_release_files": 46,
+    "iteration34_technical_native_wayland_smoke": true,
+    "iteration34_technical_restore_gate": true,
+    "iteration34_technical_restore_status": "OK",
+    "iteration34_technical_restore_sha256": "1f1f46f35d5e733385c77e39c45366a812ce6b92f5a0786faaf948dbfddb4d41",
+    "iteration34_technical_tested_head_sha": "8b5525541cff430f9e820a02adf44f469acc43a7",
+    "iteration34_release_version": "0.17.0"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -270,7 +283,12 @@
     "framework_version": "6.11.2",
     "dashboard_title": "Provoware-Datenbank-Dashboard 2026",
     "reference_theme": "Modern Dark Amber",
-    "themes": ["Amber", "Türkis", "Lila", "Kontrast"],
+    "themes": [
+      "Amber",
+      "Türkis",
+      "Lila",
+      "Kontrast"
+    ],
     "default_theme": "Amber",
     "theme_scope": "current_session_all_open_windows",
     "theme_persistence": false,
@@ -280,15 +298,42 @@
     "theme_selector_accessible_name": "Farbtheme auswählen",
     "font_family": "Sans Serif",
     "external_font_dependency": false,
-    "zoom_levels_percent": [100, 125, 150, 175, 200],
-    "zoom_managed_windows": ["dashboard", "song_editor", "song_library", "recovery", "profile_editor", "todo", "calendar"],
+    "zoom_levels_percent": [
+      100,
+      125,
+      150,
+      175,
+      200
+    ],
+    "zoom_managed_windows": [
+      "dashboard",
+      "song_editor",
+      "song_library",
+      "recovery",
+      "profile_editor",
+      "todo",
+      "calendar"
+    ],
     "font_size_follows_zoom": true,
     "geometry_zoom_max_growth_percent": 25,
     "responsive_width_zoom_max_growth_percent": 10,
     "high_zoom_mode_from_percent": 175,
-    "responsive_breakpoints_px": {"compact_below": 1100, "wide_from": 1450},
-    "responsive_components": ["dashboard_sidebar", "dashboard_search", "profile_controls", "song_section_list", "song_editor_splitter", "song_library_columns"],
-    "song_library_stretch_columns": ["title", "tags"],
+    "responsive_breakpoints_px": {
+      "compact_below": 1100,
+      "wide_from": 1450
+    },
+    "responsive_components": [
+      "dashboard_sidebar",
+      "dashboard_search",
+      "profile_controls",
+      "song_section_list",
+      "song_editor_splitter",
+      "song_library_columns"
+    ],
+    "song_library_stretch_columns": [
+      "title",
+      "tags"
+    ],
     "splitters_non_collapsible": true,
     "keyboard_focus_policy": "Qt.StrongFocus",
     "screenreader_names_autofill": true,
@@ -304,10 +349,17 @@
     "core_text_contrast_minimum": 4.5,
     "presentation_policy": "app/presentation_policy.py",
     "presentation_policy_qt_independent": true,
-    "presentation_policy_shared_by": ["ui_standards", "laptop_layout", "navigation_ux"],
+    "presentation_policy_shared_by": [
+      "ui_standards",
+      "laptop_layout",
+      "navigation_ux"
+    ],
     "laptop_compact_mode": true,
     "laptop_compact_scope": "dashboard_only",
-    "laptop_compact_zoom_percent": [125, 150],
+    "laptop_compact_zoom_percent": [
+      125,
+      150
+    ],
     "laptop_compact_wide_layout_unchanged_from_px": 1450,
     "laptop_compact_height_trigger_px": 820,
     "laptop_compact_effective_height_trigger_px": 700,
@@ -315,16 +367,34 @@
     "laptop_compact_keeps_core_navigation": true,
     "navigation_module": "app/navigation_ux.py",
     "navigation_ready_first": true,
-    "navigation_ready_routes": ["Songtexte", "Genres & Vorgaben", "Todo-Liste", "Kalender", "Fehlerhilfe (Recovery)"],
+    "navigation_ready_routes": [
+      "Songtexte",
+      "Genres & Vorgaben",
+      "Todo-Liste",
+      "Kalender",
+      "Fehlerhilfe (Recovery)"
+    ],
     "navigation_planned_collapsible": true,
     "navigation_planned_default_expanded": false,
     "navigation_planned_count": 10,
-    "navigation_planned_groups": ["Kreativ & Inhalte", "Dateien & Werkzeuge", "Projekte"],
+    "navigation_planned_groups": [
+      "Kreativ & Inhalte",
+      "Dateien & Werkzeuge",
+      "Projekte"
+    ],
     "navigation_planned_hidden_in_laptop_and_high_zoom": true,
     "managed_window_registry": "app.ui.Dashboard._managed_window_registry",
     "managed_window_registry_single_source": true,
-    "managed_window_registry_scope": ["managed_widget_detection", "zoom_distribution", "visible_refresh"],
-    "managed_window_refresh_scope": ["recovery", "todo", "calendar"]
+    "managed_window_registry_scope": [
+      "managed_widget_detection",
+      "zoom_distribution",
+      "visible_refresh"
+    ],
+    "managed_window_refresh_scope": [
+      "recovery",
+      "todo",
+      "calendar"
+    ]
   },
   "process_consistency": {
     "atomic_writer": "app/atomic_io.py",
@@ -337,15 +407,45 @@
     "file_fsync_before_replace": true,
     "directory_fsync_after_replace_on_supported_platforms": true,
     "temp_cleanup_on_failure": true,
-    "writers_using_common_path": ["profile", "todo", "calendar", "song", "song_versions", "song_exports", "regression_state", "log_quarantine", "event_human_reports", "watcher_human_reports", "start_status", "kubuntu_acceptance_reports", "diagnostic_sha256", "release_sha256", "restore_sha256", "restore_report"],
-    "append_only_writers_kept_append_only": ["event_jsonl", "project_note"],
+    "writers_using_common_path": [
+      "profile",
+      "todo",
+      "calendar",
+      "song",
+      "song_versions",
+      "song_exports",
+      "regression_state",
+      "log_quarantine",
+      "event_human_reports",
+      "watcher_human_reports",
+      "start_status",
+      "kubuntu_acceptance_reports",
+      "diagnostic_sha256",
+      "release_sha256",
+      "restore_sha256",
+      "restore_report"
+    ],
+    "append_only_writers_kept_append_only": [
+      "event_jsonl",
+      "project_note"
+    ],
     "stale_lock_milliseconds": 5000
   },
   "profile_database": {
     "module": "app/profile_store.py",
     "storage": "daten/profile/db_profile.json",
-    "categories": ["Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"],
-    "built_in_profiles": ["HardTechno", "HipHop/Rap", "Hörspiele"],
+    "categories": [
+      "Genres",
+      "Stimmungen",
+      "Stil",
+      "Stimme",
+      "Besonderheiten"
+    ],
+    "built_in_profiles": [
+      "HardTechno",
+      "HipHop/Rap",
+      "Hörspiele"
+    ],
     "defaults_are_memory_only_until_change": true,
     "duplicate_rule": "Doppelte Profilwerte werden nicht still bereinigt, sondern abgewiesen.",
     "atomic_write": "app.atomic_io.atomic_write_json"
@@ -365,8 +465,20 @@
     "reminder_controller": "app/calendar_reminders.py",
     "storage": "daten/kalender/termine.json",
     "schema_version": 1,
-    "views": ["day", "week", "month", "year"],
-    "reminder_options_minutes": [0, 5, 15, 30, 60, 1440],
+    "views": [
+      "day",
+      "week",
+      "month",
+      "year"
+    ],
+    "reminder_options_minutes": [
+      0,
+      5,
+      15,
+      30,
+      60,
+      1440
+    ],
     "reminder_runtime": "while_dashboard_is_running",
     "background_service_when_dashboard_closed": false,
     "time_semantics": "lokale Rechnerzeit ohne stille Zeitzonenumrechnung",
@@ -379,7 +491,12 @@
     "autosave_seconds": 300,
     "version_rule": "Vor einem geänderten Überschreiben wird der vorherige Stand gesichert; identische Saves erzeugen keine Version.",
     "atomic_write": "app.atomic_io.atomic_write_text",
-    "exports": ["txt", "markdown", "json", "lyrics_only_txt"],
+    "exports": [
+      "txt",
+      "markdown",
+      "json",
+      "lyrics_only_txt"
+    ],
     "new_song_entry_visible_in_library": true,
     "section_removal_requires_confirmation": true,
     "version_restore_requires_preview_and_confirmation": true
@@ -433,73 +550,395 @@
     "sha256_atomic_write": "app.atomic_io.atomic_write_text"
   },
   "files": [
-    {"path":"MANIFEST.json","release":true,"purpose":"Laufzeit-, Versions-, Accessibility-, UX-, Plattform- und I/O-Freigabedaten"},
-    {"path":"ANLEITUNG_LAIEN.md","release":true,"purpose":"Laienfreundliche Nutzeranleitung inklusive Kubuntu-26.04-Wayland-Abnahme"},
-    {"path":"requirements.txt","release":true,"purpose":"Fest gepinnte PySide6-Abhängigkeit"},
-    {"path":"schnellstart.sh","release":true,"purpose":"Vollautomatischer laienfreundlich beschrifteter backend-neutraler Start"},
-    {"path":"kubuntu_abnahme.sh","release":true,"purpose":"Klickstart für reale Kubuntu-26.04-/KDE-Plasma-Wayland-Endabnahme"},
-    {"path":"app/__init__.py","release":true,"purpose":"Anwendungspaket"},
-    {"path":"app/main.py","release":true,"purpose":"Programmeinstieg mit Einzelinstanz-Schutz und verständlichen Startmeldungen"},
-    {"path":"app/presentation_policy.py","release":true,"purpose":"Qt-unabhängige deterministische Präsentationspolicy für Laptop-, Groß- und Hochzoomzustände"},
-    {"path":"app/laptop_layout.py","release":true,"purpose":"Reversibler Laptop-Kompaktmodus fuer das Dashboard bei knapper Flaeche"},
-    {"path":"app/navigation_ux.py","release":true,"purpose":"Laienfreundliche Menü-Hierarchie mit einklappbaren geplanten Bereichen"},
-    {"path":"app/atomic_io.py","release":true,"purpose":"Zentraler atomarer Schreib- und Prepared-File-Publish-Weg"},
-    {"path":"app/process_guard.py","release":true,"purpose":"Mehrfachstart-Schutz pro Projektordner"},
-    {"path":"app/event_log.py","release":true,"purpose":"Ereignisprotokoll und atomare menschenlesbare Berichte"},
-    {"path":"app/regression.py","release":true,"purpose":"Atomar gespeichertes Rückfalllernen"},
-    {"path":"app/redaction.py","release":true,"purpose":"Bereinigung sensibler Protokollwerte"},
-    {"path":"app/log_maintenance.py","release":true,"purpose":"Logrotation und atomare Quarantäne"},
-    {"path":"app/recovery_ui.py","release":true,"purpose":"Recovery-Logik"},
-    {"path":"app/recovery_center.py","release":true,"purpose":"Laienfreundliche Fehlerhilfe mit optionalen Technikdetails"},
-    {"path":"app/quick_note.py","release":true,"purpose":"Kompatibler Append-only-Speicherweg für Projekt-Notizen"},
-    {"path":"app/profile_store.py","release":true,"purpose":"Profilbestand"},
-    {"path":"app/profile_editor.py","release":true,"purpose":"Laienfreundliche Profil- und Vorgabenverwaltung"},
-    {"path":"app/todo_store.py","release":true,"purpose":"Todo-Bestand"},
-    {"path":"app/todo_window.py","release":true,"purpose":"Schrittgeführte Todo-Oberfläche"},
-    {"path":"app/calendar_store.py","release":true,"purpose":"Kalenderbestand"},
-    {"path":"app/calendar_reminders.py","release":true,"purpose":"Kalender-Erinnerungsprüfung"},
-    {"path":"app/calendar_window.py","release":true,"purpose":"Schrittgeführte Kalender-Oberfläche"},
-    {"path":"app/song_document.py","release":true,"purpose":"Songdaten, Versionen und Exporte"},
-    {"path":"app/song_editor.py","release":true,"purpose":"Schrittgeführter Songtexteditor mit sicheren Bestätigungen"},
-    {"path":"app/song_library.py","release":true,"purpose":"Songbibliothek mit sichtbarem Erstnutzer-Einstieg, responsiver Tabelle und klaren Rückmeldungen"},
-    {"path":"app/texts.py","release":true,"purpose":"Textregistrierung"},
-    {"path":"app/ui.py","release":true,"purpose":"Laiengeführtes PySide6-Referenzdashboard"},
-    {"path":"app/ui_standards.py","release":true,"purpose":"Zentrale responsive UI-, Zoom-, Theme-, Fokus-, Screenreader- und Kontraststandards"},
-    {"path":"scripts/pruefen.sh","release":true,"purpose":"Laufzeit- und Vollprüfung inklusive aktueller Runtime-/Doku-Vollständigkeit"},
-    {"path":"scripts/start_status.py","release":true,"purpose":"Grafische Startanzeige mit atomaren Checkpoints"},
-    {"path":"scripts/process_watch.py","release":true,"purpose":"Externe Prozesswache mit atomarem menschenlesbarem Absturzbericht"},
-    {"path":"scripts/diagnosepaket.py","release":true,"purpose":"Diagnoseexport mit zentralem abgesichertem ZIP-Publish und atomarer SHA-256-Begleitdatei"},
-    {"path":"scripts/iteration_restore.py","release":true,"purpose":"Backup, Restore-Gate und atomare Restore-Evidence"},
-    {"path":"scripts/kubuntu_abnahme.py","release":true,"purpose":"Kubuntu-26.04-/Wayland-Abnahmeassistent mit nativer Qt-Plattformprüfung und atomaren Berichten"},
-    {"path":"texte/registry.json","release":true,"purpose":"Zentrale Nutzertexte"},
-    {"path":"README.md","release":false,"purpose":"Aktuelle Projektübersicht ohne doppelte Versionshistorie"},
-    {"path":"TODO.md","release":false,"purpose":"Aktueller Freigabe- und Entwicklungsplan"},
-    {"path":"CHANGELOG.md","release":false,"purpose":"Änderungsverlauf"},
-    {"path":"scripts/wayland_smoke.py","release":false,"purpose":"CI-Smoke für echten nativen Qt-Wayland-Fensterstart"},
-    {"path":"tests/test_wayland_smoke.py","release":false,"purpose":"Regression für importierbaren Wayland-Smoke-Helfer"},
-    {"path":"tests/test_presentation_policy.py","release":false,"purpose":"Reine Grenzwert- und Determinismusregression der zentralen Präsentationspolicy"},
-    {"path":"tests/test_repo_hygiene.py","release":false,"purpose":"Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"},
-    {"path":"tests/test_layman_ux_gui.py","release":false,"purpose":"Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"},
-    {"path":"tests/test_navigation_ux_gui.py","release":false,"purpose":"Regression für Menü-Hierarchie, Auf-/Zuklappen, Laptop-/Hochzoom-Zustand und Accessibility"},
-    {"path":"tests/test_dashboard_reference_gui.py","release":false,"purpose":"Regression für Referenzlayout, Hochzoom, Laptop-Kompaktmodus, Themes, WCAG-Kontraste, Tastaturfokus und Screenreader-Namen"},
-    {"path":"tests/test_process_consistency.py","release":false,"purpose":"Atomar-, Direktstart-, Mehrfachstart- und Wächterregression"},
-    {"path":"tests/test_diagnostics_logging.py","release":false,"purpose":"Diagnoseexport-, Datenschutz-, Quarantäne-, I/O- und kontrollierte Start/Ende-Regression"},
-    {"path":"tests/test_restore.py","release":false,"purpose":"Restore-, Backup-I/O- und Pfadsicherheitsregression"},
-    {"path":"docs/ITERATION17_PROCESS_CONSISTENCY.md","release":false,"purpose":"Konsistenzhärtung und Abnahme"},
-    {"path":"docs/ITERATION18_DIAGNOSTIC_IO.md","release":false,"purpose":"Diagnose-I/O-Härtung und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION19_BACKUP_REPORT_IO.md","release":false,"purpose":"Backup-/Restore-Bericht-I/O-Härtung und Abnahme"},
-    {"path":"docs/ITERATION20_REPO_HYGIENE.md","release":false,"purpose":"Repository-Hygiene, Schutzgrenzen und Abnahme"},
-    {"path":"docs/ITERATION21_LAIEN_UX.md","release":false,"purpose":"Nutzersicht-, Laien-UX- und Abnahmebericht"},
-    {"path":"docs/ITERATION22_RESPONSIVE_DESIGN.md","release":false,"purpose":"Responsive Design-, Screenshot-Befund- und Abnahmebericht"},
-    {"path":"docs/ITERATION23_ZOOM_HAERTUNG.md","release":false,"purpose":"Hochzoom-Härtung, Screenshot-Befund und Abnahme"},
-    {"path":"docs/ITERATION24_ACCESSIBILITY_THEMES.md","release":false,"purpose":"Barrierefreiheits-, Theme-, Kontrast- und Abnahmebericht"},
-    {"path":"docs/ITERATION25_LAPTOP_LAYOUT.md","release":false,"purpose":"Laptop-Kompaktlayout, Regression, Fehlerkorrektur und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION26_RELEASE_IO_HARDENING.md","release":false,"purpose":"Release-/Bericht-I/O-Audit, zentraler Publish-Pfad und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION27_NAVIGATION_UX.md","release":false,"purpose":"Menü-Hierarchie, Laiennavigation, Synchronisationsfehler und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION28_KUBUNTU_2604_WAYLAND.md","release":false,"purpose":"Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION29_PRESENTATION_POLICY.md","release":false,"purpose":"Architekturanalyse, Präsentationspolicy, Release-Vollständigkeit und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION30_LOG_MAINTENANCE_CODE_QUALITY.md","release":false,"purpose":"Codequalitäts-Härtung der Log-Wartung und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION31_WINDOW_LIFECYCLE.md","release":false,"purpose":"Typisierter Fenster-Lebenszyklus, Regression und CI-/Restore-Evidence"},
-    {"path":"docs/ITERATION32_MANAGED_WINDOW_REGISTRY.md","release":false,"purpose":"Zentrale Managed-Window-Registry, Zoom-/Refresh-Konsistenz und CI-/Restore-Evidence"}
+    {
+      "path": "MANIFEST.json",
+      "release": true,
+      "purpose": "Laufzeit-, Versions-, Accessibility-, UX-, Plattform- und I/O-Freigabedaten"
+    },
+    {
+      "path": "ANLEITUNG_LAIEN.md",
+      "release": true,
+      "purpose": "Laienfreundliche Nutzeranleitung inklusive Kubuntu-26.04-Wayland-Abnahme"
+    },
+    {
+      "path": "requirements.txt",
+      "release": true,
+      "purpose": "Fest gepinnte PySide6-Abhängigkeit"
+    },
+    {
+      "path": "schnellstart.sh",
+      "release": true,
+      "purpose": "Vollautomatischer laienfreundlich beschrifteter backend-neutraler Start"
+    },
+    {
+      "path": "kubuntu_abnahme.sh",
+      "release": true,
+      "purpose": "Klickstart für reale Kubuntu-26.04-/KDE-Plasma-Wayland-Endabnahme"
+    },
+    {
+      "path": "app/__init__.py",
+      "release": true,
+      "purpose": "Anwendungspaket"
+    },
+    {
+      "path": "app/main.py",
+      "release": true,
+      "purpose": "Programmeinstieg mit Einzelinstanz-Schutz und verständlichen Startmeldungen"
+    },
+    {
+      "path": "app/presentation_policy.py",
+      "release": true,
+      "purpose": "Qt-unabhängige deterministische Präsentationspolicy für Laptop-, Groß- und Hochzoomzustände"
+    },
+    {
+      "path": "app/laptop_layout.py",
+      "release": true,
+      "purpose": "Reversibler Laptop-Kompaktmodus fuer das Dashboard bei knapper Flaeche"
+    },
+    {
+      "path": "app/navigation_ux.py",
+      "release": true,
+      "purpose": "Laienfreundliche Menü-Hierarchie mit einklappbaren geplanten Bereichen"
+    },
+    {
+      "path": "app/startup_validation.py",
+      "release": true,
+      "purpose": "Explizite Startordner-Prüfung mit Zustimmung vor Erstellung und Schreibtest"
+    },
+    {
+      "path": "app/character_store.py",
+      "release": true,
+      "purpose": "Atomarer wiederverwendbarer Charakterfibel-Datenbestand"
+    },
+    {
+      "path": "app/character_window.py",
+      "release": true,
+      "purpose": "Eigenständiges Charakterfibel-Modul"
+    },
+    {
+      "path": "app/text_editor_store.py",
+      "release": true,
+      "purpose": "Atomare allgemeine Textdokumente mit Versionen"
+    },
+    {
+      "path": "app/text_editor_window.py",
+      "release": true,
+      "purpose": "Eigenständiger allgemeiner Texteditor mit Charakterreferenzen"
+    },
+    {
+      "path": "app/import_schema.py",
+      "release": true,
+      "purpose": "Exakte validierbare JSON-Importstruktur für Songtexte"
+    },
+    {
+      "path": "app/atomic_io.py",
+      "release": true,
+      "purpose": "Zentraler atomarer Schreib- und Prepared-File-Publish-Weg"
+    },
+    {
+      "path": "app/process_guard.py",
+      "release": true,
+      "purpose": "Mehrfachstart-Schutz pro Projektordner"
+    },
+    {
+      "path": "app/event_log.py",
+      "release": true,
+      "purpose": "Ereignisprotokoll und atomare menschenlesbare Berichte"
+    },
+    {
+      "path": "app/regression.py",
+      "release": true,
+      "purpose": "Atomar gespeichertes Rückfalllernen"
+    },
+    {
+      "path": "app/redaction.py",
+      "release": true,
+      "purpose": "Bereinigung sensibler Protokollwerte"
+    },
+    {
+      "path": "app/log_maintenance.py",
+      "release": true,
+      "purpose": "Logrotation und atomare Quarantäne"
+    },
+    {
+      "path": "app/recovery_ui.py",
+      "release": true,
+      "purpose": "Recovery-Logik"
+    },
+    {
+      "path": "app/recovery_center.py",
+      "release": true,
+      "purpose": "Laienfreundliche Fehlerhilfe mit optionalen Technikdetails"
+    },
+    {
+      "path": "app/quick_note.py",
+      "release": true,
+      "purpose": "Kompatibler Append-only-Speicherweg für Projekt-Notizen"
+    },
+    {
+      "path": "app/profile_store.py",
+      "release": true,
+      "purpose": "Profilbestand"
+    },
+    {
+      "path": "app/profile_editor.py",
+      "release": true,
+      "purpose": "Laienfreundliche Profil- und Vorgabenverwaltung"
+    },
+    {
+      "path": "app/todo_store.py",
+      "release": true,
+      "purpose": "Todo-Bestand"
+    },
+    {
+      "path": "app/todo_window.py",
+      "release": true,
+      "purpose": "Schrittgeführte Todo-Oberfläche"
+    },
+    {
+      "path": "app/calendar_store.py",
+      "release": true,
+      "purpose": "Kalenderbestand"
+    },
+    {
+      "path": "app/calendar_reminders.py",
+      "release": true,
+      "purpose": "Kalender-Erinnerungsprüfung"
+    },
+    {
+      "path": "app/calendar_window.py",
+      "release": true,
+      "purpose": "Schrittgeführte Kalender-Oberfläche"
+    },
+    {
+      "path": "app/song_document.py",
+      "release": true,
+      "purpose": "Songdaten, Versionen und Exporte"
+    },
+    {
+      "path": "app/song_editor.py",
+      "release": true,
+      "purpose": "Schrittgeführter Songtexteditor mit sicheren Bestätigungen"
+    },
+    {
+      "path": "app/song_library.py",
+      "release": true,
+      "purpose": "Songbibliothek mit sichtbarem Erstnutzer-Einstieg, responsiver Tabelle und klaren Rückmeldungen"
+    },
+    {
+      "path": "app/texts.py",
+      "release": true,
+      "purpose": "Textregistrierung"
+    },
+    {
+      "path": "app/ui.py",
+      "release": true,
+      "purpose": "Laiengeführtes PySide6-Referenzdashboard"
+    },
+    {
+      "path": "app/ui_standards.py",
+      "release": true,
+      "purpose": "Zentrale responsive UI-, Zoom-, Theme-, Fokus-, Screenreader- und Kontraststandards"
+    },
+    {
+      "path": "scripts/pruefen.sh",
+      "release": true,
+      "purpose": "Laufzeit- und Vollprüfung inklusive aktueller Runtime-/Doku-Vollständigkeit"
+    },
+    {
+      "path": "scripts/start_status.py",
+      "release": true,
+      "purpose": "Grafische Startanzeige mit atomaren Checkpoints"
+    },
+    {
+      "path": "scripts/process_watch.py",
+      "release": true,
+      "purpose": "Externe Prozesswache mit atomarem menschenlesbarem Absturzbericht"
+    },
+    {
+      "path": "scripts/diagnosepaket.py",
+      "release": true,
+      "purpose": "Diagnoseexport mit zentralem abgesichertem ZIP-Publish und atomarer SHA-256-Begleitdatei"
+    },
+    {
+      "path": "scripts/iteration_restore.py",
+      "release": true,
+      "purpose": "Backup, Restore-Gate und atomare Restore-Evidence"
+    },
+    {
+      "path": "scripts/kubuntu_abnahme.py",
+      "release": true,
+      "purpose": "Kubuntu-26.04-/Wayland-Abnahmeassistent mit nativer Qt-Plattformprüfung und atomaren Berichten"
+    },
+    {
+      "path": "texte/registry.json",
+      "release": true,
+      "purpose": "Zentrale Nutzertexte"
+    },
+    {
+      "path": "vorlagen/songtext_import_vorlage.json",
+      "release": true,
+      "purpose": "Weitergebbare exakte JSON-Beispielvorlage für Songtextimporte"
+    },
+    {
+      "path": "README.md",
+      "release": false,
+      "purpose": "Aktuelle Projektübersicht ohne doppelte Versionshistorie"
+    },
+    {
+      "path": "TODO.md",
+      "release": false,
+      "purpose": "Aktueller Freigabe- und Entwicklungsplan"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "release": false,
+      "purpose": "Änderungsverlauf"
+    },
+    {
+      "path": "scripts/wayland_smoke.py",
+      "release": false,
+      "purpose": "CI-Smoke für echten nativen Qt-Wayland-Fensterstart"
+    },
+    {
+      "path": "tests/test_wayland_smoke.py",
+      "release": false,
+      "purpose": "Regression für importierbaren Wayland-Smoke-Helfer"
+    },
+    {
+      "path": "tests/test_presentation_policy.py",
+      "release": false,
+      "purpose": "Reine Grenzwert- und Determinismusregression der zentralen Präsentationspolicy"
+    },
+    {
+      "path": "tests/test_repo_hygiene.py",
+      "release": false,
+      "purpose": "Regression gegen versionierte Laufzeit-, Temp- und lokale Root-Artefakte"
+    },
+    {
+      "path": "tests/test_layman_ux_gui.py",
+      "release": false,
+      "purpose": "Regression für Laienführung, responsive Breiten, Tabellenverteilung, Nicht-Silent-Fail, Sicherheitsbestätigung und Kernkontraste"
+    },
+    {
+      "path": "tests/test_navigation_ux_gui.py",
+      "release": false,
+      "purpose": "Regression für Menü-Hierarchie, Auf-/Zuklappen, Laptop-/Hochzoom-Zustand und Accessibility"
+    },
+    {
+      "path": "tests/test_dashboard_reference_gui.py",
+      "release": false,
+      "purpose": "Regression für Referenzlayout, Hochzoom, Laptop-Kompaktmodus, Themes, WCAG-Kontraste, Tastaturfokus und Screenreader-Namen"
+    },
+    {
+      "path": "tests/test_process_consistency.py",
+      "release": false,
+      "purpose": "Atomar-, Direktstart-, Mehrfachstart- und Wächterregression"
+    },
+    {
+      "path": "tests/test_iteration34_core.py",
+      "release": false,
+      "purpose": "Kernregressionen für neue Module, Import, Startordner, Komma-Eingaben und Todo-Backlog"
+    },
+    {
+      "path": "tests/test_iteration34_gui.py",
+      "release": false,
+      "purpose": "GUI-Regressionen für Charakterfibel, Texteditor, freie Songbereiche und Eingabekontrast"
+    },
+    {
+      "path": "tests/test_diagnostics_logging.py",
+      "release": false,
+      "purpose": "Diagnoseexport-, Datenschutz-, Quarantäne-, I/O- und kontrollierte Start/Ende-Regression"
+    },
+    {
+      "path": "tests/test_restore.py",
+      "release": false,
+      "purpose": "Restore-, Backup-I/O- und Pfadsicherheitsregression"
+    },
+    {
+      "path": "docs/ITERATION17_PROCESS_CONSISTENCY.md",
+      "release": false,
+      "purpose": "Konsistenzhärtung und Abnahme"
+    },
+    {
+      "path": "docs/ITERATION18_DIAGNOSTIC_IO.md",
+      "release": false,
+      "purpose": "Diagnose-I/O-Härtung und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION19_BACKUP_REPORT_IO.md",
+      "release": false,
+      "purpose": "Backup-/Restore-Bericht-I/O-Härtung und Abnahme"
+    },
+    {
+      "path": "docs/ITERATION20_REPO_HYGIENE.md",
+      "release": false,
+      "purpose": "Repository-Hygiene, Schutzgrenzen und Abnahme"
+    },
+    {
+      "path": "docs/ITERATION21_LAIEN_UX.md",
+      "release": false,
+      "purpose": "Nutzersicht-, Laien-UX- und Abnahmebericht"
+    },
+    {
+      "path": "docs/ITERATION22_RESPONSIVE_DESIGN.md",
+      "release": false,
+      "purpose": "Responsive Design-, Screenshot-Befund- und Abnahmebericht"
+    },
+    {
+      "path": "docs/ITERATION23_ZOOM_HAERTUNG.md",
+      "release": false,
+      "purpose": "Hochzoom-Härtung, Screenshot-Befund und Abnahme"
+    },
+    {
+      "path": "docs/ITERATION24_ACCESSIBILITY_THEMES.md",
+      "release": false,
+      "purpose": "Barrierefreiheits-, Theme-, Kontrast- und Abnahmebericht"
+    },
+    {
+      "path": "docs/ITERATION25_LAPTOP_LAYOUT.md",
+      "release": false,
+      "purpose": "Laptop-Kompaktlayout, Regression, Fehlerkorrektur und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION26_RELEASE_IO_HARDENING.md",
+      "release": false,
+      "purpose": "Release-/Bericht-I/O-Audit, zentraler Publish-Pfad und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION27_NAVIGATION_UX.md",
+      "release": false,
+      "purpose": "Menü-Hierarchie, Laiennavigation, Synchronisationsfehler und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION28_KUBUNTU_2604_WAYLAND.md",
+      "release": false,
+      "purpose": "Kubuntu-26.04-/Wayland-Umstellung, Schutzgrenzen und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION29_PRESENTATION_POLICY.md",
+      "release": false,
+      "purpose": "Architekturanalyse, Präsentationspolicy, Release-Vollständigkeit und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION30_LOG_MAINTENANCE_CODE_QUALITY.md",
+      "release": false,
+      "purpose": "Codequalitäts-Härtung der Log-Wartung und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION31_WINDOW_LIFECYCLE.md",
+      "release": false,
+      "purpose": "Typisierter Fenster-Lebenszyklus, Regression und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION32_MANAGED_WINDOW_REGISTRY.md",
+      "release": false,
+      "purpose": "Zentrale Managed-Window-Registry, Zoom-/Refresh-Konsistenz und CI-/Restore-Evidence"
+    },
+    {
+      "path": "docs/ITERATION34_CORE_MODULES_DATA_STANDARDS.md",
+      "release": false,
+      "purpose": "Charakterfibel, Texteditor, Daten-/UI-Standards, Backlog und CI-/Restore-Evidence"
+    }
   ]
 }

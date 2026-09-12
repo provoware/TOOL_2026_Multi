@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget,
 )
 
-from app.todo_store import active_tasks, add_task, archived_tasks, complete_task
+from app.todo_store import active_tasks, add_task, archived_tasks, complete_task, ensure_project_module_backlog
 from app.ui_standards import SPACING, apply_global_style
 
 
@@ -29,8 +29,15 @@ class TodoWindow(QWidget):
         self.resize(900, 650)
         self.setMinimumSize(760, 520)
         self._build()
+        try:
+            added_backlog = ensure_project_module_backlog(self.project_root)
+        except Exception as error:
+            added_backlog = 0
+            self.status_label.setText(f"Projektmodul-Plan konnte nicht ergänzt werden · vorhandene Todos bleiben erhalten. Grund: {error}")
         self.set_zoom(zoom_percent)
         self.refresh()
+        if added_backlog:
+            self.status_label.setText(f"{added_backlog} Projektmodule als detaillierte Todos ergänzt · vorhandene Aufgaben blieben erhalten.")
         self.title_entry.setFocus()
 
     def _build(self) -> None:

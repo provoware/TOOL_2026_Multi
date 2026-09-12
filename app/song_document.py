@@ -101,6 +101,16 @@ def safe_title(title: str) -> str:
     return clean[:120] or "Unbenannter Song"
 
 
+def normalize_section_name(value: str) -> str:
+    """Normalisiert Standard- und frei benannte Songbereiche ohne das Textformat zu beschädigen."""
+    cleaned = " ".join(str(value or "").strip().split())
+    if not cleaned:
+        raise ValueError("Bereichsname darf nicht leer sein.")
+    if any(char in cleaned for char in "[]\0") or any(ord(char) < 32 for char in cleaned):
+        raise ValueError("Bereichsname enthält unzulässige Zeichen.")
+    return cleaned[:80]
+
+
 def song_path(root: Path, title: str) -> Path:
     return root / "daten" / "songtexte" / f"{safe_title(title)}.txt"
 

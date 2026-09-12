@@ -34,18 +34,24 @@ class TodoGuiTests(unittest.TestCase):
         self.changed += 1
 
     def test_add_without_due_and_archive_after_complete(self):
+        baseline_active = len(active_tasks(self.root))
+        baseline_archive = len(archived_tasks(self.root))
         self.window.title_entry.setText("Milch kaufen")
         self.window.note_entry.setPlainText("2 Liter")
         self.window.add_current_task()
         self.app.processEvents()
-        self.assertEqual(len(active_tasks(self.root)), 1)
-        self.assertEqual(self.window.active_table.rowCount(), 1)
-        self.window.active_table.selectRow(0)
+        self.assertEqual(len(active_tasks(self.root)), baseline_active + 1)
+        self.assertEqual(self.window.active_table.rowCount(), baseline_active + 1)
+        row = next(
+            row for row in range(self.window.active_table.rowCount())
+            if self.window.active_table.item(row, 0).text() == "Milch kaufen"
+        )
+        self.window.active_table.selectRow(row)
         self.window.complete_selected()
         self.app.processEvents()
-        self.assertEqual(active_tasks(self.root), [])
-        self.assertEqual(len(archived_tasks(self.root)), 1)
-        self.assertEqual(self.window.archive_table.rowCount(), 1)
+        self.assertEqual(len(active_tasks(self.root)), baseline_active)
+        self.assertEqual(len(archived_tasks(self.root)), baseline_archive + 1)
+        self.assertEqual(self.window.archive_table.rowCount(), baseline_archive + 1)
         self.assertEqual(self.changed, 2)
 
     def test_due_datetime_is_saved_when_enabled(self):

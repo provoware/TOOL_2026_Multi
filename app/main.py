@@ -36,10 +36,14 @@ def main() -> int:
         from app.ui_standards import configure_application
         from app.laptop_layout import install_laptop_layout
         from app.navigation_ux import install_navigation_ux
+        from app.startup_validation import ensure_runtime_folders_gui
 
         app = QApplication.instance() or QApplication([])
         app.setApplicationName("Provoware-Datenbank-Dashboard 2026")
         configure_application(app)
+
+        if not ensure_runtime_folders_gui(ROOT):
+            return 2
 
         guard = acquire_instance_guard(ROOT)
         if guard is None:
