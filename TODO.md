@@ -268,13 +268,14 @@ Stand: 2026-09-12
 - 🟢 neue Module sind eigenständige Top-Level-Fenster und verwenden die vorhandenen Zoom-/Theme-/Accessibility-Standards.
 - 🟢 Projekt-Todo ergänzt die neun Modulvorhaben idempotent als 9 Hauptaufgaben plus 48 separat abhakbare Unteraufgaben.
 
-### Technische Abnahme vor Versionssync
+### Finale technische Abnahme und Release
 
-- 🟢 bereinigter Feature-Head `8b5525541cff430f9e820a02adf44f469acc43a7` in Grundprüfung **#685** vollständig erfolgreich.
-- 🟢 **104 Logik-/Regressionstests** und **74 PySide6-GUI-Tests** erfolgreich.
-- 🟢 **46 Release-Betriebsdateien**, Headless-Start und nativer Qt-Wayland-Smoke erfolgreich.
-- 🟢 Vollprojekt-Restore `OK`, SHA-256 `1f1f46f35d5e733385c77e39c45366a812ce6b92f5a0786faaf948dbfddb4d41`.
-- 🟡 finale v0.17.0-Versions-/Dokumentationssynchronisierung wird anschließend erneut vollständig geprüft.
+- 🟢 synchronisierter PR-Head `9d9b608b55a72311d65d627dbe274ab400a2c79d` in Grundprüfung **#696** vollständig erfolgreich.
+- 🟢 **104 Logik-/Regressionstests**, **74 PySide6-GUI-Tests** und **46 Release-Betriebsdateien** erfolgreich; Headless-Start und nativer Qt-Wayland-Smoke ebenfalls grün.
+- 🟢 PR #45 SHA-geschützt gemergt; Produkt-Main `f3fafe411f48a67e8eff83c07f7caf9e2ea753c7`.
+- 🟢 gemergter Main in Grundprüfung **#697** erneut vollständig erfolgreich: 104 Logiktests, 74 GUI-Tests, 46 Release-Dateien, nativer Wayland-Smoke und Restore `OK`.
+- 🟢 Main-Restore-SHA-256 `25a9ee8d06ae39a48d712ebf5c98c3451fe92b88abb4937705d7c17a18f1ab04`.
+- 🟢 Version **0.17.0** freigegeben; reale sichtbare Kubuntu-/Plasma-Wayland-Abnahme bleibt als separater manueller Schritt bestehen.
 
 ## Detaillierter Modul-Backlog zum Abhaken
 

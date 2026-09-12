@@ -23,20 +23,38 @@ Zwei neue produktive Module bereitstellen und gleichzeitig wiederverwendbare Sta
 - Das spätere Updatemodul wird nicht als unkontrollierter Selbstüberschreiber implementiert; vorgesehen ist ZIP-Prüfung → Integrität/Manifest → Checkpoint → Staging → Tests → Aktivierung → Nachprüfung → Rollback.
 - Keine neue externe Laufzeitabhängigkeit.
 
-## Technische Abnahme vor Versionssync
+## Technische Abnahme und Freigabe
 
-- Branch-Head: `8b5525541cff430f9e820a02adf44f469acc43a7`
-- GitHub-Grundprüfung: **#685 – success**
-- Logik-/Regressionstests: **104**
-- PySide6-GUI-Tests: **74**
-- Release-Betriebsdateien: **46**
+### Vor Versionssync
+
+- Feature-Head: `8b5525541cff430f9e820a02adf44f469acc43a7`
+- Grundprüfung **#685 – success**
+- 104 Logik-/Regressionstests, 74 PySide6-GUI-Tests, 46 Release-Betriebsdateien
+- nativer Qt-Wayland-Smoke und Restore `OK`
+
+### Final synchronisierter PR-Head
+
+- Head: `9d9b608b55a72311d65d627dbe274ab400a2c79d`
+- Grundprüfung **#696 – success**
+- **104/104 Logik-/Regressionstests**
+- **74/74 PySide6-GUI-Tests**, einschließlich Zoom-/Layoutregressionen für 100–200 %
+- **46 Release-Betriebsdateien**
 - Headless-Start: **OK**
 - nativer Qt-Wayland-Smoke: **OK** (`QApplication.platformName() = wayland`)
 - Vollprojekt-Restore: **OK**
-- Restore-SHA-256: `1f1f46f35d5e733385c77e39c45366a812ce6b92f5a0786faaf948dbfddb4d41`
+- Restore-SHA-256: `7b1e9365f6326359ca7e927b0d639c4af922ff46ebfce16e266316580634f2ff`
+
+### Merge und Main-Nachprüfung
+
+- PR #45 SHA-geschützt als Squash-Merge freigegeben.
+- Produkt-Main: `f3fafe411f48a67e8eff83c07f7caf9e2ea753c7`
+- Grundprüfung **#697 – success**
+- erneut **104 Logiktests**, **74 GUI-Tests**, **46 Release-Dateien**, Headless-Start und nativer Wayland-Smoke erfolgreich
+- Main-Restore: **OK**
+- Main-Restore-SHA-256: `25a9ee8d06ae39a48d712ebf5c98c3451fe92b88abb4937705d7c17a18f1ab04`
 
 Die sichtbare reale Kubuntu-26.04-/KDE-Plasma-Wayland-Abnahme bleibt separat erforderlich; Offscreen-/Weston-CI ersetzt keine reale Sichtprüfung.
 
-## Release-Schritt
+## Release-Ergebnis
 
-Die Version wird mit diesem Synchronisationslauf auf **0.17.0** gesetzt. Danach muss der vollständig synchronisierte Head nochmals Vollprüfung, 100–200-%-GUI-Regression, nativen Wayland-Smoke und Restore-Gate bestehen, bevor PR #45 gemergt werden darf.
+Version **0.17.0** ist technisch freigegeben. Dieser nachgelagerte Evidence-Sync ändert ausschließlich Status-/Nachweisdokumentation und das maschinenlesbare MANIFEST; der bereits zweifach grün geprüfte Laufzeitcode bleibt unverändert.
