@@ -261,8 +261,9 @@ class NavigationUxController(QObject):
         self.dashboard.toggle_sidebar = self.toggle_sidebar  # type: ignore[method-assign]
 
     def _planned_toggle_text(self) -> str:
-        marker = "▾" if self.planned_expanded else "▸"
-        return f"{marker}  Geplante Bereiche ({PLANNED_COUNT})"
+        if self.planned_expanded:
+            return f"▾  Bereiche ausblenden ({PLANNED_COUNT})"
+        return f"▸  Geplante Bereiche ({PLANNED_COUNT})"
 
     def _restricted(self) -> bool:
         return presentation_state(self.dashboard).restricted_navigation
