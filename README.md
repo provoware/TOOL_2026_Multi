@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.17.0 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit Charakterfibel und Texteditor; automatische Voll-/Restore- und native Wayland-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
+> **Version:** 0.17.1 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit standardisiertem Charakterzugriff in Text- und Songeditor; automatische Voll-/Restore-, native Wayland- und ZIP-Artefakt-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -68,6 +68,14 @@ Der Theme-Wechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswa
 
 Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast gegen den jeweiligen Hintergrund geprüft.
 
+## Neu in 0.17.1 – Charakterzugriff in Schreibmodulen
+
+- **Einheitliche Charakterauswahl:** Texteditor und Songtexteditor beziehen Figuren über dieselbe zentrale, stabile Charakter-ID-Logik.
+- **Songtexteditor:** Figuren aus der Charakterfibel können direkt an der aktuellen Schreibposition eingefügt werden.
+- **Sicherer Referenzmarker:** `«Charakter: Name (Rolle)»` kollidiert nicht mit Songbereichen wie `[Strophe]` oder `[Refrain]`.
+- **Regressionsschutz:** ein erster Prüflauf deckte genau diese Kollision auf; nach der Korrektur sind 106 Logiktests und 76 GUI-Tests grün.
+- **Vollständiges Projekt-ZIP:** ein erfolgreicher CI-Lauf erzeugt nach Vollprüfung, nativem Wayland-Smoke und Restore zusätzlich ein vollständiges Git-Projekt-ZIP samt SHA-256.
+
 ## Neu in 0.17.0 – Charaktere, Texteditor und gemeinsame Standards
 
 - **Charakterfibel:** eigener atomarer Datenbestand mit stabilen Charakter-IDs und wiederverwendbaren Feldern für Schreibmodule.
@@ -120,6 +128,8 @@ Im Editor:
 1. Titel eintragen.
 2. Standard-Songbereich wählen oder einen eigenen Bereichsnamen eingeben.
 3. Text schreiben.
+
+Optional kann direkt darunter ein Charakter aus der **Charakterfibel** gewählt und mit **In Songbereich einfügen** an der aktuellen Schreibposition eingesetzt werden. Die sichtbare Referenz hat die Form `«Charakter: Name (Rolle)»`.
 
 Änderungen werden automatisch gespeichert. Zusätzlich steht **Jetzt speichern** bzw. `Strg+S` zur Verfügung.
 
@@ -318,6 +328,7 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION28_KUBUNTU_2604_WAYLAND.md` – Kubuntu-26.04-/Wayland-Umstellung und Plattformabnahme
 - `docs/ITERATION29_PRESENTATION_POLICY.md` – Architekturhärtung, zentrale Präsentationspolicy und Release-Vollständigkeit
 - `docs/ITERATION34_CORE_MODULES_DATA_STANDARDS.md` – Charakterfibel, Texteditor, gemeinsame Daten-/UI-Standards und Abnahme
+- `docs/ITERATION35_WRITING_CONTEXT.md` – standardisierter Charakterzugriff, Songeditor-Integration und ZIP-Artefakt-Gate
 
 ## Noch offen
 

@@ -144,6 +144,14 @@ Der Editor zeigt oben eine einfache Schrittfolge:
 
 Mögliche Bereiche sind zum Beispiel Strophe, Refrain, Intro, Bridge oder Outro. Du kannst zusätzlich einen eigenen Namen eintippen, zum Beispiel **Pre-Drop** oder **Gesprochenes Outro**. Ungültige/leere Namen werden nicht übernommen.
 
+### Charakter aus der Charakterfibel einsetzen
+
+1. Oben bei **Charakterfibel** eine Figur auswählen.
+2. **In Songbereich einfügen** anklicken.
+3. Provoware setzt die Referenz an die aktuelle Schreibposition und speichert den Song anschließend.
+
+Die Referenz sieht zum Beispiel so aus: `«Charakter: Nora (Erzählerin)»`. Die besonderen Klammern sind absichtlich gewählt, damit die Referenz nicht mit Songbereichen wie `[Strophe]` verwechselt wird.
+
 Rechts steht die **Gesamtvorschau**.
 
 ## Speichern
