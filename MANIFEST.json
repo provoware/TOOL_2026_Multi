@@ -728,6 +728,11 @@
       "purpose": "Laienfreundliche Fehlerhilfe mit optionalen Technikdetails"
     },
     {
+      "path": "app/help_content.py",
+      "release": true,
+      "purpose": "UI-unabhängige, durchsuchbare Hilfethemen für Hilfe & Fehlerhilfe"
+    },
+    {
       "path": "app/quick_note.py",
       "release": true,
       "purpose": "Kompatibler Append-only-Speicherweg für Projekt-Notizen"
