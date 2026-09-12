@@ -162,6 +162,23 @@ def validate_evidence(path: Path) -> tuple[bool, tuple[str, ...]]:
     return not problems, tuple(problems)
 
 
+def _bind_execution_globals(namespace: dict[str, object], name: str, replacements: dict[str, object]) -> None:
+    """Bindet Ersatzobjekte an den echten Global-Namespace einer geladenen Funktion.
+
+    ``runpy.run_path`` kann einen Ergebnis-Namespace liefern, der nicht mit dem
+    ``__globals__``-Mapping bereits erzeugter Funktionen identisch ist. Nur den
+    Ergebnis-Namespace zu ändern reicht dann nicht. Diese Funktion macht die
+    Bindung explizit und prüfbar, damit der CI-Lauf exakt dieselbe Dashboard-
+    Präsentationsschicht nutzt wie der Produktstart.
+    """
+    target = namespace.get(name)
+    globals_map = getattr(target, "__globals__", None)
+    if not callable(target) or not isinstance(globals_map, dict):
+        raise RuntimeError(f"Shadow-Gate-Funktion {name!r} besitzt keinen bindbaren Global-Namespace.")
+    globals_map.update(replacements)
+    namespace.update(replacements)
+
+
 def _load_shadow_runtime() -> dict[str, object]:
     """Lädt den Gate-Code ohne ihn sofort zu starten und gleicht ihn an Produktion an."""
     if not TARGET.is_file():
@@ -187,8 +204,19 @@ def _load_shadow_runtime() -> dict[str, object]:
             raise RuntimeError("Shadow-Gate muss exakt drei Kernfenster-Fabriken bereitstellen.")
         return (lambda: production_dashboard(root), *factories[1:])
 
-    namespace["_core_factories"] = production_core_factories
+    # Wichtig: Nicht nur die von runpy zurückgegebene Dictionary-Kopie ändern.
+    # ``run()`` löst ``_core_factories`` über sein eigenes __globals__ auf.
+    # Genau diese Verbindung war im ersten realen Kalibrierungslauf ungetestet.
+    _bind_execution_globals(
+        namespace,
+        "run",
+        {
+            "_core_factories": production_core_factories,
+            "_provoware_production_dashboard_factory": production_dashboard,
+        },
+    )
     namespace["_provoware_production_dashboard_factory"] = production_dashboard
+    namespace["_provoware_production_core_factories"] = production_core_factories
     return namespace
 
 
