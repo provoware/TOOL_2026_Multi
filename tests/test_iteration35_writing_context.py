@@ -27,7 +27,7 @@ class Iteration35WritingContextTests(unittest.TestCase):
 
             self.assertEqual(
                 character_marker(root, str(saved["id"])),
-                "[Charakter: Nora (Hauptfigur)]",
+                "«Charakter: Nora (Hauptfigur)»",
             )
             with self.assertRaises(ValueError):
                 character_marker(root, "nicht-vorhanden")
