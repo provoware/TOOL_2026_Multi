@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QTextEdit, QToolButton, QVBoxLayout, QWidget,
 )
 
+from app.character_store import character_marker, character_options
 from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song
 from app.ui_standards import SPACING, apply_global_style
 
@@ -45,6 +46,7 @@ class SongEditor(QWidget):
         self.setMinimumSize(940, 650)
         self._build()
         self._load_document_into_widgets()
+        self.refresh_characters()
         self._load_section(0)
         self._update_preview()
         apply_global_style(self, zoom_percent)
@@ -85,7 +87,7 @@ class SongEditor(QWidget):
         header.addWidget(save_button)
         outer.addLayout(header)
 
-        guide = QLabel("1. Titel eintragen  →  2. Bereich wählen oder hinzufügen  →  3. Text schreiben. Änderungen werden automatisch gespeichert.")
+        guide = QLabel("1. Titel eintragen  →  2. Bereich wählen oder hinzufügen  →  3. Text schreiben. Charaktere können optional direkt aus der Charakterfibel eingefügt werden.")
         guide.setObjectName("muted")
         guide.setWordWrap(True)
         outer.addWidget(guide)
@@ -132,6 +134,21 @@ class SongEditor(QWidget):
         for col in range(3):
             meta_layout.setColumnStretch(col, 1)
         outer.addWidget(meta_frame)
+
+        character_frame = QFrame()
+        character_frame.setObjectName("innerCard")
+        character_layout = QHBoxLayout(character_frame)
+        character_layout.setContentsMargins(10, 6, 10, 6)
+        character_layout.addWidget(QLabel("Charakterfibel:"))
+        self.character_combo = QComboBox()
+        self.character_combo.setObjectName("song_character_selector")
+        self.character_combo.setToolTip("Charaktere stammen direkt aus der zentralen Charakterfibel.")
+        character_layout.addWidget(self.character_combo, 1)
+        insert_character = QPushButton("In Songbereich einfügen")
+        insert_character.setToolTip("Fügt die ausgewählte Figur an der aktuellen Schreibposition ein und speichert den Song anschließend.")
+        insert_character.clicked.connect(self.insert_character_reference)
+        character_layout.addWidget(insert_character)
+        outer.addWidget(character_frame)
 
         splitter = QSplitter(Qt.Horizontal)
         left = QWidget()
@@ -222,6 +239,43 @@ class SongEditor(QWidget):
         self.other_text.setPlainText(self.document.other)
         self.other_text.blockSignals(False)
         self._refresh_section_list()
+
+    def refresh_characters(self) -> None:
+        """Verwendet dieselbe zentrale Auswahl wie andere Schreibmodule."""
+        selected = self.character_combo.currentData()
+        self.character_combo.blockSignals(True)
+        self.character_combo.clear()
+        self.character_combo.addItem("Charakter auswählen …", "")
+        try:
+            options = character_options(self.project_root)
+        except Exception:
+            options = []
+        for option in options:
+            self.character_combo.addItem(option.label, option.character_id)
+        if selected:
+            index = self.character_combo.findData(selected)
+            if index >= 0:
+                self.character_combo.setCurrentIndex(index)
+        self.character_combo.blockSignals(False)
+
+    def insert_character_reference(self) -> None:
+        """Fügt eine lesbare Referenz in den aktuellen Bereich ein; das Songformat bleibt unverändert."""
+        character_id = str(self.character_combo.currentData() or "")
+        if not character_id:
+            QMessageBox.information(self, "Kein Charakter ausgewählt", "Bitte zuerst einen Charakter aus der Charakterfibel auswählen.")
+            return
+        try:
+            marker = character_marker(self.project_root, character_id)
+        except ValueError as error:
+            self.refresh_characters()
+            QMessageBox.information(self, "Charakter nicht mehr verfügbar", str(error))
+            return
+        cursor = self.section_text.textCursor()
+        cursor.insertText(marker)
+        self.section_text.setTextCursor(cursor)
+        self._store_current_section()
+        self._update_preview()
+        self.save(reason="Charakterreferenz eingefügt")
 
     def _refresh_section_list(self) -> None:
         self.section_list.blockSignals(True)
