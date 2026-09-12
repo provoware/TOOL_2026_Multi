@@ -78,6 +78,28 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                 editor.close()
                 _settle(2)
 
+    def test_song_editor_section_actions_shorten_only_at_high_zoom_without_losing_semantics(self):
+        cases = (
+            (150, "Bereich hinzufügen", "Bereich entfernen"),
+            (175, "＋ Bereich", "− Bereich"),
+            (200, "＋ Bereich", "− Bereich"),
+        )
+        for zoom, add_text, remove_text in cases:
+            with self.subTest(zoom=zoom), tempfile.TemporaryDirectory() as tmp:
+                editor = SongEditor(Path(tmp), zoom_percent=zoom)
+                try:
+                    editor.show()
+                    _settle()
+                    self.assertEqual(editor.add_section_button.text(), add_text)
+                    self.assertEqual(editor.remove_section_button.text(), remove_text)
+                    self.assertEqual(editor.add_section_button.accessibleName(), "Bereich hinzufügen")
+                    self.assertEqual(editor.remove_section_button.accessibleName(), "Bereich entfernen")
+                    self.assertTrue(editor.add_section_button.toolTip())
+                    self.assertTrue(editor.remove_section_button.toolTip())
+                finally:
+                    editor.close()
+                    _settle(2)
+
     def test_dashboard_dense_mode_prioritizes_ready_workflows_on_short_height(self):
         with tempfile.TemporaryDirectory() as tmp:
             dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
