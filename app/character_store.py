@@ -201,5 +201,5 @@ def character_reference(root: Path, character_id: str) -> str:
 
 
 def character_marker(root: Path, character_id: str) -> str:
-    """Erzeugt den einheitlichen sichtbaren Marker für Schreibtexte."""
-    return f"[Charakter: {character_reference(root, character_id)}]"
+    """Erzeugt einen sichtbaren Marker, der nicht mit Songbereichsklammern kollidiert."""
+    return f"«Charakter: {character_reference(root, character_id)}»"
