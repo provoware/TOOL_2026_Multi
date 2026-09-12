@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -31,13 +32,47 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _stored_unix_mode(info: zipfile.ZipInfo) -> int:
+    """Liest nur die normalen Unix-Rechte aus einem ZIP-Eintrag."""
+    return (info.external_attr >> 16) & 0o777
+
+
 def safe_members(archive: zipfile.ZipFile) -> list[zipfile.ZipInfo]:
     members = archive.infolist()
     for info in members:
         path = PurePosixPath(info.filename)
         if path.is_absolute() or ".." in path.parts:
             raise ValueError(f"Unsicherer ZIP-Pfad: {info.filename}")
+        unix_type = (info.external_attr >> 16) & 0o170000
+        if unix_type == stat.S_IFLNK:
+            raise ValueError(f"Symbolischer Link im Restore-ZIP nicht erlaubt: {info.filename}")
     return members
+
+
+def extract_preserving_modes(archive: zipfile.ZipFile, destination: Path) -> None:
+    """Entpackt sichere Einträge und stellt portable Unix-Rechte wieder her.
+
+    ``zipfile.extractall`` übernimmt Unix-Ausführungsbits nicht zuverlässig.
+    Deshalb werden Dateien kontrolliert geschrieben und anschließend ausschließlich
+    mit den im ZIP gespeicherten Benutzer-/Gruppen-/Sonstigen-Rechten (0o777)
+    versehen. Sonderbits werden absichtlich nie übernommen.
+    """
+    destination = destination.resolve()
+    for info in safe_members(archive):
+        relative = PurePosixPath(info.filename)
+        target = destination.joinpath(*relative.parts)
+        if info.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+            mode = _stored_unix_mode(info)
+            if mode:
+                target.chmod(mode)
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with archive.open(info, "r") as source, target.open("wb") as output:
+            shutil.copyfileobj(source, output)
+        mode = _stored_unix_mode(info)
+        if mode:
+            target.chmod(mode)
 
 
 def _fsync_directory(directory: Path) -> None:
@@ -119,8 +154,7 @@ def restore_and_verify(root: Path, output_dir: Path) -> dict[str, object]:
         shutil.rmtree(restore_root)
     restore_root.mkdir(parents=True)
     with zipfile.ZipFile(archive) as zipped:
-        members = safe_members(zipped)
-        zipped.extractall(restore_root, members=members)
+        extract_preserving_modes(zipped, restore_root)
 
     restored_manifest = json.loads((restore_root / "MANIFEST.json").read_text(encoding="utf-8"))
     if restored_manifest != manifest:
@@ -132,6 +166,7 @@ def restore_and_verify(root: Path, output_dir: Path) -> dict[str, object]:
         "restore_status": "OK", "archive": str(archive), "sha256": expected_sha,
         "restore_dir": str(restore_root), "files": file_count,
         "manifest_version": version, "full_check": "OK", "headless_start": "OK",
+        "permissions_restored": True,
     }
     report_path = output_dir / f"{archive.stem}_RESTORE.json"
     atomic_write_text(report_path, json.dumps(report, ensure_ascii=False, indent=2) + "\n")
