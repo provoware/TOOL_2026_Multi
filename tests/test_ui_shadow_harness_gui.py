@@ -48,6 +48,24 @@ class UiShadowHarnessGuiTests(unittest.TestCase):
                 dashboard.close()
                 QApplication.processEvents()
 
+    def test_shadow_waits_for_deferred_navigation_before_measurement(self):
+        namespace = self.entry._load_shadow_runtime()
+        spec = namespace["critical_matrix"]()[1]  # 1366×768 · 150 % · Amber
+        factory = namespace["_provoware_production_dashboard_factory"]
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = factory(Path(tmp))
+            try:
+                namespace["_apply_case"](dashboard, spec)
+                planned = [
+                    button for button in dashboard.findChildren(QPushButton)
+                    if button.property("planned") is True and button.objectName() == "navButton"
+                ]
+                self.assertTrue(planned)
+                self.assertTrue(all(not button.isVisibleTo(dashboard) for button in planned))
+            finally:
+                dashboard.close()
+                QApplication.processEvents()
+
     def test_shadow_core_factories_keep_exact_three_window_contract(self):
         namespace = self.entry._load_shadow_runtime()
         with tempfile.TemporaryDirectory() as tmp:
