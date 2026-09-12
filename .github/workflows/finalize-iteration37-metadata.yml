@@ -23,7 +23,16 @@ jobs:
         shell: bash
         run: |
           set -Eeuo pipefail
-          sed -i 's/\\n## Anzeige und Zoom\\n/\\n## Datensicherheit\\n/' scripts/sync_iteration37_metadata.py
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/sync_iteration37_metadata.py')
+          text = path.read_text(encoding='utf-8')
+          old = 'end = r.index("\\n## Anzeige und Zoom\\n", start)'
+          new = 'end = r.index("\\n## Datensicherheit\\n", start)'
+          if text.count(old) != 1:
+              raise SystemExit(f'README-Endmarker im Syncskript nicht eindeutig: {text.count(old)} Treffer')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
           python3 scripts/sync_iteration37_metadata.py
 
       - name: Einmalige Sync-Helfer entfernen und Ergebnis schreiben
