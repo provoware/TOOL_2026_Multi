@@ -286,6 +286,12 @@ class NavigationUxController(QObject):
         for button, text in zip(self.ready_buttons, labels, strict=True):
             button.setText(text)
 
+    @staticmethod
+    def _set_vertical_presence(widget: QWidget, visible: bool) -> None:
+        """Entfernt versteckte Bereiche auch sicher aus der Höhenverteilung."""
+        widget.setMaximumHeight(16777215 if visible else 0)
+        widget.setVisible(visible)
+
     def sync_visibility(self) -> None:
         collapsed = bool(getattr(self.dashboard, "nav_collapsed", False))
         sidebar_open = not collapsed
@@ -301,16 +307,16 @@ class NavigationUxController(QObject):
         self.layout.setSpacing(4 if state.high_zoom else 2)
 
         self.menu_title.setVisible(sidebar_open)
-        for widget in self.core_entries:
-            widget.setVisible(sidebar_open)
-        self.overview_button.setVisible(sidebar_open and not state.high_zoom)
-        self.ready_heading.setVisible(sidebar_open and not state.high_zoom)
-        self.planned_heading.setVisible(sidebar_open and not restricted)
-        self.planned_hint.setVisible(sidebar_open and not restricted)
-        self.planned_toggle.setVisible(sidebar_open and not restricted)
+        for button in self.ready_buttons:
+            button.setVisible(sidebar_open)
+        self._set_vertical_presence(self.overview_button, sidebar_open and not state.high_zoom)
+        self._set_vertical_presence(self.ready_heading, sidebar_open and not state.high_zoom)
+        self._set_vertical_presence(self.planned_heading, sidebar_open and not restricted)
+        self._set_vertical_presence(self.planned_hint, sidebar_open and not restricted)
+        self._set_vertical_presence(self.planned_toggle, sidebar_open and not restricted)
 
         show_planned = sidebar_open and not restricted and self.planned_expanded
-        self.planned_container.setVisible(show_planned)
+        self._set_vertical_presence(self.planned_container, show_planned)
         for button in self.planned_buttons:
             button.setMaximumHeight(16777215)
             button.setVisible(show_planned)

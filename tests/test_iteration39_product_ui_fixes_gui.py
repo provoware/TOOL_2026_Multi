@@ -129,8 +129,13 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                 dashboard.show()
                 _settle()
                 controller = dashboard._provoware_navigation_ux
-                self.assertFalse(controller.overview_button.isVisibleTo(dashboard))
-                self.assertFalse(controller.ready_heading.isVisibleTo(dashboard))
+                hidden = (
+                    controller.overview_button, controller.ready_heading,
+                    controller.planned_heading, controller.planned_hint, controller.planned_toggle,
+                )
+                for widget in hidden:
+                    self.assertFalse(widget.isVisibleTo(dashboard))
+                    self.assertEqual(widget.maximumHeight(), 0)
                 self.assertGreaterEqual(controller.layout.spacing(), 4)
                 visible = [button for button in controller.ready_buttons if button.isVisibleTo(dashboard)]
                 self.assertEqual(len(visible), 7)
