@@ -68,6 +68,14 @@ Der Theme-Wechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswa
 
 Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast gegen den jeweiligen Hintergrund geprüft.
 
+## Neu in 0.17.4 – automatische UI-Abnahme im Shadow-Modus
+
+Die wiederkehrende Oberflächenprüfung wird erstmals systematisch automatisiert. Ein neuer **UI-Shadow-Gate** prüft die kritischen Fenster gegen zentrale Verträge für Raster, Geometrie, Mindesthöhen, Accessibility und Kontrast. Pull Requests nutzen eine kompakte 8-Fall-Matrix; `main` nutzt 60 Kombinationen aus 1366×768 bis 1920×1080, 100–200 % Zoom und allen vier Themes.
+
+Auffälligkeiten erzeugen eine maschinenlesbare JSON-Evidenz und – wo sinnvoll – Diagnosebilder mit 8-Pixel-Raster. Gespeicherte Fensterpositionen werden zusätzlich mit deterministischen Problemfällen gefuzzt. Der Gate läuft in Iteration 39 bewusst **nicht blockierend**, damit seine Regeln zuerst kalibriert werden können. Die vorhandenen Logik-, GUI-, Wayland-, Restore- und ZIP-Gates bleiben weiterhin die verbindliche Freigabe.
+
+Wichtig: CI-Evidenz wird als separates Artefakt erzeugt und nicht nachträglich in das Quell-Manifest geschrieben. Dadurch entsteht kein endloser Kreislauf, bei dem ein Evidenz-Commit selbst wieder einen neuen Evidenz-Commit erfordert.
+
 ## Neu in 0.17.3 – Fensterführung und kleine Displays
 
 - **Klare Song-Arbeitsfolge:** Beim Öffnen eines Songs aus der Bibliothek wird die Bibliothek vorübergehend ausgeblendet; nach dem Schließen des letzten Songeditors kehrt sie kontrolliert zurück.
