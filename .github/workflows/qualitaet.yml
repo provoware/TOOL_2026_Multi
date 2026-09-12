@@ -44,3 +44,20 @@ jobs:
           python3 scripts/wayland_smoke.py
       - name: Vollprojekt wiederherstellen und prüfen
         run: python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"
+      - name: Geprüfte ZIP-Pakete erzeugen
+        run: |
+          set -Eeuo pipefail
+          python3 scripts/veroeffentlichen.py
+          VERSION="$(python3 -c 'import json; print(json.load(open("MANIFEST.json", encoding="utf-8"))["tool"]["version"])')"
+          FULL="release/TOOL_2026_Multi_${VERSION}_vollstaendiges-projekt.zip"
+          git archive --format=zip --output="$FULL" HEAD
+          sha256sum "$FULL" > "$FULL.sha256"
+      - name: Geprüfte ZIP-Pakete bereitstellen
+        uses: actions/upload-artifact@v4
+        with:
+          name: TOOL_2026_Multi-gepruefte-pakete
+          path: |
+            release/*.zip
+            release/*.sha256
+          if-no-files-found: error
+          retention-days: 14
