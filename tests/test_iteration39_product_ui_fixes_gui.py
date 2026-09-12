@@ -118,6 +118,38 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                 dashboard.close()
                 _settle(2)
 
+    def test_sidebar_uses_short_visible_labels_without_losing_semantics(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
+                dashboard.zoom_percent = 150
+                dashboard.set_zoom(150)
+                apply_global_style(dashboard, 150, "Amber")
+                dashboard.resize(1334, 696)
+                dashboard.show()
+                _settle()
+                controller = dashboard._provoware_navigation_ux
+                self.assertEqual(dashboard.profile_nav_button.text(), "▦  Vorgaben")
+                self.assertEqual(dashboard.profile_nav_button.accessibleName(), "Genres & Vorgaben")
+                self.assertEqual(dashboard.recovery_nav_button.text(), "ⓘ  Hilfe")
+                self.assertEqual(dashboard.recovery_nav_button.accessibleName(), "Hilfe & Fehlerhilfe")
+
+                dashboard.zoom_percent = 100
+                dashboard.set_zoom(100)
+                apply_global_style(dashboard, 100, "Amber")
+                dashboard.resize(1334, 696)
+                _settle()
+                self.assertEqual(controller.planned_toggle.text(), "▸  Geplante Bereiche (10)")
+                self.assertEqual(
+                    controller.planned_toggle.accessibleName(),
+                    "Geplante Bereiche anzeigen oder ausblenden",
+                )
+                self.assertTrue(controller.planned_toggle.toolTip())
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
     def test_high_zoom_sidebar_keeps_ready_buttons_separated(self):
         with tempfile.TemporaryDirectory() as tmp:
             dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
