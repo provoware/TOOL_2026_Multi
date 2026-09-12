@@ -82,6 +82,24 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
             try:
+                dashboard.zoom_percent = 100
+                apply_global_style(dashboard, 100, "Amber")
+                dashboard.resize(1334, 696)
+                dashboard.show()
+                _settle()
+                self.assertFalse(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
+                self.assertFalse(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
+                self.assertTrue(_card_by_title(dashboard, "🚀  So startest du").isVisibleTo(dashboard))
+                self.assertTrue(_card_by_title(dashboard, "▦  Daten & Vorgaben").isVisibleTo(dashboard))
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
+    def test_dashboard_dense_mode_tracks_125_percent_shadow_boundary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
                 dashboard.zoom_percent = 125
                 dashboard.set_zoom(125)
                 apply_global_style(dashboard, 125, "Türkis")
@@ -90,8 +108,6 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                 _settle()
                 self.assertFalse(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
                 self.assertFalse(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
-                self.assertTrue(_card_by_title(dashboard, "🚀  So startest du").isVisibleTo(dashboard))
-                self.assertTrue(_card_by_title(dashboard, "▦  Daten & Vorgaben").isVisibleTo(dashboard))
 
                 dashboard.resize(1594, 926)
                 _settle()
