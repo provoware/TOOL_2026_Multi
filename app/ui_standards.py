@@ -513,8 +513,8 @@ def _install_responsive_layout(widget: QWidget) -> None:
 
 
 def _clean_accessible_text(text: str) -> str:
-    compact = " ".join((text or "").replace("\n", " ").split())
-    return compact.lstrip("♫▣▤▥?⌕≡◈✎◫▦⚕✓●①②③ ·") or compact
+    compact = " ".join((text or "").replace("&&", "&").replace("\n", " ").split())
+    return compact.lstrip("♫▣▤▥?⌕≡◈✎◫▦⚕ⓘ✓●①②③ ·") or compact
 
 
 def _apply_accessibility(widget: QWidget) -> None:
