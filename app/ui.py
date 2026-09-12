@@ -284,7 +284,7 @@ class Dashboard(QWidget):
         self.todo_nav_button = self._add_nav(layout, "  ✓  Todo-Liste", self.open_todo)
         self.calendar_nav_button = self._add_nav(layout, "  ▦  Kalender", self.open_calendar)
         self._add_heading(layout, "Hilfe")
-        self.recovery_nav_button = self._add_nav(layout, "  ⚕  Fehlerhilfe (Recovery)", self.open_recovery)
+        self.recovery_nav_button = self._add_nav(layout, "  ⓘ  Hilfe & Fehlerhilfe", self.open_recovery)
         layout.addStretch(1)
         return sidebar
 
@@ -510,6 +510,7 @@ class Dashboard(QWidget):
         QShortcut(QKeySequence("Ctrl+-"), self, activated=lambda: self._step_zoom(-1))
         QShortcut(QKeySequence("Ctrl+0"), self, activated=lambda: self.set_zoom(100))
         QShortcut(QKeySequence("Ctrl+R"), self, activated=self.open_recovery)
+        QShortcut(QKeySequence("F1"), self, activated=self.open_recovery)
 
     @staticmethod
     def _set_song_editor_zoom(editor: SongEditor, percent: int) -> None:
@@ -591,7 +592,7 @@ class Dashboard(QWidget):
             self.quick_status.setText("Bitte zuerst eine kurze Projekt-Notiz eingeben.")
             return
         except Exception:
-            self.quick_status.setText("Projekt-Notiz konnte nicht gespeichert werden. Öffne bei Bedarf die Fehlerhilfe.")
+            self.quick_status.setText("Projekt-Notiz konnte nicht gespeichert werden. Öffne bei Bedarf Hilfe & Fehlerhilfe.")
             return
         self.quick_entry.clear()
         self.quick_status.setText("Projekt-Notiz gespeichert. Vorhandene Notizen bleiben erhalten.")
@@ -651,7 +652,7 @@ class Dashboard(QWidget):
         try:
             profiles = load_profiles(self.project_root)
         except Exception:
-            self.quick_status.setText("Profile konnten nicht geladen werden. Öffne die Fehlerhilfe, wenn das Problem bleibt.")
+            self.quick_status.setText("Profile konnten nicht geladen werden. Öffne Hilfe & Fehlerhilfe, wenn das Problem bleibt.")
             return
         self.db_profile_combo.blockSignals(True)
         self.db_profile_combo.clear()
@@ -670,7 +671,7 @@ class Dashboard(QWidget):
         try:
             data = load_profiles(self.project_root).get(profile, {})
         except Exception:
-            self.quick_status.setText("Profilwerte konnten nicht geladen werden. Öffne bei Bedarf die Fehlerhilfe.")
+            self.quick_status.setText("Profilwerte konnten nicht geladen werden. Öffne bei Bedarf Hilfe & Fehlerhilfe.")
             return
         for category in CATEGORIES:
             combo = self.db_boxes[category]
@@ -740,7 +741,7 @@ class Dashboard(QWidget):
 
     def _calendar_reminder_error(self, error: Exception) -> None:
         del error
-        self.quick_status.setText("Kalender-Erinnerungen konnten nicht geprüft werden. Öffne bei Bedarf die Fehlerhilfe.")
+        self.quick_status.setText("Kalender-Erinnerungen konnten nicht geprüft werden. Öffne bei Bedarf Hilfe & Fehlerhilfe.")
 
     def open_song_editor(self) -> None:
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
@@ -877,7 +878,7 @@ def install_exception_handler(app, logger: EventLogger, refresh: Callable[[], No
                 severity="FEHLER", area="OBERFLAECHE",
                 summary="Eine Aktion wurde sicher abgebrochen.", cause=str(error) or "Unbekannter Programmfehler",
                 protection="Die betroffene Aktion wurde beendet; andere Bereiche bleiben verfügbar.",
-                next_step="Öffnen Sie die Fehlerhilfe (Recovery) und folgen Sie dem dort genannten Schritt.", exception=error,
+                next_step="Öffnen Sie Hilfe & Fehlerhilfe und folgen Sie dem dort genannten Schritt.", exception=error,
             )
             refresh()
             QMessageBox.critical(parent, "Aktion sicher beendet", f"{event['summary']}\n\n{event['next_step']}\n\nKennung: {event['event_id']}")

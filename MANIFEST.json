@@ -1,16 +1,16 @@
 {
-  "schema_version": 29,
+  "schema_version": 30,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.17.1",
+    "version": "0.17.2",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-09-12"
   },
   "iteration": {
-    "number": 36,
-    "goal": "Kubuntu-Abnahmestart und Restore-Dateirechte für Klick-&-Start zuverlässig absichern",
-    "completed": 6,
+    "number": 37,
+    "goal": "Entwicklungsprüfung automatisieren, Repository-Überreste blockieren und Hilfe & Fehlerhilfe durchsuchbar machen",
+    "completed": 5,
     "open_next": 1
   },
   "runtime": {
@@ -321,7 +321,22 @@
     "iteration36_main_runtime_release_sha256": "ec408ed8ba64a05d9a8ba0e2a6d7b1659d2b1dcebc3f6c4f8dce32c4c848c950",
     "iteration36_launcher_modes": "schnellstart.sh=0755;kubuntu_abnahme.sh=0755",
     "iteration36_permissions_restored": true,
-    "iteration36_symlink_restore_rejected": true
+    "iteration36_symlink_restore_rejected": true,
+    "iteration37_initial_ci_run": 764,
+    "iteration37_initial_ci_result": "failure",
+    "iteration37_initial_ci_cause": "Release-Invariant blockierte korrekt: app/help_content.py fehlte im Release-Manifest; Entwickler-Grundausstattung erkannte zusätzlich die fehlende Iteration-37-Dokumentation",
+    "iteration37_technical_ci_run": 769,
+    "iteration37_technical_ci_result": "success",
+    "iteration37_technical_tested_head_sha": "7368488c601160506a7b95a057c3e340bef64e8f",
+    "iteration37_logic_tests": 113,
+    "iteration37_gui_tests": 77,
+    "iteration37_release_files": 47,
+    "iteration37_native_wayland_smoke": true,
+    "iteration37_restore_gate": true,
+    "iteration37_restore_status": "OK",
+    "iteration37_restore_sha256": "000b03420cb2a7cddc4ce80885e27aa9f96bdf62aa43a571116f099c16fbb177",
+    "iteration37_runtime_release_sha256": "993786558ce564dfbd5deee90ac9b7f1fe0067a321d5e12a7c0859f97cb6f28a",
+    "iteration37_final_head_gate": "pending_after_version_sync"
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
@@ -726,6 +741,11 @@
       "path": "app/recovery_center.py",
       "release": true,
       "purpose": "Laienfreundliche Fehlerhilfe mit optionalen Technikdetails"
+    },
+    {
+      "path": "app/help_content.py",
+      "release": true,
+      "purpose": "UI-unabhängige, durchsuchbare Hilfethemen für Hilfe & Fehlerhilfe"
     },
     {
       "path": "app/quick_note.py",

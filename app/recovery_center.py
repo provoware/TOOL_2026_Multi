@@ -1,15 +1,17 @@
-"""Eigenständige PySide6-Fehlerhilfe außerhalb der Dashboard-Hauptfläche."""
+"""Eigenständige Hilfe und Fehlerhilfe außerhalb der Dashboard-Hauptfläche."""
 
 from __future__ import annotations
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
-    QComboBox, QDialog, QFormLayout, QHBoxLayout, QLabel, QMessageBox,
-    QPushButton, QTextEdit, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget,
+    QComboBox, QDialog, QFormLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QMessageBox, QPushButton, QSplitter, QTabWidget, QTextEdit,
+    QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget,
 )
 
 from app.event_log import EventLogger
+from app.help_content import help_topic_by_key, help_topics
 from app.import_schema import song_import_help_text, song_import_template_text
 from app.recovery_ui import ZOOM_LEVELS, available_areas, filter_events, repetition_summary, technical_details
 from app.texts import TextRegistry
@@ -17,7 +19,7 @@ from app.ui_standards import apply_global_style, severity_display
 
 
 class RecoveryCenter(QWidget):
-    """Zeigt Fehler und Hinweise zuerst in einfacher Sprache; technische Details bleiben optional."""
+    """Bündelt Bedienhilfe und Recovery, ohne technische Details aufzudrängen."""
 
     def __init__(self, texts: TextRegistry, logger: EventLogger, zoom_percent: int = 100,
                  parent: QWidget | None = None) -> None:
@@ -26,11 +28,12 @@ class RecoveryCenter(QWidget):
         self.zoom_percent = zoom_percent
         self._all_events: list[dict] = []
         self._event_by_item: dict[int, dict] = {}
-        self.setWindowTitle("Fehlerhilfe · Recovery")
-        self.resize(1000, 680)
+        self.setWindowTitle("Hilfe & Fehlerhilfe · Recovery")
+        self.resize(1040, 720)
         self.setMinimumSize(760, 520)
         self._build()
         apply_global_style(self, zoom_percent)
+        QShortcut(QKeySequence("F1"), self, activated=self.show_quick_help)
         QShortcut(QKeySequence("F5"), self, activated=self.refresh)
         QShortcut(QKeySequence("Escape"), self, activated=self.close)
         self.refresh()
@@ -41,7 +44,7 @@ class RecoveryCenter(QWidget):
         body.setSpacing(10)
 
         header = QHBoxLayout()
-        title = QLabel("Fehlerhilfe (Recovery)")
+        title = QLabel("Hilfe & Fehlerhilfe")
         title.setObjectName("sectionTitle")
         header.addWidget(title)
         header.addStretch(1)
@@ -50,13 +53,14 @@ class RecoveryCenter(QWidget):
         import_button.clicked.connect(self.show_import_template)
         header.addWidget(import_button)
         refresh_button = QPushButton("Meldungen aktualisieren")
+        refresh_button.setToolTip("Lädt nur die gespeicherten Fehlermeldungen neu; Nutzerdaten werden nicht verändert.")
         refresh_button.clicked.connect(self.refresh)
         header.addWidget(refresh_button)
         body.addLayout(header)
 
         hint = QLabel(
-            "Hier siehst du verständlich, was passiert ist, was das Programm zum Schutz getan hat und was du als Nächstes tun kannst. "
-            "Technische Details bleiben zunächst ausgeblendet."
+            "Schnellhilfe erklärt die Bedienung in einfachen Schritten. Unter Fehlermeldungen siehst du, was passiert ist, "
+            "was geschützt wurde und was du als Nächstes tun kannst. Technische Details bleiben zunächst ausgeblendet."
         )
         hint.setObjectName("muted")
         hint.setWordWrap(True)
@@ -65,6 +69,52 @@ class RecoveryCenter(QWidget):
         self.ready = QLabel(f"● {self.texts.get('status.ready', 'System bereit')}")
         self.ready.setObjectName("statusGood")
         body.addWidget(self.ready)
+
+        self.tabs = QTabWidget()
+        self.tabs.setAccessibleName("Hilfe und Fehlerhilfe")
+        body.addWidget(self.tabs, 1)
+        self._build_help_tab()
+        self._build_events_tab()
+
+    def _build_help_tab(self) -> None:
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+        layout.setContentsMargins(8, 10, 8, 8)
+        layout.setSpacing(8)
+
+        self.help_search = QLineEdit()
+        self.help_search.setPlaceholderText("Hilfe durchsuchen, z. B. speichern, Songtexte, Daten, Fehler oder Wayland")
+        self.help_search.setAccessibleName("Hilfethemen durchsuchen")
+        self.help_search.textChanged.connect(self._refresh_help_topics)
+        layout.addWidget(self.help_search)
+
+        splitter = QSplitter(Qt.Horizontal)
+        self.help_list = QListWidget()
+        self.help_list.setAccessibleName("Hilfethemen")
+        self.help_list.setMinimumWidth(230)
+        self.help_list.itemSelectionChanged.connect(self._show_selected_help_topic)
+        splitter.addWidget(self.help_list)
+
+        self.help_text = QTextEdit()
+        self.help_text.setReadOnly(True)
+        self.help_text.setAccessibleName("Anleitung zum gewählten Hilfethema")
+        splitter.addWidget(self.help_text)
+        splitter.setStretchFactor(0, 0)
+        splitter.setStretchFactor(1, 1)
+        layout.addWidget(splitter, 1)
+
+        self.help_status = QLabel("")
+        self.help_status.setObjectName("muted")
+        layout.addWidget(self.help_status)
+
+        self.tabs.addTab(tab, "Schnellhilfe")
+        self._refresh_help_topics()
+
+    def _build_events_tab(self) -> None:
+        tab = QWidget()
+        body = QVBoxLayout(tab)
+        body.setContentsMargins(8, 10, 8, 8)
+        body.setSpacing(8)
 
         controls = QHBoxLayout()
         controls.addWidget(QLabel("Nur diese Wichtigkeit:"))
@@ -110,6 +160,51 @@ class RecoveryCenter(QWidget):
         self.status.setObjectName("muted")
         actions.addWidget(self.status)
         body.addLayout(actions)
+
+        self.tabs.addTab(tab, "Fehlermeldungen")
+
+    def show_quick_help(self) -> None:
+        self.tabs.setCurrentIndex(0)
+        self.help_search.setFocus()
+
+    def _refresh_help_topics(self, *_args: object) -> None:
+        current_key = None
+        current = self.help_list.currentItem() if hasattr(self, "help_list") else None
+        if current is not None:
+            current_key = current.data(Qt.UserRole)
+        topics = help_topics(self.help_search.text() if hasattr(self, "help_search") else "")
+        self.help_list.blockSignals(True)
+        self.help_list.clear()
+        selected_item: QListWidgetItem | None = None
+        for topic in topics:
+            item = QListWidgetItem(topic.title)
+            item.setData(Qt.UserRole, topic.key)
+            self.help_list.addItem(item)
+            if topic.key == current_key:
+                selected_item = item
+        self.help_list.blockSignals(False)
+        if selected_item is not None:
+            self.help_list.setCurrentItem(selected_item)
+        elif self.help_list.count():
+            self.help_list.setCurrentRow(0)
+        else:
+            self.help_text.setPlainText(
+                "Kein Hilfethema passt zu dieser Suche. Versuche ein einfacheres Wort wie speichern, Daten, Fehler, Songtexte oder Wayland."
+            )
+        if topics:
+            label = "Hilfethema" if len(topics) == 1 else "Hilfethemen"
+            self.help_status.setText(f"{len(topics)} {label} gefunden")
+        else:
+            self.help_status.setText("Kein Hilfethema gefunden")
+        self._show_selected_help_topic()
+
+    def _show_selected_help_topic(self) -> None:
+        item = self.help_list.currentItem()
+        if item is None:
+            return
+        topic = help_topic_by_key(str(item.data(Qt.UserRole)))
+        if topic is not None:
+            self.help_text.setPlainText(topic.render())
 
     def show_import_template(self) -> None:
         from PySide6.QtWidgets import QApplication

@@ -513,7 +513,7 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.assertIn("#FFD800", self.dashboard.styleSheet())
 
     def test_recovery_occurs_once_in_dashboard_controls(self):
-        buttons = [button for button in self.dashboard.findChildren(QPushButton) if "Recovery" in button.text()]
+        buttons = [button for button in self.dashboard.findChildren(QPushButton) if "Hilfe & Fehlerhilfe" in button.text()]
         self.assertEqual(len(buttons), 1)
         self.assertIs(buttons[0], self.dashboard.recovery_nav_button)
 

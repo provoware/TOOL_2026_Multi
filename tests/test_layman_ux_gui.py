@@ -115,7 +115,7 @@ class LaymanUxGuiTests(unittest.TestCase):
             self.assertIn("Profil", profile.status_label.text())
             self.assertIn("Song", library.search_entry.placeholderText())
             self.assertIn("automatisch", editor.status_label.text())
-            self.assertIn("Fehlerhilfe", recovery.windowTitle())
+            self.assertIn("Hilfe & Fehlerhilfe", recovery.windowTitle())
         finally:
             editor._closing_after_save = True
             editor.close()
