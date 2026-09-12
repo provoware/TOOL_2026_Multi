@@ -8,6 +8,7 @@ FORBIDDEN_DIRS = {".venv", "__pycache__", "logs", "berichte", "tmp", "backups", 
 FORBIDDEN_NAMES = {".DS_Store", "Thumbs.db"}
 FORBIDDEN_SUFFIXES = (".pyc", ".pyo", ".log", ".tmp", ".bak", ".swp", ".zip", ".sha256")
 FORBIDDEN_ROOT_PREFIXES = ("ChatGPT Image ", "Screenshot", "Bildschirmfoto")
+FORBIDDEN_ONE_OFF_PREFIXES = ("scripts/_iter", "scripts/finalize_", ".github/workflows/finalize-")
 MAX_ROOT_FILE_BYTES = 1_000_000
 
 
@@ -31,6 +32,9 @@ class RepositoryHygieneTests(unittest.TestCase):
                 offenders.append(relative)
                 continue
             if len(path.parts) == 1 and path.name.startswith(FORBIDDEN_ROOT_PREFIXES):
+                offenders.append(relative)
+                continue
+            if relative.startswith(FORBIDDEN_ONE_OFF_PREFIXES):
                 offenders.append(relative)
                 continue
             full_path = ROOT / path

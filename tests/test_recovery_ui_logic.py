@@ -3,12 +3,31 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from app.help_content import help_topic_by_key, help_topics
 from app.recovery_ui import available_areas, filter_events, repetition_summary, technical_details, zoom_font_size
 from app.regression import RegressionManager
 from scripts.schreibfehler_simulieren import run_simulations
 
 
 class RecoveryUiLogicTests(unittest.TestCase):
+    def test_help_topics_are_searchable_and_stable(self):
+        all_topics = help_topics()
+        self.assertGreaterEqual(len(all_topics), 8)
+        self.assertEqual(all_topics[0].key, "erste-schritte")
+        wayland = help_topics("kubuntu wayland")
+        self.assertEqual([topic.key for topic in wayland], ["kubuntu-abnahme"])
+        self.assertEqual(help_topics("gibt-es-nicht"), ())
+
+    def test_help_search_normalises_german_umlauts_and_rendering_is_actionable(self):
+        matches = help_topics("oeffnen")
+        self.assertTrue(any(topic.key == "erste-schritte" for topic in matches))
+        topic = help_topic_by_key("fehler-beheben")
+        self.assertIsNotNone(topic)
+        rendered = topic.render()
+        self.assertIn("So gehst du vor:", rendered)
+        self.assertIn("1.", rendered)
+        self.assertIn("Wichtig:", rendered)
+
     def test_filters_by_severity_and_area(self):
         events = [
             {"severity": "INFO", "area": "START"},

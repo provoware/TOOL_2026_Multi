@@ -1,47 +1,136 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 MODE="${1:---full}"
-[[ "$MODE" == "--full" || "$MODE" == "--runtime" ]] || { printf 'Nutzung: %s [--full|--runtime]\n' "$0" >&2; exit 2; }
-fehler=0
-pruefe_datei(){ [[ -f "$1" ]] && printf '🟢 vorhanden: %s\n' "$1" || { printf '🔴 fehlt: %s\n' "$1"; fehler=1; }; }
+if [[ -x "$ROOT/.venv/bin/python" ]]; then
+  PYTHON_BIN="$ROOT/.venv/bin/python"
+else
+  PYTHON_BIN="${PYTHON_BIN:-python3}"
+fi
+[[ "$MODE" == "--full" || "$MODE" == "--quick" || "$MODE" == "--runtime" ]] || {
+  printf 'Nutzung: %s [--quick|--full|--runtime]\n' "$0" >&2
+  exit 2
+}
 
-runtime_dateien=(MANIFEST.json ANLEITUNG_LAIEN.md requirements.txt schnellstart.sh kubuntu_abnahme.sh app/main.py app/presentation_policy.py app/laptop_layout.py app/navigation_ux.py app/startup_validation.py app/character_store.py app/character_window.py app/text_editor_store.py app/text_editor_window.py app/import_schema.py app/atomic_io.py app/process_guard.py app/event_log.py app/regression.py app/redaction.py app/log_maintenance.py app/recovery_ui.py app/recovery_center.py app/quick_note.py app/profile_store.py app/profile_editor.py app/todo_store.py app/todo_window.py app/calendar_store.py app/calendar_reminders.py app/calendar_window.py app/song_document.py app/song_editor.py app/song_library.py app/texts.py app/ui.py app/ui_standards.py scripts/pruefen.sh scripts/start_status.py scripts/process_watch.py scripts/diagnosepaket.py scripts/kubuntu_abnahme.py texte/registry.json vorlagen/songtext_import_vorlage.json)
-for datei in "${runtime_dateien[@]}"; do pruefe_datei "$datei"; done
-if [[ "$MODE" == "--full" ]]; then
-  entwickler_dateien=(README.md AGENTS.md TODO.md CHANGELOG.md scripts/veroeffentlichen.py scripts/iteration_restore.py scripts/backup_erstellen.sh scripts/schreibfehler_simulieren.py scripts/wayland_smoke.py tests/test_repo_hygiene.py tests/test_layman_ux_gui.py tests/test_navigation_ux_gui.py tests/test_presentation_policy.py tests/test_event_management.py tests/test_release_builder.py tests/test_security_watch.py tests/test_restore.py tests/test_diagnostics_logging.py tests/test_recovery_ui_logic.py tests/test_recovery_ui_gui.py tests/test_song_logic.py tests/test_song_gui.py tests/test_song_library.py tests/test_song_library_gui.py tests/test_song_library_controls.py tests/test_song_library_controls_gui.py tests/test_dashboard_reference_gui.py tests/test_kubuntu_acceptance.py tests/test_wayland_smoke.py tests/test_zoom_controls_gui.py tests/test_profile_store.py tests/test_profile_gui.py tests/test_todo_store.py tests/test_todo_gui.py tests/test_calendar_store.py tests/test_calendar_gui.py tests/test_process_consistency.py tests/test_iteration34_core.py tests/test_iteration34_gui.py tests/test_iteration35_writing_context.py tests/test_iteration35_writing_context_gui.py tests/test_iteration36_acceptance_launcher.py tests/regression_registry.json agents/INFO_DATEIEN_AGENT.md docs/ITERATION6_RECOVERY_UI.md docs/ITERATION7_SONG_WORKFLOW.md docs/ITERATION8_SONG_LIBRARY.md docs/ITERATION9_SONG_LIBRARY_CONTROLS.md docs/ITERATION11_QT_DASHBOARD.md docs/ITERATION12_KUBUNTU_ABNAHME.md docs/ITERATION13_ZOOM.md docs/ITERATION14_DB_PROFILE.md docs/ITERATION15_TODO.md docs/ITERATION16_CALENDAR.md docs/ITERATION17_PROCESS_CONSISTENCY.md docs/ITERATION18_DIAGNOSTIC_IO.md docs/ITERATION19_BACKUP_REPORT_IO.md docs/ITERATION20_REPO_HYGIENE.md docs/ITERATION21_LAIEN_UX.md docs/ITERATION22_RESPONSIVE_DESIGN.md docs/ITERATION23_ZOOM_HAERTUNG.md docs/ITERATION24_ACCESSIBILITY_THEMES.md docs/ITERATION25_LAPTOP_LAYOUT.md docs/ITERATION26_RELEASE_IO_HARDENING.md docs/ITERATION27_NAVIGATION_UX.md docs/ITERATION28_KUBUNTU_2604_WAYLAND.md docs/ITERATION29_PRESENTATION_POLICY.md docs/ITERATION34_CORE_MODULES_DATA_STANDARDS.md docs/ITERATION35_WRITING_CONTEXT.md docs/ITERATION36_ACCEPTANCE_LAUNCHER.md)
-  for datei in "${entwickler_dateien[@]}"; do pruefe_datei "$datei"; done
+fehler=0
+pruefe_datei() {
+  [[ -f "$1" ]] && printf '🟢 vorhanden: %s\n' "$1" || {
+    printf '🔴 fehlt: %s\n' "$1"
+    fehler=1
+  }
+}
+
+printf 'Prüfe freigegebene Betriebsdateien aus MANIFEST.json …\n'
+while IFS= read -r datei; do
+  pruefe_datei "$datei"
+done < <(
+  "$PYTHON_BIN" - <<'PY'
+import json
+from pathlib import Path
+manifest = json.loads(Path("MANIFEST.json").read_text(encoding="utf-8"))
+for entry in manifest.get("files", []):
+    if entry.get("release") is True:
+        path = entry.get("path")
+        if isinstance(path, str) and path:
+            print(path)
+PY
+)
+
+if [[ "$MODE" != "--runtime" ]]; then
+  printf '\nPrüfe kleine feste Entwickler-Grundausstattung …\n'
+  entwickler_dateien=(
+    README.md AGENTS.md TODO.md CHANGELOG.md
+    tests/regression_registry.json agents/INFO_DATEIEN_AGENT.md
+    docs/ENTWICKLUNGSREGELN.md docs/FEHLER_UND_REGRESSION.md
+    docs/ITERATIONSBERICHT_VORLAGE.md docs/ITERATION37_MAINTENANCE_HELP.md
+    scripts/veroeffentlichen.py scripts/schreibfehler_simulieren.py scripts/wayland_smoke.py
+  )
+  for datei in "${entwickler_dateien[@]}"; do
+    pruefe_datei "$datei"
+  done
 fi
 
-printf '\nPrüfe Shell-Syntax …\n'
-bash -n schnellstart.sh || fehler=1
-bash -n kubuntu_abnahme.sh || fehler=1
-bash -n scripts/pruefen.sh || fehler=1
-bash -n scripts/backup_erstellen.sh || fehler=1
+printf '\nPrüfe Shell-Syntax automatisch …\n'
+mapfile -t shell_dateien < <(
+  find . -maxdepth 2 -type f -name '*.sh' \
+    -not -path './.git/*' -not -path './.venv/*' \
+    -not -path './backups/*' -not -path './release/*' | sort
+)
+for datei in "${shell_dateien[@]}"; do
+  bash -n "$datei" || fehler=1
+done
 
-printf '\nPrüfe JSON-Dateien …\n'
-python3 -m json.tool MANIFEST.json >/dev/null || fehler=1
-python3 -m json.tool texte/registry.json >/dev/null || fehler=1
-python3 -m json.tool vorlagen/songtext_import_vorlage.json >/dev/null || fehler=1
-[[ "$MODE" != "--full" ]] || python3 -m json.tool tests/regression_registry.json >/dev/null || fehler=1
+printf '\nPrüfe statische JSON-Dateien …\n'
+mapfile -t json_dateien < <(
+  "$PYTHON_BIN" - <<'PY'
+import json
+from pathlib import Path
+manifest = json.loads(Path("MANIFEST.json").read_text(encoding="utf-8"))
+paths = {"MANIFEST.json"}
+for entry in manifest.get("files", []):
+    path = entry.get("path")
+    if isinstance(path, str) and path.endswith(".json") and Path(path).is_file():
+        paths.add(path)
+if Path("tests/regression_registry.json").is_file():
+    paths.add("tests/regression_registry.json")
+for path in sorted(paths):
+    print(path)
+PY
+)
+for datei in "${json_dateien[@]}"; do
+  "$PYTHON_BIN" -m json.tool "$datei" >/dev/null || fehler=1
+done
 
-printf '\nPrüfe Python-Syntax …\n'
-python3 -m py_compile app/*.py scripts/start_status.py scripts/process_watch.py scripts/diagnosepaket.py scripts/kubuntu_abnahme.py || fehler=1
-if [[ "$MODE" == "--full" ]]; then
-  python3 -m py_compile scripts/veroeffentlichen.py scripts/iteration_restore.py scripts/schreibfehler_simulieren.py scripts/wayland_smoke.py tests/*.py || fehler=1
-  printf '\nPrüfe Repo-Hygiene, Präsentationspolicy, Rückfall-, Release-, Sicherheits-, Restore-, Diagnose-, Song-, Profil-, Todo-, Kalender-, Prozess-, Launcher- und Kubuntu-Logik …\n'
-  python3 -m unittest tests.test_presentation_policy tests.test_repo_hygiene tests.test_event_management tests.test_release_builder tests.test_security_watch tests.test_restore tests.test_diagnostics_logging tests.test_recovery_ui_logic tests.test_song_logic tests.test_song_library tests.test_song_library_controls tests.test_profile_store tests.test_todo_store tests.test_calendar_store tests.test_process_consistency tests.test_iteration34_core tests.test_iteration35_writing_context tests.test_iteration36_acceptance_launcher tests.test_kubuntu_acceptance tests.test_wayland_smoke || fehler=1
+printf '\nPrüfe Python-Prüfumgebung …\n'
+if ! "$PYTHON_BIN" -c 'import PySide6' >/dev/null 2>&1; then
+  printf '🔴 PySide6 fehlt in %s. Starte zuerst schnellstart.sh oder verwende PYTHON_BIN=/pfad/zur/python-umgebung.\n' "$PYTHON_BIN"
+  exit 3
+fi
+
+printf '\nPrüfe Python-Syntax automatisch …\n'
+python_ziele=(app scripts)
+[[ "$MODE" == "--runtime" ]] || python_ziele+=(tests)
+"$PYTHON_BIN" -m compileall -q "${python_ziele[@]}" || fehler=1
+
+if [[ "$MODE" != "--runtime" ]]; then
+  printf '\nPrüfe automatisch alle Logik-/Regressionstests …\n'
+  mapfile -t logik_tests < <(
+    find tests -maxdepth 1 -type f -name 'test_*.py' ! -name '*_gui.py' -printf '%f\n' \
+      | sort | sed -e 's/\.py$//' -e 's#^#tests.#'
+  )
+  if (( ${#logik_tests[@]} == 0 )); then
+    printf '🔴 Keine Logiktests gefunden.\n'
+    fehler=1
+  else
+    "$PYTHON_BIN" -m unittest "${logik_tests[@]}" || fehler=1
+  fi
+
   printf '\nSimuliere vollen/geschützten Datenträger ohne echten Speicherverbrauch …\n'
-  python3 scripts/schreibfehler_simulieren.py >/dev/null || fehler=1
-  printf '\nPrüfe Laienführung, Dashboard, Navigation, Fehlerhilfe, Songeditor, Songbibliothek, Profile, Todo, Kalender und Zoom in echter PySide6-Oberfläche …\n'
+  "$PYTHON_BIN" scripts/schreibfehler_simulieren.py >/dev/null || fehler=1
+fi
+
+if [[ "$MODE" == "--full" ]]; then
+  printf '\nPrüfe automatisch alle PySide6-GUI-Tests …\n'
   export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
-  python3 -m unittest tests.test_layman_ux_gui tests.test_navigation_ux_gui tests.test_recovery_ui_gui tests.test_song_gui tests.test_song_library_gui tests.test_song_library_controls_gui tests.test_dashboard_reference_gui tests.test_zoom_controls_gui tests.test_profile_gui tests.test_todo_gui tests.test_calendar_gui tests.test_iteration34_gui tests.test_iteration35_writing_context_gui || fehler=1
-  python3 scripts/veroeffentlichen.py --check-only || fehler=1
+  mapfile -t gui_tests < <(
+    find tests -maxdepth 1 -type f -name '*_gui.py' -printf '%f\n' \
+      | sort | sed -e 's/\.py$//' -e 's#^#tests.#'
+  )
+  if (( ${#gui_tests[@]} == 0 )); then
+    printf '🔴 Keine GUI-Tests gefunden.\n'
+    fehler=1
+  else
+    "$PYTHON_BIN" -m unittest "${gui_tests[@]}" || fehler=1
+  fi
+
+  printf '\nPrüfe Release-Manifest …\n'
+  "$PYTHON_BIN" scripts/veroeffentlichen.py --check-only || fehler=1
 fi
 
 printf '\nPrüfe Startunterbau ohne Oberfläche …\n'
-python3 -m app.main --headless-check || fehler=1
+"$PYTHON_BIN" -m app.main --headless-check || fehler=1
 
 if (( fehler != 0 )); then
   printf '\n🔴 Prüfung fehlgeschlagen. Keine Reparaturschleife gestartet.\n'

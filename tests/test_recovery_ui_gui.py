@@ -52,8 +52,21 @@ class RecoveryUiGuiTests(unittest.TestCase):
         self.app.processEvents()
 
     def test_recovery_is_single_sidebar_entry_and_not_dashboard_table(self):
-        self.assertEqual(self.dashboard.recovery_nav_button.text().strip(), "⚕  Fehlerhilfe (Recovery)")
+        self.assertEqual(self.dashboard.recovery_nav_button.text().strip(), "ⓘ  Hilfe & Fehlerhilfe")
         self.assertEqual(len(self.dashboard.findChildren(QTreeWidget)), 0)
+
+    def test_searchable_quick_help_is_available_without_hiding_recovery(self):
+        self.dashboard.open_recovery()
+        rc = self.dashboard._recovery_center
+        self.app.processEvents()
+        self.assertEqual(rc.tabs.tabText(0), "Schnellhilfe")
+        self.assertEqual(rc.tabs.tabText(1), "Fehlermeldungen")
+        self.assertGreaterEqual(rc.help_list.count(), 8)
+        rc.help_search.setText("Wayland")
+        self.app.processEvents()
+        self.assertEqual(rc.help_list.count(), 1)
+        self.assertIn("Kubuntu 26.04", rc.help_text.toPlainText())
+        self.assertIn("Wayland", rc.help_text.toPlainText())
 
     def test_recovery_filters_and_selection(self):
         self.dashboard.open_recovery()
@@ -77,7 +90,7 @@ class RecoveryUiGuiTests(unittest.TestCase):
         rc = self.dashboard._recovery_center
         self.assertTrue(rc.isWindow())
         self.assertTrue(rc.table.focusPolicy() != 0)
-        self.assertIn("Recovery", rc.windowTitle())
+        self.assertIn("Hilfe", rc.windowTitle())
 
 
 if __name__ == "__main__":

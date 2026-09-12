@@ -84,7 +84,7 @@ def main() -> int:
                     summary="Das Programm konnte nicht vollständig gestartet oder beendet werden.",
                     cause=str(error) or "Unbekannter Start- oder Laufzeitfehler",
                     protection="Der betroffene Ablauf wurde beendet; vorhandene Daten wurden nicht absichtlich verändert.",
-                    next_step="Öffne nach dem nächsten Start die Fehlerhilfe (Recovery). Falls das nicht möglich ist, prüfe den Ordner berichte.",
+                    next_step="Öffne nach dem nächsten Start Hilfe & Fehlerhilfe und wechsle zu Fehlermeldungen. Falls das nicht möglich ist, prüfe den Ordner berichte.",
                     exception=error,
                 )
             except Exception:
