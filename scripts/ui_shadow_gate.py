@@ -267,6 +267,18 @@ def _save_debug_image(window: QWidget, findings: list[dict[str, object]], destin
     return pixmap.save(str(destination), "PNG")
 
 
+def _settle_ui(cycles: int = 5) -> None:
+    """Lässt verschachtelte 0-ms-Qt-Timer/Layout-Requests reproduzierbar auslaufen.
+
+    Dashboard-Navigation und Laptop-Layout verwenden bewusst verzögerte Synchronisation,
+    damit sich mehrere Resize/Style-Ereignisse bündeln. Ein einzelnes processEvents()
+    kann deshalb einen legitimen Zwischenzustand messen. Der Shadow-Gate bewertet nur
+    den stabilisierten Endzustand.
+    """
+    for _ in range(max(1, cycles)):
+        QApplication.processEvents()
+
+
 def _apply_case(window: QWidget, spec: ViewportSpec) -> None:
     setattr(window, "zoom_percent", spec.zoom)
     set_zoom = getattr(window, "set_zoom", None)
@@ -277,14 +289,14 @@ def _apply_case(window: QWidget, spec: ViewportSpec) -> None:
     target_height = max(window.minimumHeight(), spec.height - 72)
     window.resize(target_width, target_height)
     window.show()
-    QApplication.processEvents()
+    _settle_ui()
 
 
 def _close_window(window: QWidget) -> None:
     if isinstance(window, (SongEditor, Dashboard)):
         setattr(window, "_closing_after_save", True)
     window.close()
-    QApplication.processEvents()
+    _settle_ui(2)
 
 
 def _core_factories(root: Path, zoom: int) -> tuple[Callable[[], QWidget], ...]:
