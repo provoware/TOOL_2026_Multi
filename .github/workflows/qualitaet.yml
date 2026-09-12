@@ -4,9 +4,6 @@ on:
   push:
   pull_request:
 
-permissions:
-  contents: write
-
 jobs:
   grundpruefung:
     runs-on: ubuntu-latest
@@ -15,18 +12,6 @@ jobs:
     steps:
       - name: Projekt holen
         uses: actions/checkout@v7.0.1
-      - name: Iteration 35 Metadaten einmalig synchronisieren
-        if: github.event_name == 'push' && github.ref == 'refs/heads/iteration-35-writing-character-context'
-        run: |
-          set -Eeuo pipefail
-          if [[ -f scripts/finalize_iteration35.py ]]; then
-            python3 scripts/finalize_iteration35.py
-            git config user.name "provoware-ci"
-            git config user.email "actions@users.noreply.github.com"
-            git add -A
-            git commit -m "Iteration 35: Version 0.17.1 und Projektdoku synchronisieren"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
       - name: PySide6-Prüfumgebung bereitstellen
         run: |
           sudo apt-get update -qq
