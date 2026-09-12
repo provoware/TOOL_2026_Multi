@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -15,6 +16,17 @@ TEXT_FIELDS = (
     "name", "role", "age", "appearance", "personality", "motivation",
     "background", "relationships", "speech", "strengths", "weaknesses", "notes",
 )
+
+
+@dataclass(frozen=True)
+class CharacterOption:
+    """UI-unabhängige Auswahlrepräsentation für alle Schreibmodule."""
+
+    character_id: str
+    name: str
+    role: str
+    label: str
+    reference: str
 
 
 def store_path(root: Path) -> Path:
@@ -125,6 +137,22 @@ def list_characters(root: Path, search: str = "") -> list[dict[str, object]]:
     return sorted(characters, key=lambda item: str(item["name"]).casefold())
 
 
+def character_options(root: Path) -> list[CharacterOption]:
+    """Liefert dieselbe stabile Charakterauswahl für jedes Schreibmodul."""
+    options: list[CharacterOption] = []
+    for character in list_characters(root):
+        name = str(character["name"])
+        role = str(character.get("role") or "").strip()
+        options.append(CharacterOption(
+            character_id=str(character["id"]),
+            name=name,
+            role=role,
+            label=f"{name} — {role}" if role else name,
+            reference=f"{name} ({role})" if role else name,
+        ))
+    return options
+
+
 def get_character(root: Path, character_id: str) -> dict[str, object] | None:
     for item in load_state(root)["characters"]:
         if item["id"] == character_id:
@@ -170,3 +198,8 @@ def character_reference(root: Path, character_id: str) -> str:
         raise ValueError("Charakter wurde nicht gefunden.")
     role = str(character.get("role") or "").strip()
     return f"{character['name']} ({role})" if role else str(character["name"])
+
+
+def character_marker(root: Path, character_id: str) -> str:
+    """Erzeugt den einheitlichen sichtbaren Marker für Schreibtexte."""
+    return f"[Charakter: {character_reference(root, character_id)}]"
