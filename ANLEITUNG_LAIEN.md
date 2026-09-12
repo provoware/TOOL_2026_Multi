@@ -38,6 +38,8 @@ Falls diese Prüfung meldet, dass keine Wayland-Sitzung aktiv ist, melde dich ab
 Aktuell direkt nutzbar sind vor allem:
 
 - **Songtexte**
+- **Charakterfibel**
+- **Texteditor**
 - **Genres & Vorgaben**
 - **Todo-Liste**
 - **Kalender**
@@ -63,6 +65,8 @@ Die Navigation ist bewusst in zwei einfache Teile gegliedert.
 Unter **Direkt nutzbar** stehen zuerst die Bereiche, mit denen du sofort arbeiten kannst:
 
 - **Songtexte**
+- **Texteditor**
+- **Charakterfibel**
 - **Genres & Vorgaben**
 - **Todo-Liste**
 - **Kalender**
@@ -138,7 +142,7 @@ Der Editor zeigt oben eine einfache Schrittfolge:
 2. Songbereich wählen oder hinzufügen.
 3. Text schreiben.
 
-Mögliche Bereiche sind zum Beispiel Strophe, Refrain, Intro, Bridge oder Outro.
+Mögliche Bereiche sind zum Beispiel Strophe, Refrain, Intro, Bridge oder Outro. Du kannst zusätzlich einen eigenen Namen eintippen, zum Beispiel **Pre-Drop** oder **Gesprochenes Outro**. Ungültige/leere Namen werden nicht übernommen.
 
 Rechts steht die **Gesamtvorschau**.
 
@@ -207,7 +211,7 @@ Ablauf:
 1. Profil wählen.
 2. Bereich wählen.
 3. Vorhandene Werte ansehen.
-4. Neuen Wert eingeben und **Wert hinzufügen** anklicken.
+4. Einen oder mehrere Werte eingeben und **Wert hinzufügen** anklicken. Mehrere Werte mit Komma trennen, zum Beispiel `düster, treibend, melodisch`. Jeder Begriff wird einzeln gespeichert; Dubletten werden übersprungen.
 
 Beim Entfernen eines Wertes wird vorher nachgefragt.
 
@@ -218,6 +222,18 @@ daten/profile/db_profile.json
 ```
 
 ---
+
+---
+
+# Charakterfibel
+
+Öffnen über **Direkt nutzbar → Charakterfibel**. Hier pflegst du Figuren zentral, damit spätere Schreibmodule auf denselben Bestand zugreifen können. Gespeichert werden unter anderem Name, Rolle, Aussehen, Persönlichkeit, Motivation, Hintergrund, Beziehungen, Sprache, Stärken, Schwächen, Tags und Notizen. Jeder Charakter erhält intern eine stabile Kennung.
+
+---
+
+# Texteditor
+
+Öffnen über **Direkt nutzbar → Texteditor**. Der Titel bestimmt einen sicheren Dateinamen. Darunter liegen die große Schreibfläche und ein separates Abschlussnotizenfeld. Texte werden atomar gespeichert und können auf Charaktere aus der Charakterfibel verweisen. `Strg+S` speichert sofort.
 
 # Aufgaben / Todo-Liste
 
@@ -298,7 +314,7 @@ Die Fehlerhilfe zeigt zuerst einfache Informationen:
 - **Was soll ich jetzt tun?**
 - **Wie oft ist das passiert?**
 
-Technische Details bleiben zunächst ausgeblendet und können bei Bedarf geöffnet werden.
+Technische Details bleiben zunächst ausgeblendet und können bei Bedarf geöffnet werden. Mit **JSON-Importvorlage** kannst du zusätzlich die exakte Struktur für extern vorbereitete Songtexte anzeigen und in die Zwischenablage kopieren. Dieselbe Vorlage liegt unter `vorlagen/songtext_import_vorlage.json`.
 
 Falls eine Meldung ausgewählt werden muss und nichts markiert ist, erscheint ein verständlicher Hinweis.
 
@@ -378,6 +394,11 @@ Typische Ursachen:
 - eine Projektdatei fehlt oder ist beschädigt.
 
 Vorhandene Nutzerdaten werden durch die reine Startprüfung nicht absichtlich verändert.
+
+
+## Wenn benötigte Arbeitsordner fehlen
+
+Fehlt beim Start ein benötigter Tool-/Datenordner, legt Provoware ihn nicht still im Hintergrund an. Es zeigt den vorgesehenen Pfad und Zweck und fragt zuerst nach Zustimmung. Bei **Nein** wird nichts erstellt. Bei **Ja** wird der Ordner angelegt und anschließend auf Schreibbarkeit geprüft. Schlägt das fehl, bekommst du eine verständliche Fehlermeldung statt eines halbfertigen Starts.
 
 ---
 

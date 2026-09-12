@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.16.1 · **Stand:** 10.09.2026 · **Status:** ausführbarer Kern, automatische Voll-/Restore- und native Wayland-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
+> **Version:** 0.17.0 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit Charakterfibel und Texteditor; automatische Voll-/Restore- und native Wayland-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -25,6 +25,8 @@ ANLEITUNG_LAIEN.md
 ## Direkt nutzbar
 
 - 🟢 **Songtexte** – neue Songs schreiben, vorhandene Songs suchen, filtern, sortieren und öffnen
+- 🟢 **Charakterfibel** – konsistente Figuren zentral speichern, suchen und für andere Schreibmodule referenzierbar halten
+- 🟢 **Texteditor** – allgemeine Texte mit Titel/Dateiname, Haupttext, Abschlussnotizen, Versionen und Charakterbezug bearbeiten
 - 🟢 **Ältere Songversionen** – Vorschau und bestätigte Wiederherstellung; aktueller Stand wird vorher gesichert
 - 🟢 **Profile & Vorgaben** – Genres, Stimmungen, Stil, Stimme und Besonderheiten je Profil verwalten
 - 🟢 **Todo-Liste** – Aufgaben mit optionalem Termin anlegen und erledigte Aufgaben sicher archivieren
@@ -33,7 +35,7 @@ ANLEITUNG_LAIEN.md
 - 🟢 **Zoom 100–200 %** – gemeinsam für alle Hauptfenster
 - 🟢 **Farbthemes** – Amber, Türkis, Lila und Kontrast
 
-Die linke Navigation stellt diese fertigen Wege zuerst unter **Direkt nutzbar** bereit. Die zehn noch nicht fertigen Bereiche stehen getrennt unter **Noch nicht fertig** und sind standardmäßig eingeklappt. So bleibt das Menü ruhig; wer die geplanten Bereiche sehen möchte, kann sie mit einem einzigen Schalter einblenden.
+Die linke Navigation stellt diese fertigen Wege – einschließlich **Texteditor** und **Charakterfibel** – zuerst unter **Direkt nutzbar** bereit. Die zehn noch nicht fertigen Bereiche stehen getrennt unter **Noch nicht fertig** und sind standardmäßig eingeklappt. So bleibt das Menü ruhig; wer die geplanten Bereiche sehen möchte, kann sie mit einem einzigen Schalter einblenden.
 
 ## Erscheinungsbild, Zoom und Barrierefreiheit
 
@@ -65,6 +67,17 @@ Unten im Dashboard befindet sich die Auswahl **Farben**:
 Der Theme-Wechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswahl ist **sitzungsbezogen** und erzeugt bewusst keinen neuen Nutzerdaten- oder Konfigurationsschreibweg.
 
 Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast gegen den jeweiligen Hintergrund geprüft.
+
+## Neu in 0.17.0 – Charaktere, Texteditor und gemeinsame Standards
+
+- **Charakterfibel:** eigener atomarer Datenbestand mit stabilen Charakter-IDs und wiederverwendbaren Feldern für Schreibmodule.
+- **Texteditor:** eigener Arbeitsbereich mit sicherem Titel/Dateinamen, Haupttext, Abschlussnotizen, Versionierung und Charakterreferenzen.
+- **Genres & Vorgaben:** Komma-Eingaben wie `düster, treibend, melodisch` werden bereinigt und als einzelne Datenbankwerte gespeichert; Dubletten werden vermieden.
+- **Songtexte:** neben Standardbereichen können eigene validierte Bereichsnamen angelegt werden.
+- **JSON-Hilfe:** die Fehlerhilfe zeigt eine exakte Songtext-Importvorlage; zusätzlich liegt `vorlagen/songtext_import_vorlage.json` im Projekt.
+- **Startschutz:** fehlen benötigte Arbeitsordner, zeigt Provoware Ziel und Zweck und fragt vor dem Erstellen ausdrücklich nach Zustimmung; anschließend wird Schreibbarkeit validiert.
+- **Eingabekontrast:** Eingabe- und Auswahlfelder verwenden themeweit einen eigenen Kontrasthintergrund mit kontrastgeprüfter Schrift.
+- **Projektplanung:** neun größere Modulvorhaben wurden mit einzeln abhakbaren Unteraufgaben in den Todo-Bestand aufgenommen.
 
 ## Was ist noch geplant?
 
@@ -105,7 +118,7 @@ Darum heißen Funktionen wahrheitsgemäß und laienfreundlich, zum Beispiel **So
 Im Editor:
 
 1. Titel eintragen.
-2. Songbereich wählen oder hinzufügen.
+2. Standard-Songbereich wählen oder einen eigenen Bereichsnamen eingeben.
 3. Text schreiben.
 
 Änderungen werden automatisch gespeichert. Zusätzlich steht **Jetzt speichern** bzw. `Strg+S` zur Verfügung.
@@ -142,6 +155,8 @@ Ein Profil bündelt zusammenpassende Werte, beispielsweise für **HardTechno**, 
 daten/profile/db_profile.json
 ```
 
+Mehrere Werte können mit Komma eingegeben werden. Jeder bereinigte Begriff wird einzeln gespeichert; vorhandene Dubletten werden nicht erneut angelegt.
+
 Die eingebauten Startprofile werden beim bloßen Start nicht unnötig als Nutzerdatendatei geschrieben.
 
 ## Todo-Liste
@@ -175,7 +190,7 @@ Sie zeigt zuerst:
 - Was soll ich jetzt tun?
 - Wie oft trat es auf?
 
-Technische Details bleiben standardmäßig ausgeblendet.
+Technische Details bleiben standardmäßig ausgeblendet. Über **JSON-Importvorlage** lässt sich zusätzlich die exakte Struktur für extern vorbereitete Songtexte anzeigen und kopieren.
 
 ## Datensicherheit
 
@@ -229,7 +244,8 @@ Sie prüft unter anderem:
 - Fachlogik und bekannte Rückfälle
 - Datensicherheit und Restore
 - Songeditor und Songbibliothek
-- Profile, Todo und Kalender
+- Profile, Charakterfibel, Texteditor, Todo und Kalender
+- Komma-Eingaben, freie Songbereiche, JSON-Importstruktur und Startordner-Validierung
 - Fehlerhilfe
 - PySide6-Bedienwege im Offscreen-Test
 - Zoom, Fokus und Hochzoom
@@ -301,6 +317,7 @@ backups/    lokale Sicherungen, nicht versioniert
 - `docs/ITERATION27_NAVIGATION_UX.md` – Menü-Hierarchie, Laiennavigation und Abnahme
 - `docs/ITERATION28_KUBUNTU_2604_WAYLAND.md` – Kubuntu-26.04-/Wayland-Umstellung und Plattformabnahme
 - `docs/ITERATION29_PRESENTATION_POLICY.md` – Architekturhärtung, zentrale Präsentationspolicy und Release-Vollständigkeit
+- `docs/ITERATION34_CORE_MODULES_DATA_STANDARDS.md` – Charakterfibel, Texteditor, gemeinsame Daten-/UI-Standards und Abnahme
 
 ## Noch offen
 

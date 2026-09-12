@@ -1,6 +1,6 @@
 # TODO – TOOL_2026_Multi
 
-Stand: 2026-09-10
+Stand: 2026-09-12
 
 ## Ampel
 
@@ -251,6 +251,102 @@ Stand: 2026-09-10
 - 🟢 Grundprüfung **#638**: 96 Logiktests, 62 GUI-Tests, 39 Release-Dateien, Headless-Start, nativer Wayland-Smoke und Restore `OK`.
 - 🟢 Restore-SHA-256 `64c3d081f652abcb29623375336c4d71b5ffd55ebce72e2c33cae64e83cef51b`.
 - 🟢 PR #42 gemergt; technischer Main-Commit vor diesem Evidence-Sync: `a0032bc7977e21d830297828610d9b6d3ac68ea3`.
+
+## Iteration 34 – Charakterfibel, Texteditor und gemeinsame Standards
+
+**Hauptziel:** Zwei produktiv nutzbare Module hinzufügen und gemeinsame Daten-/UI-/Import-/Startstandards vereinheitlichen.
+
+### Umsetzung
+
+- 🟢 Charakterfibel mit atomarem Datenbestand, stabilen IDs, Suche/Bearbeitung und wiederverwendbaren Charakterreferenzen.
+- 🟢 universeller Texteditor mit Titel→Dateiname, Haupttext, Abschlussnotizen, Versionierung, Autosave und Charakterbezug.
+- 🟢 Genres, Stimmungen, Stil, Stimme und Besonderheiten akzeptieren Komma-Listen und speichern jeden bereinigten Wert einzeln; Dubletten werden verhindert.
+- 🟢 Songtexteditor erlaubt eigene validierte Bereichsnamen zusätzlich zu den Standardbereichen.
+- 🟢 Hilfe enthält eine kopierbare exakte JSON-Importvorlage; zusätzliche Datei `vorlagen/songtext_import_vorlage.json`.
+- 🟢 Startvalidierung fragt vor dem Erstellen fehlender Arbeitsordner nach Zustimmung und prüft anschließend Schreibbarkeit.
+- 🟢 Eingabe-/Auswahlfelder erhalten zentral einen kontrastierenden Theme-Hintergrund mit kontrastgeprüfter Schrift.
+- 🟢 neue Module sind eigenständige Top-Level-Fenster und verwenden die vorhandenen Zoom-/Theme-/Accessibility-Standards.
+- 🟢 Projekt-Todo ergänzt die neun Modulvorhaben idempotent als 9 Hauptaufgaben plus 48 separat abhakbare Unteraufgaben.
+
+### Technische Abnahme vor Versionssync
+
+- 🟢 bereinigter Feature-Head `8b5525541cff430f9e820a02adf44f469acc43a7` in Grundprüfung **#685** vollständig erfolgreich.
+- 🟢 **104 Logik-/Regressionstests** und **74 PySide6-GUI-Tests** erfolgreich.
+- 🟢 **46 Release-Betriebsdateien**, Headless-Start und nativer Qt-Wayland-Smoke erfolgreich.
+- 🟢 Vollprojekt-Restore `OK`, SHA-256 `1f1f46f35d5e733385c77e39c45366a812ce6b92f5a0786faaf948dbfddb4d41`.
+- 🟡 finale v0.17.0-Versions-/Dokumentationssynchronisierung wird anschließend erneut vollständig geprüft.
+
+## Detaillierter Modul-Backlog zum Abhaken
+
+### 1. Charakterfibel
+- [x] atomarer Charakterdatenbestand und stabile IDs
+- [x] Such-/Bearbeitungsoberfläche
+- [x] Kernfelder für Rolle, Aussehen, Persönlichkeit, Motivation, Hintergrund, Beziehungen, Sprache, Stärken, Schwächen, Tags und Notizen
+- [x] Zugriffsmöglichkeit aus dem Texteditor
+- [ ] Zugriff aus weiteren Schreibmodulen standardisieren
+
+### 2. Profil- & Accountmanager
+- [ ] Webseite/URL, Profilname optional, verwendete E-Mail-Adresse, Passworthinweis und Sonstiges
+- [ ] frei ergänzbare Felder
+- [ ] Gruppen, Suche, Filter und Schnellwiederfinden
+- [ ] Schutzkonzept: keine Passwörter unverschlüsselt speichern
+- [ ] Import/Export, Backup, Restore und Datenschutzprüfung
+
+### 3. Universeller Texteditor
+- [x] Titel bestimmt sicheren Dateinamen
+- [x] große Schreibfläche und Abschlussnotizenfeld
+- [x] atomare Speicherung, Versionierung und Autosave
+- [x] Charakterfibel-Zugriff
+- [ ] farbliche Text-/Strukturhilfen weiter ausbauen
+
+### 4. Textfragment- und Ideenarchiv
+- [ ] einzelne oder mehrere Verse, Sätze, Fragmente und Schlagworte speichern
+- [ ] Tags, Herkunft und Volltextsuche
+- [ ] übersichtliche Karten-/Listenansicht
+- [ ] Drag-and-drop in einen seitlichen Kompositionsbereich
+- [ ] neue Texte aus Fragmenten erzeugen, ohne Originale zu löschen
+
+### 5. Autonomes Updatemodul
+- [ ] ZIP-Dateien sicher prüfen und entpacken
+- [ ] Manifest, Version, Prüfsummen und Integrität vor Änderung validieren
+- [ ] vollständigen Checkpoint/Backup vor jedem Update erzeugen
+- [ ] Update zuerst isoliert im Staging testen
+- [ ] automatisierte Tests vor Aktivierung erzwingen
+- [ ] atomare Aktivierung und Nachprüfung
+- [ ] automatischen Rollback bei Fehlern
+- [ ] Rechte-/Bestätigungsdialoge für riskante Änderungen; kein blindes Überschreiben
+
+### 6. Projektmodulbaukasten / Plugin-System
+- [ ] standardisierte Projektvorlagen
+- [ ] Modul-/Plugin-Manifest definieren
+- [ ] stabile Plugin-Schnittstellen statt Direktzugriff auf Kerninternas
+- [ ] Plugins aktivieren/deaktivieren, ohne Kerncode zu beschädigen
+- [ ] Abhängigkeits-, Versions- und Kompatibilitätsprüfung
+- [ ] Test-/Stagingbereich für neue Module
+
+### 7. Rechte Schnellstarter-Symbolleiste
+- [ ] schmale persistente rechte Symbolleiste
+- [ ] URL-Starter hinzufügen, bearbeiten und entfernen
+- [ ] URL validieren und sicher im Standardbrowser öffnen
+- [ ] Name, Symbol und Gruppe speichern
+- [ ] Beispiele für YouTube, Suno und eigene Seiten
+- [ ] Tastatur-, Tooltip- und Screenreader-Unterstützung
+
+### 8. Wikimodul
+- [ ] mehrere getrennte Wissensbasen
+- [ ] Artikel mit Titel, Text, Tags und Verknüpfungen
+- [ ] Volltextsuche und Querverweise
+- [ ] dokumentierter Import/Export
+- [ ] Versionierung, Backup und Zugriff anderer Module
+
+### 9. Arbeitsverzeichnis- und Entwicklungspool
+- [ ] mehrere Arbeits-/Poolordner persistent speichern und direkt öffnen
+- [ ] dateimanagerartige Übersicht
+- [ ] Status Entwicklung/Beta/stabil/archiviert
+- [ ] funktionierende Beta-/Release-Stände sicher ins Archiv duplizieren
+- [ ] niemals bestehende Archive überschreiben; eindeutige Namen/Versionen
+- [ ] organisieren, umbenennen und Metadaten bearbeiten
+- [ ] Vor-/Nachprüfung und nachvollziehbares Protokoll
 
 ## Danach
 
