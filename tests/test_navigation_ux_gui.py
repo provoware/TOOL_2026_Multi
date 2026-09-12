@@ -139,13 +139,13 @@ class NavigationUxGuiTests(unittest.TestCase):
         self.assertTrue(all(not label.isVisible() for label in legacy))
         self.assertEqual(self.dashboard.profile_nav_button.text(), "▦  Vorgaben")
         self.assertEqual(self.dashboard.profile_nav_button.accessibleName(), "Genres & Vorgaben")
-        self.assertEqual(self.dashboard.recovery_nav_button.text(), "⚕  Fehlerhilfe")
-        self.assertIn("Recovery", self.dashboard.recovery_nav_button.accessibleName())
+        self.assertEqual(self.dashboard.recovery_nav_button.text(), "ⓘ  Hilfe")
+        self.assertIn("Hilfe", self.dashboard.recovery_nav_button.accessibleName())
 
         self.dashboard.set_zoom(100)
         self._events()
         self.assertEqual(self.dashboard.profile_nav_button.text(), "▦  Genres & Vorgaben")
-        self.assertEqual(self.dashboard.recovery_nav_button.text(), "⚕  Fehlerhilfe (Recovery)")
+        self.assertEqual(self.dashboard.recovery_nav_button.text(), "ⓘ  Hilfe & Fehlerhilfe")
 
     def test_sidebar_collapse_keeps_clear_reversible_state_and_accessibility(self):
         self.assertEqual(self.dashboard.planned_menu_toggle.focusPolicy(), Qt.StrongFocus)

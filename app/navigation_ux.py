@@ -143,7 +143,7 @@ class NavigationUxController(QObject):
         genres = _find_button(widgets, "Genres")
         todo = _find_button(widgets, "Todo-Liste")
         calendar = _find_button(widgets, "Kalender")
-        recovery = _find_button(widgets, "Fehlerhilfe")
+        recovery = _find_button(widgets, "Hilfe & Fehlerhilfe")
 
         overview.setText("⌂  Übersicht")
         overview.setAccessibleName("Übersicht")
@@ -157,7 +157,7 @@ class NavigationUxController(QObject):
             ),
             self._set_ready_button(todo, "✓  Todo-Liste"),
             self._set_ready_button(calendar, "▦  Kalender"),
-            self._set_ready_button(recovery, "⚕  Fehlerhilfe (Recovery)"),
+            self._set_ready_button(recovery, "ⓘ  Hilfe & Fehlerhilfe"),
         ]
 
         # Der frühere Sammelpunkt "Alle Bereiche" führte ebenfalls nur zu einer
@@ -280,7 +280,7 @@ class NavigationUxController(QObject):
             "▦  Vorgaben" if high_zoom else f"▦  {self._t('navigation.ready.profile', 'Genres & Vorgaben')}",
             "✓  Todo-Liste",
             "▦  Kalender",
-            "⚕  Fehlerhilfe" if high_zoom else "⚕  Fehlerhilfe (Recovery)",
+            "ⓘ  Hilfe" if high_zoom else "ⓘ  Hilfe & Fehlerhilfe",
         )
         for button, text in zip(self.ready_buttons, labels, strict=True):
             button.setText(text)
