@@ -1,0 +1,62 @@
+name: Iteration 37 Release-Eintrag synchronisieren
+
+on:
+  push:
+    branches:
+      - iteration-37-maintenance-help
+    paths:
+      - .github/workflows/sync-iteration37-release-entry.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Projekt holen
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Hilfe-Modul ins Release-Manifest aufnehmen
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('MANIFEST.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          files = data.get('files')
+          if not isinstance(files, list):
+              raise SystemExit('MANIFEST.json: files ist keine Liste')
+          matches = [item for item in files if isinstance(item, dict) and item.get('path') == 'app/help_content.py']
+          if len(matches) > 1:
+              raise SystemExit('MANIFEST.json: app/help_content.py ist mehrfach eingetragen')
+          if not matches:
+              entry = {
+                  'path': 'app/help_content.py',
+                  'release': True,
+                  'purpose': 'UI-unabhängige, durchsuchbare Hilfethemen für Hilfe & Fehlerhilfe',
+              }
+              insert_at = next(
+                  (index + 1 for index, item in enumerate(files)
+                   if isinstance(item, dict) and item.get('path') == 'app/recovery_center.py'),
+                  len(files),
+              )
+              files.insert(insert_at, entry)
+          else:
+              matches[0]['release'] = True
+              matches[0]['purpose'] = 'UI-unabhängige, durchsuchbare Hilfethemen für Hilfe & Fehlerhilfe'
+          path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+          rm -f .github/workflows/sync-iteration37-release-entry.yml
+          git config user.name "provoware-ci"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "Iteration 37: Hilfe-Modul ins Release-Manifest aufnehmen"
+          git push origin HEAD:iteration-37-maintenance-help
