@@ -297,7 +297,7 @@ class NavigationUxController(QObject):
             4 if state.high_zoom else 8,
             4 if state.high_zoom else 8,
         )
-        self.layout.setSpacing(0 if state.high_zoom else 2)
+        self.layout.setSpacing(4 if state.high_zoom else 2)
 
         self.menu_title.setVisible(sidebar_open)
         for widget in self.core_entries:

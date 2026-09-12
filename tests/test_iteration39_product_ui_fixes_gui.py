@@ -82,15 +82,21 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
             try:
-                dashboard.zoom_percent = 100
-                apply_global_style(dashboard, 100, "Amber")
-                dashboard.resize(1334, 696)
+                dashboard.zoom_percent = 125
+                dashboard.set_zoom(125)
+                apply_global_style(dashboard, 125, "Türkis")
+                dashboard.resize(1568, 828)
                 dashboard.show()
                 _settle()
                 self.assertFalse(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
                 self.assertFalse(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
                 self.assertTrue(_card_by_title(dashboard, "🚀  So startest du").isVisibleTo(dashboard))
                 self.assertTrue(_card_by_title(dashboard, "▦  Daten & Vorgaben").isVisibleTo(dashboard))
+
+                dashboard.resize(1594, 926)
+                _settle()
+                self.assertTrue(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
+                self.assertTrue(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
             finally:
                 dashboard._closing_after_save = True
                 dashboard.close()
@@ -101,12 +107,14 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
             dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
             try:
                 dashboard.zoom_percent = 200
+                dashboard.set_zoom(200)
                 apply_global_style(dashboard, 200, "Kontrast")
                 dashboard.resize(1334, 696)
                 dashboard.show()
                 _settle()
                 controller = dashboard._provoware_navigation_ux
                 self.assertFalse(controller.ready_heading.isVisibleTo(dashboard))
+                self.assertGreaterEqual(controller.layout.spacing(), 4)
                 visible = [button for button in controller.ready_buttons if button.isVisibleTo(dashboard)]
                 self.assertEqual(len(visible), 7)
                 ordered = sorted(visible, key=lambda button: button.mapTo(dashboard, button.rect().topLeft()).y())
