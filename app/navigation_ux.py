@@ -291,10 +291,18 @@ class NavigationUxController(QObject):
         state = presentation_state(self.dashboard)
         restricted = state.restricted_navigation
         self._sync_ready_labels(state.high_zoom)
+        self.layout.setContentsMargins(
+            4 if state.high_zoom else 8,
+            4 if state.high_zoom else 8,
+            4 if state.high_zoom else 8,
+            4 if state.high_zoom else 8,
+        )
+        self.layout.setSpacing(0 if state.high_zoom else 2)
 
         self.menu_title.setVisible(sidebar_open)
         for widget in self.core_entries:
             widget.setVisible(sidebar_open)
+        self.ready_heading.setVisible(sidebar_open and not state.high_zoom)
         self.planned_heading.setVisible(sidebar_open and not restricted)
         self.planned_hint.setVisible(sidebar_open and not restricted)
         self.planned_toggle.setVisible(sidebar_open and not restricted)

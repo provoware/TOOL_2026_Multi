@@ -207,7 +207,7 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
         padding:{geometry_scaled(5, zoom_percent)}px;
         selection-background-color:{colors['accent_soft']}; selection-color:{colors['text']};
     }}
-    QLineEdit {{ min-height:{control_height}px; }}
+    QLineEdit, QCheckBox {{ min-height:{control_height}px; }}
     QComboBox {{
         background:{colors['input_bg']}; color:{colors['text']};
         border:1px solid {colors['input_border']}; border-radius:{radius}px;
@@ -372,6 +372,7 @@ def _apply_responsive_layout(window: QWidget) -> None:
         wide = width >= WIDE_MIN_WIDTH_PX
         high_zoom = zoom >= HIGH_ZOOM_MIN_PERCENT
         module_compact = width < 1180 or height < 760 or zoom >= 150
+        dashboard_dense = window.__class__.__name__ == "Dashboard" and (height < 820 or zoom >= 125)
         width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
         gap = 6 if compact else (10 if wide else 8)
@@ -385,6 +386,28 @@ def _apply_responsive_layout(window: QWidget) -> None:
             root_layout.setSpacing(gap)
 
         _apply_dashboard_high_zoom(window, high_zoom)
+
+        if window.__class__.__name__ == "Dashboard":
+            # Auf knapper Höhe bekommen fertige Arbeitswege Vorrang vor reinen
+            # Planungskarten. Dieselben geplanten Funktionen bleiben über die
+            # bedarfsgesteuerte Sidebar vollständig erreichbar.
+            for card in window.findChildren(QFrame):
+                if card.objectName() != "card":
+                    continue
+                title_text = _card_title(card)
+                if title_text.startswith("▣  Funktionen") or title_text.startswith("▤  Dateien & Werkzeuge"):
+                    card.setVisible(not dashboard_dense)
+                elif title_text.startswith("▦  Daten & Vorgaben") or title_text.startswith("▦  Vorgaben"):
+                    for label in card.findChildren(QLabel):
+                        if label.objectName() == "cardTitle":
+                            label.setText("▦  Vorgaben" if high_zoom else "▦  Daten & Vorgaben")
+                            break
+            for label in window.findChildren(QLabel):
+                text = label.text()
+                if text.startswith("Wähle einen fertigen Bereich."):
+                    label.setVisible(not dashboard_dense)
+                elif text.startswith("Tipp: Für Genres, Stimmung, Stil oder Stimme"):
+                    label.setVisible(not dashboard_dense and not high_zoom)
 
         compact_handler = getattr(window, "set_compact_mode", None)
         if callable(compact_handler) and window.__class__.__name__ in {"SongEditor", "SongLibrary"}:
@@ -423,8 +446,8 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         profile_combo = getattr(window, "db_profile_combo", None)
         if isinstance(profile_combo, QWidget):
-            minimum = round((100 if high_zoom else (110 if compact else 135)) * width_factor)
-            maximum = round((135 if high_zoom else (190 if wide else 160)) * width_factor)
+            minimum = round((90 if high_zoom else (110 if compact else 135)) * width_factor)
+            maximum = round((112 if high_zoom else (190 if wide else 160)) * width_factor)
             profile_combo.setMinimumWidth(minimum)
             profile_combo.setMaximumWidth(maximum)
 
