@@ -2,6 +2,20 @@
 
 Stand: 2026-09-12
 
+## Iteration 38 – Fensterführung und kleine Displays
+
+- [x] Bibliothek→Editor→Bibliothek ohne gleichzeitigen Fensterstapel
+- [x] Bildschirmbegrenzung und sichere Zentrierung für Songeditor/Songbibliothek
+- [x] neutraler Eingaberand, Akzent nur im Fokus, Rot/Grün als Zustände
+- [x] Platzhalterkontrast erhöhen
+- [x] sichtbares `&` in Hilfe & Fehlerhilfe reparieren
+- [x] Songeditor: einklappbare optionale Angaben und Kompaktmodus
+- [x] Songbibliothek: einklappbare Filter/Sortierung/Gruppierung
+- [x] portable, validierte Fensterzustände ergänzen
+- [ ] Iteration-38-CI, nativer Wayland-Smoke, Restore und ZIP-Artefakte vollständig grün bestätigen
+- [ ] reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme bei 1366×768 und 125/150/175/200 % durchführen
+
+
 ## Ampel
 
 🟢 erledigt und geprüft · 🟡 umgesetzt, finale Abnahme offen · 🔴 offen · ⚫ blockiert

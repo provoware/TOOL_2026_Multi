@@ -59,6 +59,9 @@ def _prepare_module_window(window: QWidget) -> None:
 
 def _show_module_window(window: QWidget) -> None:
     _prepare_module_window(window)
+    ensure_on_screen = getattr(window, "ensure_on_screen", None)
+    if callable(ensure_on_screen):
+        ensure_on_screen()
     window.show()
 
 
@@ -90,6 +93,9 @@ def _open_managed_window(
         _prepare_module_window(window)
     if prepare_before_show is not None:
         prepare_before_show(window)
+    ensure_on_screen = getattr(window, "ensure_on_screen", None)
+    if callable(ensure_on_screen):
+        ensure_on_screen()
     window.show()
     if refresh_after_show:
         window.refresh()
@@ -118,6 +124,7 @@ class Dashboard(QWidget):
         self.zoom_percent = 100
         self._song_editors: list[SongEditor] = []
         self._song_library: SongLibrary | None = None
+        self._song_library_hidden_for_editor_session = False
         self._recovery_center: RecoveryCenter | None = None
         self._profile_editor: ProfileEditor | None = None
         self._todo_window: TodoWindow | None = None
@@ -284,7 +291,7 @@ class Dashboard(QWidget):
         self.todo_nav_button = self._add_nav(layout, "  ✓  Todo-Liste", self.open_todo)
         self.calendar_nav_button = self._add_nav(layout, "  ▦  Kalender", self.open_calendar)
         self._add_heading(layout, "Hilfe")
-        self.recovery_nav_button = self._add_nav(layout, "  ⓘ  Hilfe & Fehlerhilfe", self.open_recovery)
+        self.recovery_nav_button = self._add_nav(layout, "  ⓘ  Hilfe && Fehlerhilfe", self.open_recovery)
         layout.addStretch(1)
         return sidebar
 
@@ -743,11 +750,20 @@ class Dashboard(QWidget):
         del error
         self.quick_status.setText("Kalender-Erinnerungen konnten nicht geprüft werden. Öffne bei Bedarf Hilfe & Fehlerhilfe.")
 
+    def _begin_song_editor_session(self) -> None:
+        """Verhindert den Bibliothek-Editor-Stapel und merkt den sicheren Rückweg."""
+        if self._song_library is not None and self._song_library.isVisible():
+            self._song_library.hide()
+            self._song_library_hidden_for_editor_session = True
+
     def open_song_editor(self) -> None:
+        self._begin_song_editor_session()
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, on_saved=self._song_saved, parent=self)
         self._song_editors.append(editor)
         _show_module_window(editor)
+        editor.raise_()
+        editor.activateWindow()
 
     def open_song_path(self, path: Path) -> None:
         try:
@@ -758,13 +774,24 @@ class Dashboard(QWidget):
                 f"Der Song wurde nicht verändert.\n\nGrund: {error}",
             )
             return
+        self._begin_song_editor_session()
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, document=document,
                             on_saved=self._song_saved, parent=self)
         self._song_editors.append(editor)
         _show_module_window(editor)
+        editor.raise_()
+        editor.activateWindow()
 
     def open_song_library(self, initial_search: str = "") -> None:
+        visible_editors = [editor for editor in self._song_editors if editor.isVisible()]
+        if visible_editors:
+            editor = visible_editors[-1]
+            editor.raise_()
+            editor.activateWindow()
+            self.quick_status.setText("Ein Songtexteditor ist geöffnet. Schließe ihn zuerst; danach erscheint die Songbibliothek wieder.")
+            return
+
         def apply_search(window: SongLibrary) -> None:
             if initial_search:
                 window.set_search(initial_search)
@@ -793,6 +820,14 @@ class Dashboard(QWidget):
         if editor in self._song_editors:
             self._song_editors.remove(editor)
         self.refresh_recent_songs()
+        if (not self._song_editors and self._song_library_hidden_for_editor_session
+                and not self._closing_after_save):
+            self._song_library_hidden_for_editor_session = False
+            if self._song_library is not None:
+                self._song_library.refresh()
+                _show_module_window(self._song_library)
+                self._song_library.raise_()
+                self._song_library.activateWindow()
 
     def save_open_song_editors(self) -> bool:
         success = True

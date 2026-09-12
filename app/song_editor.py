@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import QSize, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDialog, QFormLayout, QFrame, QGridLayout, QHBoxLayout,
@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 from app.character_store import character_marker, character_options
 from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song
 from app.ui_standards import SPACING, apply_global_style
+from app.window_state import ensure_window_visible, restore_window_state, save_window_state
 
 AUTOSAVE_MS = 5 * 60 * 1000
 
@@ -42,14 +43,17 @@ class SongEditor(QWidget):
         self._loading_section = False
 
         self.setWindowTitle(f"Songtexteditor – {self.document.title or 'Unbenannt'}")
-        self.resize(1180, 810)
-        self.setMinimumSize(940, 650)
+        self._compact_mode: bool | None = None
         self._build()
         self._load_document_into_widgets()
         self.refresh_characters()
         self._load_section(0)
         self._update_preview()
         apply_global_style(self, zoom_percent)
+        restore_window_state(
+            self, self.project_root, "song_editor",
+            preferred=QSize(1180, 810), minimum=QSize(760, 560),
+        )
 
         self.autosave_timer = QTimer(self)
         self.autosave_timer.setInterval(AUTOSAVE_MS)
@@ -99,26 +103,23 @@ class SongEditor(QWidget):
         meta_layout.setHorizontalSpacing(10)
         meta_layout.setVerticalSpacing(5)
         self.meta_entries: list[QLineEdit] = []
-        field_names = ("Titel", "Genre", "Stimmung", "Stil", "Stimme", "Besonderheiten", "Tags (mit Komma trennen)")
         self._meta_by_name: dict[str, QLineEdit] = {}
-        for index, label_text in enumerate(field_names):
-            row, col = divmod(index, 3)
+
+        def add_meta_field(layout: QGridLayout, label_text: str, row: int, col: int, *, span: int = 1) -> QLineEdit:
             label = QLabel(label_text)
             label.setObjectName("muted")
             entry = QLineEdit()
             entry.editingFinished.connect(self._save_from_focus)
             entry.textChanged.connect(self._update_preview)
-            meta_layout.addWidget(label, row * 2, col)
-            meta_layout.addWidget(entry, row * 2 + 1, col)
+            layout.addWidget(label, row, col, 1, span)
+            layout.addWidget(entry, row + 1, col, 1, span)
             self.meta_entries.append(entry)
             self._meta_by_name[label_text] = entry
-        self.title_entry = self._meta_by_name["Titel"]
-        self.genre_entry = self._meta_by_name["Genre"]
-        self.mood_entry = self._meta_by_name["Stimmung"]
-        self.style_entry = self._meta_by_name["Stil"]
-        self.voice_entry = self._meta_by_name["Stimme"]
-        self.special_entry = self._meta_by_name["Besonderheiten"]
-        self.tags_entry = self._meta_by_name["Tags (mit Komma trennen)"]
+            return entry
+
+        self.title_entry = add_meta_field(meta_layout, "Titel", 0, 0)
+        self.genre_entry = add_meta_field(meta_layout, "Genre", 0, 1)
+        self.mood_entry = add_meta_field(meta_layout, "Stimmung", 0, 2)
 
         status_row = QHBoxLayout()
         status_row.addWidget(QLabel("Bearbeitungsstand:"))
@@ -130,10 +131,31 @@ class SongEditor(QWidget):
         self.favorite_check.toggled.connect(lambda _value: self.save(reason="Favorit gespeichert"))
         status_row.addWidget(self.favorite_check)
         status_row.addStretch(1)
-        meta_layout.addLayout(status_row, 5, 1, 1, 2)
+        self.details_toggle = QToolButton()
+        self.details_toggle.setCheckable(True)
+        self.details_toggle.setChecked(True)
+        self.details_toggle.setToolTip("Optionale Angaben wie Stil, Stimme, Besonderheiten und Tags ein- oder ausblenden.")
+        self.details_toggle.toggled.connect(self._toggle_details)
+        status_row.addWidget(self.details_toggle)
+        meta_layout.addLayout(status_row, 2, 0, 1, 3)
         for col in range(3):
             meta_layout.setColumnStretch(col, 1)
         outer.addWidget(meta_frame)
+
+        self.details_frame = QFrame()
+        self.details_frame.setObjectName("innerCard")
+        details_layout = QGridLayout(self.details_frame)
+        details_layout.setContentsMargins(10, 7, 10, 7)
+        details_layout.setHorizontalSpacing(10)
+        details_layout.setVerticalSpacing(5)
+        self.style_entry = add_meta_field(details_layout, "Stil", 0, 0)
+        self.voice_entry = add_meta_field(details_layout, "Stimme", 0, 1)
+        self.special_entry = add_meta_field(details_layout, "Besonderheiten", 0, 2)
+        self.tags_entry = add_meta_field(details_layout, "Tags (mit Komma trennen)", 2, 0, span=3)
+        for col in range(3):
+            details_layout.setColumnStretch(col, 1)
+        outer.addWidget(self.details_frame)
+        self._toggle_details(True)
 
         character_frame = QFrame()
         character_frame.setObjectName("innerCard")
@@ -211,6 +233,27 @@ class SongEditor(QWidget):
         self.status_label = QLabel("Bereit · Änderungen werden automatisch gespeichert.")
         self.status_label.setObjectName("muted")
         outer.addWidget(self.status_label)
+
+    def ensure_on_screen(self) -> None:
+        ensure_window_visible(self, QSize(760, 560))
+
+    def _toggle_details(self, checked: bool) -> None:
+        if hasattr(self, "details_frame"):
+            self.details_frame.setVisible(bool(checked))
+        if hasattr(self, "details_toggle"):
+            self.details_toggle.setText("▾ Weitere Angaben" if checked else "▸ Weitere Angaben")
+
+    def set_compact_mode(self, compact: bool) -> None:
+        """Verdichtet optionale Metadaten nur beim Wechsel in/aus dem Kompaktmodus."""
+        compact = bool(compact)
+        if self._compact_mode == compact:
+            return
+        self._compact_mode = compact
+        self.details_toggle.blockSignals(True)
+        self.details_toggle.setChecked(not compact)
+        self.details_toggle.blockSignals(False)
+        self._toggle_details(not compact)
+        self.other_text.setMaximumHeight(88 if compact else 120)
 
     def eventFilter(self, watched, event):
         from PySide6.QtCore import QEvent
@@ -445,6 +488,7 @@ class SongEditor(QWidget):
         if not self._closing_after_save and self.save(reason="beim Schließen gespeichert") is None:
             event.ignore()
             return
+        save_window_state(self, self.project_root, "song_editor")
         self._closed = True
         self.autosave_timer.stop()
         if self.on_closed is not None:

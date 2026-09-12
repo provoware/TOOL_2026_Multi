@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.17.2 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit durchsuchbarer Hilfe, automatischer Testentdeckung und gehärteter Repository-Hygiene; Voll-/Restore-, native Wayland- und ZIP-Artefakt-Prüfung aktiv, reale Kubuntu-26.04-/Plasma-Wayland-Sichtabnahme noch offen
+> **Version:** 0.17.3 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit professioneller Song-Fensterführung, laptopgeeignetem Kompaktmodus, kontraststarkem Eingabefokus und portablen Fensterzuständen; technische Iteration-38-Abnahme läuft
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -67,6 +67,17 @@ Unten im Dashboard befindet sich die Auswahl **Farben**:
 Der Theme-Wechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswahl ist **sitzungsbezogen** und erzeugt bewusst keinen neuen Nutzerdaten- oder Konfigurationsschreibweg.
 
 Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast gegen den jeweiligen Hintergrund geprüft.
+
+## Neu in 0.17.3 – Fensterführung und kleine Displays
+
+- **Klare Song-Arbeitsfolge:** Beim Öffnen eines Songs aus der Bibliothek wird die Bibliothek vorübergehend ausgeblendet; nach dem Schließen des letzten Songeditors kehrt sie kontrolliert zurück.
+- **Bildschirmsicher:** Songeditor und Songbibliothek werden auf die aktuelle Arbeitsfläche begrenzt und bei ungültiger alter Position neu zentriert.
+- **Portable Fensterzustände:** Größe, Position und Maximiert-Status liegen getrennt von Songdaten in `daten/ui/fenster.json`.
+- **Kompakter Songeditor:** Stil, Stimme, Besonderheiten und Tags liegen unter **Weitere Angaben** und werden bei knapper Fläche oder ab 150 % Zoom automatisch eingeklappt.
+- **Kompakte Songbibliothek:** Filter, Sortierung und Gruppierung können gemeinsam eingeklappt werden; auf kleinen Ansichten bekommt die Songtabelle Vorrang.
+- **Eingabefokus:** normal = neutraler Rand, Fokus = Theme-Akzent, Fehler = Rot, gültiger Zustand = Grün. Platzhalter wurden kontrastreicher gemacht.
+- **Qt-Ampersand:** `Hilfe & Fehlerhilfe` wird sichtbar korrekt gezeichnet; der Screenreader-Name bleibt unverändert.
+- **Sicherheitsgrenze:** keine Song-, Profil-, Todo- oder Kalenderformate wurden verändert.
 
 ## Neu in 0.17.2 – Wartbarkeit, Entwicklungseffizienz und Hilfe
 

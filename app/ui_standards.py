@@ -22,7 +22,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFD66B", "red": "#FF7180", "red_soft": "#35171E",
         "blocked": "#93A8BA", "border": "#52718C", "border_soft": "#38546B",
         "hover": "#19354B", "active_nav": "#18344A", "header_section": "#173149",
-        "inverse_text": "#07111A", "input_bg": "#50657A", "input_border": "#FFB11B",
+        "inverse_text": "#07111A", "input_bg": "#263C50", "input_border": "#66839A", "placeholder": "#C7D4DF",
     },
     "Türkis": {
         "background": "#051419", "surface": "#0A2026", "surface_alt": "#103038",
@@ -32,7 +32,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFE06A", "red": "#FF7A8A", "red_soft": "#3A1B22",
         "blocked": "#9BC2C7", "border": "#3F7C86", "border_soft": "#2F5E66",
         "hover": "#143B43", "active_nav": "#143A42", "header_section": "#153D45",
-        "inverse_text": "#041012", "input_bg": "#426970", "input_border": "#40F2E2",
+        "inverse_text": "#041012", "input_bg": "#244A50", "input_border": "#4E8188", "placeholder": "#C8E5E8",
     },
     "Lila": {
         "background": "#120B1B", "surface": "#1B1028", "surface_alt": "#2B1840",
@@ -42,7 +42,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFD86A", "red": "#FF7C92", "red_soft": "#431C2B",
         "blocked": "#C0A6D0", "border": "#80609B", "border_soft": "#5B4070",
         "hover": "#3B2251", "active_nav": "#38204D", "header_section": "#3D2353",
-        "inverse_text": "#13081A", "input_bg": "#725184", "input_border": "#DFA0FF",
+        "inverse_text": "#13081A", "input_bg": "#4A3558", "input_border": "#8A6A9F", "placeholder": "#E0D2E8",
     },
     "Kontrast": {
         "background": "#000000", "surface": "#0A0A0A", "surface_alt": "#161616",
@@ -52,7 +52,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFEA00", "red": "#FF5252", "red_soft": "#3A0000",
         "blocked": "#C7C7C7", "border": "#FFFFFF", "border_soft": "#BDBDBD",
         "hover": "#242424", "active_nav": "#1B1B1B", "header_section": "#202020",
-        "inverse_text": "#000000", "input_bg": "#606060", "input_border": "#FFFFFF",
+        "inverse_text": "#000000", "input_bg": "#222222", "input_border": "#BDBDBD", "placeholder": "#E0E0E0",
     },
 }
 THEME_NAMES = tuple(THEMES)
@@ -198,6 +198,7 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
         background:{colors['input_bg']}; color:{colors['text']};
         border:1px solid {colors['input_border']}; border-radius:{radius}px;
         padding:{geometry_scaled(5, zoom_percent)}px;
+        placeholder-text-color:{colors['placeholder']};
         selection-background-color:{colors['accent_soft']}; selection-color:{colors['text']};
     }}
     QListWidget, QTreeWidget, QTableWidget {{
@@ -214,7 +215,15 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
         min-height:{control_height}px;
         selection-background-color:{colors['accent_soft']}; selection-color:{colors['text']};
     }}
-    QLineEdit:focus, QComboBox:focus, QTextEdit:focus, QPlainTextEdit:focus,
+    QLineEdit:focus, QComboBox:focus, QTextEdit:focus, QPlainTextEdit:focus {{
+        border:{focus_width}px solid {colors['accent']};
+    }}
+    QLineEdit[fieldState="error"], QComboBox[fieldState="error"], QTextEdit[fieldState="error"], QPlainTextEdit[fieldState="error"] {{
+        border:{focus_width}px solid {colors['red']};
+    }}
+    QLineEdit[fieldState="valid"], QComboBox[fieldState="valid"], QTextEdit[fieldState="valid"], QPlainTextEdit[fieldState="valid"] {{
+        border:{focus_width}px solid {colors['green']};
+    }}
     QListWidget:focus, QTreeWidget:focus, QTableWidget:focus, QPushButton:focus, QToolButton:focus {{
         border:{focus_width}px solid {colors['cyan']};
     }}
@@ -357,10 +366,12 @@ def _apply_responsive_layout(window: QWidget) -> None:
     window.setProperty("provowareResponsiveBusy", True)
     try:
         width = max(window.width(), window.minimumWidth())
+        height = max(window.height(), window.minimumHeight())
         zoom = _zoom_percent(window)
         compact = width < 1100
         wide = width >= WIDE_MIN_WIDTH_PX
         high_zoom = zoom >= HIGH_ZOOM_MIN_PERCENT
+        module_compact = width < 1180 or height < 760 or zoom >= 150
         width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
         gap = 6 if compact else (10 if wide else 8)
@@ -374,6 +385,10 @@ def _apply_responsive_layout(window: QWidget) -> None:
             root_layout.setSpacing(gap)
 
         _apply_dashboard_high_zoom(window, high_zoom)
+
+        compact_handler = getattr(window, "set_compact_mode", None)
+        if callable(compact_handler) and window.__class__.__name__ in {"SongEditor", "SongLibrary"}:
+            compact_handler(module_compact)
 
         for card in window.findChildren(QFrame):
             if card.objectName() in {"card", "innerCard"}:

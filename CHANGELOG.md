@@ -1,5 +1,17 @@
 # Änderungsverlauf
 
+## 0.17.3 – Iteration 38: Fensterführung, Kompaktmodus und Fokuskontrast
+
+- Songbibliothek wird während einer Editor-Sitzung kontrolliert verborgen und nach dem letzten Editor wiederhergestellt.
+- gespeicherte Fensterpositionen werden nur bei aktuell sichtbarer Monitorüberschneidung übernommen; sonst sicher neu zentriert.
+- portable Fensterzustände in `daten/ui/fenster.json`, unabhängig von Songdaten.
+- Songeditor blendet optionale Metadaten im Kompaktmodus ein/aus; Songbibliothek bündelt Filter/Sortierung/Gruppierung.
+- Eingabefelder: neutraler Normalrand, Theme-Akzent bei Fokus, zentrale Rot-/Grün-Zustände sowie kontrastreichere Platzhalter.
+- sichtbares `&` in „Hilfe & Fehlerhilfe“ Qt-konform repariert.
+- neue GUI-Regressionen für 1366×768, Zoom/Kompaktmodus, Fokusfluss und Fensterzustand.
+- CI-/Wayland-/Restore-/ZIP-Abnahme: ausstehend bis zum Iteration-38-Branch-Gate.
+
+
 ## 0.17.2 – 2026-09-12 – Wartbarkeit, Entwicklungseffizienz und Hilfe
 
 ### Neu

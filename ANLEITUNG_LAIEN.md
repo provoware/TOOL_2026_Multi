@@ -123,7 +123,7 @@ Oben kann gesucht werden nach:
 - Stimme
 - Tags
 
-Zusätzlich können Filter kombiniert werden.
+Zusätzlich können Filter kombiniert werden. Auf kleineren Fenstern oder bei höherem Zoom werden **Filter, Sortierung und Gruppierung** platzsparend eingeklappt. Mit **Filter** kannst du sie jederzeit wieder öffnen.
 
 **Wichtig:** Suchen, Filtern, Sortieren und Gruppieren verändern keine Songdatei.
 
@@ -153,6 +153,10 @@ Mögliche Bereiche sind zum Beispiel Strophe, Refrain, Intro, Bridge oder Outro.
 Die Referenz sieht zum Beispiel so aus: `«Charakter: Nora (Erzählerin)»`. Die besonderen Klammern sind absichtlich gewählt, damit die Referenz nicht mit Songbereichen wie `[Strophe]` verwechselt wird.
 
 Rechts steht die **Gesamtvorschau**.
+
+**Weitere Angaben:** Stil, Stimme, Besonderheiten und Tags sind optional. Auf kleinen Fenstern oder ab 150 % Zoom klappt Provoware diesen Bereich automatisch ein, damit mehr Platz zum Schreiben bleibt. Du kannst ihn jederzeit mit **Weitere Angaben** wieder öffnen.
+
+Wenn du einen Song aus der Bibliothek öffnest, wird die Bibliothek bewusst ausgeblendet. Nach dem Schließen des letzten Songeditors erscheint sie automatisch wieder. Fenstergröße, Position und „maximiert“ werden getrennt von deinen Songdaten gespeichert; ungültige Positionen auf einem nicht mehr vorhandenen Monitor werden nicht blind wiederhergestellt.
 
 ## Speichern
 
