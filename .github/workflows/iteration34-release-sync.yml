@@ -1,0 +1,35 @@
+name: Iteration 34 Release-Sync
+
+on:
+  push:
+    branches:
+      - iteration-34-core-modules-data-standards
+    paths:
+      - scripts/iteration34_release_sync.py
+      - .github/workflows/iteration34-release-sync.yml
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.event.head_commit.message == 'Iteration 34 Release-Sync starten'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Projekt holen
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: iteration-34-core-modules-data-standards
+      - name: Version und Dokumentation synchronisieren
+        run: python3 scripts/iteration34_release_sync.py
+      - name: Änderungen prüfen und committen
+        run: |
+          set -Eeuo pipefail
+          python3 -m json.tool MANIFEST.json >/dev/null
+          bash -n scripts/pruefen.sh
+          git diff --check
+          git config user.name "provoware"
+          git config user.email "provoware.one@gmail.com"
+          git add MANIFEST.json README.md ANLEITUNG_LAIEN.md TODO.md CHANGELOG.md scripts/pruefen.sh docs/ITERATION34_CORE_MODULES_DATA_STANDARDS.md
+          git commit -m "Iteration 34: v0.17.0 synchronisieren"
+          git push origin HEAD:iteration-34-core-modules-data-standards
