@@ -57,7 +57,7 @@ class Iteration35WritingContextGuiTests(unittest.TestCase):
         target = song_path(self.root, "Charaktertest")
         self.assertTrue(target.is_file())
         loaded = load_song(target)
-        self.assertIn("[Charakter: Nora (Hauptfigur)]", loaded.sections[0].text)
+        self.assertIn("«Charakter: Nora (Hauptfigur)»", loaded.sections[0].text)
 
 
 if __name__ == "__main__":
