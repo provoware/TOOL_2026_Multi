@@ -1,0 +1,230 @@
+diff -ruN a/app/navigation_ux.py b/app/navigation_ux.py
+--- a/app/navigation_ux.py	2026-09-12 06:27:27.765946074 +0000
++++ b/app/navigation_ux.py	2026-09-12 06:27:27.768043416 +0000
+@@ -291,10 +291,18 @@
+         state = presentation_state(self.dashboard)
+         restricted = state.restricted_navigation
+         self._sync_ready_labels(state.high_zoom)
++        self.layout.setContentsMargins(
++            4 if state.high_zoom else 8,
++            4 if state.high_zoom else 8,
++            4 if state.high_zoom else 8,
++            4 if state.high_zoom else 8,
++        )
++        self.layout.setSpacing(0 if state.high_zoom else 2)
+ 
+         self.menu_title.setVisible(sidebar_open)
+         for widget in self.core_entries:
+             widget.setVisible(sidebar_open)
++        self.ready_heading.setVisible(sidebar_open and not state.high_zoom)
+         self.planned_heading.setVisible(sidebar_open and not restricted)
+         self.planned_hint.setVisible(sidebar_open and not restricted)
+         self.planned_toggle.setVisible(sidebar_open and not restricted)
+diff -ruN a/app/song_editor.py b/app/song_editor.py
+--- a/app/song_editor.py	2026-09-12 06:27:27.762341797 +0000
++++ b/app/song_editor.py	2026-09-12 06:27:27.764089499 +0000
+@@ -109,6 +109,8 @@
+             label = QLabel(label_text)
+             label.setObjectName("muted")
+             entry = QLineEdit()
++            entry.setAccessibleName(label_text)
++            label.setBuddy(entry)
+             entry.editingFinished.connect(self._save_from_focus)
+             entry.textChanged.connect(self._update_preview)
+             layout.addWidget(label, row, col, 1, span)
+@@ -217,6 +219,7 @@
+         preview_title.setObjectName("sectionTitle")
+         right_layout.addWidget(preview_title)
+         self.preview = QTextEdit()
++        self.preview.setAccessibleName("Gesamtvorschau")
+         self.preview.setReadOnly(True)
+         right_layout.addWidget(self.preview, 1)
+         right_layout.addWidget(QLabel("Zusätzliche Notizen zum Song (optional):"))
+diff -ruN a/app/ui_standards.py b/app/ui_standards.py
+--- a/app/ui_standards.py	2026-09-12 06:27:27.757544930 +0000
++++ b/app/ui_standards.py	2026-09-12 06:27:27.760796197 +0000
+@@ -207,7 +207,7 @@
+         padding:{geometry_scaled(5, zoom_percent)}px;
+         selection-background-color:{colors['accent_soft']}; selection-color:{colors['text']};
+     }}
+-    QLineEdit {{ min-height:{control_height}px; }}
++    QLineEdit, QCheckBox {{ min-height:{control_height}px; }}
+     QComboBox {{
+         background:{colors['input_bg']}; color:{colors['text']};
+         border:1px solid {colors['input_border']}; border-radius:{radius}px;
+@@ -372,6 +372,7 @@
+         wide = width >= WIDE_MIN_WIDTH_PX
+         high_zoom = zoom >= HIGH_ZOOM_MIN_PERCENT
+         module_compact = width < 1180 or height < 760 or zoom >= 150
++        dashboard_dense = window.__class__.__name__ == "Dashboard" and (height < 820 or zoom >= 125)
+         width_factor = _zoom_width_factor(window)
+         margin = 7 if compact else (13 if wide else 10)
+         gap = 6 if compact else (10 if wide else 8)
+@@ -386,6 +387,28 @@
+ 
+         _apply_dashboard_high_zoom(window, high_zoom)
+ 
++        if window.__class__.__name__ == "Dashboard":
++            # Auf knapper Höhe bekommen fertige Arbeitswege Vorrang vor reinen
++            # Planungskarten. Dieselben geplanten Funktionen bleiben über die
++            # bedarfsgesteuerte Sidebar vollständig erreichbar.
++            for card in window.findChildren(QFrame):
++                if card.objectName() != "card":
++                    continue
++                title_text = _card_title(card)
++                if title_text.startswith("▣  Funktionen") or title_text.startswith("▤  Dateien & Werkzeuge"):
++                    card.setVisible(not dashboard_dense)
++                elif title_text.startswith("▦  Daten & Vorgaben") or title_text.startswith("▦  Vorgaben"):
++                    for label in card.findChildren(QLabel):
++                        if label.objectName() == "cardTitle":
++                            label.setText("▦  Vorgaben" if high_zoom else "▦  Daten & Vorgaben")
++                            break
++            for label in window.findChildren(QLabel):
++                text = label.text()
++                if text.startswith("Wähle einen fertigen Bereich."):
++                    label.setVisible(not dashboard_dense)
++                elif text.startswith("Tipp: Für Genres, Stimmung, Stil oder Stimme"):
++                    label.setVisible(not dashboard_dense and not high_zoom)
++
+         compact_handler = getattr(window, "set_compact_mode", None)
+         if callable(compact_handler) and window.__class__.__name__ in {"SongEditor", "SongLibrary"}:
+             compact_handler(module_compact)
+@@ -423,8 +446,8 @@
+ 
+         profile_combo = getattr(window, "db_profile_combo", None)
+         if isinstance(profile_combo, QWidget):
+-            minimum = round((100 if high_zoom else (110 if compact else 135)) * width_factor)
+-            maximum = round((135 if high_zoom else (190 if wide else 160)) * width_factor)
++            minimum = round((90 if high_zoom else (110 if compact else 135)) * width_factor)
++            maximum = round((112 if high_zoom else (190 if wide else 160)) * width_factor)
+             profile_combo.setMinimumWidth(minimum)
+             profile_combo.setMaximumWidth(maximum)
+ 
+diff -ruN a/tests/test_iteration39_product_ui_fixes_gui.py b/tests/test_iteration39_product_ui_fixes_gui.py
+--- a/tests/test_iteration39_product_ui_fixes_gui.py	1970-01-01 00:00:00.000000000 +0000
++++ b/tests/test_iteration39_product_ui_fixes_gui.py	2026-09-12 06:27:27.771504013 +0000
+@@ -0,0 +1,124 @@
++import os
++import tempfile
++import unittest
++from pathlib import Path
++
++os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
++
++from PySide6.QtWidgets import QApplication, QCheckBox, QFrame, QLabel, QPushButton
++
++from app.main import configure_dashboard_presentation
++from app.song_editor import SongEditor
++from app.ui import Dashboard
++from app.ui_standards import apply_global_style
++
++
++class _Texts:
++    def get(self, _key: str, default: str = "") -> str:
++        return default
++
++
++class _Logger:
++    def recent(self, _limit: int = 100):
++        return []
++
++    @staticmethod
++    def human_report(event):
++        return str(event)
++
++
++def _settle(cycles: int = 6) -> None:
++    for _ in range(cycles):
++        QApplication.processEvents()
++
++
++def _card_by_title(window: Dashboard, prefix: str) -> QFrame:
++    for card in window.findChildren(QFrame):
++        if card.objectName() != "card":
++            continue
++        for label in card.findChildren(QLabel):
++            if label.objectName() == "cardTitle" and label.text().startswith(prefix):
++                return card
++    raise AssertionError(f"Karte fehlt: {prefix}")
++
++
++class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.app = QApplication.instance() or QApplication([])
++
++    def test_checkbox_hit_area_reaches_hard_minimum_at_100_percent(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            editor = SongEditor(Path(tmp), zoom_percent=100)
++            try:
++                editor.show()
++                _settle()
++                self.assertGreaterEqual(editor.favorite_check.height(), 27)
++            finally:
++                editor.close()
++                _settle(2)
++
++    def test_song_editor_primary_and_optional_fields_have_semantic_accessible_names(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            editor = SongEditor(Path(tmp), zoom_percent=100)
++            try:
++                expected = {
++                    editor.title_entry: "Titel",
++                    editor.genre_entry: "Genre",
++                    editor.mood_entry: "Stimmung",
++                    editor.style_entry: "Stil",
++                    editor.voice_entry: "Stimme",
++                    editor.special_entry: "Besonderheiten",
++                    editor.tags_entry: "Tags (mit Komma trennen)",
++                    editor.preview: "Gesamtvorschau",
++                }
++                for widget, name in expected.items():
++                    self.assertEqual(widget.accessibleName(), name)
++            finally:
++                editor.close()
++                _settle(2)
++
++    def test_dashboard_dense_mode_prioritizes_ready_workflows_on_short_height(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
++            try:
++                dashboard.zoom_percent = 100
++                apply_global_style(dashboard, 100, "Amber")
++                dashboard.resize(1334, 696)
++                dashboard.show()
++                _settle()
++                self.assertFalse(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
++                self.assertFalse(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
++                self.assertTrue(_card_by_title(dashboard, "🚀  So startest du").isVisibleTo(dashboard))
++                self.assertTrue(_card_by_title(dashboard, "▦  Daten & Vorgaben").isVisibleTo(dashboard))
++            finally:
++                dashboard._closing_after_save = True
++                dashboard.close()
++                _settle(2)
++
++    def test_high_zoom_sidebar_keeps_ready_buttons_separated(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
++            try:
++                dashboard.zoom_percent = 200
++                apply_global_style(dashboard, 200, "Kontrast")
++                dashboard.resize(1334, 696)
++                dashboard.show()
++                _settle()
++                controller = dashboard._provoware_navigation_ux
++                self.assertFalse(controller.ready_heading.isVisibleTo(dashboard))
++                visible = [button for button in controller.ready_buttons if button.isVisibleTo(dashboard)]
++                self.assertEqual(len(visible), 7)
++                ordered = sorted(visible, key=lambda button: button.mapTo(dashboard, button.rect().topLeft()).y())
++                for first, second in zip(ordered, ordered[1:]):
++                    first_bottom = first.mapTo(dashboard, first.rect().bottomLeft()).y()
++                    second_top = second.mapTo(dashboard, second.rect().topLeft()).y()
++                    self.assertLess(first_bottom, second_top)
++            finally:
++                dashboard._closing_after_save = True
++                dashboard.close()
++                _settle(2)
++
++
++if __name__ == "__main__":
++    unittest.main()
