@@ -1,5 +1,5 @@
 {
-  "schema_version": 28,
+  "schema_version": 29,
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
@@ -8,9 +8,9 @@
     "date": "2026-09-12"
   },
   "iteration": {
-    "number": 35,
-    "goal": "Charakterzugriff in Schreibmodulen standardisieren und geprüfte Vollprojekt-ZIPs direkt aus CI bereitstellen",
-    "completed": 4,
+    "number": 36,
+    "goal": "Kubuntu-Abnahmestart und Restore-Dateirechte für Klick-&-Start zuverlässig absichern",
+    "completed": 6,
     "open_next": 1
   },
   "runtime": {
@@ -302,7 +302,26 @@
     "iteration35_technical_restore_sha256": "2b1dc4413771643c7a83a9e7b991ed56062afd6da259150d64c5d77ea62bca3a",
     "iteration35_technical_tested_head_sha": "907e65df46ba31d2d5e7df03d137baf1448742b8",
     "iteration35_ci_full_project_artifact": true,
-    "iteration35_release_version": "0.17.1"
+    "iteration35_release_version": "0.17.1",
+    "iteration36_initial_ci_run": 736,
+    "iteration36_initial_ci_result": "failure",
+    "iteration36_initial_ci_cause": "Restore verlor Unix-Ausführungsrechte; wiederhergestellte Starter waren 0644",
+    "iteration36_corrected_ci_run": 740,
+    "iteration36_corrected_ci_result": "success",
+    "iteration36_main_merge_sha": "9a5d60cfe2322619ac526854dde29a943c439661",
+    "iteration36_main_ci_run": 745,
+    "iteration36_main_ci_result": "success",
+    "iteration36_main_logic_tests": 111,
+    "iteration36_main_gui_tests": 76,
+    "iteration36_main_release_files": 46,
+    "iteration36_main_native_wayland_smoke": true,
+    "iteration36_main_restore_gate": true,
+    "iteration36_main_restore_status": "OK",
+    "iteration36_main_restore_sha256": "3b1145b912aca1f6fbced4070688ee28177416a8aadce68a0ec82ac7182dc5ef",
+    "iteration36_main_runtime_release_sha256": "ec408ed8ba64a05d9a8ba0e2a6d7b1659d2b1dcebc3f6c4f8dce32c4c848c950",
+    "iteration36_launcher_modes": "schnellstart.sh=0755;kubuntu_abnahme.sh=0755",
+    "iteration36_permissions_restored": true,
+    "iteration36_symlink_restore_rejected": true
   },
   "ci": {
     "workflow": ".github/workflows/qualitaet.yml",
