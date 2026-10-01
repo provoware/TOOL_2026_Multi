@@ -42,6 +42,34 @@ jobs:
           fi
           export WAYLAND_DISPLAY=wayland-ci
           python3 scripts/wayland_smoke.py
+      - name: UI-Qualitätsanalyse erzeugen (Shadow)
+        id: ui_shadow
+        run: |
+          set -Eeuo pipefail
+          PROFILE="pr"
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then PROFILE="release"; fi
+          mkdir -p "$RUNNER_TEMP/ui-shadow"
+          set +e
+          python3 scripts/ui_shadow_entry.py --profile "$PROFILE" --output-dir "$RUNNER_TEMP/ui-shadow"
+          SHADOW_RC=$?
+          set -e
+          printf '%s\n' "$SHADOW_RC" > "$RUNNER_TEMP/ui-shadow/runner_exit_code.txt"
+          echo "exit_code=$SHADOW_RC" >> "$GITHUB_OUTPUT"
+          case "$SHADOW_RC" in
+            0) echo "UI-Shadow: keine harten UI-Befunde." ;;
+            1) echo "::notice::UI-Shadow hat UI-Befunde erkannt. In Iteration 39 bleiben diese nicht blockierend." ;;
+            2) echo "::warning::UI-Shadow-Prüfsystem meldet einen Infrastrukturfehler. Der abschließende Infrastruktur-Gate wird den Job rot markieren." ;;
+            *) echo "::warning::UI-Shadow lieferte unerwarteten Exitcode $SHADOW_RC. Der abschließende Infrastruktur-Gate entscheidet anhand der Evidenz." ;;
+          esac
+          exit 0
+      - name: UI-Shadow-Evidenz bereitstellen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TOOL_2026_Multi-ui-shadow-${{ github.run_number }}
+          path: ${{ runner.temp }}/ui-shadow/**
+          if-no-files-found: warn
+          retention-days: 30
       - name: Vollprojekt wiederherstellen und prüfen
         run: python3 scripts/iteration_restore.py --output-dir "$RUNNER_TEMP/tool_restore"
       - name: Geprüfte ZIP-Pakete erzeugen
@@ -61,3 +89,8 @@ jobs:
             release/*.sha256
           if-no-files-found: error
           retention-days: 14
+      - name: UI-Shadow-Infrastruktur hart validieren
+        if: always()
+        run: |
+          set -Eeuo pipefail
+          python3 scripts/ui_shadow_entry.py --validate-evidence "$RUNNER_TEMP/ui-shadow/ui_shadow_evidence.json"

@@ -1,5 +1,16 @@
 # Änderungsverlauf
 
+## 0.17.4 – Iteration 39: Autonomous UI Quality Gate PRO (Shadow Mode)
+
+- zentrale Qt-unabhängige UI-Verträge für 8-/4-Pixel-Raster, Geometrie, Mindesthöhen und WCAG-Kontrast
+- 8-fällige PR-Kernmatrix und vollständige 60-fällige Main-/Release-Matrix
+- deterministisches Window-State-Fuzzing für ungültige/offscreen gespeicherte Fensterpositionen
+- automatischer PySide6-Shadow-Gate für Dashboard, Songbibliothek und Songeditor
+- JSON-Evidenz, Markdown-Zusammenfassung und Raster-Screenshots bei Auffälligkeiten
+- Infrastrukturfehler des Prüfsystems werden explizit dokumentiert statt still verschluckt
+- GitHub Actions sammelt Shadow-Evidenz getrennt vom unveränderlichen Quell-Manifest; bestehende Hard-Gates bleiben unverändert
+- reine Vertrags-/Meta-Tests prüfen das Prüfsystem selbst und erkennen absichtlich fehlerhafte Geometrie, Kontrast und Promotion-Zustände
+
 ## 0.17.3 – Iteration 38: Fensterführung, Kompaktmodus und Fokuskontrast
 
 - Songbibliothek wird während einer Editor-Sitzung kontrolliert verborgen und nach dem letzten Editor wiederhergestellt.

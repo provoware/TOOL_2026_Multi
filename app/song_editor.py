@@ -109,6 +109,8 @@ class SongEditor(QWidget):
             label = QLabel(label_text)
             label.setObjectName("muted")
             entry = QLineEdit()
+            entry.setAccessibleName(label_text)
+            label.setBuddy(entry)
             entry.editingFinished.connect(self._save_from_focus)
             entry.textChanged.connect(self._update_preview)
             layout.addWidget(label, row, col, 1, span)
@@ -187,15 +189,19 @@ class SongEditor(QWidget):
             self.section_type.lineEdit().setPlaceholderText("Standard wählen oder eigenen Namen eingeben")
         self.section_type.setCurrentText("Strophe")
         section_bar.addWidget(self.section_type)
-        add_button = QPushButton("Bereich hinzufügen")
-        add_button.clicked.connect(self.add_section)
-        section_bar.addWidget(add_button)
-        remove_button = QPushButton("Bereich entfernen")
-        remove_button.setToolTip("Fragt vor dem Entfernen noch einmal nach.")
-        remove_button.clicked.connect(self.remove_section)
-        section_bar.addWidget(remove_button)
+        self.add_section_button = QPushButton("Bereich hinzufügen")
+        self.add_section_button.setAccessibleName("Bereich hinzufügen")
+        self.add_section_button.setToolTip("Fügt einen neuen Songbereich hinzu.")
+        self.add_section_button.clicked.connect(self.add_section)
+        section_bar.addWidget(self.add_section_button)
+        self.remove_section_button = QPushButton("Bereich entfernen")
+        self.remove_section_button.setAccessibleName("Bereich entfernen")
+        self.remove_section_button.setToolTip("Fragt vor dem Entfernen noch einmal nach.")
+        self.remove_section_button.clicked.connect(self.remove_section)
+        section_bar.addWidget(self.remove_section_button)
         section_bar.addStretch(1)
         left_layout.addLayout(section_bar)
+        self._sync_section_action_labels()
 
         content_row = QHBoxLayout()
         self.section_list = QListWidget()
@@ -217,6 +223,7 @@ class SongEditor(QWidget):
         preview_title.setObjectName("sectionTitle")
         right_layout.addWidget(preview_title)
         self.preview = QTextEdit()
+        self.preview.setAccessibleName("Gesamtvorschau")
         self.preview.setReadOnly(True)
         right_layout.addWidget(self.preview, 1)
         right_layout.addWidget(QLabel("Zusätzliche Notizen zum Song (optional):"))
@@ -243,9 +250,16 @@ class SongEditor(QWidget):
         if hasattr(self, "details_toggle"):
             self.details_toggle.setText("▾ Weitere Angaben" if checked else "▸ Weitere Angaben")
 
+    def _sync_section_action_labels(self) -> None:
+        """Hält Aktionsnamen vollständig, verkürzt aber die sichtbaren Hochzoomtexte."""
+        high_zoom = self.zoom_percent >= 175
+        self.add_section_button.setText("＋ Bereich" if high_zoom else "Bereich hinzufügen")
+        self.remove_section_button.setText("− Bereich" if high_zoom else "Bereich entfernen")
+
     def set_compact_mode(self, compact: bool) -> None:
         """Verdichtet optionale Metadaten nur beim Wechsel in/aus dem Kompaktmodus."""
         compact = bool(compact)
+        self._sync_section_action_labels()
         if self._compact_mode == compact:
             return
         self._compact_mode = compact

@@ -13,6 +13,22 @@ from app.texts import TextRegistry
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def configure_dashboard_presentation(dashboard):
+    """Installiert exakt die Präsentationsschichten des produktiven Dashboards.
+
+    Die Funktion ist die einzige Quelle für die Controller-Reihenfolge und wird
+    sowohl vom echten Programmstart als auch vom automatischen UI-Shadow-Gate
+    verwendet. So kann die Prüfumgebung nicht unbemerkt vom Produktionsstart
+    abweichen.
+    """
+    from app.laptop_layout import install_laptop_layout
+    from app.navigation_ux import install_navigation_ux
+
+    install_laptop_layout(dashboard)
+    install_navigation_ux(dashboard)
+    return dashboard
+
+
 def headless_check() -> int:
     try:
         manifest = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
@@ -34,8 +50,6 @@ def main() -> int:
         from PySide6.QtWidgets import QApplication
         from app.ui import Dashboard, install_exception_handler
         from app.ui_standards import configure_application
-        from app.laptop_layout import install_laptop_layout
-        from app.navigation_ux import install_navigation_ux
         from app.startup_validation import ensure_runtime_folders_gui
 
         app = QApplication.instance() or QApplication([])
@@ -58,8 +72,7 @@ def main() -> int:
 
         logger = EventLogger(ROOT, version)
         dashboard = Dashboard(TextRegistry(ROOT / "texte" / "registry.json"), logger, ROOT)
-        install_laptop_layout(dashboard)
-        install_navigation_ux(dashboard)
+        configure_dashboard_presentation(dashboard)
         install_exception_handler(app, logger, dashboard.refresh, dashboard)
         logger.record(
             severity="INFO", area="START", summary="Das Programm wurde sicher gestartet.",

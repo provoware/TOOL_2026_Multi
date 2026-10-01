@@ -2,6 +2,18 @@
 
 Stand: 2026-09-12
 
+## Iteration 39 – Autonomous UI Quality Gate PRO (Shadow Mode)
+
+- [x] zentrale Qt-unabhängige UI-Verträge für Raster, Geometrie, Kontrast und Mindestgrößen anlegen
+- [x] kritische PR-Matrix mit 8 reproduzierbaren Fällen definieren
+- [x] vollständige Main-/Release-Matrix mit 60 Kombinationen definieren
+- [x] deterministisches Window-State-Fuzzing für Monitor-/Skalierungswechsel ergänzen
+- [x] echte Dashboard-/Songbibliothek-/Songeditor-Prüfung im Offscreen-Shadow-Gate ergänzen
+- [x] maschinenlesbare JSON-Evidenz, Markdown-Zusammenfassung und Raster-Diagnosebilder erzeugen
+- [x] Shadow-Gate so integrieren, dass bestehende harte Release-Gates nicht blockiert werden
+- [ ] Shadow-Ergebnisse über mehrere CI-Läufe kalibrieren und bestätigte Fehlalarme beseitigen
+- [ ] nach mindestens drei sauberen Läufen ausgewählte Regeln zum Pflicht-Gate hochstufen
+
 ## Iteration 38 – Fensterführung und kleine Displays
 
 - [x] Bibliothek→Editor→Bibliothek ohne gleichzeitigen Fensterstapel

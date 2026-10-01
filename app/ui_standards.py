@@ -207,7 +207,7 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
         padding:{geometry_scaled(5, zoom_percent)}px;
         selection-background-color:{colors['accent_soft']}; selection-color:{colors['text']};
     }}
-    QLineEdit {{ min-height:{control_height}px; }}
+    QLineEdit, QCheckBox {{ min-height:{control_height}px; }}
     QComboBox {{
         background:{colors['input_bg']}; color:{colors['text']};
         border:1px solid {colors['input_border']}; border-radius:{radius}px;
@@ -287,7 +287,11 @@ def _apply_dashboard_high_zoom(window: QWidget, high_zoom: bool) -> None:
 
     nav_collapsed = bool(getattr(window, "nav_collapsed", False))
     for button in window.findChildren(QPushButton):
-        if button.objectName() == "navButton" and button.property("planned") is True:
+        if button.accessibleName() == "Übersicht":
+            # Das Dashboard ist bereits die Übersicht. Bei 175/200 % gibt der
+            # redundante Eintrag seine Höhe vollständig an die Arbeitswege ab.
+            button.setMaximumHeight(0 if high_zoom else 16777215)
+        elif button.objectName() == "navButton" and button.property("planned") is True:
             button.setMaximumHeight(0 if high_zoom else 16777215)
             button.setVisible(not high_zoom and not nav_collapsed)
         elif button.objectName() == "tileButton" and button.property("planned") is True:
@@ -372,6 +376,9 @@ def _apply_responsive_layout(window: QWidget) -> None:
         wide = width >= WIDE_MIN_WIDTH_PX
         high_zoom = zoom >= HIGH_ZOOM_MIN_PERCENT
         module_compact = width < 1180 or height < 760 or zoom >= 150
+        dashboard_dense = window.__class__.__name__ == "Dashboard" and (
+            height < 760 or high_zoom or (zoom >= 125 and height < 860)
+        )
         width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
         gap = 6 if compact else (10 if wide else 8)
@@ -385,6 +392,28 @@ def _apply_responsive_layout(window: QWidget) -> None:
             root_layout.setSpacing(gap)
 
         _apply_dashboard_high_zoom(window, high_zoom)
+
+        if window.__class__.__name__ == "Dashboard":
+            # Auf knapper Höhe bekommen fertige Arbeitswege Vorrang vor reinen
+            # Planungskarten. Dieselben geplanten Funktionen bleiben über die
+            # bedarfsgesteuerte Sidebar vollständig erreichbar.
+            for card in window.findChildren(QFrame):
+                if card.objectName() != "card":
+                    continue
+                title_text = _card_title(card)
+                if title_text.startswith("▣  Funktionen") or title_text.startswith("▤  Dateien & Werkzeuge"):
+                    card.setVisible(not dashboard_dense)
+                elif title_text.startswith("▦  Daten & Vorgaben") or title_text.startswith("▦  Vorgaben"):
+                    for label in card.findChildren(QLabel):
+                        if label.objectName() == "cardTitle":
+                            label.setText("▦  Vorgaben" if high_zoom else "▦  Daten & Vorgaben")
+                            break
+            for label in window.findChildren(QLabel):
+                text = label.text()
+                if text.startswith("Wähle einen fertigen Bereich."):
+                    label.setVisible(not dashboard_dense)
+                elif text.startswith("Tipp: Für Genres, Stimmung, Stil oder Stimme"):
+                    label.setVisible(not dashboard_dense and not high_zoom)
 
         compact_handler = getattr(window, "set_compact_mode", None)
         if callable(compact_handler) and window.__class__.__name__ in {"SongEditor", "SongLibrary"}:
@@ -423,8 +452,8 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         profile_combo = getattr(window, "db_profile_combo", None)
         if isinstance(profile_combo, QWidget):
-            minimum = round((100 if high_zoom else (110 if compact else 135)) * width_factor)
-            maximum = round((135 if high_zoom else (190 if wide else 160)) * width_factor)
+            minimum = round((90 if high_zoom else (110 if compact else 135)) * width_factor)
+            maximum = round((112 if high_zoom else (190 if wide else 160)) * width_factor)
             profile_combo.setMinimumWidth(minimum)
             profile_combo.setMaximumWidth(maximum)
 
@@ -441,9 +470,10 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         for button in window.findChildren(QPushButton):
             if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
-                if high_zoom:
-                    button.setText("Profile")
-                else:
+                # Im Hochzoom ist dieselbe Bearbeitung über „Vorgaben“ in der
+                # Sidebar erreichbar. Die Profil-Auswahl erhält den Platz.
+                button.setVisible(not high_zoom)
+                if not high_zoom:
                     button.setText("Profile & Werte bearbeiten" if wide else "Profile bearbeiten")
 
         if window.__class__.__name__ == "CalendarWindow":

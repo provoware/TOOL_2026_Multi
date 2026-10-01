@@ -29,11 +29,29 @@ def _card_title(card: QFrame) -> str:
     return ""
 
 
+def _sync_profile_action_text(window: QWidget, state) -> None:
+    """Bewahrt den Volltext, gibt ihm aber in großer Ansicht garantiert genug Breite."""
+    for button in window.findChildren(QPushButton):
+        if button.text() not in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
+            continue
+        text = (
+            "Profile" if state.laptop_compact
+            else "Profile & Werte bearbeiten" if state.wide
+            else "Profile bearbeiten"
+        )
+        button.setText(text)
+        if state.wide and not state.high_zoom:
+            button.setMinimumWidth(button.fontMetrics().horizontalAdvance(text) + 20)
+        else:
+            button.setMinimumWidth(0)
+
+
 def apply_laptop_layout(window: QWidget) -> None:
     """Verdichtet nur die kleine Dashboard-Ansicht und stellt sie reversibel wieder her."""
     state = presentation_state(window)
     compact = state.laptop_compact
     was_compact = bool(window.property("provowareLaptopCompact"))
+    _sync_profile_action_text(window, state)
 
     # Ist der Laptop-Modus weder aktiv noch zu restaurieren, darf diese Schicht
     # nichts anfassen. So bleiben normale Großansicht und 175/200-%-Hochzoom
@@ -52,10 +70,6 @@ def apply_laptop_layout(window: QWidget) -> None:
             else:
                 button.setMaximumHeight(16777215)
                 button.setVisible(not nav_collapsed)
-        if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
-            button.setText("Profile" if compact else (
-                "Profile & Werte bearbeiten" if state.wide else "Profile bearbeiten"
-            ))
 
     for label in window.findChildren(QLabel):
         text = label.text()
@@ -110,6 +124,7 @@ def apply_laptop_layout(window: QWidget) -> None:
         # wieder exakt nach seinen bestehenden Regeln verteilen.
         from app.ui_standards import refresh_responsive_layout
         refresh_responsive_layout(window)
+        _sync_profile_action_text(window, state)
 
 
 class _LaptopLayoutFilter(QObject):

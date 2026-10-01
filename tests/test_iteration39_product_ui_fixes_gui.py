@@ -1,0 +1,253 @@
+import os
+import tempfile
+import unittest
+from pathlib import Path
+
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+
+from PySide6.QtWidgets import QApplication, QCheckBox, QFrame, QLabel, QPushButton
+
+from app.main import configure_dashboard_presentation
+from app.song_editor import SongEditor
+from app.song_library import SongLibrary
+from app.ui import Dashboard
+from app.ui_standards import apply_global_style
+
+
+class _Texts:
+    def get(self, _key: str, default: str = "") -> str:
+        return default
+
+
+class _Logger:
+    def recent(self, _limit: int = 100):
+        return []
+
+    @staticmethod
+    def human_report(event):
+        return str(event)
+
+
+def _settle(cycles: int = 6) -> None:
+    for _ in range(cycles):
+        QApplication.processEvents()
+
+
+def _card_by_title(window: Dashboard, prefix: str) -> QFrame:
+    for card in window.findChildren(QFrame):
+        if card.objectName() != "card":
+            continue
+        for label in card.findChildren(QLabel):
+            if label.objectName() == "cardTitle" and label.text().startswith(prefix):
+                return card
+    raise AssertionError(f"Karte fehlt: {prefix}")
+
+
+class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.app = QApplication.instance() or QApplication([])
+
+    def test_checkbox_hit_area_reaches_hard_minimum_at_100_percent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            editor = SongEditor(Path(tmp), zoom_percent=100)
+            try:
+                editor.show()
+                _settle()
+                self.assertGreaterEqual(editor.favorite_check.height(), 27)
+            finally:
+                editor.close()
+                _settle(2)
+
+    def test_song_editor_primary_and_optional_fields_have_semantic_accessible_names(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            editor = SongEditor(Path(tmp), zoom_percent=100)
+            try:
+                expected = {
+                    editor.title_entry: "Titel",
+                    editor.genre_entry: "Genre",
+                    editor.mood_entry: "Stimmung",
+                    editor.style_entry: "Stil",
+                    editor.voice_entry: "Stimme",
+                    editor.special_entry: "Besonderheiten",
+                    editor.tags_entry: "Tags (mit Komma trennen)",
+                    editor.preview: "Gesamtvorschau",
+                }
+                for widget, name in expected.items():
+                    self.assertEqual(widget.accessibleName(), name)
+            finally:
+                editor.close()
+                _settle(2)
+
+    def test_song_editor_section_actions_shorten_only_at_high_zoom_without_losing_semantics(self):
+        cases = (
+            (150, "Bereich hinzufügen", "Bereich entfernen"),
+            (175, "＋ Bereich", "− Bereich"),
+            (200, "＋ Bereich", "− Bereich"),
+        )
+        for zoom, add_text, remove_text in cases:
+            with self.subTest(zoom=zoom), tempfile.TemporaryDirectory() as tmp:
+                editor = SongEditor(Path(tmp), zoom_percent=zoom)
+                try:
+                    editor.show()
+                    _settle()
+                    self.assertEqual(editor.add_section_button.text(), add_text)
+                    self.assertEqual(editor.remove_section_button.text(), remove_text)
+                    self.assertEqual(editor.add_section_button.accessibleName(), "Bereich hinzufügen")
+                    self.assertEqual(editor.remove_section_button.accessibleName(), "Bereich entfernen")
+                    self.assertTrue(editor.add_section_button.toolTip())
+                    self.assertTrue(editor.remove_section_button.toolTip())
+                finally:
+                    editor.close()
+                    _settle(2)
+
+    def test_song_library_version_action_shorten_only_at_high_zoom_without_losing_semantics(self):
+        cases = (
+            (150, "Ältere Version ansehen / wiederherstellen"),
+            (175, "Versionen"),
+            (200, "Versionen"),
+        )
+        for zoom, expected_text in cases:
+            with self.subTest(zoom=zoom), tempfile.TemporaryDirectory() as tmp:
+                library = SongLibrary(Path(tmp), zoom, lambda _path: None)
+                try:
+                    library.show()
+                    _settle()
+                    self.assertEqual(library.version_button.text(), expected_text)
+                    self.assertEqual(
+                        library.version_button.accessibleName(),
+                        "Ältere Version ansehen oder wiederherstellen",
+                    )
+                    self.assertTrue(library.version_button.toolTip())
+                finally:
+                    library.close()
+                    _settle(2)
+
+    def test_dashboard_dense_mode_prioritizes_ready_workflows_on_short_height(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
+                dashboard.zoom_percent = 100
+                apply_global_style(dashboard, 100, "Amber")
+                dashboard.resize(1334, 696)
+                dashboard.show()
+                _settle()
+                self.assertFalse(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
+                self.assertFalse(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
+                self.assertTrue(_card_by_title(dashboard, "🚀  So startest du").isVisibleTo(dashboard))
+                self.assertTrue(_card_by_title(dashboard, "▦  Daten & Vorgaben").isVisibleTo(dashboard))
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
+    def test_dashboard_dense_mode_tracks_125_percent_shadow_boundary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
+                dashboard.zoom_percent = 125
+                dashboard.set_zoom(125)
+                apply_global_style(dashboard, 125, "Türkis")
+                dashboard.resize(1568, 828)
+                dashboard.show()
+                _settle()
+                self.assertFalse(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
+                self.assertFalse(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
+
+                dashboard.resize(1594, 926)
+                _settle()
+                self.assertTrue(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
+                self.assertTrue(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
+    def test_sidebar_uses_short_visible_labels_without_losing_semantics(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
+                dashboard.zoom_percent = 150
+                dashboard.set_zoom(150)
+                apply_global_style(dashboard, 150, "Amber")
+                dashboard.resize(1334, 696)
+                dashboard.show()
+                _settle()
+                controller = dashboard._provoware_navigation_ux
+                self.assertEqual(dashboard.profile_nav_button.text(), "▦  Vorgaben")
+                self.assertEqual(dashboard.profile_nav_button.accessibleName(), "Genres & Vorgaben")
+                self.assertEqual(dashboard.recovery_nav_button.text(), "ⓘ  Hilfe")
+                self.assertEqual(dashboard.recovery_nav_button.accessibleName(), "Hilfe & Fehlerhilfe")
+
+                dashboard.zoom_percent = 100
+                dashboard.set_zoom(100)
+                apply_global_style(dashboard, 100, "Amber")
+                dashboard.resize(1334, 696)
+                _settle()
+                self.assertEqual(controller.planned_toggle.text(), "▸  Geplante Bereiche (10)")
+                self.assertEqual(
+                    controller.planned_toggle.accessibleName(),
+                    "Geplante Bereiche anzeigen oder ausblenden",
+                )
+                self.assertTrue(controller.planned_toggle.toolTip())
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
+    def test_high_zoom_sidebar_keeps_ready_buttons_separated(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
+                dashboard.zoom_percent = 200
+                dashboard.set_zoom(200)
+                apply_global_style(dashboard, 200, "Kontrast")
+                dashboard.resize(1334, 696)
+                dashboard.show()
+                _settle()
+                controller = dashboard._provoware_navigation_ux
+                hidden = (
+                    controller.overview_button, controller.ready_heading,
+                    controller.planned_heading, controller.planned_hint, controller.planned_toggle,
+                )
+                for widget in hidden:
+                    self.assertFalse(widget.isVisibleTo(dashboard))
+                    self.assertEqual(widget.maximumHeight(), 0)
+                self.assertGreaterEqual(controller.layout.spacing(), 4)
+                visible = [button for button in controller.ready_buttons if button.isVisibleTo(dashboard)]
+                self.assertEqual(len(visible), 7)
+                ordered = sorted(visible, key=lambda button: button.mapTo(dashboard, button.rect().topLeft()).y())
+                for first, second in zip(ordered, ordered[1:]):
+                    first_bottom = first.mapTo(dashboard, first.rect().bottomLeft()).y()
+                    second_top = second.mapTo(dashboard, second.rect().topLeft()).y()
+                    self.assertLess(first_bottom, second_top)
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
+    def test_high_zoom_profile_row_keeps_selector_without_redundant_edit_button(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            dashboard = configure_dashboard_presentation(Dashboard(_Texts(), _Logger(), Path(tmp)))
+            try:
+                dashboard.zoom_percent = 200
+                dashboard.set_zoom(200)
+                apply_global_style(dashboard, 200, "Kontrast")
+                dashboard.resize(1334, 696)
+                dashboard.show()
+                _settle()
+                self.assertTrue(dashboard.db_profile_combo.isVisibleTo(dashboard))
+                profile_buttons = [
+                    button for button in dashboard.findChildren(QPushButton)
+                    if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}
+                ]
+                self.assertEqual(len(profile_buttons), 1)
+                self.assertFalse(profile_buttons[0].isVisibleTo(dashboard))
+            finally:
+                dashboard._closing_after_save = True
+                dashboard.close()
+                _settle(2)
+
+
+if __name__ == "__main__":
+    unittest.main()

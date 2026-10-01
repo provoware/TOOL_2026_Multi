@@ -202,9 +202,12 @@ class SongLibrary(QWidget):
         open_button.setObjectName("primaryButton")
         open_button.clicked.connect(self.open_selected)
         actions.addWidget(open_button)
-        version_button = QPushButton("Ältere Version ansehen / wiederherstellen")
-        version_button.clicked.connect(self.show_versions)
-        actions.addWidget(version_button)
+        self.version_button = QPushButton("Ältere Version ansehen / wiederherstellen")
+        self.version_button.setAccessibleName("Ältere Version ansehen oder wiederherstellen")
+        self.version_button.setToolTip("Zeigt ältere Songversionen zur Vorschau und sicheren Wiederherstellung an.")
+        self.version_button.clicked.connect(self.show_versions)
+        actions.addWidget(self.version_button)
+        self._sync_version_button_label()
         actions.addStretch(1)
         self.status_label = QLabel("")
         self.status_label.setObjectName("muted")
@@ -218,9 +221,16 @@ class SongLibrary(QWidget):
         self.filters_frame.setVisible(bool(checked))
         self.filter_toggle.setText("▾ Filter" if checked else "▸ Filter")
 
+    def _sync_version_button_label(self) -> None:
+        """Kürzt nur den sichtbaren Wiederherstellungstext bei 175/200 % Zoom."""
+        self.version_button.setText(
+            "Versionen" if self.zoom_percent >= 175 else "Ältere Version ansehen / wiederherstellen"
+        )
+
     def set_compact_mode(self, compact: bool) -> None:
         """Gibt auf kleinen/hoch gezoomten Ansichten der Songtabelle Vorrang."""
         compact = bool(compact)
+        self._sync_version_button_label()
         if self._compact_mode == compact:
             return
         self._compact_mode = compact

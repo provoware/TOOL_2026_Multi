@@ -44,8 +44,8 @@ if [[ "$MODE" != "--runtime" ]]; then
     README.md AGENTS.md TODO.md CHANGELOG.md
     tests/regression_registry.json agents/INFO_DATEIEN_AGENT.md
     docs/ENTWICKLUNGSREGELN.md docs/FEHLER_UND_REGRESSION.md
-    docs/ITERATIONSBERICHT_VORLAGE.md docs/ITERATION38_WINDOW_UX.md
-    scripts/veroeffentlichen.py scripts/schreibfehler_simulieren.py scripts/wayland_smoke.py
+    docs/ITERATIONSBERICHT_VORLAGE.md docs/ITERATION39_UI_QUALITY_SHADOW.md
+    scripts/veroeffentlichen.py scripts/schreibfehler_simulieren.py scripts/wayland_smoke.py scripts/ui_shadow_gate.py
   )
   for datei in "${entwickler_dateien[@]}"; do
     pruefe_datei "$datei"

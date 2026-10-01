@@ -148,6 +148,7 @@ class NavigationUxController(QObject):
         overview.setText("⌂  Übersicht")
         overview.setAccessibleName("Übersicht")
         overview.show()
+        self.overview_button = overview
         self.ready_buttons = [
             self._set_ready_button(song, "♫  Songtexte"),
             self._set_ready_button(text_editor, "✎  Texteditor"),
@@ -260,47 +261,58 @@ class NavigationUxController(QObject):
         self.dashboard.toggle_sidebar = self.toggle_sidebar  # type: ignore[method-assign]
 
     def _planned_toggle_text(self) -> str:
-        key = "navigation.planned.hide" if self.planned_expanded else "navigation.planned.show"
-        fallback = (
-            "▾  Geplante Bereiche ausblenden ({count})"
-            if self.planned_expanded
-            else "▸  Geplante Bereiche anzeigen ({count})"
-        )
-        return self._t(key, fallback).format(count=PLANNED_COUNT)
+        if self.planned_expanded:
+            return f"▾  Bereiche ausblenden ({PLANNED_COUNT})"
+        return f"▸  Geplante Bereiche ({PLANNED_COUNT})"
 
     def _restricted(self) -> bool:
         return presentation_state(self.dashboard).restricted_navigation
 
-    def _sync_ready_labels(self, high_zoom: bool) -> None:
-        """Verwendet bei 175/200 % kurze sichtbare Labels ohne Informationsverlust."""
+    def _sync_ready_labels(self, compact_labels: bool) -> None:
+        """Verwendet bei knapper Fläche kurze sichtbare Labels ohne Informationsverlust."""
         labels = (
             "♫  Songtexte",
-            "✎  Editor" if high_zoom else "✎  Texteditor",
-            "♙  Charaktere" if high_zoom else "♙  Charakterfibel",
-            "▦  Vorgaben" if high_zoom else f"▦  {self._t('navigation.ready.profile', 'Genres & Vorgaben')}",
+            "✎  Editor" if compact_labels else "✎  Texteditor",
+            "♙  Charaktere" if compact_labels else "♙  Charakterfibel",
+            "▦  Vorgaben" if compact_labels else f"▦  {self._t('navigation.ready.profile', 'Genres & Vorgaben')}",
             "✓  Todo-Liste",
             "▦  Kalender",
-            "ⓘ  Hilfe" if high_zoom else "ⓘ  Hilfe && Fehlerhilfe",
+            "ⓘ  Hilfe" if compact_labels else "ⓘ  Hilfe && Fehlerhilfe",
         )
         for button, text in zip(self.ready_buttons, labels, strict=True):
             button.setText(text)
+
+    @staticmethod
+    def _set_vertical_presence(widget: QWidget, visible: bool) -> None:
+        """Entfernt versteckte Bereiche auch sicher aus der Höhenverteilung."""
+        widget.setMaximumHeight(16777215 if visible else 0)
+        widget.setVisible(visible)
 
     def sync_visibility(self) -> None:
         collapsed = bool(getattr(self.dashboard, "nav_collapsed", False))
         sidebar_open = not collapsed
         state = presentation_state(self.dashboard)
         restricted = state.restricted_navigation
-        self._sync_ready_labels(state.high_zoom)
+        self._sync_ready_labels(state.high_zoom or state.laptop_compact)
+        self.layout.setContentsMargins(
+            4 if state.high_zoom else 8,
+            4 if state.high_zoom else 8,
+            4 if state.high_zoom else 8,
+            4 if state.high_zoom else 8,
+        )
+        self.layout.setSpacing(4 if state.high_zoom else 2)
 
         self.menu_title.setVisible(sidebar_open)
-        for widget in self.core_entries:
-            widget.setVisible(sidebar_open)
-        self.planned_heading.setVisible(sidebar_open and not restricted)
-        self.planned_hint.setVisible(sidebar_open and not restricted)
-        self.planned_toggle.setVisible(sidebar_open and not restricted)
+        for button in self.ready_buttons:
+            button.setVisible(sidebar_open)
+        self._set_vertical_presence(self.overview_button, sidebar_open and not state.high_zoom)
+        self._set_vertical_presence(self.ready_heading, sidebar_open and not state.high_zoom)
+        self._set_vertical_presence(self.planned_heading, sidebar_open and not restricted)
+        self._set_vertical_presence(self.planned_hint, sidebar_open and not restricted)
+        self._set_vertical_presence(self.planned_toggle, sidebar_open and not restricted)
 
         show_planned = sidebar_open and not restricted and self.planned_expanded
-        self.planned_container.setVisible(show_planned)
+        self._set_vertical_presence(self.planned_container, show_planned)
         for button in self.planned_buttons:
             button.setMaximumHeight(16777215)
             button.setVisible(show_planned)
