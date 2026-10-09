@@ -756,14 +756,15 @@ class Dashboard(QWidget):
             self._song_library.hide()
             self._song_library_hidden_for_editor_session = True
 
+    def _show_song_editor(self, editor: SongEditor) -> None:
+        """Registriert und aktiviert einen Songeditor über einen gemeinsamen Ablauf."""
+        self._show_song_editor(editor)
+
     def open_song_editor(self) -> None:
         self._begin_song_editor_session()
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, on_saved=self._song_saved, parent=self)
-        self._song_editors.append(editor)
-        _show_module_window(editor)
-        editor.raise_()
-        editor.activateWindow()
+        self._show_song_editor(editor)
 
     def open_song_path(self, path: Path) -> None:
         try:
@@ -778,10 +779,7 @@ class Dashboard(QWidget):
         editor = SongEditor(self.project_root, zoom_percent=self.zoom_percent,
                             on_closed=self._song_editor_closed, document=document,
                             on_saved=self._song_saved, parent=self)
-        self._song_editors.append(editor)
-        _show_module_window(editor)
-        editor.raise_()
-        editor.activateWindow()
+        self._show_song_editor(editor)
 
     def open_song_library(self, initial_search: str = "") -> None:
         visible_editors = [editor for editor in self._song_editors if editor.isVisible()]
