@@ -758,7 +758,10 @@ class Dashboard(QWidget):
 
     def _show_song_editor(self, editor: SongEditor) -> None:
         """Registriert und aktiviert einen Songeditor über einen gemeinsamen Ablauf."""
-        self._show_song_editor(editor)
+        self._song_editors.append(editor)
+        _show_module_window(editor)
+        editor.raise_()
+        editor.activateWindow()
 
     def open_song_editor(self) -> None:
         self._begin_song_editor_session()
