@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QTextEdit, QToolButton, QVBoxLayout, QWidget,
 )
 
-from app.character_store import character_marker, 
+from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
 from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song
 from app.ui_standards import SPACING, apply_global_style
