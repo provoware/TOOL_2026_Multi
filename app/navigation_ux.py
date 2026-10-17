@@ -94,6 +94,7 @@ class NavigationUxController(QObject):
             raise RuntimeError("Menükopf ist unvollständig.")
 
         toggle_text = self._t("navigation.toggle", "Menü ein- oder ausklappen")
+        self.menu_button = menu_button
         menu_button.setToolTip(toggle_text)
         menu_button.setAccessibleName(toggle_text)
         try:
@@ -293,7 +294,18 @@ class NavigationUxController(QObject):
         sidebar_open = not collapsed
         state = presentation_state(self.dashboard)
         restricted = state.restricted_navigation
-        self._sync_ready_labels(state.high_zoom or state.laptop_compact)
+        compact_labels = state.zoom_percent >= 150 or state.laptop_compact
+        self._sync_ready_labels(compact_labels)
+        # Das Menüsymbol muss auch mit 200 % Schriftgröße samt Innenabstand
+        # vollständig in den Schalter passen.
+        menu_width = max(42, self.menu_button.fontMetrics().horizontalAdvance("☰") + 32)
+        self.menu_button.setFixedWidth(menu_width)
+        # Vollständige Erklärung bleibt über Tooltip und Screenreader erhalten.
+        self.planned_toggle.setText(
+            f"▸  Geplante ({PLANNED_COUNT})"
+            if state.zoom_percent >= 150 and not self.planned_expanded
+            else self._planned_toggle_text()
+        )
         self.layout.setContentsMargins(
             4 if state.high_zoom else 8,
             4 if state.high_zoom else 8,
