@@ -1,5 +1,15 @@
 # Änderungsverlauf
 
+## Dokumentationspflege und nachträgliche Fehlerkorrekturen – 17.10.2026 (Version weiterhin 0.17.4)
+
+- Gemeinsame Korrekturen gegen Verlust ungespeicherter Texte, versehentliches Überschreiben bei Dateinamen-Kollisionen und Dashboard-Überlappungen über [PR #57](https://github.com/provoware/TOOL_2026_Multi/pull/57) integriert.
+- Darstellung der Navigation bei 150–200 % vergrößerter Schrift nachgebessert; Layoutkonflikte anschließend über PR #58–61 behoben.
+- Letzter dokumentierter vollständiger Oberflächenlauf: 60 Prüffälle, 180 Fensteransichten, 0 Fehler, 0 Warnungen. [GitHub-Prüflauf](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39065993768).
+- README, Einsteigeranleitung, Aufgabenübersicht und Ordnererklärung vereinheitlicht. Historische Iterationsberichte bleiben als Nachweise erhalten.
+- Die sichtbare Abnahme an einem echten Kubuntu-26.04-Rechner sowie eine ausdrücklich unabhängige Sicherung persönlicher Daten bleiben offene Aufgaben.
+- **Versionshinweis:** Keine neue Produktversion behauptet. Die Versionsnummer bleibt 0.17.4, bis eine eigene Freigabe erfolgt.
+
+
 ## 0.17.4 – Iteration 39: Autonomous UI Quality Gate PRO (Shadow Mode)
 
 - zentrale Qt-unabhängige UI-Verträge für 8-/4-Pixel-Raster, Geometrie, Mindesthöhen und WCAG-Kontrast
