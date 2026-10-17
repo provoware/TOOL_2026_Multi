@@ -723,6 +723,11 @@
       "purpose": "Atomarer wiederverwendbarer Charakterfibel-Datenbestand"
     },
     {
+      "path": "app/character_combo.py",
+      "release": true,
+      "purpose": "Gemeinsame Figurenauswahl in den beiden Schreibfenstern"
+    },
+    {
       "path": "app/character_window.py",
       "release": true,
       "purpose": "Eigenständiges Charakterfibel-Modul"

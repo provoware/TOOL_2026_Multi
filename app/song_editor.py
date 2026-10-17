@@ -13,7 +13,8 @@ from PySide6.QtWidgets import (
     QTextEdit, QToolButton, QVBoxLayout, QWidget,
 )
 
-from app.character_store import character_marker, character_options
+from app.character_store import character_marker
+from app.character_combo import refresh_character_combo
 from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song
 from app.ui_standards import SPACING, apply_global_style
 from app.window_state import ensure_window_visible, restore_window_state, save_window_state
@@ -299,21 +300,7 @@ class SongEditor(QWidget):
 
     def refresh_characters(self) -> None:
         """Verwendet dieselbe zentrale Auswahl wie andere Schreibmodule."""
-        selected = self.character_combo.currentData()
-        self.character_combo.blockSignals(True)
-        self.character_combo.clear()
-        self.character_combo.addItem("Charakter auswählen …", "")
-        try:
-            options = character_options(self.project_root)
-        except Exception:
-            options = []
-        for option in options:
-            self.character_combo.addItem(option.label, option.character_id)
-        if selected:
-            index = self.character_combo.findData(selected)
-            if index >= 0:
-                self.character_combo.setCurrentIndex(index)
-        self.character_combo.blockSignals(False)
+        refresh_character_combo(self.character_combo, self.project_root)
 
     def insert_character_reference(self) -> None:
         """Fügt eine lesbare Referenz in den aktuellen Bereich ein; das Songformat bleibt unverändert."""
