@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.17.3 · **Stand:** 12.09.2026 · **Status:** ausführbarer Kern mit professioneller Song-Fensterführung, laptopgeeignetem Kompaktmodus, kontraststarkem Eingabefokus und portablen Fensterzuständen; technische Iteration-38-Abnahme läuft
+> **Version:** 0.17.4 · **Dokumentationsstand:** 17.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -67,6 +67,41 @@ Unten im Dashboard befindet sich die Auswahl **Farben**:
 Der Theme-Wechsel gilt sofort für alle geöffneten Provoware-Fenster. Die Auswahl ist **sitzungsbezogen** und erzeugt bewusst keinen neuen Nutzerdaten- oder Konfigurationsschreibweg.
 
 Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast gegen den jeweiligen Hintergrund geprüft.
+
+## Schnellüberblick: Was kann das Programm heute?
+
+**Fertig:** Songtexte schreiben und verwalten, Charakterfibel, allgemeiner Texteditor, Genre-/Stimmungs-/Stilprofile, Aufgabenliste, Kalender, Erinnerungen während das Hauptprogramm läuft sowie Hilfe & Fehlerhilfe.
+
+**Noch nicht fertig:** Genre-Zufallsgenerator, Reimfinder, Suche über alle Dateien, Duplikatprüfung, GitHub-Verwaltung, Blog-, Podcast-/Hörspielfunktionen und automatisches Update. Ein sichtbarer Planungsbereich bedeutet **nicht**, dass die Funktion bereits arbeitet.
+
+**Die wichtigsten drei Schritte zum Start:**
+1. Projektordner öffnen.
+2. Terminal im Projektordner öffnen und `bash schnellstart.sh` eingeben.
+3. Im Dashboard **Songtexte**, **Texteditor**, **Todo-Liste** oder **Kalender** wählen.
+
+**Wo liegen meine Daten?** Im Ordner `daten/`. Eine Sicherung dieses Ordners auf ein getrenntes Laufwerk ist sinnvoll. Ein automatisch erzeugtes Projekt-ZIP ist **kein nachgewiesener Ersatz für eine unabhängige Sicherung der persönlichen Arbeitsdateien**. Vor einer Wiederherstellung immer zuerst eine zusätzliche Kopie anlegen.
+
+**Was ist zuletzt verbessert worden?** Im Oktober wurden Schutzabfragen gegen ungespeicherte Textänderungen, Konfliktprüfungen bei Dateinamen und die Anzeige bei hohem Zoom ergänzt. Die automatische Hauptzweig-Prüfung umfasst 60 Kombinationen; zuletzt 0 Fehler und 0 Warnungen (GitHub-Arbeitsablauf [#39065993768](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39065993768)). Dies ersetzt keine sichtbare Prüfung am eigenen Bildschirm.
+
+**Brauchst du Hilfe?** Öffne `ANLEITUNG_LAIEN.md`. Bei Problemen nutze zuerst **Hilfe & Fehlerhilfe** oder `F1`; technische Einzelheiten stehen in `docs/`.
+
+## Orientierung im Repository
+
+| Datei oder Ordner | Einfach erklärt |
+|---|---|
+| `schnellstart.sh` | Normaler Start des Programms. |
+| `ANLEITUNG_LAIEN.md` | Bedienung Schritt für Schritt. |
+| `README.md` | Übersicht, Funktionen und Einstieg. |
+| `TODO.md` | Was erledigt ist und was noch fehlt. |
+| `CHANGELOG.md` | Chronologische Übersicht der Änderungen. |
+| `MANIFEST.json` | Technische Liste der Dateien und Regeln, die das Programm benötigt. |
+| `app/` | Eigentlicher Programmcode. |
+| `daten/` | Persönliche Arbeitsdaten; **vor Änderungen und Wiederherstellungen sichern**. |
+| `tests/` | Automatische Prüfungen für Entwickler. |
+| `docs/` | Ausführliche technische Unterlagen und frühere Entwicklungsberichte. |
+| `scripts/` | Zusätzliche Prüf- und Hilfsprogramme. |
+
+**Ältere Abschnitte weiter unten dokumentieren den damaligen Entwicklungsstand.** Ihre historischen Testzahlen und Zwischenstände beschreiben nicht automatisch die neueste Version.
 
 ## Neu in 0.17.4 – automatische UI-Abnahme im Shadow-Modus
 

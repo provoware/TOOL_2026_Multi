@@ -1,6 +1,30 @@
 # TODO – TOOL_2026_Multi
 
-Stand: 2026-09-12
+Stand: 2026-10-17
+
+## Aktuelle Übersicht – zuerst lesen
+
+**Erledigt und durch GitHub geprüft**
+- [x] Texteditor: vor dem Verlassen eines veränderten Textes Speichern, Verwerfen oder Abbrechen anbieten (PR #57).
+- [x] Dateinamen-Kollisionen bei Song- und allgemeinen Textdateien absichern (PR #57).
+- [x] Profilwahl und Bearbeitung im Dashboard ohne Überlagerung anordnen (PR #57).
+- [x] Navigation bei starker Vergrößerung korrigieren (PR #58–61).
+- [x] Automatische Oberfläche: 60 Kombinationen / 180 Fenster, 0 Fehler, 0 Warnungen (GitHub #39065993768).
+
+**Noch offen – vor einer breiten Veröffentlichung**
+- [ ] Die Anzeige und Bedienung auf einem echten Kubuntu-26.04-/Plasma-Wayland-Rechner vollständig durchgehen.
+- [ ] Eine *eigenständige* Sicherung und geprüfte Wiederherstellung der persönlichen Daten aus `daten/` umsetzen.
+- [ ] UI-Schattenprüfung erst nach bewusster Kalibrierung als blockierende Pflichtprüfung schalten.
+- [ ] Startprogramm nach beschädigter Umgebung und fehlenden Abhängigkeiten prüfen.
+- [ ] Einfache veröffentlichte Versionskennzeichnung und vollständige Freigabeunterlagen herstellen.
+
+**Später geplante Funktionen**
+- [ ] Genre-Zufallsgenerator.
+- [ ] Zentrale Text- und Dateisuche.
+- [ ] Sicherer Update-Manager mit Rückkehr zur vorherigen Version.
+
+**Lesetipp:** Die längeren Iterationsabschnitte weiter unten sind historische Entwicklungsprotokolle. Dort noch offene Aufgaben können inzwischen durch die aktuelle Übersicht erledigt sein.
+
 
 ## Iteration 39 – Autonomous UI Quality Gate PRO (Shadow Mode)
 

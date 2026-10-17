@@ -1,0 +1,36 @@
+# Technische Dokumentation – Wegweiser
+
+**Stand:** 17. Oktober 2026
+
+Du musst diese Dateien **nicht** lesen, um Provoware zu benutzen. Für den Alltag helfen zunächst die [einfache Anleitung](../ANLEITUNG_LAIEN.md) und die [Projektübersicht](../README.md).
+
+## Welches Dokument brauche ich?
+
+| Frage | Passende Datei |
+|---|---|
+| Was funktioniert heute, was fehlt noch? | [Aktueller Stand](AKTUELLER_STAND.md) und [Aufgabenübersicht](../TODO.md) |
+| Welche Ordner enthalten persönliche Daten? | [Ordnerstruktur](ORDNERSTRUKTUR.md) |
+| Wie sind Sicherung und Wiederherstellung bisher geplant? | [Sicherungskonzept](BACKUP_KONZEPT.md) |
+| Welche Regeln gelten bei Änderungen? | [Entwicklungsregeln](ENTWICKLUNGSREGELN.md) und [AGENTS](../AGENTS.md) |
+| Wie werden Fehler beschrieben und dauerhaft verhindert? | [Fehler und Rückfallprüfungen](FEHLER_UND_REGRESSION.md) |
+| Welche Veränderungen gab es? | [Änderungsverlauf](../CHANGELOG.md) |
+| Wo finde ich ältere technische Entscheidungen? | Die Berichte `ITERATION*.md` |
+
+## Warum gibt es so viele ältere Berichte?
+
+Jede Entwicklungsrunde wurde einzeln dokumentiert. Die Berichte erklären, welche Änderung damals gemacht und wie sie geprüft wurde. **Sie sind historische Nachweise und keine aktuelle Bedienungsanleitung.**
+
+Ein dort stehender älterer Status muss deshalb nicht mehr der heutige Status sein. Maßgeblich sind `README.md`, `TODO.md`, `CHANGELOG.md` und der tatsächlich getestete GitHub-Stand.
+
+## Einfache Sicherheitsregel
+
+Beim Aufräumen **niemals blind** die Ordner `daten/`, `backups/`, `logs/` oder `berichte/` löschen. Auch bei Wartungsarbeiten an der Dokumentation dürfen persönliche Arbeitsdateien nicht verändert werden.
+
+## Technische Qualitätsprüfung
+
+- Kurzer Prüflauf: `bash scripts/pruefen.sh --quick`
+- Vollständige Prüfung: `bash scripts/pruefen.sh --full`
+- Die GitHub-Automatik überprüft zusätzlich einen Start unter Qt/Wayland, eine Projekt-Wiederherstellung und die Oberflächendiagnose.
+- Die vollständige Oberflächenmatrix umfasst 60 Prüffälle; ein Erfolg im automatischen Test ersetzt keine Sichtprüfung auf dem Zielrechner.
+
+Die Produktversion bleibt 0.17.4, bis eine echte Veröffentlichung erfolgt.
