@@ -430,6 +430,7 @@ class Dashboard(QWidget):
         self.db_profile_combo.currentTextChanged.connect(self._load_profile_values)
         profile_row.addWidget(self.db_profile_combo)
         edit_profiles = QPushButton("Profile & Werte bearbeiten")
+        edit_profiles.setObjectName("profileEditButton")
         edit_profiles.setAccessibleName("Profile & Werte bearbeiten")
         edit_profiles.clicked.connect(self.open_profile_editor)
         edit_profiles.setToolTip("Profile und gespeicherte Werte bearbeiten")
