@@ -8,6 +8,28 @@
 
 **Bei stark vergrößerter Schrift:** Die Navigation verwendet kürzere gut lesbare Beschriftungen. Über die eingeblendeten Hinweise und die barrierefreien Namen bleiben die vollständigen Funktionen erkennbar.
 
+## Schnellhilfe: Die sieben häufigsten Fragen
+
+| Was möchtest du tun? | So geht es |
+|---|---|
+| **Programm starten** | Projektordner öffnen → Terminal öffnen → `bash schnellstart.sh`. |
+| **Song schreiben** | **Songtexte** → **＋ Neuen Song schreiben** → Titel und Text eingeben. |
+| **Normalen Text schreiben** | **Texteditor** öffnen → Titel und Text eingeben → `Strg+S`. |
+| **Aufgabe notieren** | **Todo-Liste** öffnen → Aufgabe eintragen → **Aufgabe anlegen**. |
+| **Termin eintragen** | **Kalender** öffnen → Termin und Uhrzeit auswählen → speichern. |
+| **Alles größer machen** | Unten `A+` drücken; bis 200 % möglich. |
+| **Problem lösen** | `F1` drücken → **Hilfe & Fehlerhilfe**. |
+
+**Deine wichtigsten Dateien liegen unter `daten/`.** Sichere diesen Ordner regelmäßig auf einem getrennten Datenträger.
+
+**Achtung bei Textänderungen:** Beim Schließen oder Wechseln eines bearbeiteten Textes kannst du **Speichern**, **Verwerfen** oder **Abbrechen** wählen. Mit **Abbrechen** bleibt deine Arbeit offen. Wird ein Dateiname bereits von einer anderen Datei verwendet, verhindert das Programm ein ungewolltes Überschreiben.
+
+**Was ist noch nicht fertig?** Mit **In Planung** gekennzeichnete Funktionen sind keine einsatzbereiten Werkzeuge.
+
+**Mehr Einzelheiten:** Die folgenden Kapitel sind zum Nachschlagen gedacht. Für den normalen Einstieg genügt die Tabelle oben.
+
+---
+
 ## In 30 Sekunden starten
 
 1. Projektordner öffnen.
