@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+## Interne Entwicklungseffizienz – 18.10.2026 (Version weiterhin 0.17.4)
+
+- Doppelungen in Python-Programmdateien können mit einem rein lesenden Analysewerkzeug erkannt werden.
+- GitHub-Prüfläufe, ungefähre Dauer, zusätzliche Prüfungen desselben Commits, Zwischenspeicher-Nachweise und Änderungsumfang können mit einem kleinen Werkzeug ausgewertet werden.
+- Die bereits vorhandene Fensterverwaltung wurde aus der großen Dashboard-Datei in `app/window_lifecycle.py` verschoben, ohne Funktionen oder Aufrufnamen zu verändern.
+- Zwei Rückfalltestdateien sichern die Entwicklungswerkzeuge und die unveränderten Importstellen ab.
+- **Keine Änderung** an der Bedienoberfläche, persönlichen Daten oder Speicherformaten.
+
+
 ## Wartung der Entwicklung – 18.10.2026 (Programmversion weiterhin 0.17.4)
 
 - GitHub-Prüfung nur noch bei Pull Requests und neuen `main`-Commits auslösen, statt für denselben PR-Commit zusätzlich einen Zweig-Lauf zu erzeugen.

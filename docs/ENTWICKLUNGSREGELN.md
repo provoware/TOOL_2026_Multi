@@ -50,6 +50,18 @@ Diese Regeln betreffen nur die Entwicklung und ändern **keine Bedienung** des P
 
 **Wichtig:** Gespart werden doppelte *Ausführungen* und unnötige Übertragungen, nicht sicherheitsrelevante *Prüfschritte*.
 
+## Entwicklungsarbeit gezielt messen
+
+Diese rein internen Werkzeuge sind **optional**. Sie verändern keine persönlichen Dateien und benötigen keine neuen Pakete.
+
+- **Code-Doppelungen finden:** `python3 scripts/code_doppelungen.py`. Zeigt identische Anweisungsfolgen mit Datei und Zeilennummer. Die Treffer sind Hinweise und dürfen nicht automatisch zusammengelegt werden.
+- **Prüfläufe messen:** `python3 scripts/entwicklungsmessung.py --online`. Fragt die letzten 100 GitHub-Prüfläufe in einer einzigen Anfrage ab. Für die Entwicklung ohne Internet: `python3 scripts/entwicklungsmessung.py --datei laeufe.json`.
+- **Zwischenspeicher belegen:** Optional `--protokoll job.txt` mit einem bereits gespeicherten GitHub-Protokoll angeben. Ohne Nachweis wird kein erfolgreicher Zwischenspeicher-Treffer behauptet.
+- **Änderungsumfang belegen:** Optional `--pr-datei pull-request.json` für Zahl der Dateien sowie ergänzte und entfernte Zeilen.
+- **Messwerte richtig lesen:** Laufzeiten sind Näherungswerte, mehrfach geprüfte Commits sind nicht zwingend verschwendete Prüfungen. Vorher-/Nachher-Vergleiche sollen gleichartige Prüfungen gegenüberstellen. Diese Messung zählt **keine tatsächlichen übertragenen Bytes**.
+
+Die bisherige allgemeine Fensterverwaltung wurde ohne Verhaltensänderung aus `app/ui.py` in das kürzere, einzeln wartbare `app/window_lifecycle.py` ausgelagert. Die bisherigen Importnamen bleiben erhalten.
+
 ## Nutzerbeteiligung minimieren
 
 Die Entwicklung trifft reversible technische Entscheidungen autonom. Fehlende reale Geräte-/Oberflächenprüfungen werden klar als externe Abnahme markiert, statt den Nutzer für jeden Zwischenschritt zum Testen einzuspannen.
