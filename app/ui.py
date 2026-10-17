@@ -428,13 +428,14 @@ class Dashboard(QWidget):
         self.db_profile_combo.setToolTip("Ein Profil bündelt passende Genres, Stimmungen, Stil, Stimme und Besonderheiten.")
         self.db_profile_combo.currentTextChanged.connect(self._load_profile_values)
         profile_row.addWidget(self.db_profile_combo)
-        edit_profiles = QPushButton("Profile & Werte bearbeiten")
+        edit_profiles = QPushButton("Bearbeiten")
+        edit_profiles.setAccessibleName("Profile & Werte bearbeiten")
         edit_profiles.clicked.connect(self.open_profile_editor)
         edit_profiles.setToolTip("Profile und gespeicherte Werte bearbeiten")
+        # Keine zusätzliche Zeile: In kleinen Karten würde sie die nachfolgenden
+        # Kombinationsfelder verdrängen. Die kurze Beschriftung passt daneben.
+        profile_row.addWidget(edit_profiles)
         d.insertLayout(0, profile_row)
-        # Die Profilwahl und der Aktionsknopf teilen nicht länger eine
-        # zu schmale Zeile. Das verhindert Geschwister-Überlappungen.
-        d.insertWidget(1, edit_profiles)
 
         self.db_boxes: dict[str, QComboBox] = {}
         for label in CATEGORIES:
