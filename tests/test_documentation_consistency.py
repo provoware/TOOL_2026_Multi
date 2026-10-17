@@ -10,7 +10,7 @@ IMPORTANT = (
     "TODO.md", "docs/README.md", "docs/AKTUELLER_STAND.md",
     "docs/ORDNERSTRUKTUR.md", "AGENTS.md",
 )
-LINK = re.compile(r"(?<!!)\\[[^\\]]+\\]\\(([^)]+)\\)")
+LINK = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 
 
 class DocumentationConsistencyTests(unittest.TestCase):
@@ -20,7 +20,7 @@ class DocumentationConsistencyTests(unittest.TestCase):
 
     def test_project_version_matches_current_documentation(self):
         version = self.manifest["tool"]["version"]
-        self.assertRegex(version, r"^\\d+\\.\\d+\\.\\d+$")
+        self.assertRegex(version, r"^\d+\.\d+\.\d+$")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         status = (ROOT / "docs/AKTUELLER_STAND.md").read_text(encoding="utf-8")
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
