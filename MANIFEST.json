@@ -9,9 +9,9 @@
   },
   "iteration": {
     "number": 39,
-    "goal": "Der dokumentierte Stand enthält Datenverlustschutz und eine erfolgreiche 60-Fall-Oberflächenprüfung. Persönliche Datensicherung und reale Kubuntu-Abnahme bleiben gesondert offen.",
+    "goal": "Lokale UI-Sichttests durch einen automatischen, diagnostizierenden Shadow-Gate mit zentralen UI-Verträgen und Testmatrix minimieren",
     "completed": 7,
-    "open_next": 3
+    "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
