@@ -35,15 +35,13 @@ def _sync_profile_action_text(window: QWidget, state) -> None:
         if button.text() not in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
             continue
         text = (
-            "Profile" if state.laptop_compact
-            else "Profile & Werte bearbeiten" if state.wide
-            else "Profile bearbeiten"
+            "Profile & Werte bearbeiten" if state.wide and not state.high_zoom
+            else "Profile"
         )
         button.setText(text)
-        if state.wide and not state.high_zoom:
-            button.setMinimumWidth(button.fontMetrics().horizontalAdvance(text) + 20)
-        else:
-            button.setMinimumWidth(0)
+        # Auch die Kurzform muss bei 150 % lesbar bleiben; pauschale
+        # Breitenvorgaben dürfen sie nicht auf 79 Pixel zusammenpressen.
+        button.setMinimumWidth(button.fontMetrics().horizontalAdvance(text) + 20)
 
 
 def apply_laptop_layout(window: QWidget) -> None:
