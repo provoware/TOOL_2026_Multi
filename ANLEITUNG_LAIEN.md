@@ -1,5 +1,13 @@
 # Provoware – einfache Anleitung
 
+## Wichtig vor dem ersten Start
+
+**Deine Texte gehören dir.** Sichere den Ordner `daten/` regelmäßig auf einem zweiten Datenträger. Bei Problemen mit Daten oder bei einer Wiederherstellung zuerst eine Kopie des aktuellen `daten/`-Ordners anlegen. Die automatische GitHub-Prüfung kann keine Sicherung deiner persönlichen Dateien ersetzen.
+
+**Neue Sicherheitsfragen im Texteditor:** Wenn du einen veränderten Text verlässt, einen neuen Text beginnst oder das Fenster schließt, fragt das Programm, ob gespeichert, verworfen oder abgebrochen werden soll. **Abbrechen** bringt dich zum bisherigen Text zurück. Haben verschiedene Titel nach Bereinigung denselben Dateinamen, verweigert das Programm ein unbeabsichtigtes Überschreiben.
+
+**Bei stark vergrößerter Schrift:** Die Navigation verwendet kürzere gut lesbare Beschriftungen. Über die eingeblendeten Hinweise und die barrierefreien Namen bleiben die vollständigen Funktionen erkennbar.
+
 ## In 30 Sekunden starten
 
 1. Projektordner öffnen.
@@ -96,7 +104,7 @@ Oben im Arbeitsbereich befindet sich **Projekt-Notiz**.
 - `Enter` drücken oder **Notiz speichern** anklicken.
 - Vorhandene Notizen bleiben erhalten.
 
-Die technische Datei dahinter heißt weiterhin `Entwicklerinformation.txt`, damit bestehende Daten kompatibel bleiben.
+Die zugrunde liegende Datei heißt weiterhin `Entwicklerinformation.txt`, damit bestehende Daten kompatibel bleiben.
 
 ---
 
@@ -232,8 +240,6 @@ Eigene Profildaten werden gespeichert unter:
 ```text
 daten/profile/db_profile.json
 ```
-
----
 
 ---
 
@@ -404,7 +410,7 @@ Typische Ursachen:
 - benötigte Programmteile konnten nicht eingerichtet werden.
 - eine Projektdatei fehlt oder ist beschädigt.
 
-Vorhandene Nutzerdaten werden durch die reine Startprüfung nicht absichtlich verändert.
+Die reine Startprüfung soll vorhandene Nutzerdaten nicht verändern. Vor umfangreichen Änderungen trotzdem eine eigene Sicherung erstellen.
 
 
 ## Wenn benötigte Arbeitsordner fehlen
