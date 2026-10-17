@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Interne Vereinfachung – 18.10.2026 (weiterhin 0.17.4)
+
+- Doppelte Aktualisierung der Charakterauswahl in Songeditor und allgemeinem Texteditor in eine gemeinsame Hilfsfunktion überführt.
+- Bestehende Auswahl, Beschriftung, Fehlerrückfall und Schutz vor Änderungssignalen bleiben erhalten.
+- Die Funktion wird durch zusätzliche automatische Tests abgesichert. Keine sichtbare Änderung und kein neues Dateiformat.
+
+
 ## Interne Entwicklungseffizienz – 18.10.2026 (Version weiterhin 0.17.4)
 
 - Doppelungen in Python-Programmdateien können mit einem rein lesenden Analysewerkzeug erkannt werden.
