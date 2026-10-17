@@ -136,6 +136,8 @@ def save_song(root: Path, document: SongDocument) -> Path:
     content = document.render()
     if target.is_file():
         previous = target.read_text(encoding="utf-8")
+        if parse_song(previous, target.stem).title != document.title:
+            raise FileExistsError("Ein anderer Song besitzt bereits diesen Dateinamen. Bitte einen eindeutigen Titel wählen.")
         if previous == content:
             return target
         _atomic_write(_version_path(root, document.title), previous)

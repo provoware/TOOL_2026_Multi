@@ -28,6 +28,7 @@ class TextEditorWindow(QWidget):
         self.zoom_percent = zoom_percent
         self.document = TextDocument()
         self.current_path: Path | None = None
+        self._saved_snapshot: tuple[object, ...] | None = None
         self.setWindowTitle("Texteditor")
         self.resize(1120, 760)
         self.setMinimumSize(820, 560)
@@ -187,7 +188,31 @@ class TextEditorWindow(QWidget):
             self.file_list.setCurrentRow(selected_row)
         self.refresh_characters()
 
+    def _snapshot(self) -> tuple[object, ...]:
+        return (
+            self.title_entry.text(), self.text_edit.toPlainText(),
+            self.notes_edit.toPlainText(), tuple(self.document.character_ids),
+        )
+
+    def _confirm_leave_document(self) -> bool:
+        if self._saved_snapshot is None or self._snapshot() == self._saved_snapshot:
+            return True
+        answer = QMessageBox.question(
+            self, "Ungespeicherte Änderungen",
+            "Der aktuelle Text wurde geändert. Möchtest du ihn vor dem Wechsel speichern?\\n"
+            "Ja = speichern · Nein = Änderungen verwerfen · Abbrechen = hier bleiben.",
+            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+            QMessageBox.Cancel,
+        )
+        if answer == QMessageBox.Cancel:
+            return False
+        if answer == QMessageBox.Yes:
+            return self.save() is not None
+        return True
+
     def new_document(self) -> None:
+        if not self._confirm_leave_document():
+            return
         self.current_path = None
         self.document = TextDocument()
         self.file_list.clearSelection()
@@ -196,9 +221,25 @@ class TextEditorWindow(QWidget):
         self.notes_edit.clear()
         self.status_label.setText("Neuer Text · der Titel wird beim Speichern zum Dateinamen.")
         self.title_entry.setFocus()
+        self._saved_snapshot = self._snapshot()
 
     def _load_selected(self, current: QListWidgetItem | None, _previous: QListWidgetItem | None) -> None:
         if current is None:
+            return
+        if not self._confirm_leave_document():
+            self.file_list.blockSignals(True)
+            previous_row = next(
+                (i for i in range(self.file_list.count())
+                 if self.current_path is not None
+                 and self.file_list.item(i).data(Qt.UserRole) == str(self.current_path)),
+                -1,
+            )
+            if previous_row >= 0:
+                self.file_list.setCurrentRow(previous_row)
+            else:
+                self.file_list.clearSelection()
+                self.file_list.setCurrentRow(-1)
+            self.file_list.blockSignals(False)
             return
         path = Path(str(current.data(Qt.UserRole)))
         try:
@@ -212,6 +253,7 @@ class TextEditorWindow(QWidget):
         self.text_edit.setPlainText(document.text)
         self.notes_edit.setPlainText(document.notes)
         self.status_label.setText(f"„{document.title}“ geladen.")
+        self._saved_snapshot = self._snapshot()
 
     def insert_character_reference(self) -> None:
         character_id = str(self.character_combo.currentData() or "")
@@ -246,9 +288,17 @@ class TextEditorWindow(QWidget):
             QMessageBox.critical(self, "Text nicht gespeichert", f"Der bisherige gespeicherte Stand bleibt erhalten.\n\nGrund: {error}")
             return None
         self.current_path = target
+        self._saved_snapshot = self._snapshot()
         self.refresh()
         self.status_label.setText(f"● Gespeichert: {target.name}")
         return target
+
+    def closeEvent(self, event) -> None:
+        if self._confirm_leave_document():
+            self.autosave_timer.stop()
+            event.accept()
+        else:
+            event.ignore()
 
     def _autosave(self) -> None:
         if self.title_entry.text().strip():

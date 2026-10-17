@@ -119,6 +119,14 @@ def save_text_document(root: Path, document: TextDocument, previous_path: Path |
     target = text_path(root, str(payload["title"]))
 
     if target.is_file():
+        existing = _validate_payload(json.loads(target.read_text(encoding="utf-8")))
+        same_document = (
+            previous_path is not None and previous_path.resolve() == target.resolve()
+        )
+        if not same_document and existing["title"] != payload["title"]:
+            raise FileExistsError("Ein anderer Text besitzt bereits diesen Dateinamen. Bitte einen eindeutigen Titel wählen.")
+        if not same_document and existing["title"] == payload["title"]:
+            raise FileExistsError("Ein Text mit diesem Titel existiert bereits. Öffne ihn zuerst oder wähle einen anderen Titel.")
         current = _validate_payload(json.loads(target.read_text(encoding="utf-8")))
         comparable_current = {key: value for key, value in current.items() if key != "updated_at"}
         comparable_new = {key: value for key, value in payload.items() if key != "updated_at"}
