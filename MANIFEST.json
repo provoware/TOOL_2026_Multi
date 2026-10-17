@@ -858,6 +858,11 @@
       "purpose": "Zentrale responsive UI-, Zoom-, Theme-, Fokus-, Screenreader- und Kontraststandards"
     },
     {
+      "path": "app/window_lifecycle.py",
+      "release": true,
+      "purpose": "Bereits bestehende einheitliche Fensterverwaltung, getrennt vom Dashboard"
+    },
+    {
       "path": "app/window_state.py",
       "release": true,
       "purpose": "Portable, bildschirmsichere Fenstergeometrie und Zustandswiederherstellung"
