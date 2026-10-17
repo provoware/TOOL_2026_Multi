@@ -68,6 +68,36 @@ class DocumentationConsistencyTests(unittest.TestCase):
         self.assertIn("**Noch nicht fertig", readme)
         self.assertIn("## Was ist noch nicht fertig?", status)
 
+    def test_beginner_sections_avoid_duplicate_answers(self):
+        for relative, heading in (
+            ("README.md", "## Das Wichtigste auf einen Blick"),
+            ("ANLEITUNG_LAIEN.md", "## Schnellhilfe: Die sieben häufigsten Fragen"),
+        ):
+            document = (ROOT / relative).read_text(encoding="utf-8")
+            self.assertEqual(document.count(heading), 1)
+            section = document.split(heading, 1)[1].split("---", 1)[0]
+            lines = [line.strip() for line in section.splitlines()
+                     if line.startswith("|") and line.count("|") >= 3]
+            self.assertEqual(len(lines), len(set(lines)), relative)
+
+    def test_beginner_sections_avoid_unexplained_jargon(self):
+        for relative, heading in (
+            ("README.md", "## Das Wichtigste auf einen Blick"),
+            ("ANLEITUNG_LAIEN.md", "## Schnellhilfe: Die sieben häufigsten Fragen"),
+        ):
+            document = (ROOT / relative).read_text(encoding="utf-8")
+            section = document.split(heading, 1)[1].split("---", 1)[0].casefold()
+            for term in ("headless", "fuzzing", "pipeline", "ci-gate"):
+                with self.subTest(file=relative, term=term):
+                    self.assertNotIn(term, section)
+
+    def test_unfinished_features_are_in_planned_section(self):
+        document = (ROOT / "docs/AKTUELLER_STAND.md").read_text(encoding="utf-8")
+        section = document.split("## Was ist noch nicht fertig?", 1)[1].split("## ", 1)[0]
+        for feature in ("Genre-Zufall", "Reimfinder", "Dateisuche", "Duplikatsuche"):
+            with self.subTest(feature=feature):
+                self.assertIn(feature, section)
+
 
 if __name__ == "__main__":
     unittest.main()
