@@ -47,6 +47,15 @@ class ProfileLayoutOverlapTests(unittest.TestCase):
                 button_rect = QRect(button.mapTo(dashboard, QPoint(0, 0)), button.size())
                 self.assertFalse(combo_rect.intersects(button_rect),
                                  "Profilwahl und Bearbeiten-Schaltfläche überlappen")
+                for category, selector in dashboard.db_boxes.items():
+                    selector_rect = QRect(
+                        selector.mapTo(dashboard, QPoint(0, 0)), selector.size()
+                    )
+                    overlap = selector_rect.intersected(button_rect)
+                    self.assertFalse(
+                        overlap.width() > 2 and overlap.height() > 2,
+                        f"Bearbeiten-Schaltfläche überlappt Auswahlfeld {category}",
+                    )
             finally:
                 dashboard._closing_after_save = True
                 dashboard.close()
