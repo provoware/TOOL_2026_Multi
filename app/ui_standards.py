@@ -187,6 +187,10 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
     QPushButton#tileButton[ready="true"] {{
         background:{colors['header_section']}; border-bottom:2px solid {colors['accent']};
     }}
+    QPushButton#profileEditButton {{
+        min-height:{geometry_scaled(24, zoom_percent)}px;
+        padding:{geometry_scaled(2, zoom_percent)}px {geometry_scaled(6, zoom_percent)}px;
+    }}
     QPushButton#recentSongButton {{ text-align:left; }}
     QPushButton#closeWindowButton {{
         border:1px solid {colors['border']}; background:{colors['surface_soft']}; font-weight:700;
