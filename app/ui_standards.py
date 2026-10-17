@@ -450,6 +450,14 @@ def _apply_responsive_layout(window: QWidget) -> None:
         if isinstance(theme_combo, QComboBox):
             _set_width(theme_combo, round((90 if high_zoom else 132) * width_factor))
 
+        # Gleiche natürliche Höhe wie die übrigen Auswahlfelder: Der
+        # Bearbeiten-Button darf in 1600×900 nicht in die erste Zeile ragen.
+        if window.__class__.__name__ == "Dashboard":
+            for action in window.findChildren(QPushButton):
+                if action.accessibleName() == "Profile & Werte bearbeiten":
+                    action.setMaximumHeight(geometry_scaled(34, zoom))
+                    break
+
         profile_combo = getattr(window, "db_profile_combo", None)
         if isinstance(profile_combo, QWidget):
             minimum = round((90 if high_zoom else (110 if compact else 135)) * width_factor)
