@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QSplitter, QTextEdit, QVBoxLayout, QWidget,
 )
 
-from app.character_store import character_marker, 
+from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
 from app.text_editor_store import TextDocument, list_text_documents, load_text_document, save_text_document
 from app.ui_standards import SPACING, apply_global_style
