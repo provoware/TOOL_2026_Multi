@@ -1,5 +1,15 @@
 # Änderungsverlauf
 
+## Wartung der Entwicklung – 18.10.2026 (Programmversion weiterhin 0.17.4)
+
+- GitHub-Prüfung nur noch bei Pull Requests und neuen `main`-Commits auslösen, statt für denselben PR-Commit zusätzlich einen Zweig-Lauf zu erzeugen.
+- Überholte Prüfläufe eines Pull Requests automatisch abbrechen; `main`-Prüfungen niemals dadurch abbrechen.
+- Python 3.12 als feste Prüfumgebung und Download-Zwischenspeicher für die festgelegten Python-Pakete verwenden.
+- Regressionstests bewachen die unveränderten Sicherheitsprüfungen und den neuen Auslösevertrag.
+- Entwicklungsregeln für kleine Patches, gebündelte Commits, gezieltes Lesen und Nachweise zu exakt einem Commit konkretisiert.
+- **Keine** Änderung an Programmoberfläche, Nutzerdaten, Dateiformaten oder Sicherheitsschranken.
+
+
 ## Dokumentationspflege und nachträgliche Fehlerkorrekturen – 17.10.2026 (Version weiterhin 0.17.4)
 
 - Gemeinsame Korrekturen gegen Verlust ungespeicherter Texte, versehentliches Überschreiben bei Dateinamen-Kollisionen und Dashboard-Überlappungen über [PR #57](https://github.com/provoware/TOOL_2026_Multi/pull/57) integriert.

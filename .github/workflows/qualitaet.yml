@@ -1,8 +1,16 @@
 name: Grundprüfung
 
+# Jeder PR-Stand wird einmal geprüft; main bleibt nach jedem Merge voll geprüft.
 on:
   push:
+    branches:
+      - main
   pull_request:
+
+# Nur überholte PR-Stände abbrechen, niemals die letzte main-Abnahme.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   grundpruefung:
@@ -12,6 +20,12 @@ jobs:
     steps:
       - name: Projekt holen
         uses: actions/checkout@v7.0.1
+      - name: Python 3.12 mit wiederverwendbarem Download-Zwischenspeicher
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.txt
       - name: PySide6-Prüfumgebung bereitstellen
         run: |
           sudo apt-get update -qq
