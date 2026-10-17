@@ -430,8 +430,11 @@ class Dashboard(QWidget):
         profile_row.addWidget(self.db_profile_combo)
         edit_profiles = QPushButton("Profile & Werte bearbeiten")
         edit_profiles.clicked.connect(self.open_profile_editor)
-        profile_row.addWidget(edit_profiles)
+        edit_profiles.setToolTip("Profile und gespeicherte Werte bearbeiten")
         d.insertLayout(0, profile_row)
+        # Die Profilwahl und der Aktionsknopf teilen nicht länger eine
+        # zu schmale Zeile. Das verhindert Geschwister-Überlappungen.
+        d.insertWidget(1, edit_profiles)
 
         self.db_boxes: dict[str, QComboBox] = {}
         for label in CATEGORIES:
