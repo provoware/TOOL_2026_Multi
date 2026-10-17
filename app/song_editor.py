@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable
 
-from PySide6.QtCore import QSize, Qt, QTimer
+from PySide6.QtCore import QSignalBlocker, QSize, Qt, QTimer
 from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QDialog, QFormLayout, QFrame, QGridLayout, QHBoxLayout,
@@ -284,18 +284,16 @@ class SongEditor(QWidget):
             (self.tags_entry, ", ".join(self.document.tags)),
         )
         for widget, value in widgets:
-            widget.blockSignals(True)
-            widget.setText(value)
-            widget.blockSignals(False)
-        self.status_song.blockSignals(True)
-        self.status_song.setCurrentText(self.document.status if self.document.status in SONG_STATUSES else "Idee")
-        self.status_song.blockSignals(False)
-        self.favorite_check.blockSignals(True)
-        self.favorite_check.setChecked(self.document.favorite)
-        self.favorite_check.blockSignals(False)
-        self.other_text.blockSignals(True)
-        self.other_text.setPlainText(self.document.other)
-        self.other_text.blockSignals(False)
+            with QSignalBlocker(widget):
+                widget.setText(value)
+        with QSignalBlocker(self.status_song):
+            self.status_song.setCurrentText(
+                self.document.status if self.document.status in SONG_STATUSES else "Idee"
+            )
+        with QSignalBlocker(self.favorite_check):
+            self.favorite_check.setChecked(self.document.favorite)
+        with QSignalBlocker(self.other_text):
+            self.other_text.setPlainText(self.document.other)
         self._refresh_section_list()
 
     def refresh_characters(self) -> None:
