@@ -39,7 +39,7 @@ class ProfileLayoutOverlapTests(unittest.TestCase):
                 for _ in range(8):
                     self.app.processEvents()
                 button = next(button for button in dashboard.findChildren(QPushButton)
-                              if button.text() == "Profile & Werte bearbeiten")
+                              if button.accessibleName() == "Profile & Werte bearbeiten")
                 combo = dashboard.db_profile_combo
                 self.assertTrue(combo.isVisibleTo(dashboard))
                 self.assertTrue(button.isVisibleTo(dashboard))
