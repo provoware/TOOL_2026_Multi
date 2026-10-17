@@ -34,6 +34,22 @@ Ein Prüfblock darf nicht ohne Anlass wiederholt werden. Er wird erneut ausgefü
 - Freigegebene Betriebsdateien werden aus `MANIFEST.json` gelesen; parallele manuelle Runtime-Dateilisten sind zu vermeiden.
 - Einmalige Patch-/Finalisierungshilfen müssen sich entfernen oder dürfen gar nicht erst committed werden; der Hygiene-Test blockiert bekannte Einmal-Helfer-Präfixe.
 
+## Schlanke Entwicklung – weniger Code und weniger GitHub-Verkehr
+
+Diese Regeln betreffen nur die Entwicklung und ändern **keine Bedienung** des Programms:
+
+1. **Ein Hauptziel pro Änderungsantrag.** Vorher betroffene Stellen eingrenzen. Bestehende Funktionen benutzen, bevor neue Hilfsdateien oder zusätzliche Abhängigkeiten entstehen.
+2. **Erst eine gezielte Prüfung, danach eine volle.** Lokal bzw. isoliert zunächst den betroffenen Test und `bash scripts/pruefen.sh --quick` verwenden. Vor Freigabe muss die vollständige GitHub-Prüfung erfolgreich sein. Das vollständige Prüfsystem, native Wayland-Startprüfung, Restore und Freigabepakete dürfen nicht übersprungen werden.
+3. **Dateiänderungen gesammelt bereitstellen.** Inhaltlich zusammengehörende geprüfte Änderungen möglichst in *einem* Commit übertragen; nicht jede Textzeile über GitHub einzeln veröffentlichen. Dadurch entfallen unnötige Prüfstarts und Datenübertragungen.
+4. **Ein PR löst einen Prüflauf aus.** Direkte Zweig-Pushes werden nicht mehr zusätzlich zum Pull-Request-Ereignis vollständig geprüft. Jeder Merge nach `main` startet unverändert die volle Prüfung; überholte PR-Läufe werden abgebrochen, nicht jedoch die Hauptzweig-Abnahme.
+5. **Abhängigkeiten zwischenspeichern.** GitHub merkt bereits heruntergeladene Python-Pakete anhand von `requirements.txt`. Ändert sich diese Liste, erstellt GitHub einen neuen passenden Zwischenspeicher. Sicherheit und Versionsbindung bleiben unverändert.
+6. **Gezielt lesen statt alles herunterladen.** Vor Änderungen zuerst Dateibaum/Dateinamen, dann nur die tatsächlich betroffenen Dateiausschnitte laden. Große ZIP-Pakete und Oberflächenbilder nur bei konkretem Prüfbedarf abrufen.
+7. **Code nicht um jeden Preis verkürzen.** Eine verständliche Funktion ist wertvoller als ein schwer lesbarer Einzeiler. Gemeinsame Logik nur zusammenfassen, wenn dasselbe Verhalten mehrfach existiert. Keine zusätzlichen Werkzeuge, Pakete oder Steuerungsebenen ohne belegten Nutzen.
+8. **Prüfnachweise zu genau einem Commit.** Erfolg, Version, Prüfergebnis und Freigabe müssen zum identischen Git-Stand gehören. Ein neuer Commit braucht die erforderlichen Prüfungen erneut.
+9. **Keine Nutzerabnahme ohne Oberflächenänderung.** Reine Prüf-, Wartungs- und Dokumentationsverbesserungen automatisch absichern. Sichtbare Bedienänderungen bleiben eine eigene, getrennt zu bewertende Aufgabe.
+
+**Wichtig:** Gespart werden doppelte *Ausführungen* und unnötige Übertragungen, nicht sicherheitsrelevante *Prüfschritte*.
+
 ## Nutzerbeteiligung minimieren
 
 Die Entwicklung trifft reversible technische Entscheidungen autonom. Fehlende reale Geräte-/Oberflächenprüfungen werden klar als externe Abnahme markiert, statt den Nutzer für jeden Zwischenschritt zum Testen einzuspannen.

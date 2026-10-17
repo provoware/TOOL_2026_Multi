@@ -45,6 +45,14 @@ Ablauf:
 
 Offene Punkte aus einer Iteration werden mit Ursache, Priorität und Abhängigkeit in die nächste Iterationsplanung übernommen. Nichts wird stillschweigend vergessen.
 
+## 3a. Effiziente Übertragung und verlässliche Tests
+
+- Zusammengehörende Änderungen erst fertigstellen und möglichst **in einem Commit** an GitHub senden.
+- Bei offenen Änderungsanträgen unnötige Doppelprüfungen vermeiden; für jede neue geprüfte Revision reicht ein vollständiger PR-Prüflauf. `main` bekommt nach jedem Merge seinen eigenen vollständigen Prüflauf.
+- Überholte PR-Prüfläufe dürfen beendet werden, die Abnahme auf `main` nicht.
+- Vollständige Grundprüfung, nativer Wayland-Test, Restore, Release-ZIP und Oberflächen-Evidenz bleiben erhalten.
+- Bei reinen internen Wartungsarbeiten keine neue Nutzer-Sichtabnahme verlangen; Details siehe `docs/ENTWICKLUNGSREGELN.md`.
+
 ## 4. Änderungsgrenzen
 
 - Keine kosmetischen Nebenarbeiten außerhalb des Iterationsziels.
