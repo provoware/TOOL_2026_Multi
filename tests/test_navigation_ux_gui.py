@@ -51,6 +51,17 @@ class NavigationUxGuiTests(unittest.TestCase):
         self.app.processEvents()
         self.app.processEvents()
 
+    def test_textbutton_label_fits_at_150_and_restores_full_label(self):
+        button = self.dashboard._provoware_navigation_ux.feature_buttons[2]
+        for zoom, expected in ((150, "Textbuttons"), (100, "Textbaustein-Buttons")):
+            self.dashboard.set_zoom(zoom)
+            for _ in range(5):
+                self.app.processEvents()
+            self.assertEqual(button.text(), expected)
+            self.assertLessEqual(button.fontMetrics().horizontalAdvance(button.text()) + 20,
+                                 button.width())
+            self.assertEqual(button.accessibleName(), "Textbaustein-Buttons")
+
     def test_ready_routes_are_prioritized_and_planning_is_collapsed(self):
         self.assertEqual(self.dashboard.nav_title.text(), "Menü")
         self.assertTrue(self.dashboard.song_nav_button.isVisible())

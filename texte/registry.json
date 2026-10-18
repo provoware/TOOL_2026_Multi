@@ -53,6 +53,7 @@
     "modules.dictionary_missing": "Das deutsche Wörterbuch ist nicht verfügbar. Bitte aspell-de installieren.",
     "modules.spell_ok": "Keine unbekannten Wörter gefunden. Namen und Fachbegriffe bitte selbst prüfen.",
     "modules.snippets": "Textbaustein-Buttons",
+    "modules.snippets_short": "Textbuttons",
     "modules.search_snippets": "Titel, Kategorie oder Text suchen …",
     "modules.new_snippet": "Neuen Button anlegen",
     "modules.new_workflow": "Workflow ergänzen",

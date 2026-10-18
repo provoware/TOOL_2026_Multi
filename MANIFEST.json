@@ -3,15 +3,15 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.18.1",
+    "version": "0.18.2",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-10-18"
   },
   "iteration": {
-    "number": 41,
-    "goal": "Datensparsame lokale Leistungsdiagnose in der bestehenden Hilfe",
-    "completed": 6,
-    "open_next": 3
+    "number": 42,
+    "goal": "Dashboard-Überlappungen und abgeschnittene Menütexte aus Issue #86 beheben",
+    "completed": 2,
+    "open_next": 2
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -1218,6 +1218,11 @@
       "path": "docs/LEISTUNGSDIAGNOSE.md",
       "release": false,
       "purpose": "Abnahme und Grenzen der lokalen Leistungsdiagnose"
+    },
+    {
+      "path": "docs/ITERATION42_LAYOUT.md",
+      "release": false,
+      "purpose": "Ursache, minimale Korrektur und Abnahme der Release-UI-Befunde #86"
     }
   ],
   "creative_modules": {
@@ -1265,5 +1270,13 @@
       "ram",
       "automatic_cold_warm_classification"
     ]
+  },
+  "layout_iteration42": {
+    "issue": 86,
+    "base_main": "526a423f484a9ef045643d30dc8e908cbed35d09",
+    "data_migration": false,
+    "thresholds_relaxed": false,
+    "full_release_matrix": "60 cases / 180 windows; local 0 errors / 0 warnings",
+    "final_ci_evidence": "See pull request for exact head and artifacts"
   }
 }

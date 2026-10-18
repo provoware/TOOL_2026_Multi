@@ -296,6 +296,8 @@ class NavigationUxController(QObject):
         )
         for button, text in zip(self.ready_buttons, labels, strict=True):
             button.setText(text)
+        self.feature_buttons[2].setText(module_text("snippets_short", "Textbuttons")
+                                        if compact_labels else module_text("snippets", "Textbaustein-Buttons"))
 
     @staticmethod
     def _set_vertical_presence(widget: QWidget, visible: bool) -> None:

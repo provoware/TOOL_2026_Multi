@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.18.1 · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
+> **Version:** 0.18.2 · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -10,11 +10,11 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 |---|---|
 | **Was ist Provoware?** | Ein Programm für Songtexte, eigene Texte, Figuren, Aufgaben und Termine. |
 | **Wie starte ich?** | Projektordner öffnen, Terminal starten und `bash schnellstart.sh` eingeben. |
-| **Was funktioniert?** | Songtexte, Texteditor, Charakterfibel, Profile, Aufgaben, Kalender und Hilfe. |
-| **Was fehlt noch?** | Reimfinder, Dateisuche und weitere geplante Module; zusätzliche Leistungsdiagnose ist zunächst ein Konzept. |
+| **Was funktioniert?** | Songtexte, Texteditor, Charakterfibel, Textbuttons, Buchwerkstatt, Profile, Aufgaben, Kalender und Hilfe. |
+| **Was fehlt noch?** | Reimfinder, Dateisuche und weitere geplante Module; eine freiwillige lokale Leistungsdiagnose ist bereits verfügbar. |
 | **Wie sichere ich meine Arbeit?** | Programm schließen und den gesamten Ordner `daten/` auf einen anderen Datenträger kopieren. |
 | **Wo finde ich Hilfe?** | [Schritt-für-Schritt-Anleitung](ANLEITUNG_LAIEN.md) oder im Programm die Taste `F1`. |
-| **Was wurde zuletzt verbessert?** | Textbuttons, Buchwerkstatt, gemeinsame Modularchive und Hochzoom-Schutz im Prüfkandidaten 0.18.0. |
+| **Was wurde zuletzt verbessert?** | Kompaktes Dashboard ohne überlappende Vorgabenfelder und kurze Menütexte bei starker Vergrößerung (0.18.2). |
 | **Was ist technisch noch offen?** | Praxistest auf echtem Kubuntu-Rechner und eigenständige automatische Datensicherung. |
 
 **Für die normale Nutzung brauchst du nur diese Übersicht und die [einfache Anleitung](ANLEITUNG_LAIEN.md).** Ausführliche technische Informationen stehen getrennt im [Dokumentenwegweiser](docs/README.md). Der folgende Abschnitt enthält zusätzliche Einzelheiten für Interessierte.

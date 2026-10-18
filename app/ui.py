@@ -320,6 +320,7 @@ class Dashboard(QWidget):
 
     def _build_dashboard_grid(self) -> QGridLayout:
         grid = QGridLayout()
+        self.dashboard_grid = grid
         grid.setHorizontalSpacing(SPACING["s"])
         grid.setVerticalSpacing(SPACING["s"])
         grid.setColumnStretch(0, 1)

@@ -1,6 +1,6 @@
 # Aktueller Projektstand – leicht verständlich
 
-**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.1
+**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.2
 
 ## Wozu dient Provoware?
 
@@ -30,7 +30,9 @@ Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: Reimfinder
 
 ## Was wurde zuletzt geprüft?
 
-Der Code-/Layoutstand `cfc7353` von [PR #84](https://github.com/provoware/TOOL_2026_Multi/pull/84) bestand [Lauf #1007](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39127077853): 188 Logiktests, 144 GUI-Tests, nativer Wayland-Start, Wiederherstellung und ZIP-Erzeugung. Die UI-Analyse erreichte acht Matrixfälle / 24 Fensterinstanzen mit null Fehlern und null Warnungen. Die nachfolgende Informationsrunde hat ihren eigenen Prüfnachweis am aktuellen PR-Head. **0.18.0 wurde nach ausdrücklicher Freigabe über PR #84 mit main zusammengeführt. Der Hauptzweig-Lauf nach dem Merge ist erfolgreich. 0.18.1 ergänzt als nächste Iteration die lokale Leistungsdiagnose.**
+Textbuttons/Buchwerkstatt (PR #84) und die freiwillige Leistungsdiagnose (PR #85) sind nach ausdrücklicher Freigabe in `main` enthalten. Der [Main-Lauf #1011](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39132402699) auf `526a423` bestand 200 Logiktests, 148 GUI-Tests, Wayland-Start, Restore und ZIP-Erzeugung. Seine größere Oberflächenmatrix meldete jedoch 24 Fehler und acht Warnungen; ein technisch erfolgreicher Lauf bedeutet deshalb kein fehlerfreies Layout.
+
+Version **0.18.2** behebt diese Befunde als eigene Iteration zu [Issue #86](https://github.com/provoware/TOOL_2026_Multi/issues/86). Die lokale Release-Matrix erreicht nun **60 Fälle / 180 Fenster, 0 Fehler, 0 Warnungen**. Die vollständige GitHub-Abnahme muss zum finalen neuen Head gehören; ihr Nachweis wird am zugehörigen Pull Request geführt. Details: [Iteration 42](ITERATION42_LAYOUT.md).
 
 Die folgenden Nachweise betreffen frühere Stände:
 
@@ -61,6 +63,6 @@ Die Ordner `daten/`, `backups/`, `logs/` und `berichte/` dürfen nicht ohne Prü
 2. Echte Bedienprüfung auf Kubuntu 26.04 mit stark vergrößerter Schrift durchführen.
 3. Eine unabhängige, erprobte Datensicherung mit sicherer Wiederherstellung entwickeln.
 
-Version 0.18.0 wird als eigener Änderungsantrag geprüft. Frühere CI-Nachweise oben gelten für den damaligen Stand. Die neue Prüfung muss zum neuen Commit gehören.
+Version 0.18.2 wird als eigener Änderungsantrag geprüft. Frühere CI-Nachweise gelten für den damaligen Stand.
 
 Die Bewertung der Entwicklung mit gemessenen Laufzeiten und Verbesserungsregeln steht im [Entwicklungsreview](ENTWICKLUNGSREVIEW_2026_10_18.md). Das Konzept zusätzlicher Leistungsdaten steht im [Messplan](DIAGNOSE_MESSPLAN.md); die erste ausdrücklich einschaltbare Ausbaustufe ist nun in 0.18.1 implementiert.

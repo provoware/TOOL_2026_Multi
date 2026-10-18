@@ -381,7 +381,7 @@ def _apply_responsive_layout(window: QWidget) -> None:
         high_zoom = zoom >= HIGH_ZOOM_MIN_PERCENT
         module_compact = width < 1180 or height < 760 or zoom >= 150
         dashboard_dense = window.__class__.__name__ == "Dashboard" and (
-            height < 760 or high_zoom or (zoom >= 125 and height < 860)
+            height < 860 or high_zoom
         )
         width_factor = _zoom_width_factor(window)
         margin = 7 if compact else (13 if wide else 10)
@@ -398,6 +398,11 @@ def _apply_responsive_layout(window: QWidget) -> None:
         _apply_dashboard_high_zoom(window, high_zoom)
 
         if window.__class__.__name__ == "Dashboard":
+            # Auch bei 100 % passen nicht immer beide Kartenzeilen. Versteckte
+            # Planungskarten dürfen keinen Höhenanteil im Raster reservieren.
+            planning_stretch = 0 if dashboard_dense else 1
+            if window.dashboard_grid.rowStretch(1) != planning_stretch:
+                window.dashboard_grid.setRowStretch(1, planning_stretch)
             # Auf knapper Höhe bekommen fertige Arbeitswege Vorrang vor reinen
             # Planungskarten. Dieselben geplanten Funktionen bleiben über die
             # bedarfsgesteuerte Sidebar vollständig erreichbar.
