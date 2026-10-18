@@ -26,11 +26,12 @@ jobs:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: requirements.txt
-      - name: PySide6-Prüfumgebung bereitstellen
+      - name: Systempakete für Wayland bereitstellen
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq libegl1 weston
-          python3 -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Python-Pakete bereitstellen
+        run: python3 -m pip install --disable-pip-version-check -r requirements.txt
       - name: Vollständige Grundprüfung ausführen
         run: bash scripts/pruefen.sh --full
       - name: Nativen Qt-Wayland-Start prüfen
