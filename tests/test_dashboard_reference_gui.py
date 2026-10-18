@@ -413,7 +413,7 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.assertEqual(len(tiles), 7)
         ready_tiles = [button for button in tiles if button.property("ready") is True]
         planned_tiles = [button for button in tiles if button.property("planned") is True]
-        self.assertEqual(len(ready_tiles), 6)
+        self.assertEqual(len(ready_tiles), 7)
         self.assertTrue(all(button.isVisible() for button in ready_tiles))
         self.assertTrue(any("Charakterfibel" in button.text() for button in ready_tiles))
         self.assertTrue(any("Texteditor" in button.text() for button in ready_tiles))

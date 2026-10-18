@@ -18,7 +18,7 @@ from app.module_widgets import t as module_text
 
 PLANNED_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("creative", ("Hörspiele", "Blogartikel", "Prompts", "Reimfinder")),
-    ("files", ("Dateisuche", "Textinhalt suchen", "Trefferliste", "Duplikatprüfer")),
+    ("files", ("Duplikatprüfer",)),
 )
 PLANNED_COUNT = sum(len(items) for _key, items in PLANNED_GROUPS)
 

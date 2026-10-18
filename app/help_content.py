@@ -159,6 +159,19 @@ HELP_TOPICS: tuple[HelpTopic, ...] = (
         alternative="Im Dashboard findest du beide Module auch oben über Textbuttons und Bücher.",
         note="JSON-Export enthält den gespeicherten Modulbestand. Monatszähler importierter Textbutton-Kopien beginnen bei null. Rechtschreibung benötigt lokal aspell und aspell-de; es werden keine Texte an einen Dienst gesendet.",
     ),
+    HelpTopic(
+        "dateisuche", "Dateien und Texte suchen",
+        ("dateisuche", "textsuche", "treffer", "suchtext"),
+        "Die zentrale Suche findet Namen und Textstellen in gespeicherten Dateien unter daten/. Sie verändert keine Dateien.",
+        (
+            "Öffne Dateisuche oben im Dashboard oder mit Strg+Umschalt+F. Auch das Suchfeld im Kopf öffnet diese Suche.",
+            "Gib einen Suchtext ein und wähle Dateinamen, Textinhalte oder beides. Groß- und Kleinschreibung spielen keine Rolle.",
+            "Wähle Suchen. Während des Suchens kannst du jederzeit Abbrechen wählen; bisherige Treffer bleiben erhalten.",
+            "Markiere einen Treffer. Datei, Zeile und Textausschnitt erscheinen darunter als kopierbarer Klartext.",
+            "Bei Suchgrenzen oder ausgelassenen Dateien die Meldung beachten und den Suchtext genauer eingrenzen.",
+        ),
+        note="Textinhalte: UTF-8-Dateien mit Endung txt, md, json oder csv; höchstens 1 MiB je Datei, 32 MiB gelesener Inhalt, 5000 Einträge, 200 Treffer und 10 Sekunden zwischen Suchschritten. Verknüpfungen, versteckte Dateien/Ordner und ältere Versionen werden nicht durchsucht. Ungespeicherte Texte sind nicht enthalten.",
+    ),
 )
 
 

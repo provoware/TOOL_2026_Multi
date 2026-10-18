@@ -37,3 +37,6 @@ Jedes ZIP erhält eine `.sha256`-Datei. Vor Wiederherstellung:
 ## Wichtiger Unterschied
 
 Quellcode-Sicherung ersetzt keine Sicherung späterer Nutzerdaten. Sobald TOOL_2026_Multi Nutzerdaten erzeugt, erhält `daten/` eine eigene transaktionale Sicherungsstrategie mit Wiederherstellungsprüfung.
+
+
+Eigenständige persönliche Datensicherung: [Anleitung](DATENSICHERUNG.md). Vorher Programm schließen; Wiederherstellung erfolgt ausschließlich in einen neuen Ordner.

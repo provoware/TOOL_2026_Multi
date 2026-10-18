@@ -559,3 +559,18 @@ Die Daten liegen unter `daten/textbausteine/bestand.json` und `daten/buecher/bes
 6. Ausschalten stoppt neue Messungen. **Alle Leistungsdaten löschen und Messung ausschalten** entfernt nach Bestätigung den zusätzlichen Leistungsbestand. Eigene Arbeiten und Fehlerprotokolle bleiben erhalten.
 
 Die Statistik wird gebündelt alle 60 Sekunden und beim normalen Beenden gespeichert. Ein Absturz kann die letzte Minute Statistik verlieren; Arbeitsdateien sind davon unabhängig. Startwerte entstehen erst bei einem folgenden Programmstart mit eingeschalteter Messung. Größenklassen für Cache und tatsächliche SSD-Schreibmengen werden noch nicht gemessen. „Unverändert“ zählt gültige Speicherversuche in Buchwerkstatt, Textbuttons und Texteditor; es bedeutet nicht, dass bereits Schreibzugriffe eingespart werden.
+
+
+Eigenständige persönliche Datensicherung: [Anleitung](docs/DATENSICHERUNG.md). Vorher Programm schließen; Wiederherstellung erfolgt ausschließlich in einen neuen Ordner.
+
+
+### Wenn die Startumgebung beschädigt ist
+
+Das Startprogramm prüft nun auch bei vorhandener Installationsmarkierung die tatsächlichen Pakete. Fehlende Programmteile werden mit Zeitgrenze erneut installiert. Bei fehlender Verbindung oder defekter Umgebung startet die Oberfläche nicht. Persönliche Arbeitsdaten bleiben erhalten.
+
+Wenn die Meldung ausdrücklich eine beschädigte `.venv` nennt: Programm schließen, ausschließlich den versteckten Ordner `.venv` in einen noch nicht vorhandenen Namen wie `.venv-alt` umbenennen und `bash schnellstart.sh` erneut starten. `daten/` bleibt erhalten. Vorhandene `.venv-alt` niemals überschreiben. Das Werkzeug benennt keine Ordner automatisch um.
+
+
+### Dateien und Textstellen wiederfinden
+
+Im Dashboard oben **Dateisuche** wählen oder **Strg+Umschalt+F** drücken. Suchtext eingeben, Dateinamen und/oder Textinhalte wählen und **Suchen** drücken. Markiere einen Treffer, um Datei, Zeile und Textausschnitt darunter zu lesen oder zu kopieren. **Abbrechen** beendet weitere Suche, bisherige Treffer bleiben sichtbar. Dateien werden nicht verändert oder automatisch geöffnet. Gesucht wird nur im gespeicherten Datenbestand; versteckte Dateien und ältere Versionen bleiben außen vor. Bei Suchgrenzen den Begriff genauer wählen. [Weitere Grenzen](docs/DATEISUCHE.md).

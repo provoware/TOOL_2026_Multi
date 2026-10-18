@@ -1,5 +1,36 @@
 # Änderungsverlauf
 
+## 0.18.3 – Ergänzung zentrale Suche
+- Gespeicherte Dateinamen und UTF-8-Textinhalte unter daten/ mit Treffern, Zeilennummer und Klartextvorschau suchen.
+- Abbruch, feste Suchgrenzen und Schutz vor Linkverfolgung; keine Indexdateien oder automatischen Dateiöffnungen.
+- Dateisuche-Kachel, Kopfsuchfeld, bestehende Werkzeugkarten und Strg+Umschalt+F führen zur zentralen Suche.
+
+## 0.18.3 – lokaler Prüfkandidat, noch nicht veröffentlicht
+- Persönliche Daten unabhängig sichern und isoliert zurückholen.
+- Defekte Startumgebungen und fehlende Pakete trotz Installationsmarker erkennen.
+- Schreib-/Ladebenchmarks und Auswertung gespeicherter UI-Kalibrierungsnachweise.
+- Versionskennung im Fenstertitel und klare Freigabeunterlagen.
+
+## Entwicklung – UI-Kalibrierung vorbereiten
+- Gespeicherte vollständige CI-Evidenz auswerten; Dubletten und ungeklärte Befunde verhindern eine Empfehlung.
+- Keine automatische Änderung des Shadow-Modus.
+
+## Entwicklung – Archivlade-Benchmark
+- Synthetische Datenklassen und tatsächliche Archivvalidierung in neuen Prozessen; erstes und wiederholtes Lesen getrennt.
+- Betriebssystem-Cache und vollständiger Dashboardstart werden nicht als gemessen ausgegeben.
+
+## Entwicklung – robuster Start
+- Beschädigte vorhandene Umgebungen bleiben erhalten; klare Wiederanlaufhilfe.
+- Paketversion und Qt-Import unabhängig vom Installationsmarker prüfen; begrenzte Installation und Startprüfungen.
+
+## Entwicklung – persönliche Datensicherung
+- Eigenständige Sicherung aller regulären Arbeitsdateien, SHA-256 und isolierter Wiederherstellungsvergleich.
+- Rückholen ausschließlich in neue Ordner; keine automatische Aktivierung und keine Löschung alter Sicherungen.
+
+## Entwicklung – Diagnose-Benchmark (18.10.2026)
+- Isoliertes, begrenztes Entwicklermesswerkzeug für identische Schreibmengen ohne Instrumentierung sowie mit ausgeschalteter/eingeschalteter Diagnose.
+- Rohwerte, Flush-Kosten, Quellstand und Systembedingungen; keine neue Laufzeitfunktion oder Abhängigkeit.
+
 ## 0.18.2 · 18.10.2026 – Dashboard-Layout aus Issue #86
 
 - Bestehenden Höhen-Grenzwert der kompakten Dashboardansicht auch bei 100 % anwenden.

@@ -18,6 +18,7 @@ from app.calendar_window import CalendarWindow
 from app.character_window import CharacterWindow
 from app.book_window import BookWindow
 from app.snippet_window import SnippetWindow
+from app.search_window import SearchWindow
 from app.module_widgets import t as module_text
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
@@ -64,13 +65,16 @@ class Dashboard(QWidget):
         self._text_editor_window: TextEditorWindow | None = None
         self._book_window: BookWindow | None = None
         self._snippet_window: SnippetWindow | None = None
+        self._search_window: SearchWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
         self._event_filter_installed = False
 
         self.setObjectName("dashboardShell")
-        self.setWindowTitle("Provoware-Datenbank-Dashboard 2026")
+        title = self.texts.get("app.window_title", "Provoware-Datenbank-Dashboard 2026")
+        version = getattr(logger, "version", "")
+        self.setWindowTitle(f"{title} · {version}" if isinstance(version, str) and version else title)
         self.resize(1280, 790)
         self.setMinimumSize(1020, 650)
         self._build()
@@ -138,8 +142,8 @@ class Dashboard(QWidget):
         self.header_search_icon = search_icon
         layout.addWidget(search_icon)
         self.search_entry = QLineEdit()
-        self.search_entry.setPlaceholderText("Songs durchsuchen …")
-        self.search_entry.setToolTip("Durchsucht deine Songbibliothek nach Titel, Genre, Stimmung, Stil, Stimme und Tags.")
+        self.search_entry.setPlaceholderText(module_text("search_query", "Suchtext eingeben …"))
+        self.search_entry.setToolTip(module_text("search_title", "Dateien & Texte suchen"))
         self.search_entry.setFixedWidth(245)
         self.search_entry.returnPressed.connect(self._header_search)
         layout.addWidget(self.search_entry)
@@ -164,7 +168,7 @@ class Dashboard(QWidget):
             ("✎\nTexteditor", self.open_text_editor, False, "Texteditor"),
             ("▥\nGenres", lambda: self.open_profile_editor("Genres"), False, "Genres"),
             (module_text("snippet_tile", "▣\nTextbuttons"), self.open_snippets, False, "Textbuttons"),
-            ("⌕\nDateisuche\nIn Planung", lambda: self._planned("Dateisuche"), True, "Dateisuche"),
+            (module_text("search_tile", "⌕\nDateisuche"), self.open_search, False, "Dateisuche"),
             (module_text("book_tile", "▤\nBücher"), self.open_books, False, "Buchwerkstatt"),
         )
         for text, command, planned, name in tiles:
@@ -218,9 +222,6 @@ class Dashboard(QWidget):
         self._add_nav(layout, "  ◉  Genre-Zufall", self.open_genre_random)
         self._add_nav(layout, "  ✎  Reimfinder · geplant", lambda: self._planned("Reimfinder"), planned=True)
         self._add_heading(layout, "Dateien & Werkzeuge")
-        self._add_nav(layout, "  ⌕  Dateisuche · geplant", lambda: self._planned("Dateisuche"), planned=True)
-        self._add_nav(layout, "  ▤  Textinhalt suchen · geplant", lambda: self._planned("Textinhalt suchen"), planned=True)
-        self._add_nav(layout, "  ≡  Trefferliste · geplant", lambda: self._planned("Trefferliste"), planned=True)
         self._add_nav(layout, "  ◫  Duplikatprüfer · geplant", lambda: self._planned("Duplikatprüfer"), planned=True)
         self._add_heading(layout, "Planung")
         self.todo_nav_button = self._add_nav(layout, "  ✓  Todo-Liste", self.open_todo)
@@ -413,17 +414,21 @@ class Dashboard(QWidget):
         f.addLayout(function_row)
         grid.addWidget(functions, 1, 0)
 
-        system, s = self._card("▤  Dateien & Werkzeuge · In Planung")
+        system, s = self._card(module_text("search_tools", "▤  Dateien & Werkzeuge"))
         for title, subtitle in (
             ("⌕  Dateisuche", "Dateien nach Namen finden"),
             ("▤  Textinhalt suchen", "Wörter in Textdateien finden"),
             ("≡  Trefferliste", "Gefundene Dateien gesammelt anzeigen"),
             ("◫  Duplikatprüfer", "Doppelte Dateien finden"),
         ):
-            button = QPushButton(f"{title} · In Planung")
+            planned = "Duplikatprüfer" in title
+            button = QPushButton(f"{title} · In Planung" if planned else title)
             button.setToolTip(subtitle)
-            self._mark_planned(button, title)
-            button.clicked.connect(lambda _checked=False, selected=title: self._planned(selected))
+            if planned:
+                self._mark_planned(button, title)
+                button.clicked.connect(lambda _checked=False, selected=title: self._planned(selected))
+            else:
+                button.clicked.connect(self.open_search)
             s.addWidget(button)
         s.addStretch(1)
         grid.addWidget(system, 1, 1)
@@ -460,6 +465,7 @@ class Dashboard(QWidget):
         return frame
 
     def _bind_shortcuts(self) -> None:
+        QShortcut(QKeySequence("Ctrl+Shift+F"), self, activated=self.open_search)
         QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
         QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
         QShortcut(QKeySequence("Ctrl+Shift+G"), self, activated=self.open_github_projects)
@@ -506,6 +512,7 @@ class Dashboard(QWidget):
             (self._text_editor_window, False),
             (self._book_window, False),
             (self._snippet_window, False),
+            (self._search_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -545,7 +552,11 @@ class Dashboard(QWidget):
         )
 
     def _header_search(self) -> None:
-        self.open_song_library(initial_search=self.search_entry.text().strip())
+        self.open_search()
+        if self.search_entry.text().strip():
+            self._search_window.cancel()
+            self._search_window.query.setText(self.search_entry.text().strip())
+            self._search_window.start()
 
     def save_quick_info(self) -> None:
         try:
@@ -687,6 +698,13 @@ class Dashboard(QWidget):
         self._snippet_window = _open_managed_window(
             self._snippet_window,
             lambda: SnippetWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
+    def open_search(self) -> None:
+        self._search_window = _open_managed_window(
+            self._search_window,
+            lambda: SearchWindow(self.project_root, self.zoom_percent, parent=self),
             reuse_hidden=True,
         )
 

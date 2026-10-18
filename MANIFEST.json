@@ -3,15 +3,16 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.18.2",
+    "version": "0.18.3",
     "status": "AUSFUEHRBARER_KERN",
-    "date": "2026-10-18"
+    "date": "2026-10-18",
+    "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 42,
-    "goal": "Dashboard-Überlappungen und abgeschnittene Menütexte aus Issue #86 beheben",
-    "completed": 2,
-    "open_next": 2
+    "number": 49,
+    "goal": "Zentrale Text- und Dateisuche mit begrenztem rein lesendem Zugriff",
+    "completed": 3,
+    "open_next": 3
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -1223,6 +1224,41 @@
       "path": "docs/ITERATION42_LAYOUT.md",
       "release": false,
       "purpose": "Ursache, minimale Korrektur und Abnahme der Release-UI-Befunde #86"
+    },
+    {
+      "path": "scripts/datensicherung.py",
+      "release": true,
+      "purpose": "Eigenständige persönliche Datensicherung mit isolierter Wiederherstellung"
+    },
+    {
+      "path": "docs/DATENSICHERUNG.md",
+      "release": true,
+      "purpose": "Sichere Anleitung zur persönlichen Datensicherung"
+    },
+    {
+      "path": "scripts/start_dependencies.py",
+      "release": true,
+      "purpose": "Tatsächliche Paketversionen und Qt-Import vor dem Start prüfen"
+    },
+    {
+      "path": "docs/FREIGABE_0_18_3.md",
+      "release": true,
+      "purpose": "Versionsinformationen und Freigabegrenzen des Prüfkandidaten"
+    },
+    {
+      "path": "app/data_search.py",
+      "release": true,
+      "purpose": "Begrenzte rein lesende Suche in persönlichen Arbeitsdateien"
+    },
+    {
+      "path": "app/search_window.py",
+      "release": true,
+      "purpose": "Abbrechbare zentrale Text-/Dateisuche mit Trefferliste"
+    },
+    {
+      "path": "docs/DATEISUCHE.md",
+      "release": true,
+      "purpose": "Bedienung und Schutzgrenzen der zentralen Text-/Dateisuche"
     }
   ],
   "creative_modules": {
@@ -1278,5 +1314,37 @@
     "thresholds_relaxed": false,
     "full_release_matrix": "60 cases / 180 windows; local 0 errors / 0 warnings",
     "final_ci_evidence": "See pull request for exact head and artifacts"
+  },
+  "development_benchmark": {
+    "command": "python3 scripts/leistungsbenchmark.py",
+    "isolated": true,
+    "runtime_changed": false,
+    "target_device_acceptance": "open"
+  },
+  "personal_data_backup": {
+    "command": "python3 scripts/datensicherung.py",
+    "restore_existing_destination": false,
+    "encryption": false,
+    "requires_closed_application": true
+  },
+  "release_candidate": {
+    "published": false,
+    "manual_acceptance": "deferred_by_user",
+    "documentation": "docs/FREIGABE_0_18_3.md",
+    "pending": [
+      "target_device_acceptance",
+      "github_final_head_checks",
+      "release_publication"
+    ]
+  },
+  "data_search": {
+    "data_root": "daten/",
+    "writes": false,
+    "max_file_bytes": 1048576,
+    "max_read_bytes": 33554432,
+    "max_entries": 5000,
+    "max_hits": 200,
+    "max_seconds": 10,
+    "follow_symlinks": false
   }
 }
