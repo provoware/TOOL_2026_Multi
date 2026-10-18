@@ -18,6 +18,7 @@ from app.calendar_window import CalendarWindow
 from app.character_window import CharacterWindow
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
+from app.genre_random_window import GenreRandomWindow
 from app.profile_store import CATEGORIES, load_profiles
 from app.quick_note import append_developer_info
 from app.recovery_center import RecoveryCenter
@@ -51,6 +52,7 @@ class Dashboard(QWidget):
         self._song_library_hidden_for_editor_session = False
         self._recovery_center: RecoveryCenter | None = None
         self._profile_editor: ProfileEditor | None = None
+        self._genre_random_window: GenreRandomWindow | None = None
         self._todo_window: TodoWindow | None = None
         self._calendar_window: CalendarWindow | None = None
         self._character_window: CharacterWindow | None = None
@@ -204,7 +206,7 @@ class Dashboard(QWidget):
         self._add_nav(layout, "  ·  GitHub-Repositories · geplant", lambda: self._planned("GitHub-Repositories"), planned=True)
         self._add_nav(layout, "  ·  Prompts · geplant", lambda: self._planned("Prompts"), planned=True)
         self._add_heading(layout, "Funktionen")
-        self._add_nav(layout, "  ◉  Genre-Zufall · geplant", lambda: self._planned("Genre-Zufall"), planned=True)
+        self._add_nav(layout, "  ◉  Genre-Zufall", self.open_genre_random)
         self._add_nav(layout, "  ✎  Reimfinder · geplant", lambda: self._planned("Reimfinder"), planned=True)
         self._add_heading(layout, "Dateien & Werkzeuge")
         self._add_nav(layout, "  ⌕  Dateisuche · geplant", lambda: self._planned("Dateisuche"), planned=True)
@@ -384,13 +386,16 @@ class Dashboard(QWidget):
         functions, f = self._card("▣  Funktionen · In Planung")
         function_row = QHBoxLayout()
         for text, name in (
-            ("◈\nGenre-Zufall\nIn Planung", "Genre-Zufall"),
+            ("◈\nGenre-Zufall", "Genre-Zufall"),
             ("✎\nReimfinder\nIn Planung", "Reimfinder"),
         ):
             button = QPushButton(text)
             button.setObjectName("featureButton")
-            self._mark_planned(button, name)
-            button.clicked.connect(lambda _checked=False, selected=name: self._planned(selected))
+            if name == "Genre-Zufall":
+                button.clicked.connect(self.open_genre_random)
+            else:
+                self._mark_planned(button, name)
+                button.clicked.connect(lambda _checked=False, selected=name: self._planned(selected))
             function_row.addWidget(button)
         f.addLayout(function_row)
         grid.addWidget(functions, 1, 0)
@@ -477,6 +482,7 @@ class Dashboard(QWidget):
             (self._song_library, False),
             (self._recovery_center, True),
             (self._profile_editor, False),
+            (self._genre_random_window, False),
             (self._todo_window, True),
             (self._calendar_window, True),
             (self._character_window, False),
@@ -631,6 +637,12 @@ class Dashboard(QWidget):
                 on_changed=self.refresh_db_profiles, parent=self,
             ),
             prepare_visible=prepare_visible,
+        )
+
+    def open_genre_random(self) -> None:
+        self._genre_random_window = _open_managed_window(
+            self._genre_random_window,
+            lambda: GenreRandomWindow(self.project_root, self.zoom_percent, parent=self),
         )
 
     def open_character_fibel(self) -> None:

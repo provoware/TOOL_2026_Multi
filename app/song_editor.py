@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 
 from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
+from app.genre_random_window import GenreRandomWindow
 from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song
 from app.ui_standards import SPACING, apply_global_style
 from app.window_state import ensure_window_visible, restore_window_state, save_window_state
@@ -42,6 +43,7 @@ class SongEditor(QWidget):
         self._closing_after_save = False
         self._active_index: int | None = None
         self._loading_section = False
+        self._genre_random_window: GenreRandomWindow | None = None
 
         self.setWindowTitle(f"Songtexteditor – {self.document.title or 'Unbenannt'}")
         self._compact_mode: bool | None = None
@@ -90,6 +92,10 @@ class SongEditor(QWidget):
         save_button.setToolTip("Zusätzlich zum automatischen Speichern sofort speichern.")
         save_button.clicked.connect(lambda: self.save())
         header.addWidget(save_button)
+        random_button = QPushButton("Genres-Zufall öffnen")
+        random_button.setToolTip("Generator mit denselben Profilen öffnen; Ergebnis kann in Songangaben eingefügt werden.")
+        random_button.clicked.connect(self.open_genre_random)
+        header.addWidget(random_button)
         outer.addLayout(header)
 
         guide = QLabel("1. Titel eintragen  →  2. Bereich wählen oder hinzufügen  →  3. Text schreiben. Charaktere können optional direkt aus der Charakterfibel eingefügt werden.")
@@ -426,6 +432,17 @@ class SongEditor(QWidget):
             return
         self._sync_document()
         self.preview.setPlainText(self.document.render())
+
+    def open_genre_random(self) -> None:
+        """Öffnet denselben Profilgenerator wie das Dashboard, ohne zweite Datenhaltung."""
+        if self._genre_random_window is None:
+            self._genre_random_window = GenreRandomWindow(
+                self.project_root, self.zoom_percent, parent=self)
+        else:
+            self._genre_random_window.refresh()
+        self._genre_random_window.show()
+        self._genre_random_window.raise_()
+        self._genre_random_window.activateWindow()
 
     def _save_from_focus(self) -> None:
         self.save(reason="Änderung gespeichert")
