@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import QSignalBlocker, Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QComboBox, QFrame, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem,
@@ -150,27 +150,25 @@ class TextEditorWindow(QWidget):
 
     def refresh(self) -> None:
         selected_path = str(self.current_path) if self.current_path else ""
-        self.file_list.blockSignals(True)
-        self.file_list.clear()
-        try:
-            paths = list_text_documents(self.project_root)
-        except Exception as error:
-            self.file_list.blockSignals(False)
-            self.status_label.setText(f"Textliste nicht lesbar · nichts verändert. Grund: {error}")
-            return
-        selected_row = -1
-        for row, path in enumerate(paths):
+        with QSignalBlocker(self.file_list):
+            self.file_list.clear()
             try:
-                document = load_text_document(path)
-                label = document.title
-            except Exception:
-                label = f"⚠ {path.stem}"
-            item = QListWidgetItem(label)
-            item.setData(Qt.UserRole, str(path))
-            self.file_list.addItem(item)
-            if str(path) == selected_path:
-                selected_row = row
-        self.file_list.blockSignals(False)
+                paths = list_text_documents(self.project_root)
+            except Exception as error:
+                self.status_label.setText(f"Textliste nicht lesbar · nichts verändert. Grund: {error}")
+                return
+            selected_row = -1
+            for row, path in enumerate(paths):
+                try:
+                    document = load_text_document(path)
+                    label = document.title
+                except Exception:
+                    label = f"⚠ {path.stem}"
+                item = QListWidgetItem(label)
+                item.setData(Qt.UserRole, str(path))
+                self.file_list.addItem(item)
+                if str(path) == selected_path:
+                    selected_row = row
         if selected_row >= 0:
             self.file_list.setCurrentRow(selected_row)
         self.refresh_characters()
@@ -214,19 +212,18 @@ class TextEditorWindow(QWidget):
         if current is None:
             return
         if not self._confirm_leave_document():
-            self.file_list.blockSignals(True)
-            previous_row = next(
-                (i for i in range(self.file_list.count())
-                 if self.current_path is not None
-                 and self.file_list.item(i).data(Qt.UserRole) == str(self.current_path)),
-                -1,
-            )
-            if previous_row >= 0:
-                self.file_list.setCurrentRow(previous_row)
-            else:
-                self.file_list.clearSelection()
-                self.file_list.setCurrentRow(-1)
-            self.file_list.blockSignals(False)
+            with QSignalBlocker(self.file_list):
+                previous_row = next(
+                    (i for i in range(self.file_list.count())
+                     if self.current_path is not None
+                     and self.file_list.item(i).data(Qt.UserRole) == str(self.current_path)),
+                    -1,
+                )
+                if previous_row >= 0:
+                    self.file_list.setCurrentRow(previous_row)
+                else:
+                    self.file_list.clearSelection()
+                    self.file_list.setCurrentRow(-1)
             return
         path = Path(str(current.data(Qt.UserRole)))
         try:
