@@ -12,7 +12,7 @@ from pathlib import Path
 
 from app.atomic_io import atomic_write_json
 from app.profile_store import (
-    CATEGORIES, add_values, load_profiles, save_profiles, split_input_values,
+    CATEGORIES, load_profiles, save_profiles, split_input_values, store_path,
 )
 
 QUICK_AMOUNTS = (3, 6, 9, 12, 15)
@@ -118,6 +118,10 @@ def generate(root: Path, profile: str, amounts: dict[str, int],
 def archive_export(root: Path, destination: Path) -> Path:
     if not destination.name.lower().endswith(".json"):
         raise ValueError("Exportdatei muss auf .json enden.")
+    protected = {store_path(root).resolve(), history_path(root).resolve(),
+                 generator_path(root).resolve()}
+    if destination.resolve() in protected:
+        raise ValueError("Archivexport darf interne Projektdateien nicht überschreiben.")
     return atomic_write_json(destination, {"schema": 1, "profiles": load_profiles(root)})
 
 
