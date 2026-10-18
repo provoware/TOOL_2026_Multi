@@ -64,6 +64,19 @@ class GenreRandomTests(unittest.TestCase):
                 rename_value(root, "HardTechno", "Genres", "Schranz", "Acid Techno")
             self.assertEqual(store_path(root).read_bytes(), before)
 
+    def test_shared_terms_are_not_repeated_across_categories(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            profiles = load_profiles(root)
+            profiles["HardTechno"]["Stimmungen"].append("Schranz")
+            save_profiles(root, profiles)
+            counts = {cat: 0 for cat in CATEGORIES}
+            counts["Genres"] = 4
+            counts["Stimmungen"] = 1
+            result = generate(root, "HardTechno", counts, rng=random.Random(3))
+            terms = result["output"].split(", ")
+            self.assertEqual(len(terms), len({term.casefold() for term in terms}))
+
     def test_three_preset_slots_are_persistent(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
