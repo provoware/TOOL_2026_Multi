@@ -16,6 +16,9 @@ from PySide6.QtWidgets import (
 from app.calendar_reminders import CalendarReminderController
 from app.calendar_window import CalendarWindow
 from app.character_window import CharacterWindow
+from app.book_window import BookWindow
+from app.snippet_window import SnippetWindow
+from app.module_widgets import t as module_text
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
 from app.genre_random_window import GenreRandomWindow
@@ -59,6 +62,8 @@ class Dashboard(QWidget):
         self._calendar_window: CalendarWindow | None = None
         self._character_window: CharacterWindow | None = None
         self._text_editor_window: TextEditorWindow | None = None
+        self._book_window: BookWindow | None = None
+        self._snippet_window: SnippetWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -158,9 +163,9 @@ class Dashboard(QWidget):
             ("♙\nCharakterfibel", self.open_character_fibel, False, "Charakterfibel"),
             ("✎\nTexteditor", self.open_text_editor, False, "Texteditor"),
             ("▥\nGenres", lambda: self.open_profile_editor("Genres"), False, "Genres"),
-            ("?\nPrompts\nIn Planung", lambda: self._planned("Prompts"), True, "Prompts"),
+            (module_text("snippet_tile", "▣\nTextbuttons"), self.open_snippets, False, "Textbuttons"),
             ("⌕\nDateisuche\nIn Planung", lambda: self._planned("Dateisuche"), True, "Dateisuche"),
-            ("≡\nDuplikate\nIn Planung", lambda: self._planned("Duplikatprüfer"), True, "Duplikatprüfer"),
+            (module_text("book_tile", "▤\nBücher"), self.open_books, False, "Buchwerkstatt"),
         )
         for text, command, planned, name in tiles:
             button = QPushButton(text)
@@ -200,6 +205,8 @@ class Dashboard(QWidget):
         self._add_nav(layout, "  ♫  Songtexte", self.open_song_library)
         self._add_nav(layout, "  ✎  Texteditor", self.open_text_editor)
         self._add_nav(layout, "  ♙  Charakterfibel", self.open_character_fibel)
+        self._add_nav(layout, module_text("snippets", "Textbaustein-Buttons"), self.open_snippets)
+        self._add_nav(layout, module_text("books", "Buchwerkstatt"), self.open_books)
         self._add_nav(layout, "  ▣  Hörspiele · geplant", lambda: self._planned("Hörspiele"), planned=True)
         self._add_nav(layout, "  ▤  Blogartikel · geplant", lambda: self._planned("Blogartikel"), planned=True)
         self._add_heading(layout, "Daten & Vorgaben")
@@ -451,6 +458,8 @@ class Dashboard(QWidget):
         return frame
 
     def _bind_shortcuts(self) -> None:
+        QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
+        QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
         QShortcut(QKeySequence("F5"), self, activated=self.refresh)
         QShortcut(QKeySequence("Ctrl++"), self, activated=lambda: self._step_zoom(1))
         QShortcut(QKeySequence("Ctrl+-"), self, activated=lambda: self._step_zoom(-1))
@@ -492,6 +501,8 @@ class Dashboard(QWidget):
             (self._calendar_window, True),
             (self._character_window, False),
             (self._text_editor_window, False),
+            (self._book_window, False),
+            (self._snippet_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -669,6 +680,24 @@ class Dashboard(QWidget):
             refresh_after_show=True,
         )
 
+    def open_snippets(self) -> None:
+        self._snippet_window = _open_managed_window(
+            self._snippet_window,
+            lambda: SnippetWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
+    def open_books(self) -> None:
+        self._book_window = _open_managed_window(
+            self._book_window,
+            lambda: BookWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
+    def _confirm_creative_modules(self) -> bool:
+        return all(window.confirm_leave() for window in
+                   (self._book_window, self._snippet_window) if window is not None)
+
     def open_todo(self) -> None:
         self._todo_window = _open_managed_window(
             self._todo_window,
@@ -788,6 +817,8 @@ class Dashboard(QWidget):
         return success
 
     def logout(self) -> None:
+        if not self._confirm_creative_modules():
+            return
         if not self.save_open_song_editors():
             QMessageBox.critical(
                 self, "Beenden gestoppt",
@@ -810,6 +841,9 @@ class Dashboard(QWidget):
         self._event_filter_installed = False
 
     def closeEvent(self, event: QCloseEvent) -> None:
+        if not self._closing_after_save and not self._confirm_creative_modules():
+            event.ignore()
+            return
         if self._closing_after_save:
             self._remove_event_filter()
             self.closed_cleanly.emit()

@@ -143,6 +143,22 @@ HELP_TOPICS: tuple[HelpTopic, ...] = (
         ),
         "Unterstützte Zoomstufen sind 100 %, 125 %, 150 %, 175 % und 200 %.",
     ),
+    HelpTopic(
+        "textbuttons-buecher", "Textbuttons und Buchwerkstatt",
+        ("zwischenablage", "textbausteine", "workflow", "bücher", "kapitel", "hörspiel", "satire", "tutorial"),
+        "Textbaustein-Buttons kopieren gespeicherte Texte. Die Buchwerkstatt ordnet längere Texte in Kapitel und Unterkapitel.",
+        (
+            "Öffne Textbaustein-Buttons über das Menü oder Strg+Alt+T. Wähle Anlegen & bearbeiten, trage Kategorie, Titel und Text ein und speichere.",
+            "Unter Buttons verwenden wähle Coding, Schreiben, Prompting oder Linux. Ein Klick auf einen Textbutton kopiert seinen Inhalt; Strg+V fügt ihn im Zielprogramm ein.",
+            "Nutze Variante anlegen für eine Unterversion und {{Name}} für später ausfüllbare Stellen. Farbe, drei Größen und Spaltenzahl sind wählbar; Pfeile ordnen innerhalb der Kategorie.",
+            "Unter jedem Texteingabefeld lässt sich die Zwischenablage einfügen. Monatliche Verwendungen zählt nur erfolgreiche Kopiervorgänge in diesem Programm.",
+            "Öffne die Buchwerkstatt über das Menü oder Strg+Alt+B. Wähle eine Vorlage für Hörspiel, Satire, Sachausarbeitung oder Tutorial und gib einen Buchtitel ein.",
+            "Wähle ein Kapitel, schreibe und ergänze bei Bedarf Unterkapitel, Textelemente oder Figuren. Strg+S speichert sofort; betitelte geänderte Bücher werden zusätzlich jede Minute gespeichert.",
+            "Nutze Importieren und Exportieren im jeweiligen Modul. Ein Import wird geprüft und ergänzt nach Vorschau neue Kopien. Exportierte Manuskripte enthalten keine Planungsnotizen.",
+        ),
+        alternative="Im Dashboard findest du beide Module auch oben über Textbuttons und Bücher.",
+        note="JSON-Export enthält den gespeicherten Modulbestand. Monatszähler importierter Textbutton-Kopien beginnen bei null. Rechtschreibung benötigt lokal aspell und aspell-de; es werden keine Texte an einen Dienst gesendet.",
+    ),
 )
 
 

@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.17.4 · **Dokumentationsstand:** 17.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
+> **Version:** 0.18.0 · **Dokumentationsstand:** 17.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -38,6 +38,10 @@ Die ausführliche einfache Bedienanleitung steht in:
 ```text
 ANLEITUNG_LAIEN.md
 ```
+
+## Neu in 0.18.0: Textbuttons und Buchwerkstatt
+
+Textbaustein-Buttons bieten Workflow-Reiter, Kategorien, Platzhalter, Unterversionen, Monatsstatistik und flexible Darstellung. Die Buchwerkstatt bietet Vorlagen für Hörspiel, Satire, Sachtext und Tutorial mit Kapiteln, Unterkapiteln, Notizen und Manuskriptexport. Beide nutzen gemeinsame Import-/Export- und Schutzfunktionen. Öffnen über die oberen Kacheln, das Menü oder Strg+Alt+T / Strg+Alt+B. Details: [Anleitung](ANLEITUNG_LAIEN.md) und [Abnahme](docs/TEXTBUTTONS_UND_BUCHWERKSTATT.md).
 
 ## Direkt nutzbar
 

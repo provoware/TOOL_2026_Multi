@@ -3,15 +3,15 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.17.4",
+    "version": "0.18.0",
     "status": "AUSFUEHRBARER_KERN",
-    "date": "2026-10-17"
+    "date": "2026-10-18"
   },
   "iteration": {
-    "number": 39,
-    "goal": "Lokale UI-Sichttests durch einen automatischen, diagnostizierenden Shadow-Gate mit zentralen UI-Verträgen und Testmatrix minimieren",
-    "completed": 7,
-    "open_next": 2
+    "number": 40,
+    "goal": "Textbuttons und Buchwerkstatt mit gemeinsamen Modulstandards",
+    "completed": 8,
+    "open_next": 1
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -35,7 +35,9 @@
     "local_reports": "berichte/",
     "local_backups": "backups/",
     "character_data": "daten/charaktere/charaktere.json",
-    "text_editor_data": "daten/texte/"
+    "text_editor_data": "daten/texte/",
+    "snippet_data": "daten/textbausteine/bestand.json",
+    "book_data": "daten/buecher/bestand.json"
   },
   "validation": {
     "command": "bash scripts/pruefen.sh --full",
@@ -1126,6 +1128,69 @@
       "path": "docs/ITERATION39_UI_QUALITY_SHADOW.md",
       "release": false,
       "purpose": "Architektur, Schutzgrenzen und Kalibrierungsplan des UI-Shadow-Gates"
+    },
+    {
+      "path": "app/module_archive.py",
+      "release": true,
+      "purpose": "Einheitliches validiertes Modularchiv mit Größenlimit"
+    },
+    {
+      "path": "app/module_widgets.py",
+      "release": true,
+      "purpose": "Gemeinsame Modulbedienung, Importvorschau und Schutz ungespeicherter Arbeit"
+    },
+    {
+      "path": "app/spelling.py",
+      "release": true,
+      "purpose": "Optionale lokale deutsche Rechtschreibprüfung"
+    },
+    {
+      "path": "app/snippet_store.py",
+      "release": true,
+      "purpose": "Textbausteine, Varianten, Platzhalter und Monatsstatistik"
+    },
+    {
+      "path": "app/snippet_window.py",
+      "release": true,
+      "purpose": "Textbuttons mit Workflows und strukturierter Bedienung"
+    },
+    {
+      "path": "app/book_store.py",
+      "release": true,
+      "purpose": "Buchdaten, Vorlagen, Kapitelhierarchie und Manuskripte"
+    },
+    {
+      "path": "app/book_window.py",
+      "release": true,
+      "purpose": "Buchwerkstatt mit Kapitelbaum und Schreibwerkzeugen"
+    },
+    {
+      "path": "tests/test_creative_modules.py",
+      "release": false,
+      "purpose": "Abnahme und Anleitung der kreativen Erweiterung"
+    },
+    {
+      "path": "tests/test_creative_modules_gui.py",
+      "release": false,
+      "purpose": "Abnahme und Anleitung der kreativen Erweiterung"
+    },
+    {
+      "path": "docs/TEXTBUTTONS_UND_BUCHWERKSTATT.md",
+      "release": false,
+      "purpose": "Abnahme und Anleitung der kreativen Erweiterung"
+    },
+    {
+      "path": "docs/DIAGNOSE_MESSPLAN.md",
+      "release": false,
+      "purpose": "Konzept für datensparsame Leistungsdiagnose und kontrollierte Weitergabe"
     }
-  ]
+  ],
+  "creative_modules": {
+    "schema_version": 1,
+    "iteration": 40,
+    "status": "pr_validation",
+    "data_migration": false,
+    "module_archive": "provoware.module v1",
+    "spelling": "optional aspell + aspell-de"
+  }
 }

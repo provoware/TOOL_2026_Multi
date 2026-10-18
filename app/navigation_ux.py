@@ -13,6 +13,7 @@ from PySide6.QtCore import QEvent, QObject, Qt, QTimer
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from app.presentation_policy import presentation_state
+from app.module_widgets import t as module_text
 
 
 PLANNED_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
@@ -168,6 +169,8 @@ class NavigationUxController(QObject):
         self.feature_buttons = [
             self._set_ready_button(genre_random, "◉  Genre-Zufall"),
             self._set_ready_button(github_projects, "◈  GitHub-Projekte"),
+            self._set_ready_button(_find_button(widgets, "Textbaustein-Buttons"), module_text("snippets", "Textbaustein-Buttons")),
+            self._set_ready_button(_find_button(widgets, "Buchwerkstatt"), module_text("books", "Buchwerkstatt")),
         ]
 
         # Der frühere Sammelpunkt "Alle Bereiche" führte ebenfalls nur zu einer

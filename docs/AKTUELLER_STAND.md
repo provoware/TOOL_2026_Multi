@@ -1,6 +1,6 @@
 # Aktueller Projektstand – leicht verständlich
 
-**Stand:** 17. Oktober 2026 · **Programmversion:** 0.17.4
+**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.0
 
 ## Wozu dient Provoware?
 
@@ -11,6 +11,8 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 | Bereich | Was du damit machen kannst |
 |---|---|
 | Songtexte | Songs schreiben, speichern, wiederfinden und ältere Versionen ansehen. |
+| Textbuttons | Häufige Texte, Platzhalter und Unterversionen auf Knopfdruck kopieren. |
+| Buchwerkstatt | Kapitel, Unterkapitel und Vorlagen für Hörspiel, Satire, Sachtext und Tutorial. |
 | Allgemeiner Texteditor | Texte und Abschlussnotizen schreiben und speichern. |
 | Charakterfibel | Figuren und ihre Eigenschaften verwalten. |
 | Profile | Genres, Stimmungen, Stile, Stimmen und weitere Vorgaben sammeln. |
@@ -52,4 +54,4 @@ Die Ordner `daten/`, `backups/`, `logs/` und `berichte/` dürfen nicht ohne Prü
 2. Echte Bedienprüfung auf Kubuntu 26.04 mit stark vergrößerter Schrift durchführen.
 3. Eine unabhängige, erprobte Datensicherung mit sicherer Wiederherstellung entwickeln.
 
-Es gibt keine neue offizielle Versionsnummer, solange keine gesonderte Veröffentlichung freigegeben wurde.
+Version 0.18.0 wird als eigener Änderungsantrag geprüft. Frühere CI-Nachweise oben gelten für den damaligen Stand. Die neue Prüfung muss zum neuen Commit gehören.

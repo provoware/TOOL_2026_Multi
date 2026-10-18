@@ -450,3 +450,12 @@ Noch nicht freigegeben und deshalb in der Oberfläche sichtbar als `In Planung` 
 - Duplikatprüfer
 
 Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md`; sie wird bewusst nicht mehrfach gepflegt.
+
+
+## Iteration 40 – Textbuttons und Buchwerkstatt
+
+- [x] Acht Funktionspakete der beiden neuen Module umgesetzt (siehe Abnahmebericht).
+- [x] Gemeinsame Modularchive, atomare Speicherung, Hilfe und Entwurfsschutz.
+- [x] 24 neue isolierte Daten-/GUI-Tests.
+- [ ] Sichtbare Kubuntu-/Plasma-Wayland-Abnahme einschließlich Zwischenablage und deutschem Wörterbuch.
+- [ ] Nächste Planung: datensparsame Qualitätskennzahlen in bestehende Diagnose integrieren; zunächst Konzept, keine automatische Übertragung.
