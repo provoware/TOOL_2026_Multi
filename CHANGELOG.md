@@ -6,7 +6,8 @@
 - Platzhalter, Unterversionen, Zwischenablage-Einfügen und Monatsstatistik mit TXT-Export.
 - Buchwerkstatt mit fünf Vorlagen, bis acht Kapitelebenen, Schreibelementen, Charakterfibel, Status und Notizen.
 - Gemeinsame atomare Speicherung, validierte Modularchive, Importvorschau, Entwurfsschutz und optionale lokale Rechtschreibung.
-- 24 neue Tests; bestehende Nutzerdatenformate unverändert.
+- Bei 175/200 % Zoom verdrängt der zusätzliche GitHub-Projekte-Button keine Profilfelder mehr; Strg+Umschalt+G bleibt als Zugang verfügbar.
+- 25 neue Tests; bestehende Nutzerdatenformate unverändert.
 
 ## Erweiterungen · 18.10.2026 (Version bleibt vor Praxisabnahme 0.17.4)
 

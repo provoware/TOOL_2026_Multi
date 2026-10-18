@@ -48,3 +48,8 @@ Nächster logischer Schritt: reale Bildschirm- und Zwischenablageprüfung nach d
 ## Folgeplanung: datensparsame Leistungsmessung
 
 Der konkrete Vorschlag für Ladezeiten, Schreibzugriffe, Cachegrößen, Ressourcen und sichere Weitergabe steht in [DIAGNOSE_MESSPLAN.md](DIAGNOSE_MESSPLAN.md). Er ist ein Konzept für die nächste Iteration; zusätzliche Erhebung und automatische Übertragung werden hier nicht implementiert.
+
+
+## Im GitHub-Lauf gefundener Nachbarfehler
+
+Der erste GitHub-Lauf war technisch erfolgreich, enthielt aber sechs harte UI-Shadow-Befunde im vorhandenen Dashboard bei 1366×768 / 200 % / Kontrast. Der zusätzliche GitHub-Projekte-Button verdrängte die Profilfelder. Er wird jetzt ab 175 % ausgeblendet; Strg+Umschalt+G öffnet das Modul weiterhin. Ein Rückfalltest prüft kollisionsfreie Profilfelder und den wieder sichtbaren Button bei 100 %. Lokaler Shadow-Nachweis nach Korrektur: acht Matrixfälle, 24 Fensterinstanzen, null Fehler und null Warnungen. Der bestehende Entwurf #83 behandelt denselben Ausgangsbefund, wurde aber nicht verändert. Die neue Revision erhält ihren eigenen vollständigen Prüflauf.

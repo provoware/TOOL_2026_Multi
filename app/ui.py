@@ -387,6 +387,7 @@ class Dashboard(QWidget):
             d.addLayout(row)
             self.db_boxes[label] = combo
         project_open = QPushButton("◈  GitHub-Projekte öffnen")
+        self.github_project_open_button = project_open
         project_open.setAccessibleName("GitHub-Projekte öffnen")
         project_open.setToolTip("Lokale Übersicht der offenen und fertigen Projekte öffnen")
         project_open.clicked.connect(self.open_github_projects)
@@ -460,6 +461,7 @@ class Dashboard(QWidget):
     def _bind_shortcuts(self) -> None:
         QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
         QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
+        QShortcut(QKeySequence("Ctrl+Shift+G"), self, activated=self.open_github_projects)
         QShortcut(QKeySequence("F5"), self, activated=self.refresh)
         QShortcut(QKeySequence("Ctrl++"), self, activated=lambda: self._step_zoom(1))
         QShortcut(QKeySequence("Ctrl+-"), self, activated=lambda: self._step_zoom(-1))
@@ -882,6 +884,9 @@ class Dashboard(QWidget):
             return
         self.zoom_percent = percent
         apply_global_style(self, percent)
+        # Der zusätzliche Zugang darf bei Hochzoom keine Profilfelder verdrängen.
+        # Menü und Tastenkürzel bleiben als unabhängige Zugänge erhalten.
+        self.github_project_open_button.setVisible(percent < 175)
         self.zoom_label.setText(f"{percent} %")
         for registration in self._managed_window_registry():
             if registration.apply_zoom is not None:

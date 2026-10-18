@@ -167,6 +167,32 @@ class CreativeModulesGuiTests(unittest.TestCase):
             self.assertLessEqual(w.header_actions.geometry().right(), w.width())
             w.close()
 
+    def test_high_zoom_project_button_does_not_squeeze_profile_controls(self):
+        from app.main import configure_dashboard_presentation
+        from app.ui_standards import apply_global_style
+        from PySide6.QtGui import QKeySequence, QShortcut
+        dashboard = configure_dashboard_presentation(Dashboard(
+            TextRegistry(ROOT / 'texte/registry.json'), EventLogger(self.root, 'test'), self.root))
+        dashboard.set_zoom(200)
+        apply_global_style(dashboard, 200, 'Kontrast')
+        dashboard.resize(1334, 696)
+        dashboard.show()
+        for _ in range(8):
+            self.app.processEvents()
+        self.assertFalse(dashboard.github_project_open_button.isVisible())
+        boxes = [dashboard.db_profile_combo, *dashboard.db_boxes.values()]
+        for index, box in enumerate(boxes):
+            rect = box.geometry()
+            rect.moveTopLeft(box.mapTo(dashboard, box.rect().topLeft()))
+            for other in boxes[index + 1:]:
+                other_rect = other.geometry()
+                other_rect.moveTopLeft(other.mapTo(dashboard, other.rect().topLeft()))
+                overlap = rect.intersected(other_rect)
+                self.assertFalse(overlap.width() > 2 and overlap.height() > 2)
+        self.assertTrue(any(s.key() == QKeySequence('Ctrl+Shift+G') for s in dashboard.findChildren(QShortcut)))
+        dashboard.set_zoom(100)
+        self.assertTrue(dashboard.github_project_open_button.isVisible())
+
     def test_dashboard_registration_and_quit_guard(self):
         dashboard = Dashboard(TextRegistry(ROOT / 'texte/registry.json'), EventLogger(self.root, 'test'), self.root)
         dashboard.open_snippets()
