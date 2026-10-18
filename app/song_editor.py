@@ -264,9 +264,8 @@ class SongEditor(QWidget):
         if self._compact_mode == compact:
             return
         self._compact_mode = compact
-        self.details_toggle.blockSignals(True)
-        self.details_toggle.setChecked(not compact)
-        self.details_toggle.blockSignals(False)
+        with QSignalBlocker(self.details_toggle):
+            self.details_toggle.setChecked(not compact)
         self._toggle_details(not compact)
         self.other_text.setMaximumHeight(88 if compact else 120)
 
