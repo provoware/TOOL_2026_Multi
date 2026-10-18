@@ -104,7 +104,7 @@ class GithubProjectStoreTests(unittest.TestCase):
             before = catalog_path(root).read_bytes()
             for altered in [
                 self.example(project="Doppelt"),
-                self.example(project="Anderes", repo="anderer/name",
+                self.example(project="Werkzeug", repo="anderer/name",
                              url="https://github.com/anderer/name"),
                 self.example(project="Falsch", repo="anders/name",
                              url="https://notgithub.com/anders/name"),
