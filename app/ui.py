@@ -19,6 +19,7 @@ from app.character_window import CharacterWindow
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
 from app.genre_random_window import GenreRandomWindow
+from app.github_projects_window import GitHubProjectsWindow
 from app.profile_store import CATEGORIES, load_profiles
 from app.quick_note import append_developer_info
 from app.recovery_center import RecoveryCenter
@@ -53,6 +54,7 @@ class Dashboard(QWidget):
         self._recovery_center: RecoveryCenter | None = None
         self._profile_editor: ProfileEditor | None = None
         self._genre_random_window: GenreRandomWindow | None = None
+        self._github_projects_window: GitHubProjectsWindow | None = None
         self._todo_window: TodoWindow | None = None
         self._calendar_window: CalendarWindow | None = None
         self._character_window: CharacterWindow | None = None
@@ -203,7 +205,7 @@ class Dashboard(QWidget):
         self._add_heading(layout, "Daten & Vorgaben")
         for label in CATEGORIES:
             self._add_nav(layout, f"  ·  {label}", lambda _checked=False, item=label: self.open_profile_editor(item))
-        self._add_nav(layout, "  ·  GitHub-Repositories · geplant", lambda: self._planned("GitHub-Repositories"), planned=True)
+        self._add_nav(layout, "  ·  GitHub-Projekte", self.open_github_projects)
         self._add_nav(layout, "  ·  Prompts · geplant", lambda: self._planned("Prompts"), planned=True)
         self._add_heading(layout, "Funktionen")
         self._add_nav(layout, "  ◉  Genre-Zufall", self.open_genre_random)
@@ -377,7 +379,7 @@ class Dashboard(QWidget):
             row.addWidget(combo, 1)
             d.addLayout(row)
             self.db_boxes[label] = combo
-        planned_db = QLabel("GitHub-Repositories und Prompts: In Planung")
+        planned_db = QLabel("GitHub-Projekte: verfügbar · Prompts: In Planung")
         planned_db.setObjectName("cardHint")
         d.addWidget(planned_db)
         d.addStretch(1)
@@ -483,6 +485,7 @@ class Dashboard(QWidget):
             (self._recovery_center, True),
             (self._profile_editor, False),
             (self._genre_random_window, False),
+            (self._github_projects_window, False),
             (self._todo_window, True),
             (self._calendar_window, True),
             (self._character_window, False),
@@ -637,6 +640,12 @@ class Dashboard(QWidget):
                 on_changed=self.refresh_db_profiles, parent=self,
             ),
             prepare_visible=prepare_visible,
+        )
+
+    def open_github_projects(self) -> None:
+        self._github_projects_window = _open_managed_window(
+            self._github_projects_window,
+            lambda: GitHubProjectsWindow(self.project_root, self.zoom_percent, parent=self),
         )
 
     def open_genre_random(self) -> None:
