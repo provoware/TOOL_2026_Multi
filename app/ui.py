@@ -380,6 +380,7 @@ class Dashboard(QWidget):
             d.addLayout(row)
             self.db_boxes[label] = combo
         project_hint = QLabel("GitHub-Projekte: verfügbar · Prompts: In Planung")
+        self._project_hint = project_hint
         project_hint.setObjectName("cardHint")
         project_hint.setToolTip("GitHub-Projekte per Menü oder mit Strg+Umschalt+G öffnen")
         d.addWidget(project_hint)
@@ -848,6 +849,8 @@ class Dashboard(QWidget):
             return
         self.zoom_percent = percent
         apply_global_style(self, percent)
+        # Optionaler Hinweis darf bei starker Vergrößerung keine Eingabefelder verdrängen.
+        self._project_hint.setVisible(percent < 175)
         self.zoom_label.setText(f"{percent} %")
         for registration in self._managed_window_registry():
             if registration.apply_zoom is not None:
