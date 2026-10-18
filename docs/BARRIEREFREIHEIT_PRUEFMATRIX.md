@@ -45,3 +45,20 @@ Ein zusätzlicher Qt-Test simuliert die **Tabulatortaste** im allgemeinen Texted
 Die Datensicherheit wird mit absichtlich ausgelösten Schreibfehlern beim Dokumentwechsel und Schließen geprüft. Dabei müssen offener Editor und noch nicht gespeicherter Text erhalten bleiben und eine Fehlermeldung erscheinen.
 
 Eine echte Bildschirmleserprüfung und die subjektive Reihenfolge der Tastaturbedienung bleiben weiterhin Aufgaben für eine spätere Praxisabnahme.
+
+
+## Priorisierung der Barrierefreiheits- und Datensicherheitsbefunde
+
+| Priorität | Bereich | Einstufung | Prüfnachweis / weiterer Schritt |
+|---|---|---|---|
+| P1 – unmittelbar | Datenverlust bei Schreibfehlern | Automatisch prüfbar | Neue Tests für fehlende Rechte bei Charakterfibel und Terminen sowie beschädigte Textdatei; vorhandene Tests für volle und schreibgeschützte Datenträger bleiben verbindlich. |
+| P1 – unmittelbar | Abbruch und Wiederherstellung | Bestehende automatisierte Absicherung | Bestehende Wiederherstellungs-, ZIP-/Pfadschutz- und Abbruchtests beibehalten. Eine während des Einspielens unterbrochene Wiederherstellung ist damit nicht vollständig simuliert und bleibt als weiterer Prüffall offen. |
+| P2 – hoch | Tastaturwechsel | Automatischer Funktionsnachweis | Test führt echte Tabulatortastendrücke in Songeditor, Kalender, Charakterfibel und Todo aus. Die intuitive vollständige Reihenfolge bleibt Praxisprüfung. |
+| P2 – hoch | Vorlesbarkeit des Kalenders | Technischer Teilnachweis | Die benannten Monatsknöpfe sind automatisiert prüfbar; die reale Ausgabe mit einem Bildschirmleser ist noch offen. |
+| P3 – mittel | Kontrast und Zoom | Technische Teilprüfung | Vier Themes und fünf Zoomstufen sind für ausgewählte Farbpaare geprüft; eine vollständige Sichtprüfung bleibt ausstehend. |
+
+**Interpretation:** Ein grüner Gesamtlauf bestätigt nur die jeweils konkret implementierten Prüfungen. Eine offene Praxisprüfung wird weder als erfolgreich noch als Fehler gewertet. Besonders bei beschädigten Projektdateien und abgebrochenen Wiederherstellungen dürfen technische Teiltests nicht mit einem vollständigen Belastungsnachweis verwechselt werden.
+
+### Dauerhaftes Abnahmekriterium
+
+Neue Änderungen dürfen weder die bekannten Rückfallprüfungen zu Speichern, Dokumentwechsel, Abbrechen, Schließen und Wiederherstellen entfernen noch die neuen Tastaturprüfungen umgehen. Sichtbare Bedienänderungen bleiben von der internen Testarbeit getrennt.
