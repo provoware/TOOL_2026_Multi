@@ -723,6 +723,11 @@
       "purpose": "Atomarer wiederverwendbarer Charakterfibel-Datenbestand"
     },
     {
+      "path": "app/accessibility_contracts.py",
+      "release": true,
+      "purpose": "Automatisierbare Zugänglichkeitskriterien und ausdrücklich getrennte Praxisprüfungen"
+    },
+    {
       "path": "app/character_combo.py",
       "release": true,
       "purpose": "Gemeinsame Figurenauswahl in den beiden Schreibfenstern"
