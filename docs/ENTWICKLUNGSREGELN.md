@@ -77,3 +77,14 @@ Für die neue Messreihe werden nur **erfolgreiche, vollständige Prüfungen auf 
 Die GitHub-Prüfkette zeigt künftig die Zeit für **Systempakete**, **Python-Pakete** und **Programmtests** in getrennten Schritten. GitHub erfasst die Dauer dieser Schritte automatisch. Die bestehenden Pflichtprüfungen bleiben unverändert erhalten. Ein kürzerer Prüflauf ist noch kein Nachweis geringeren Netzwerkverkehrs.
 
 Vor der Änderung lagen zehn vergleichbare erfolgreiche Hauptzweig-Läufe durchschnittlich bei **117,2 Sekunden**. Die ersten fünf danach lagen bei **122,6 Sekunden**; wegen der kleinen Stichprobe ist daraus noch keine zuverlässige Wirkung abzuleiten. Für jeden neuen Lauf auch die Zahl bestandener Tests und den Stand des Quellcodes notieren.
+
+
+### Gemessene Installationszeiten statt Vermutungen
+
+Die GitHub-Prüfung führt weiterhin die erforderliche Aktualisierung der Systempaket-Listen und die Installation von `libegl1` und `weston` aus. Die bisher beobachteten 23 bzw. 38 Sekunden für Systempakete begründen **noch keine Änderung** an der sicheren Installation.
+
+Ohne Netzwerkverbindung können bereits gespeicherte Ergebnisse ausgewertet werden:
+
+`python3 scripts/entwicklungsmessung.py --datei laeufe.json --jobs-datei jobs.json --vergleich-ab 2026-10-17T22:06:39Z`
+
+Dabei wird die Dauer der Systempakete, Python-Pakete und der Grundprüfung getrennt angegeben. Ein endgültiger Zehn-Läufe-Vergleich ist erst zulässig, wenn zehn passende neue `main`-Läufe vorliegen. Fehlende Werte bleiben leer; installierte Bytes und Entwicklerstunden werden nicht geschätzt.
