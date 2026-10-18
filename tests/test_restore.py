@@ -1,3 +1,4 @@
+import shutil
 import stat
 import subprocess
 import sys
@@ -83,6 +84,40 @@ class RestoreTests(unittest.TestCase):
                 self.assertIsNone(zipped.testzip())
                 self.assertEqual(zipped.namelist(), ["MANIFEST.json"])
             self.assertEqual(list(output.glob(".backup.zip.*.tmp")), [])
+
+    def test_interrupted_extraction_preserves_original_and_retry_works(self):
+        """Unterbrechung betrifft nur die isolierte Restore-Kopie, nicht das Projekt."""
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            project = base / "projekt"
+            project.mkdir()
+            (project / "MANIFEST.json").write_text('{"version": 1}', encoding="utf-8")
+            (project / "text.txt").write_text("Wichtiger Originaltext", encoding="utf-8")
+            archive = base / "sicherung.zip"
+            build_zip(project, archive)
+            before = (project / "text.txt").read_bytes()
+            first_restore = base / "abgebrochene_wiederherstellung"
+            first_restore.mkdir()
+
+            def interrupted_copy(source, target):
+                target.write(source.read(3))
+                raise OSError("Stromausfall während des Entpackens")
+
+            with zipfile.ZipFile(archive) as zipped:
+                with patch("scripts.iteration_restore.shutil.copyfileobj",
+                           side_effect=interrupted_copy):
+                    with self.assertRaisesRegex(OSError, "Stromausfall"):
+                        extract_preserving_modes(zipped, first_restore)
+            self.assertEqual((project / "text.txt").read_bytes(), before)
+            with zipfile.ZipFile(archive) as zipped:
+                self.assertIsNone(zipped.testzip())
+
+            shutil.rmtree(first_restore)
+            recovered = base / "zweiter_versuch"
+            recovered.mkdir()
+            with zipfile.ZipFile(archive) as zipped:
+                extract_preserving_modes(zipped, recovered)
+            self.assertEqual((recovered / "text.txt").read_bytes(), before)
 
     def test_restore_preserves_executable_bits_but_not_special_bits(self):
         with tempfile.TemporaryDirectory() as temp:

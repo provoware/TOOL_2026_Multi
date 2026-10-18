@@ -62,3 +62,11 @@ Eine echte Bildschirmleserprüfung und die subjektive Reihenfolge der Tastaturbe
 ### Dauerhaftes Abnahmekriterium
 
 Neue Änderungen dürfen weder die bekannten Rückfallprüfungen zu Speichern, Dokumentwechsel, Abbrechen, Schließen und Wiederherstellen entfernen noch die neuen Tastaturprüfungen umgehen. Sichtbare Bedienänderungen bleiben von der internen Testarbeit getrennt.
+
+
+## Neue Tests: Wiederherstellungsabbruch und Tastaturaktionen
+
+- `tests/test_restore.py` simuliert jetzt eine Unterbrechung **während des Entpackens** einer Sicherheitskopie. Der ursprüngliche Projektbestand wird auf Unverändertheit geprüft; anschließend muss eine Wiederherstellung aus demselben ZIP erneut möglich sein. Die Simulation nutzt einen absichtlich ausgelösten Dateischreibfehler, keinen echten Stromausfall.
+- `tests/test_keyboard_workflow_gui.py` verwendet echte Qt-Tastaturereignisse: Generieren per Leertaste, Abbrechen eines neuen Dokuments per Leertaste sowie Tabulator/Zurück-Tabulator im Songeditor.
+- `scripts/barrierefreiheit_report.py` erzeugt einen strukturierten JSON-Prüfkatalog mit Prioritäten, Modulen, Kategorien und Fundstellen (`python3 scripts/barrierefreiheit_report.py --output berichte/barrierefreiheit.json`). Er führt ausdrücklich **keine** ausgeführten CI-Testergebnisse auf. Ein vorhandener Test ist nicht dasselbe wie ein bestandener Test.
+- Eine reale Stromunterbrechung oder eine Wiederherstellung unmittelbar **über aktive Benutzerdateien** wird hier nicht getestet. Ein solches Vorgehen wäre riskant und erfordert ein eigenständiges, sicheres Konzept. Die vorhandene Restore-Funktion entpackt bewusst in ein isoliertes Ziel.
