@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+## Erweiterungen · 18.10.2026 (Version bleibt vor Praxisabnahme 0.17.4)
+
+- Genrearchiv: Sterne pro Profil/Kategorie, separater Zufall ausschließlich aus Favoriten und fortlaufende Historie mit Kennzeichnung der Favoritenziehungen.
+- **Nur Genres:** Stichtagsbezogene Monatsstatistik mit Vorschaufenster, Hilfefenster, manueller TXT-Ausgabe, Profil- und Kategorieauswertung.
+- Eigenständige **GitHub-Projektübersicht** für offene und fertige Projekte mit Name, Repository, URL, lokalen Notizen und optionaler Aufgabenliste sowie Kopierfunktion und JSON-Import/-Export.
+- Duplikatschutz, Eingabeprüfung, sichere atomare Speicherung und Regressionstests; keine Anmeldung oder externe GitHub-Abfragen.
+- Beide sichtbaren Erweiterungen benötigen vor uneingeschränkter Benutzerfreigabe noch die Kubuntu-Praxisabnahme.
+
+
 ## Entwicklungseffizienz – 18.10.2026 (Version weiterhin 0.17.4)
 
 - Letzte manuelle Signalsperre im Kompaktmodus des Songeditors durch zustandserhaltende Qt-Sperre ersetzt.
