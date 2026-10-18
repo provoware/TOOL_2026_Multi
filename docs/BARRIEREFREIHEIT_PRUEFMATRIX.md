@@ -34,3 +34,14 @@ Kontrast wird für alle vier Themes bei sämtlichen fünf freigegebenen Zoomstuf
 Bestehende Tests für **Speichern, Abbrechen, Dokumentwechsel, Schließen und Wiederherstellung** dürfen nicht entfernt oder abgeschwächt werden. Neue Oberflächentests verwenden temporäre Projektverzeichnisse und dürfen keine echten Benutzerdateien verändern. Datenverluste werden als harte Fehler behandelt.
 
 **Bekannter Befund:** Qt-interne Kalender-Navigationsknöpfe (z. B. `qt_calendar_prevmonth`) haben im automatisierten Test keine auslesbare Schaltflächenbeschriftung. Die neuen Tests prüfen deren Tastaturfokus weiter, schließen sie aber von der *anwendungseigenen* Beschriftungspflicht aus. Ihre tatsächliche Bildschirmleseransage ist weiterhin **offen**, nicht bestanden.
+
+
+## Nächste Rückfallprüfungen: Kalender, Tastatur und Schreibfehler
+
+Die Monatswechsel-Schaltflächen des Qt-Kalenders bekommen nun reine Zugänglichkeitsnamen. Das verändert keine sichtbare Oberfläche. Der technische Test liest diese Namen direkt aus den tatsächlichen Kalenderknöpfen aus.
+
+Ein zusätzlicher Qt-Test simuliert die **Tabulatortaste** im allgemeinen Texteditor und kontrolliert den Wechsel des aktiven Eingabefeldes. Das bestätigt eine konkrete Tastaturaktion, nicht die Benutzerfreundlichkeit der vollständigen Reihenfolge in jedem Fenster.
+
+Die Datensicherheit wird mit absichtlich ausgelösten Schreibfehlern beim Dokumentwechsel und Schließen geprüft. Dabei müssen offener Editor und noch nicht gespeicherter Text erhalten bleiben und eine Fehlermeldung erscheinen.
+
+Eine echte Bildschirmleserprüfung und die subjektive Reihenfolge der Tastaturbedienung bleiben weiterhin Aufgaben für eine spätere Praxisabnahme.
