@@ -96,6 +96,8 @@ def upsert_project(root: Path, *, ident: str | None = None, project: str,
                    todos: list[dict] | None = None) -> dict:
     entries = load_projects(root)
     old = next((r for r in entries if r["id"] == ident), None) if ident else None
+    if ident is not None and old is None:
+        raise ValueError("Das zu bearbeitende Projekt wurde nicht gefunden. Nichts verändert.")
     candidate = _clean_record({
         "id": old["id"] if old else uuid4().hex, "project": project, "repo": repo,
         "url": url, "notes": notes, "status": status,
@@ -115,8 +117,8 @@ def delete_project(root: Path, ident: str) -> None:
 
 
 def export_projects(root: Path, destination: Path) -> Path:
-    if destination.suffix.lower() != ".json" or destination.resolve() == catalog_path(root).resolve():
-        raise ValueError("Export muss eine andere .json-Datei sein.")
+    if destination.suffix.lower() != ".json" or destination.resolve().is_relative_to((root / "daten").resolve()):
+        raise ValueError("Export muss eine .json-Datei außerhalb der internen Projektdaten sein.")
     return atomic_write_json(destination, {"schema": 1, "projects": load_projects(root)})
 
 
