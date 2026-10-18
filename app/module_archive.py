@@ -41,7 +41,10 @@ def state_path(root, module):
 
 def load(root, module, validate, empty):
     target = state_path(root, module)
-    return validate(read_json(target)) if target.exists() else validate(empty())
+    from app.performance import observe
+    area = {'buecher': 'books', 'textbausteine': 'snippets'}[module]
+    with observe('archive.load', area):
+        return validate(read_json(target)) if target.exists() else validate(empty())
 
 
 def save(root, module, state, validate):
@@ -54,7 +57,7 @@ def save(root, module, state, validate):
 def export_target(root, target):
     """Verhindert, dass eine frei gewählte Exportdatei Arbeitsdaten ersetzt."""
     root, target = Path(root).resolve(), Path(target).resolve()
-    protected_dirs = ('daten', 'app', 'texte', 'scripts', 'tests', '.git', '.github')
+    protected_dirs = ('daten', 'app', 'texte', 'scripts', 'tests', 'logs', '.git', '.github')
     protected_files = ('MANIFEST.json', 'requirements.txt', 'README.md',
                        'ANLEITUNG_LAIEN.md', 'TODO.md', 'CHANGELOG.md', 'AGENTS.md',
                        'schnellstart.sh', 'kubuntu_abnahme.sh')

@@ -118,6 +118,7 @@ def save_text_document(root: Path, document: TextDocument, previous_path: Path |
     })
     target = text_path(root, str(payload["title"]))
 
+    unchanged = False
     if target.is_file():
         existing = _validate_payload(json.loads(target.read_text(encoding="utf-8")))
         same_document = (
@@ -130,9 +131,12 @@ def save_text_document(root: Path, document: TextDocument, previous_path: Path |
         current = _validate_payload(json.loads(target.read_text(encoding="utf-8")))
         comparable_current = {key: value for key, value in current.items() if key != "updated_at"}
         comparable_new = {key: value for key, value in payload.items() if key != "updated_at"}
+        unchanged = comparable_current == comparable_new
         if comparable_current != comparable_new:
             atomic_write_json(_version_path(root, target.stem), current)
 
+    from app.performance import note_save
+    note_save('texts', unchanged)
     atomic_write_json(target, payload)
 
     # Wird der Titel geändert, wird der alte Dateiname erst nach erfolgreichem

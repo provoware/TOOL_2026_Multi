@@ -1,6 +1,6 @@
 # Aktueller Projektstand – leicht verständlich
 
-**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.0
+**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.1
 
 ## Wozu dient Provoware?
 
@@ -20,6 +20,7 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 | Profile | Genres, Stimmungen, Stile, Stimmen und weitere Vorgaben sammeln. |
 | Todo-Liste | Aufgaben anlegen, erledigen und archivieren. |
 | Kalender | Termine verwalten; Erinnerungen erscheinen, solange das Hauptprogramm läuft. |
+| Leistungsdiagnose | Zusätzliche lokale Messung einschalten, ausgewählte Tagesdaten ansehen, exportieren und löschen. |
 | Hilfe | Erklärungen und technische Fehlermeldungen in verständlicher Sprache lesen. |
 | Anzeige | Zwischen vier Farben und fünf Zoomstufen von 100 bis 200 % wählen. |
 
@@ -29,7 +30,7 @@ Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: Reimfinder
 
 ## Was wurde zuletzt geprüft?
 
-Der Code-/Layoutstand `cfc7353` von [PR #84](https://github.com/provoware/TOOL_2026_Multi/pull/84) bestand [Lauf #1007](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39127077853): 188 Logiktests, 144 GUI-Tests, nativer Wayland-Start, Wiederherstellung und ZIP-Erzeugung. Die UI-Analyse erreichte acht Matrixfälle / 24 Fensterinstanzen mit null Fehlern und null Warnungen. Die nachfolgende Informationsrunde hat ihren eigenen Prüfnachweis am aktuellen PR-Head. **0.18.0 ist ein Prüfkandidat im offenen PR und noch nicht auf main eingepflegt.**
+Der Code-/Layoutstand `cfc7353` von [PR #84](https://github.com/provoware/TOOL_2026_Multi/pull/84) bestand [Lauf #1007](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39127077853): 188 Logiktests, 144 GUI-Tests, nativer Wayland-Start, Wiederherstellung und ZIP-Erzeugung. Die UI-Analyse erreichte acht Matrixfälle / 24 Fensterinstanzen mit null Fehlern und null Warnungen. Die nachfolgende Informationsrunde hat ihren eigenen Prüfnachweis am aktuellen PR-Head. **0.18.0 wurde nach ausdrücklicher Freigabe über PR #84 mit main zusammengeführt. Der Hauptzweig-Lauf nach dem Merge ist erfolgreich. 0.18.1 ergänzt als nächste Iteration die lokale Leistungsdiagnose.**
 
 Die folgenden Nachweise betreffen frühere Stände:
 
@@ -62,4 +63,4 @@ Die Ordner `daten/`, `backups/`, `logs/` und `berichte/` dürfen nicht ohne Prü
 
 Version 0.18.0 wird als eigener Änderungsantrag geprüft. Frühere CI-Nachweise oben gelten für den damaligen Stand. Die neue Prüfung muss zum neuen Commit gehören.
 
-Die Bewertung der Entwicklung mit gemessenen Laufzeiten und Verbesserungsregeln steht im [Entwicklungsreview](ENTWICKLUNGSREVIEW_2026_10_18.md). Das Konzept zusätzlicher Leistungsdaten steht im [Messplan](DIAGNOSE_MESSPLAN.md); es ist noch keine aktive Datenerhebung.
+Die Bewertung der Entwicklung mit gemessenen Laufzeiten und Verbesserungsregeln steht im [Entwicklungsreview](ENTWICKLUNGSREVIEW_2026_10_18.md). Das Konzept zusätzlicher Leistungsdaten steht im [Messplan](DIAGNOSE_MESSPLAN.md); die erste ausdrücklich einschaltbare Ausbaustufe ist nun in 0.18.1 implementiert.

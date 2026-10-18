@@ -46,6 +46,7 @@ def main() -> int:
     version = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))["tool"]["version"]
     guard = None
     logger = None
+    tracker = None
     try:
         from PySide6.QtWidgets import QApplication
         from app.ui import Dashboard, install_exception_handler
@@ -70,6 +71,11 @@ def main() -> int:
             )
             return CONTROLLED_ALREADY_RUNNING_EXIT
 
+        from app.performance import activate
+        from PySide6.QtCore import QTimer
+        from time import perf_counter
+        tracker = activate(ROOT, version)
+        dashboard_started = perf_counter()
         logger = EventLogger(ROOT, version)
         dashboard = Dashboard(TextRegistry(ROOT / "texte" / "registry.json"), logger, ROOT)
         configure_dashboard_presentation(dashboard)
@@ -81,6 +87,11 @@ def main() -> int:
         )
         dashboard.show()
         dashboard.refresh()
+        performance_timer = QTimer(app)
+        performance_timer.setInterval(60_000)
+        performance_timer.timeout.connect(tracker.flush)
+        performance_timer.start()
+        QTimer.singleShot(0, lambda: tracker.record('app.start', elapsed_ms=(perf_counter() - dashboard_started) * 1000))
         code = app.exec()
         logger.record(
             severity="INFO", area="ENDE", summary="Das Programm wurde kontrolliert beendet.",
@@ -106,6 +117,8 @@ def main() -> int:
             print(emergency_message(error))
         return 1
     finally:
+        if tracker is not None:
+            tracker.flush()
         if guard is not None:
             guard.release()
 

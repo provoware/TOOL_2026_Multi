@@ -111,6 +111,8 @@ class CreativeModuleTests(unittest.TestCase):
             archive.export_target(self.root, alias)
         with self.assertRaises(ValueError):
             archive.export_target(self.root, self.root / 'MANIFEST.json')
+        with self.assertRaises(ValueError):
+            archive.export_target(self.root, self.root / 'logs/leistung/statistik.json')
         self.assertEqual(original, target.read_bytes())
 
     def test_archive_size_and_schema_limits(self):

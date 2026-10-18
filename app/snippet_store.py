@@ -80,6 +80,8 @@ def put(root, values, snippet_id=None, variant_of=None):
         (s['version'] for s in state['snippets'] if s['group'] == group), default=0) + 1
     item = {field: values.get(field, '') for field in ('title', 'category', 'content', 'workflow', 'color', 'size')}
     item.update(id=key, group=group, version=version, monthly=old['monthly'] if old else {})
+    from app.performance import note_save
+    note_save('snippets', old is not None and old == item)
     if old:
         state['snippets'][state['snippets'].index(old)] = item
     else:

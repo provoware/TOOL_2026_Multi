@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## 0.18.1 · 18.10.2026 – lokale Leistungsdiagnose
+
+- Zusätzliche Leistungsmessung ausdrücklich einschaltbar; standardmäßig aus, ohne automatische Übertragung.
+- Tagesaggregate für Modul-/Bestandsladezeiten, Dashboardaufbau, zentrale Text-/JSON-Schreibzugriffe und unveränderte gültige Speicherversuche.
+- Auswahl, lesbare Übersicht, bereinigte JSON-Vorschau, TXT-/JSON-Export, Aufbewahrung 1–30 Tage und bestätigtes Löschen.
+- Rekursionsschutz, gebündelte Speicherung, Größenlimits und fehlertolerante Messung; keine Inhalte oder Dateipfade in den Messdaten.
+- Textbuttons und Buchwerkstatt wurden über PR #84 nach ausdrücklicher Freigabe in main übernommen; Hauptzweig-Prüfung erfolgreich.
+
 ## 0.18.0 · 18.10.2026 – Textbuttons und Buchwerkstatt
 
 - Informationsdateien, Entwicklungsreview und konkrete Verbesserungsregeln konsolidiert; historische Prüfnachweise klar vom aktuellen PR-Head getrennt.

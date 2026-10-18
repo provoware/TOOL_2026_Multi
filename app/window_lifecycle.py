@@ -8,6 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, Protocol, TypeVar
 
+from app.performance import observe, WINDOW_AREAS
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget
 
@@ -66,25 +67,30 @@ def _open_managed_window(
     ersetzt. Fenster mit bewusst persistentem Zustand, derzeit der Kalender, können
     über ``reuse_hidden`` denselben verdeckten Zustand erneut anzeigen.
     """
-    if current is not None and current.isVisible():
-        if prepare_visible is not None:
-            prepare_visible(current)
-        _activate_window(current)
-        current.refresh()
-        return current
+    with observe('module.open') as sample:
+        if current is not None and current.isVisible():
+            if prepare_visible is not None:
+                prepare_visible(current)
+            _activate_window(current)
+            current.refresh()
+            if sample is not None:
+                sample.area = WINDOW_AREAS.get(type(current).__name__, 'other')
+            return current
 
-    window = current if reuse_hidden and current is not None else factory()
-    if isinstance(window, QWidget):
-        _prepare_module_window(window)
-    if prepare_before_show is not None:
-        prepare_before_show(window)
-    ensure_on_screen = getattr(window, "ensure_on_screen", None)
-    if callable(ensure_on_screen):
-        ensure_on_screen()
-    window.show()
-    if refresh_after_show:
-        window.refresh()
-    return window
+        window = current if reuse_hidden and current is not None else factory()
+        if isinstance(window, QWidget):
+            _prepare_module_window(window)
+        if prepare_before_show is not None:
+            prepare_before_show(window)
+        ensure_on_screen = getattr(window, "ensure_on_screen", None)
+        if callable(ensure_on_screen):
+            ensure_on_screen()
+        window.show()
+        if refresh_after_show:
+            window.refresh()
+        if sample is not None:
+            sample.area = WINDOW_AREAS.get(type(window).__name__, 'other')
+        return window
 
 
 @dataclass(frozen=True)

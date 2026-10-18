@@ -107,6 +107,8 @@ def put(root, book):
     book = validate_book(book)
     state = load(root)
     index = next((i for i, b in enumerate(state['books']) if b['id'] == book['id']), None)
+    from app.performance import note_save
+    note_save('books', index is not None and state['books'][index] == book)
     if index is None:
         state['books'].append(book)
     else:

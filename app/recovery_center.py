@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
@@ -75,6 +77,11 @@ class RecoveryCenter(QWidget):
         body.addWidget(self.tabs, 1)
         self._build_help_tab()
         self._build_events_tab()
+        from app.performance_panel import PerformancePanel
+        log_path = getattr(self.logger, 'jsonl_path', None)
+        root = Path(log_path).parent.parent if log_path is not None else getattr(self.parent(), 'project_root', Path.cwd())
+        self.performance_panel = PerformancePanel(root, self)
+        self.tabs.addTab(self.performance_panel, self.texts.get('modules.performance_tab', 'Leistung && Verbesserung'))
 
     def _build_help_tab(self) -> None:
         tab = QWidget()
@@ -241,6 +248,7 @@ class RecoveryCenter(QWidget):
         dialog.exec()
 
     def refresh(self) -> None:
+        self.performance_panel.refresh()
         self._all_events = self.logger.recent(100)
         current = self.area_filter.currentText() or "ALLE"
         self.area_filter.blockSignals(True)

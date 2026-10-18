@@ -42,3 +42,5 @@ Die Produktversion bleibt 0.17.4, bis eine echte Veröffentlichung erfolgt.
 - [Messplan Diagnose](DIAGNOSE_MESSPLAN.md) – Vorschlag zu Ladezeiten, Schreibzugriffen, Cache, Ressourcen und kontrollierter Weitergabe; noch keine zusätzliche Erhebung.
 
 - [Entwicklungsreview 18.10.2026](ENTWICKLUNGSREVIEW_2026_10_18.md) – belegte Qualität, Umwege, Codesparsamkeit und begrenzter Lernkreislauf.
+
+- [Leistungsdiagnose 0.18.1](LEISTUNGSDIAGNOSE.md) – implementierter erster Ausbauschritt, Opt-in, Export und Messgrenzen.
