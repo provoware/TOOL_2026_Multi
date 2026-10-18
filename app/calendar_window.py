@@ -8,7 +8,7 @@ from typing import Callable
 
 from PySide6.QtCore import QDate, QDateTime, Qt
 from PySide6.QtWidgets import (
-    QAbstractItemView, QCalendarWidget, QComboBox, QDateTimeEdit, QFormLayout,
+    QAbstractButton, QAbstractItemView, QCalendarWidget, QComboBox, QDateTimeEdit, QFormLayout,
     QFrame, QHBoxLayout, QLabel, QLineEdit, QMessageBox, QPushButton, QSplitter,
     QTabWidget, QTableWidget, QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget,
 )
@@ -90,7 +90,7 @@ class CalendarWindow(QWidget):
             ("qt_calendar_prevmonth", "Vorherigen Monat anzeigen"),
             ("qt_calendar_nextmonth", "Nächsten Monat anzeigen"),
         ):
-            button = self.calendar.findChild(QPushButton, object_name)
+            button = self.calendar.findChild(QAbstractButton, object_name)
             if button is not None:
                 button.setAccessibleName(label)
                 button.setAccessibleDescription(label)
