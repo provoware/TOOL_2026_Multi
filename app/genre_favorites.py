@@ -73,6 +73,7 @@ def monthly_statistics(root: Path, cutoff: date) -> dict:
         if stamp.year == cutoff.year and stamp.month == cutoff.month and stamp <= cutoff:
             entries.append(entry)
     profiles = Counter(e["profile"] for e in entries)
+    favorite_draws = sum(bool(e.get("favorites_only")) for e in entries)
     categories = Counter()
     values = Counter()
     favorites_used = 0
@@ -88,6 +89,7 @@ def monthly_statistics(root: Path, cutoff: date) -> dict:
             favorites = {v.casefold() for v in all_favorites.get(entry["profile"], {}).get(cat, [])}
             favorites_used += sum(v.casefold() in favorites for v in names)
     return {"cutoff": cutoff.isoformat(), "total": len(entries),
+            "favorite_draws": favorite_draws,
             "profiles": dict(sorted(profiles.items())),
             "categories": {cat: categories[cat] for cat in CATEGORIES},
             "favorites_used": favorites_used, "most_common": values.most_common(15)}
@@ -97,7 +99,9 @@ def monthly_report_text(root: Path, cutoff: date) -> str:
     stats = monthly_statistics(root, cutoff)
     lines = [f"PROVOWARE · Genres-Zufall · Monatsauswertung",
              f"Monat: {cutoff:%Y-%m} · Stichtag: {cutoff.isoformat()} (einschließlich)",
-             f"Generierungen: {stats['total']}", f"Ausgewählte Favoriten (aktueller Favoritenstand): {stats['favorites_used']}",
+             f"Generierungen: {stats['total']}",
+             f"Davon reine Favoriten-Ziehungen: {stats['favorite_draws']}",
+             f"Aktuell als Favoriten markierte gezogene Begriffe: {stats['favorites_used']}",
              "", "Profile:"]
     lines += [f"  {name}: {count}" for name, count in stats["profiles"].items()] or ["  Keine"]
     lines += ["", "Kategorien:"]
