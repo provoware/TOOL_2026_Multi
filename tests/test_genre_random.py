@@ -44,6 +44,16 @@ class GenreRandomTests(unittest.TestCase):
             self.assertIn("Neu", genres)
             self.assertEqual(sum(x.casefold() == "schranz" for x in genres), 1)
 
+    def test_archive_export_cannot_overwrite_live_profile_store(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            add_values(root, "HardTechno", "Genres", "Neuer Begriff")
+            target = store_path(root)
+            original = target.read_bytes()
+            with self.assertRaisesRegex(ValueError, "nicht überschreiben"):
+                archive_export(root, target)
+            self.assertEqual(target.read_bytes(), original)
+
     def test_corrupt_import_leaves_previous_bytes_intact(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
