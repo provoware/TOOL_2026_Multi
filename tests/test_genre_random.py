@@ -7,12 +7,36 @@ from pathlib import Path
 
 from app.genre_random import (
     archive_export, archive_import, generate, history_load, preset_save,
-    presets_load, rename_value,
+    presets_load, rename_value, suno_style_text,
 )
 from app.profile_store import CATEGORIES, add_values, load_profiles, save_profiles, store_path
 
 
 class GenreRandomTests(unittest.TestCase):
+    def test_suno_output_is_plain_comma_separated_style_text(self):
+        selected = {category: [] for category in CATEGORIES}
+        selected["Genres"] = ["Hard Techno", "Industrial Techno"]
+        selected["Stimmungen"] = ["düster"]
+        selected["Stil"] = ["treibend"]
+        selected["Stimme"] = ["verzerrte Stimme"]
+        selected["Besonderheiten"] = ["harte Kicks"]
+        self.assertEqual(
+            suno_style_text(selected),
+            "Hard Techno, Industrial Techno, düster, treibend, verzerrte Stimme, harte Kicks",
+        )
+
+    def test_suno_lyrics_tags_are_not_included_in_styles(self):
+        selected = {category: [] for category in CATEGORIES}
+        selected["Genres"] = ["[Chorus]"]
+        with self.assertRaisesRegex(ValueError, "Liedtextfeld"):
+            suno_style_text(selected)
+
+    def test_overlong_suno_style_is_rejected_instead_of_truncated(self):
+        selected = {category: [] for category in CATEGORIES}
+        selected["Besonderheiten"] = ["x" * 1001]
+        with self.assertRaisesRegex(ValueError, "1000 Zeichen"):
+            suno_style_text(selected)
+
     def test_generate_is_unique_in_each_category_and_keeps_history(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

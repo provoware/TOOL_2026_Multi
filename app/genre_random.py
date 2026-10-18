@@ -81,6 +81,27 @@ def history_load(root: Path) -> list[dict]:
     return _history_validate(json.loads(path.read_text(encoding="utf-8"))) if path.exists() else []
 
 
+def suno_style_text(drawn: dict[str, list[str]]) -> str:
+    """Reiner, kommagetrennter Text für Sunos Feld »Styles / Style of Music«.
+
+    Keine Markdown-Zeilen, Kategorienüberschriften oder Songstruktur-Tags.
+    Solche Tags wie [Verse] gehören in Sunos *Lyrics*-Feld.
+    """
+    ordered = [value.strip() for category in CATEGORIES
+               for value in drawn[category] if value.strip()]
+    if any(value.startswith("[") and value.endswith("]") for value in ordered):
+        raise ValueError(
+            "Eckige Songstruktur-Tags gehören in Sunos Liedtextfeld, nicht in das Stilfeld."
+        )
+    output = ", ".join(ordered)
+    if len(output) > 1000:
+        raise ValueError(
+            "Der Suno-Stiltext ist länger als 1000 Zeichen. "
+            "Bitte kleinere Mengen wählen oder Archivbegriffe kürzen."
+        )
+    return output
+
+
 def generate(root: Path, profile: str, amounts: dict[str, int],
              *, rng: random.Random | None = None) -> dict:
     """Prüft *alle* Mengen vor einer einzigen dauerhaft protokollierten Ziehung."""
@@ -105,7 +126,7 @@ def generate(root: Path, profile: str, amounts: dict[str, int],
             )
         drawn[cat] = generator.sample(candidates, checked[cat])
         already_selected.update(item.casefold() for item in drawn[cat])
-    output = ", ".join(item for cat in CATEGORIES for item in drawn[cat])
+    output = suno_style_text(drawn)
     entry = {
         "timestamp": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
         "profile": profile, "amounts": checked, "categories": drawn, "output": output,
