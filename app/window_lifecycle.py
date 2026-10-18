@@ -45,6 +45,12 @@ def _show_module_window(window: QWidget) -> None:
     window.show()
 
 
+def _activate_window(window: _ManagedWindow) -> None:
+    """Fenster in derselben Reihenfolge wie bisher nach vorn holen."""
+    window.raise_()
+    window.activateWindow()
+
+
 def _open_managed_window(
     current: ManagedWindowT | None,
     factory: Callable[[], ManagedWindowT],
@@ -63,8 +69,7 @@ def _open_managed_window(
     if current is not None and current.isVisible():
         if prepare_visible is not None:
             prepare_visible(current)
-        current.raise_()
-        current.activateWindow()
+        _activate_window(current)
         current.refresh()
         return current
 
