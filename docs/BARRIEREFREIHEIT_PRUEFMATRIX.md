@@ -21,3 +21,16 @@ Für neue oder geänderte Bedienelemente gelten verständlicher sichtbarer Text 
 ## Vorhandene Datensicherheitsprüfungen
 
 Die vorhandenen Tests für Textwechsel, Schließen mit ungespeicherten Daten, Song-Speicherung und Projekt-Wiederherstellung bleiben verbindlich. Die neue Prüfung kontrolliert zusätzlich das Abbrechen beim Anlegen eines neuen Dokuments.
+
+
+## Ausbaustufe: reale Fenster und Theme-Paare
+
+`tests/test_accessibility_eight_windows_gui.py` instanziiert die acht tatsächlichen Modulfenster mit vorübergehenden lokalen Projektordnern. Für bedienbare Schaltflächen prüft der Test, dass sie einen technischen oder sichtbaren Namen haben, Tastaturfokus zulassen und die Qt-Fokusfolge einen geschlossenen Zyklus bildet. Eine zyklische Fokusfolge allein beweist **keine sinnvolle Reihenfolge für Menschen**; diese muss in einem späteren Praxistest beurteilt werden.
+
+Kontrast wird für alle vier Themes bei sämtlichen fünf freigegebenen Zoomstufen für ausgewählte, tatsächlich konfigurierte Farbpaarungen berechnet, zum Beispiel normale Schrift auf Hintergrund, Fläche und Eingabefeld sowie Platzhaltertext auf Eingabefeld. Das ist keine pixelgenaue Untersuchung aller Dialoge oder Zustände.
+
+### Datensicherheitsregeln
+
+Bestehende Tests für **Speichern, Abbrechen, Dokumentwechsel, Schließen und Wiederherstellung** dürfen nicht entfernt oder abgeschwächt werden. Neue Oberflächentests verwenden temporäre Projektverzeichnisse und dürfen keine echten Benutzerdateien verändern. Datenverluste werden als harte Fehler behandelt.
+
+**Bekannter Befund:** Qt-interne Kalender-Navigationsknöpfe (z. B. `qt_calendar_prevmonth`) haben im automatisierten Test keine auslesbare Schaltflächenbeschriftung. Die neuen Tests prüfen deren Tastaturfokus weiter, schließen sie aber von der *anwendungseigenen* Beschriftungspflicht aus. Ihre tatsächliche Bildschirmleseransage ist weiterhin **offen**, nicht bestanden.
