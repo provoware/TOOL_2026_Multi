@@ -379,9 +379,11 @@ class Dashboard(QWidget):
             row.addWidget(combo, 1)
             d.addLayout(row)
             self.db_boxes[label] = combo
-        planned_db = QLabel("GitHub-Projekte: verfügbar · Prompts: In Planung")
-        planned_db.setObjectName("cardHint")
-        d.addWidget(planned_db)
+        project_open = QPushButton("◈  GitHub-Projekte öffnen")
+        project_open.setAccessibleName("GitHub-Projekte öffnen")
+        project_open.setToolTip("Lokale Übersicht der offenen und fertigen Projekte öffnen")
+        project_open.clicked.connect(self.open_github_projects)
+        d.addWidget(project_open)
         d.addStretch(1)
         grid.addWidget(db, 0, 1)
 
