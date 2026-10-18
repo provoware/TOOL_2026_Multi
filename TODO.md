@@ -482,8 +482,19 @@ Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md
 - [x] Bestehende Hilfe mit Übersicht, Exportauswahl, TXT/JSON-Vorschau und Löschfunktion ergänzt.
 - [x] Rekursionsschutz, Aufbewahrung, Größenlimit und Fehlerisolierung ergänzt.
 - [x] Vollständige lokale Prüfung: 200 Logiktests, 148 GUI-Tests, 67 Release-Dateien und Headless-Start; UI-Shadow 8 Fälle / 24 Fenster, 0 Fehler / 0 Warnungen.
-- [ ] GitHub-Prüfung dieser Revision abschließen; verbindlicher Nachweis am Pull Request.
+- [x] GitHub-Prüfung und genehmigter Merge von PR #85 abgeschlossen; main 526a423, Lauf #1011: 200 Logiktests, 148 GUI-Tests, Wayland/Restore/ZIP erfolgreich. Größere Release-UI meldete dabei 24 Fehler / 8 Warnungen; Folgeauftrag #86.
 - [ ] Zusatzaufwand auf realem Zielrechner mit vergleichbaren Arbeitsmengen messen; 1%-Ziel ist noch nicht belegt.
 - [ ] Kalt-/Warmstart, Datenmengengruppen sowie echte app-eigene Cachekennzahlen in einer späteren abgegrenzten Iteration ergänzen.
 
 Externe Abhängigkeiten bleiben unverändert: echte Kubuntu-/Plasma-Abnahme und Wirksamkeitsbewertung nach mehreren vergleichbaren Entwicklungsiterationen. Sie werden nicht durch einzelne Entwicklungsprüfungen als erledigt markiert.
+
+## Iteration 42 – Release-UI-Befunde aus Issue #86
+
+- [x] Ursache der 24 Überlappungen nachgewiesen: Vorgabenkarte benötigte 300 px, erhielt 234 px; leere Planungszeile reservierte weiterhin Höhe.
+- [x] Acht GitHub-Warnungen anhand des originalen Artefakts geklärt: Textbaustein-Menü bei 150 % zu breit.
+- [x] Kleine Korrektur mit vorhandenem Kompaktmodus und kurzem Textbutton-Label; keine gelockerten Prüfgrenzen.
+- [x] Lokale Release-Matrix mit 60 Fällen / 180 Fenstern: 0 Fehler / 0 Warnungen.
+- [ ] Vollprüfung und GitHub-Prüfung am finalen Head bestätigen; Nachweis wird am Pull Request ergänzt.
+- [ ] Reale Kubuntu-/Plasma-Bedienung bleibt als externer Zielrechner-Schritt offen.
+
+Nächste Queue: vergleichbaren Overhead-Benchmark der freiwilligen Leistungsdiagnose erstellen; weiterführende Messgrößen bleiben nachrangig. Dieser Layoutauftrag ersetzt keine reale Bildschirmabnahme.

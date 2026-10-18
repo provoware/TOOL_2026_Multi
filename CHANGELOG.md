@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## 0.18.2 · 18.10.2026 – Dashboard-Layout aus Issue #86
+
+- Bestehenden Höhen-Grenzwert der kompakten Dashboardansicht auch bei 100 % anwenden.
+- Ausgeblendete Planungskarten reservieren keinen Platz mehr; Profil- und Vorgabenfelder überlappen sich nicht.
+- Seitenleiste verwendet bei 150 % die kurze Beschriftung „Textbuttons“; zugänglicher Name und Aktion bleiben erhalten.
+- Zwei GUI-Rückfalltests; vollständige lokale Release-Matrix: 60 Fälle / 180 Fenster, 0 Fehler / 0 Warnungen.
+- Leistungsdiagnose aus PR #85 ist nach ausdrücklicher Freigabe in main enthalten.
+
 ## 0.18.1 · 18.10.2026 – lokale Leistungsdiagnose
 
 - Zusätzliche Leistungsmessung ausdrücklich einschaltbar; standardmäßig aus, ohne automatische Übertragung.

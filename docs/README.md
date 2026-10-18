@@ -1,6 +1,6 @@
 # Technische Dokumentation – Wegweiser
 
-**Stand:** 17. Oktober 2026
+**Stand:** 18. Oktober 2026
 
 Du musst diese Dateien **nicht** lesen, um Provoware zu benutzen. Für den Alltag helfen zunächst die [einfache Anleitung](../ANLEITUNG_LAIEN.md) und die [Projektübersicht](../README.md).
 
@@ -44,3 +44,5 @@ Die Produktversion bleibt 0.17.4, bis eine echte Veröffentlichung erfolgt.
 - [Entwicklungsreview 18.10.2026](ENTWICKLUNGSREVIEW_2026_10_18.md) – belegte Qualität, Umwege, Codesparsamkeit und begrenzter Lernkreislauf.
 
 - [Leistungsdiagnose 0.18.1](LEISTUNGSDIAGNOSE.md) – implementierter erster Ausbauschritt, Opt-in, Export und Messgrenzen.
+
+- [Iteration 42: Dashboard-Layout und vollständige Matrix](ITERATION42_LAYOUT.md)

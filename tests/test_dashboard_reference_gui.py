@@ -364,6 +364,26 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         profile_label = next(label for label in self.dashboard.findChildren(QLabel) if label.text() == "Profil:")
         self.assertTrue(profile_label.isVisible())
 
+    def test_profile_controls_fit_release_viewport_and_restore_planning_cards(self):
+        # Der Release-Fall 1600×900 reserviert 32/72 Pixel für den Fensterrand.
+        for width, height in ((1568, 828), (1888, 1008), (1568, 828)):
+            self.dashboard.resize(width, height)
+            self.dashboard.set_zoom(100)
+            for _ in range(8):
+                self.app.processEvents()
+            controls = [self.dashboard.db_profile_combo,
+                        *self.dashboard.db_boxes.values(),
+                        self.dashboard.github_project_open_button]
+            for first, second in zip(controls, controls[1:]):
+                self.assertLess(first.geometry().bottom(), second.geometry().top())
+            card = controls[0].parentWidget()
+            self.assertGreaterEqual(card.height(), card.minimumSizeHint().height())
+            planning = next(frame for frame in self.dashboard.findChildren(QFrame)
+                            if any(label.text().startswith("▤  Dateien & Werkzeuge")
+                                   for label in frame.findChildren(QLabel))
+                            and frame.objectName() == "card")
+            self.assertEqual(planning.isVisible(), height == 1008)
+
     def test_high_zoom_keeps_font_growth_but_caps_geometry_growth(self):
         self.assertEqual(scaled(10, 200), 20)
         self.assertEqual(geometry_scaled(54, 100), 54)
