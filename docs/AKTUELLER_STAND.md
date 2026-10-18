@@ -15,6 +15,8 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 | Buchwerkstatt | Kapitel, Unterkapitel und Vorlagen für Hörspiel, Satire, Sachtext und Tutorial. |
 | Allgemeiner Texteditor | Texte und Abschlussnotizen schreiben und speichern. |
 | Charakterfibel | Figuren und ihre Eigenschaften verwalten. |
+| Genre-Zufall | Stiltexte aus vorhandenen Profilen erzeugen; Favoriten und Monatsbericht nutzen. |
+| GitHub-Projekte | Offene und fertige Projekte lokal mit Notizen verwalten. |
 | Profile | Genres, Stimmungen, Stile, Stimmen und weitere Vorgaben sammeln. |
 | Todo-Liste | Aufgaben anlegen, erledigen und archivieren. |
 | Kalender | Termine verwalten; Erinnerungen erscheinen, solange das Hauptprogramm läuft. |
@@ -23,9 +25,13 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 
 ## Was ist noch nicht fertig?
 
-Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: automatischer Genre-Zufall, Reimfinder, Dateisuche, umfassende Textsuche, Duplikatsuche, GitHub-Verwaltung sowie verschiedene zusätzliche Schreibbereiche. Ein geplanter Knopf ist kein fertiges Werkzeug.
+Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: Reimfinder, Dateisuche, umfassende Textsuche, Duplikatsuche, automatische GitHub-Verwaltung sowie verschiedene zusätzliche Schreibbereiche. Genre-Zufall und die lokale GitHub-Projektliste sind bereits nutzbar. Hörspiel-Buchvorlagen erzeugen Texte, keine fertige Audioproduktion. Ein geplanter Knopf ist kein fertiges Werkzeug.
 
 ## Was wurde zuletzt geprüft?
+
+Der Code-/Layoutstand `cfc7353` von [PR #84](https://github.com/provoware/TOOL_2026_Multi/pull/84) bestand [Lauf #1007](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39127077853): 188 Logiktests, 144 GUI-Tests, nativer Wayland-Start, Wiederherstellung und ZIP-Erzeugung. Die UI-Analyse erreichte acht Matrixfälle / 24 Fensterinstanzen mit null Fehlern und null Warnungen. Die nachfolgende Informationsrunde hat ihren eigenen Prüfnachweis am aktuellen PR-Head. **0.18.0 ist ein Prüfkandidat im offenen PR und noch nicht auf main eingepflegt.**
+
+Die folgenden Nachweise betreffen frühere Stände:
 
 - Die drei Schutzkorrekturen – Warnung vor ungespeichertem Textwechsel, Schutz vor Dateinamen-Kollisionen und Korrektur überlappender Elemente – wurden über [PR #57](https://github.com/provoware/TOOL_2026_Multi/pull/57) integriert.
 - Die anschließenden Navigationsverbesserungen wurden über PR #58 bis #61 integriert.
@@ -50,8 +56,10 @@ Die Ordner `daten/`, `backups/`, `logs/` und `berichte/` dürfen nicht ohne Prü
 
 ## Was sollte als Nächstes geschehen?
 
-1. Die Dokumentation durch die vollständige GitHub-Prüfung bestätigen lassen.
+1. Den aktuellen PR-Head einschließlich Informationsrunde durch die vollständige GitHub-Prüfung bestätigen lassen.
 2. Echte Bedienprüfung auf Kubuntu 26.04 mit stark vergrößerter Schrift durchführen.
 3. Eine unabhängige, erprobte Datensicherung mit sicherer Wiederherstellung entwickeln.
 
 Version 0.18.0 wird als eigener Änderungsantrag geprüft. Frühere CI-Nachweise oben gelten für den damaligen Stand. Die neue Prüfung muss zum neuen Commit gehören.
+
+Die Bewertung der Entwicklung mit gemessenen Laufzeiten und Verbesserungsregeln steht im [Entwicklungsreview](ENTWICKLUNGSREVIEW_2026_10_18.md). Das Konzept zusätzlicher Leistungsdaten steht im [Messplan](DIAGNOSE_MESSPLAN.md); es ist noch keine aktive Datenerhebung.

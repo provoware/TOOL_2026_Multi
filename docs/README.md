@@ -40,3 +40,5 @@ Die Produktversion bleibt 0.17.4, bis eine echte Veröffentlichung erfolgt.
 
 - [Textbuttons und Buchwerkstatt](TEXTBUTTONS_UND_BUCHWERKSTATT.md) – Bedienung, Grenzen und Prüfumfang.
 - [Messplan Diagnose](DIAGNOSE_MESSPLAN.md) – Vorschlag zu Ladezeiten, Schreibzugriffen, Cache, Ressourcen und kontrollierter Weitergabe; noch keine zusätzliche Erhebung.
+
+- [Entwicklungsreview 18.10.2026](ENTWICKLUNGSREVIEW_2026_10_18.md) – belegte Qualität, Umwege, Codesparsamkeit und begrenzter Lernkreislauf.

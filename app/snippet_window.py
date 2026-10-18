@@ -227,11 +227,7 @@ class SnippetWindow(ModuleWindow):
     def new_snippet(self):
         if not self.confirm_leave():
             return
-        self.current_id = self.variant_of = None
-        for field in (self.category, self.title, self.content):
-            field.clear()
-        self.edit_heading.setText(t('new_snippet', 'Neuen Button anlegen'))
-        self.remember()
+        self.discard_draft()
         self.tabs.setCurrentIndex(1)
         self.title.setFocus()
 

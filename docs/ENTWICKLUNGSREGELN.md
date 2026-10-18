@@ -88,3 +88,17 @@ Ohne Netzwerkverbindung können bereits gespeicherte Ergebnisse ausgewertet werd
 `python3 scripts/entwicklungsmessung.py --datei laeufe.json --jobs-datei jobs.json --vergleich-ab 2026-10-17T22:06:39Z`
 
 Dabei wird die Dauer der Systempakete, Python-Pakete und der Grundprüfung getrennt angegeben. Ein endgültiger Zehn-Läufe-Vergleich ist erst zulässig, wenn zehn passende neue `main`-Läufe vorliegen. Fehlende Werte bleiben leer; installierte Bytes und Entwicklerstunden werden nicht geschätzt.
+
+
+## Verbindliche Verbesserungen aus dem Entwicklungsreview vom 18.10.2026
+
+1. **Vor Mutation:** Ausgangs-SHA, vorhandene Änderungen, erlaubten Scope, Lieferweg (lokal / PR / Freigabe) und konkrete Gates festhalten. Unabhängige neue Arbeit von Beginn an im isolierten Worktree ausführen.
+2. **Vor Übertragung:** Alle zusammengehörenden Änderungen einschließlich Informationsdateien fertigstellen. Funktionierenden Connector-/Netzwerkweg verwenden; Transportgrenzen und Unicode beachten. Remote-Git-Baum mit dem geprüften lokalen Baum vergleichen, bevor ein Branch-Ref geändert wird.
+3. **Vor GUI-Push:** Den bestehenden UI-Shadow bei konkretem Layoutbezug lokal prüfen. Ein erfolgreicher CI-Job mit harten UI-Befunden ist kein Beleg für abgenommene Darstellung. Bestehende Gates bleiben unverändert erhalten.
+4. **Bei Hindernissen:** Pfad, Schreibbarkeit und Fähigkeit einmal prüfen. Derselbe strukturell ungeeignete Weg wird ohne neue Evidenz nicht wiederholt. Einen verfügbaren Lieferweg wählen und verbleibende Grenzen klar nennen.
+5. **Bei Codeprüfung:** Vorhandene Funktionen wiederverwenden, wenn ihr Verhalten tatsächlich identisch ist. Kandidaten des Doppelungsprüfers fachlich prüfen; keine flächige Bereinigung ohne Bezug zum Auftrag.
+6. **Bei Messung:** Ein CI-Ergebnis genau einer Revision zuordnen. Prüfergebnisse nach Abschluss in Artefakten und PR-Metadaten ergänzen; keine Commit-Schleife nur zum Nachtragen des gerade entstandenen Ergebnisses.
+7. **Bei Wiederholungen:** Ursache und Anlass unterscheiden. Neue Codekorrektur, neue Nutzeranforderung oder neuer Befund rechtfertigen eine neue Prüfung; ein unveränderter Stand wird ohne zusätzlichen Abnahmezweck nicht erneut vollständig geprüft.
+8. **Nach Abschluss:** Beobachtung → Ursache → kleine Verbesserung → Regression / Vergleich → gespeicherte Regel → spätere Wirksamkeitskontrolle. Zusätzliche Ideen bleiben im nächsten Plan. Messwerte verbessern bedeutet nicht, Prüfungen oder Schutzmechanismen abzusenken.
+
+Belegte Sitzungsauswertung und Grenzen: [Entwicklungsreview](ENTWICKLUNGSREVIEW_2026_10_18.md). Die Regeln sind unmittelbar anwendbar; eine dauerhafte Effizienzsteigerung gilt erst nach späterer Messung als nachgewiesen.

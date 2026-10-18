@@ -1183,6 +1183,11 @@
       "path": "docs/DIAGNOSE_MESSPLAN.md",
       "release": false,
       "purpose": "Konzept für datensparsame Leistungsdiagnose und kontrollierte Weitergabe"
+    },
+    {
+      "path": "docs/ENTWICKLUNGSREVIEW_2026_10_18.md",
+      "release": false,
+      "purpose": "Belegtes Entwicklungsreview und Maßnahmen zur stetigen Verbesserung"
     }
   ],
   "creative_modules": {
@@ -1192,5 +1197,19 @@
     "data_migration": false,
     "module_archive": "provoware.module v1",
     "spelling": "optional aspell + aspell-de"
+  },
+  "development_review": {
+    "document": "docs/ENTWICKLUNGSREVIEW_2026_10_18.md",
+    "measurement_plan": "docs/DIAGNOSE_MESSPLAN.md",
+    "historical_code_evidence": {
+      "head_sha": "cfc735316c749fd828595eead7d8c2ba60354d5d",
+      "run_id": 39127077853,
+      "logic_tests": 188,
+      "gui_tests": 144,
+      "ui_errors": 0,
+      "ui_warnings": 0
+    },
+    "extra_product_metrics": "planned_not_implemented",
+    "latest_revision_evidence": "PR checks and artifacts; no evidence-only commit loop"
   }
 }
