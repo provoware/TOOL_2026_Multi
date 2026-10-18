@@ -320,14 +320,13 @@ class SongEditor(QWidget):
         self.save(reason="Charakterreferenz eingefügt")
 
     def _refresh_section_list(self) -> None:
-        self.section_list.blockSignals(True)
-        self.section_list.clear()
-        counters: dict[str, int] = {}
-        for section in self.document.sections:
-            counters[section.kind] = counters.get(section.kind, 0) + 1
-            number = f" {counters[section.kind]}" if counters[section.kind] > 1 or section.kind == "Strophe" else ""
-            self.section_list.addItem(f"{section.kind}{number}")
-        self.section_list.blockSignals(False)
+        with QSignalBlocker(self.section_list):
+            self.section_list.clear()
+            counters: dict[str, int] = {}
+            for section in self.document.sections:
+                counters[section.kind] = counters.get(section.kind, 0) + 1
+                number = f" {counters[section.kind]}" if counters[section.kind] > 1 or section.kind == "Strophe" else ""
+                self.section_list.addItem(f"{section.kind}{number}")
 
     def _current_index(self) -> int | None:
         index = self.section_list.currentRow()
@@ -346,12 +345,10 @@ class SongEditor(QWidget):
         index = max(0, min(index, len(self.document.sections) - 1))
         self._loading_section = True
         try:
-            self.section_list.blockSignals(True)
-            self.section_list.setCurrentRow(index)
-            self.section_list.blockSignals(False)
-            self.section_text.blockSignals(True)
-            self.section_text.setPlainText(self.document.sections[index].text)
-            self.section_text.blockSignals(False)
+            with QSignalBlocker(self.section_list):
+                self.section_list.setCurrentRow(index)
+            with QSignalBlocker(self.section_text):
+                self.section_text.setPlainText(self.document.sections[index].text)
             self._active_index = index
         finally:
             self._loading_section = False
