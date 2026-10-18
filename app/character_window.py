@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Callable
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QSignalBlocker, Qt
 from PySide6.QtWidgets import (
     QFormLayout, QFrame, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem,
     QMessageBox, QPushButton, QScrollArea, QSplitter, QTextEdit, QVBoxLayout, QWidget,
@@ -157,18 +157,17 @@ class CharacterWindow(QWidget):
         except Exception as error:
             self.status_label.setText(f"Charaktere konnten nicht gelesen werden · nichts verändert. Grund: {error}")
             return
-        self.character_list.blockSignals(True)
-        self.character_list.clear()
-        selected_row = -1
-        for row, character in enumerate(characters):
-            role = str(character.get("role") or "").strip()
-            text = f"{character['name']}\n{role}" if role else str(character["name"])
-            item = QListWidgetItem(text)
-            item.setData(Qt.UserRole, str(character["id"]))
-            self.character_list.addItem(item)
-            if character["id"] == selected_id:
-                selected_row = row
-        self.character_list.blockSignals(False)
+        with QSignalBlocker(self.character_list):
+            self.character_list.clear()
+            selected_row = -1
+            for row, character in enumerate(characters):
+                role = str(character.get("role") or "").strip()
+                text = f"{character['name']}\n{role}" if role else str(character["name"])
+                item = QListWidgetItem(text)
+                item.setData(Qt.UserRole, str(character["id"]))
+                self.character_list.addItem(item)
+                if character["id"] == selected_id:
+                    selected_row = row
         if selected_row >= 0:
             self.character_list.setCurrentRow(selected_row)
         self.status_label.setText(f"{len(characters)} Charakter(e) angezeigt.")
