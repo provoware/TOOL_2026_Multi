@@ -18,6 +18,13 @@ DEFAULT_PROFILES = {
         "Stimme": ["gesprochen", "verzerrt", "gerufen"],
         "Besonderheiten": ["harte Kicks", "Acid-Lines", "Breakdowns"],
     },
+    "Chill": {
+        "Genres": ["Chillout", "Downtempo", "Ambient", "Lo-Fi"],
+        "Stimmungen": ["entspannt", "sanft", "träumerisch", "gelassen"],
+        "Stil": ["minimalistisch", "atmosphärisch", "warm", "ruhig"],
+        "Stimme": ["weich", "instrumental", "geflüstert"],
+        "Besonderheiten": ["weiche Klangflächen", "sanfte Übergänge", "warme Bässe"],
+    },
     "HipHop/Rap": {
         "Genres": ["Boom Bap", "Trap", "Conscious Rap", "Deutschrap"],
         "Stimmungen": ["selbstbewusst", "nachdenklich", "düster", "energetisch"],
