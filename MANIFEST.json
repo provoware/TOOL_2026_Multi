@@ -3,15 +3,15 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.18.0",
+    "version": "0.18.1",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-10-18"
   },
   "iteration": {
-    "number": 40,
-    "goal": "Textbuttons und Buchwerkstatt mit gemeinsamen Modulstandards",
-    "completed": 8,
-    "open_next": 1
+    "number": 41,
+    "goal": "Datensparsame lokale Leistungsdiagnose in der bestehenden Hilfe",
+    "completed": 6,
+    "open_next": 3
   },
   "runtime": {
     "entrypoint": "app/main.py",
@@ -1188,6 +1188,36 @@
       "path": "docs/ENTWICKLUNGSREVIEW_2026_10_18.md",
       "release": false,
       "purpose": "Belegtes Entwicklungsreview und Maßnahmen zur stetigen Verbesserung"
+    },
+    {
+      "path": "app/performance.py",
+      "release": true,
+      "purpose": "Opt-in Leistungsaggregate ohne Inhalte und Pfade"
+    },
+    {
+      "path": "app/performance_panel.py",
+      "release": true,
+      "purpose": "Leistungsübersicht mit Ein-/Ausschalten und Exportvorschau"
+    },
+    {
+      "path": "app/performance_report.py",
+      "release": true,
+      "purpose": "Lesbare Tagesauswertung mit begrenzten Verteilungsklassen"
+    },
+    {
+      "path": "tests/test_performance.py",
+      "release": false,
+      "purpose": "Abnahme und Grenzen der lokalen Leistungsdiagnose"
+    },
+    {
+      "path": "tests/test_performance_gui.py",
+      "release": false,
+      "purpose": "Abnahme und Grenzen der lokalen Leistungsdiagnose"
+    },
+    {
+      "path": "docs/LEISTUNGSDIAGNOSE.md",
+      "release": false,
+      "purpose": "Abnahme und Grenzen der lokalen Leistungsdiagnose"
     }
   ],
   "creative_modules": {
@@ -1211,5 +1241,29 @@
     },
     "extra_product_metrics": "planned_not_implemented",
     "latest_revision_evidence": "PR checks and artifacts; no evidence-only commit loop"
+  },
+  "performance": {
+    "default_enabled": false,
+    "storage": "logs/leistung/statistik.json",
+    "settings": "daten/ui/leistung.json",
+    "max_retention_days": 30,
+    "max_file_bytes": 2097152,
+    "flush_interval_seconds": 60,
+    "automatic_transmission": false,
+    "captures_contents": false,
+    "measured": [
+      "app.start",
+      "module.open",
+      "archive.load",
+      "file.write",
+      "save.attempt"
+    ],
+    "not_yet_measured": [
+      "physical_disk_bytes",
+      "cache_size",
+      "cpu",
+      "ram",
+      "automatic_cold_warm_classification"
+    ]
   }
 }

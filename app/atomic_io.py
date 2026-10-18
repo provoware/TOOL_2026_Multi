@@ -46,7 +46,7 @@ def atomic_publish_file(temporary: Path, target: Path) -> Path:
     return target
 
 
-def atomic_write_text(target: Path, content: str, *, encoding: str = "utf-8") -> Path:
+def _write_text(target: Path, content: str, *, encoding: str = "utf-8") -> Path:
     """Schreibt erst vollständig in eine eindeutige Tempdatei und ersetzt dann atomar."""
     target = Path(target)
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -63,6 +63,13 @@ def atomic_write_text(target: Path, content: str, *, encoding: str = "utf-8") ->
         if temporary.exists():
             temporary.unlink(missing_ok=True)
     return target
+
+
+def atomic_write_text(target: Path, content: str, *, encoding: str = "utf-8") -> Path:
+    """Misst optional genau einen logischen Schreibversuch, ohne Inhalte abzulegen."""
+    from app.performance import observe
+    with observe('file.write', target=target, content=content, encoding=encoding):
+        return _write_text(target, content, encoding=encoding)
 
 
 def atomic_write_json(target: Path, payload: Any) -> Path:

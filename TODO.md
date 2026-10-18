@@ -1,6 +1,6 @@
 # TODO – TOOL_2026_Multi
 
-Stand: 2026-10-17
+Stand: 2026-10-18
 
 ## Aktuelle Übersicht – zuerst lesen
 
@@ -441,8 +441,7 @@ Noch nicht freigegeben und deshalb in der Oberfläche sichtbar als `In Planung` 
 - Hörspiele
 - Blogartikel
 - Prompts
-- GitHub-Repositories als eigenes Dashboardmodul
-- Genre-Zufall
+- Automatische GitHub-Verwaltung über die vorhandene lokale Projektliste hinaus
 - Reimfinder
 - Dateisuche
 - Textinhalt-Suche
@@ -458,7 +457,7 @@ Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md
 - [x] Gemeinsame Modularchive, atomare Speicherung, Hilfe und Entwurfsschutz.
 - [x] 25 neue isolierte Daten-/GUI-Tests.
 - [ ] Sichtbare Kubuntu-/Plasma-Wayland-Abnahme einschließlich Zwischenablage und deutschem Wörterbuch.
-- [ ] Nächste Planung: datensparsame Qualitätskennzahlen in bestehende Diagnose integrieren; zunächst Konzept, keine automatische Übertragung.
+- [x] Erste datensparsame Qualitätskennzahlen in bestehende Diagnose integriert; keine automatische Übertragung.
 
 
 ## Fortführung: Informationsstand und Entwicklungsreview · 18.10.2026
@@ -468,8 +467,23 @@ Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md
 - [x] Qualität, Effizienz, Fehlerursachen und unnötige Aktionen anhand der vorhandenen Nachweise bewertet.
 - [x] Eine belegte Formular-Doppelung durch vorhandene Resetfunktion ersetzt (vier Codezeilen weniger; kein neues Framework).
 - [x] Entwicklungsregeln und Info-Dateien-Checkliste um konkrete Lehren ergänzt.
-- [ ] Vollständigen Nachweis am neuen konsolidierten PR-Head bestätigen; Ergebnis in PR-Metadaten statt Evidenz-Commit pflegen.
+- [x] Konsolidierter PR-Head 3954320: CI #1008 vollständig erfolgreich; Nachweis in PR-Metadaten gepflegt.
 - [ ] Echte Kubuntu-/Plasma-Abnahme durchführen.
-- [ ] PR nach Abschlussprüfung mit main zusammenführen; bis dahin bleibt der ursprüngliche main-Stand unverändert.
-- [ ] Messkonzept separat umsetzen: zunächst Ladezeiten, Schreibzugriffe und unveränderte Autosaves, lokaler Überblick und Exportvorschau.
+- [x] PR #84 nach ausdrücklicher Nutzerfreigabe mit main zusammengeführt (45c2496); Hauptzweig-Prüfung erfolgreich.
+- [x] Erste Messkonzept-Ausbaustufe umgesetzt: freiwillige lokale Lade-/Schreibmessung, unveränderte gültige Speicherversuche, Tagesübersicht und Exportvorschau.
 - [ ] Wirkung der neuen Entwicklungsregeln nach vergleichbaren Iterationen prüfen; keine Effizienzverbesserung ohne Messung behaupten.
+
+
+## Iteration 41 – lokale Leistungsdiagnose
+
+- [x] Opt-in, feste Messnamen und inhaltsfreie begrenzte Tagesaggregate.
+- [x] Dashboard-/Modulladezeit und Text-/JSON-Schreibzugriffe instrumentiert.
+- [x] Unveränderte gültige Speicherversuche in drei Schreibmodulen ohne zusätzliche Datei-Lesezugriffe zählen.
+- [x] Bestehende Hilfe mit Übersicht, Exportauswahl, TXT/JSON-Vorschau und Löschfunktion ergänzt.
+- [x] Rekursionsschutz, Aufbewahrung, Größenlimit und Fehlerisolierung ergänzt.
+- [x] Vollständige lokale Prüfung: 200 Logiktests, 148 GUI-Tests, 67 Release-Dateien und Headless-Start; UI-Shadow 8 Fälle / 24 Fenster, 0 Fehler / 0 Warnungen.
+- [ ] GitHub-Prüfung dieser Revision abschließen; verbindlicher Nachweis am Pull Request.
+- [ ] Zusatzaufwand auf realem Zielrechner mit vergleichbaren Arbeitsmengen messen; 1%-Ziel ist noch nicht belegt.
+- [ ] Kalt-/Warmstart, Datenmengengruppen sowie echte app-eigene Cachekennzahlen in einer späteren abgegrenzten Iteration ergänzen.
+
+Externe Abhängigkeiten bleiben unverändert: echte Kubuntu-/Plasma-Abnahme und Wirksamkeitsbewertung nach mehreren vergleichbaren Entwicklungsiterationen. Sie werden nicht durch einzelne Entwicklungsprüfungen als erledigt markiert.

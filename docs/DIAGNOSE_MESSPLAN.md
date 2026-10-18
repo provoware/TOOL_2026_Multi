@@ -1,6 +1,6 @@
 # Messplan: Diagnose und Verbesserung
 
-Stand: 18.10.2026 · Vorschlag für die nächste Iteration, noch keine zusätzliche Datenerhebung implementiert.
+Stand: 18.10.2026 · Gesamtplan. Die erste lokale Ausbaustufe ist in 0.18.1 umgesetzt: [Leistungsdiagnose](LEISTUNGSDIAGNOSE.md). Cache, CPU/RAM und weitere Unterteilungen bleiben geplant.
 
 ## Ziel und Einbindung
 

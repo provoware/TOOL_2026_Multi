@@ -547,3 +547,15 @@ Mit **Workflow ergänzen** kommen weitere Arbeitsbereiche hinzu. Ein bis drei Sp
 - Die bestehenden Farbthemes und Zoomstufen gelten auch hier. Bei wenig Platz helfen Rollbalken; der Buchbereich wechselt bei hoher Vergrößerung zur Anordnung untereinander.
 
 Die Daten liegen unter `daten/textbausteine/bestand.json` und `daten/buecher/bestand.json`. Sichere weiterhin den gesamten Ordner `daten/` auf einem getrennten Datenträger.
+
+
+## Lokale Leistungsdiagnose – freiwillig und ohne Inhaltsaufzeichnung
+
+1. **Hilfe & Fehlerhilfe → Leistung & Verbesserung** öffnen.
+2. Bei Bedarf **Lokale Leistungsmessung einschalten** auswählen. Zunächst ist sie aus.
+3. Normal arbeiten. Die Messung sammelt feste technische Aktionen, Laufzeiten, Zähler und Bytezahlen – keine Texte, Titel, Zwischenablageinhalte oder Pfade.
+4. Aufbewahrung (1–30 Tage), Berichtszeitraum und gewünschte Messgruppen wählen. **Aktualisieren** zeigt neue Werte; die **JSON-Vorschau** zeigt die gewählte Exportauswahl.
+5. **Gewählte Messdaten exportieren** speichert nach deiner Dateiauswahl TXT oder JSON. Es wird nichts hochgeladen. Vor einer späteren Weitergabe die Vorschau prüfen.
+6. Ausschalten stoppt neue Messungen. **Alle Leistungsdaten löschen und Messung ausschalten** entfernt nach Bestätigung den zusätzlichen Leistungsbestand. Eigene Arbeiten und Fehlerprotokolle bleiben erhalten.
+
+Die Statistik wird gebündelt alle 60 Sekunden und beim normalen Beenden gespeichert. Ein Absturz kann die letzte Minute Statistik verlieren; Arbeitsdateien sind davon unabhängig. Startwerte entstehen erst bei einem folgenden Programmstart mit eingeschalteter Messung. Größenklassen für Cache und tatsächliche SSD-Schreibmengen werden noch nicht gemessen. „Unverändert“ zählt gültige Speicherversuche in Buchwerkstatt, Textbuttons und Texteditor; es bedeutet nicht, dass bereits Schreibzugriffe eingespart werden.

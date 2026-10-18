@@ -159,6 +159,15 @@ class DiagnosticsLoggingTests(unittest.TestCase):
             def __init__(self, *_args): pass
             def refresh(self): pass
             def show(self): pass
+        class FakeTimer:
+            interval = None
+            def __init__(self, _parent):
+                self.timeout = types.SimpleNamespace(connect=lambda _callback: None)
+            def setInterval(self, value): FakeTimer.interval = value
+            def start(self): pass
+            @staticmethod
+            def singleShot(_delay, callback): callback()
+        fake_core = types.SimpleNamespace(QTimer=FakeTimer)
         fake_widgets = types.SimpleNamespace(QApplication=FakeApplication)
         fake_ui = types.SimpleNamespace(Dashboard=FakeDashboard, install_exception_handler=lambda *_args: None)
         fake_standards = types.SimpleNamespace(configure_application=lambda *_args: None)
@@ -171,8 +180,9 @@ class DiagnosticsLoggingTests(unittest.TestCase):
             (root / "MANIFEST.json").write_text(json.dumps({"tool":{"version":"0.10.0"}}), encoding="utf-8")
             (root / "texte" / "registry.json").write_text(json.dumps({"texts":{}}), encoding="utf-8")
             with patch.object(main_module, "ROOT", root), patch.object(main_module, "EventLogger", FakeLogger), \
-                 patch.dict(sys.modules, {"PySide6.QtWidgets": fake_widgets, "app.ui": fake_ui, "app.ui_standards": fake_standards, "app.laptop_layout": fake_laptop, "app.navigation_ux": fake_navigation, "app.startup_validation": fake_startup}):
+                 patch.dict(sys.modules, {"PySide6.QtWidgets": fake_widgets, "PySide6.QtCore": fake_core, "app.ui": fake_ui, "app.ui_standards": fake_standards, "app.laptop_layout": fake_laptop, "app.navigation_ux": fake_navigation, "app.startup_validation": fake_startup}):
                 self.assertEqual(main_module.main(), 0)
+        self.assertEqual(FakeTimer.interval, 60_000)
         self.assertEqual(events[-1]["area"], "ENDE")
         self.assertIn("kontrolliert beendet", events[-1]["summary"])
 

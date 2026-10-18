@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.18.0 · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
+> **Version:** 0.18.1 · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -39,9 +39,13 @@ Die ausführliche einfache Bedienanleitung steht in:
 ANLEITUNG_LAIEN.md
 ```
 
+## Neu in 0.18.1: lokale Leistungsdiagnose
+
+Unter **Hilfe & Fehlerhilfe → Leistung & Verbesserung** lassen sich technische Tagesaggregate freiwillig einschalten, ansehen, auswählen, exportieren und löschen. Erfasst werden Ladezeiten, logische Schreibzugriffe und unveränderte gültige Speicherversuche. Inhalte und Dateipfade werden nicht gespeichert, und es gibt keine automatische Übertragung. [Bedienung und Grenzen](docs/LEISTUNGSDIAGNOSE.md).
+
 ## Neu in 0.18.0: Textbuttons und Buchwerkstatt
 
-**Repository-Status:** als [PR #84](https://github.com/provoware/TOOL_2026_Multi/pull/84) übertragen, noch nicht mit main zusammengeführt. Code-/Layoutnachweis: [CI #1007](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39127077853), 188 Logik- und 144 GUI-Tests, UI-Shadow ohne Fehler/Warnungen, Wayland und Restore erfolgreich. Neuere Informationsänderungen benötigen ihren eigenen PR-Nachweis.
+**Repository-Status 0.18.0:** [PR #84](https://github.com/provoware/TOOL_2026_Multi/pull/84) wurde nach ausdrücklicher Freigabe mit main zusammengeführt; der anschließende Hauptzweig-Lauf ist erfolgreich. 0.18.1 ist die nachfolgende abgegrenzte Leistungsdiagnose. Code-/Layoutnachweis: [CI #1007](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39127077853), 188 Logik- und 144 GUI-Tests, UI-Shadow ohne Fehler/Warnungen, Wayland und Restore erfolgreich. Neuere Informationsänderungen benötigen ihren eigenen PR-Nachweis.
 
 Textbaustein-Buttons bieten Workflow-Reiter, Kategorien, Platzhalter, Unterversionen, Monatsstatistik und flexible Darstellung. Die Buchwerkstatt bietet Vorlagen für Hörspiel, Satire, Sachtext und Tutorial mit Kapiteln, Unterkapiteln, Notizen und Manuskriptexport. Beide nutzen gemeinsame Import-/Export- und Schutzfunktionen. Öffnen über die oberen Kacheln, das Menü oder Strg+Alt+T / Strg+Alt+B. Details: [Anleitung](ANLEITUNG_LAIEN.md) und [Abnahme](docs/TEXTBUTTONS_UND_BUCHWERKSTATT.md).
 
@@ -417,4 +421,4 @@ Die detaillierte Versionshistorie steht bewusst **nicht mehrfach in der README**
 
 ## Entwicklungsqualität und weitere Messung
 
-Die [Sitzungsauswertung](docs/ENTWICKLUNGSREVIEW_2026_10_18.md) unterscheidet echte Fehler, notwendige Prüfungen und vermeidbare Umwege. Die [Entwicklungsregeln](docs/ENTWICKLUNGSREGELN.md) wurden um konkrete Vorprüfungen und einen begrenzten Lernkreislauf ergänzt. Der [Messplan](docs/DIAGNOSE_MESSPLAN.md) beschreibt Ladezeiten, Schreibzugriffe, Cache und sichere Diagnoseweitergabe als nächste Planung. Zusätzliche Erhebung oder automatischer Versand sind nicht implementiert.
+Die [Sitzungsauswertung](docs/ENTWICKLUNGSREVIEW_2026_10_18.md) unterscheidet echte Fehler, notwendige Prüfungen und vermeidbare Umwege. Die [Entwicklungsregeln](docs/ENTWICKLUNGSREGELN.md) wurden um konkrete Vorprüfungen und einen begrenzten Lernkreislauf ergänzt. Der [Messplan](docs/DIAGNOSE_MESSPLAN.md) beschreibt Ladezeiten, Schreibzugriffe, Cache und sichere Diagnoseweitergabe als nächste Planung. Die erste lokale Ausbaustufe ist in 0.18.1 umgesetzt; weitere Messgrößen bleiben geplant. Automatischer Versand ist nicht implementiert.
