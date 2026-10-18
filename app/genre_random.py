@@ -103,13 +103,16 @@ def suno_style_text(drawn: dict[str, list[str]]) -> str:
 
 
 def generate(root: Path, profile: str, amounts: dict[str, int],
-             *, rng: random.Random | None = None) -> dict:
+             *, rng: random.Random | None = None, favorites_only: bool = False) -> dict:
     """Prüft *alle* Mengen vor einer einzigen dauerhaft protokollierten Ziehung."""
     checked = _amounts(amounts)
     profiles = load_profiles(root)
     if profile not in profiles:
         raise ValueError("Bitte ein vorhandenes Profil auswählen.")
     data = profiles[profile]
+    if favorites_only:
+        from app.genre_favorites import favorite_values
+        data = {cat: favorite_values(root, profile, cat) for cat in CATEGORIES}
     for cat in CATEGORIES:
         count = checked[cat]
         if count > len(data[cat]):
@@ -130,6 +133,7 @@ def generate(root: Path, profile: str, amounts: dict[str, int],
     entry = {
         "timestamp": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
         "profile": profile, "amounts": checked, "categories": drawn, "output": output,
+        "favorites_only": favorites_only,
     }
     history = history_load(root)
     atomic_write_json(history_path(root), history + [entry])

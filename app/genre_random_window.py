@@ -2,10 +2,11 @@
 from __future__ import annotations
 
 from pathlib import Path
+from datetime import date
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QDate
 from PySide6.QtWidgets import (
-    QApplication, QComboBox, QFileDialog, QFormLayout, QFrame, QGridLayout, QHBoxLayout,
+    QApplication, QCheckBox, QComboBox, QDateEdit, QFileDialog, QFormLayout, QFrame, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QListWidget, QMessageBox, QPushButton, QScrollArea,
     QSpinBox, QTextEdit, QVBoxLayout, QWidget,
 )
@@ -13,6 +14,9 @@ from PySide6.QtWidgets import (
 from app.genre_random import (
     QUICK_AMOUNTS, archive_export, archive_import, generate, history_load,
     preset_save, presets_load, rename_value,
+)
+from app.genre_favorites import (
+    favorite_values, set_favorite, monthly_report_text, export_monthly_report,
 )
 from app.profile_store import CATEGORIES, add_profile, add_values, load_profiles, remove_value
 from app.ui_standards import SPACING, apply_global_style
@@ -84,6 +88,7 @@ class GenreRandomWindow(QWidget):
         self._button(input_row, "Hinzufügen", self.add_entries)
         self._button(input_row, "Umbenennen", self.rename_entry)
         self._button(input_row, "Entfernen", self.delete_entry)
+        self._button(input_row, "☆ / ★ Favorit", self.toggle_favorite)
         archive_box.addLayout(input_row)
         io = QHBoxLayout()
         self._button(io, "Archiv als JSON exportieren", self.export_archive)
@@ -113,6 +118,11 @@ class GenreRandomWindow(QWidget):
             grid.addLayout(quick, row, 2)
             self.spins[category] = spin
         generator_box.addLayout(grid)
+        self.only_favorites = QCheckBox("★ Nur Favoriten für die Zufallsauswahl verwenden")
+        self.only_favorites.setAccessibleName("Ausschließlich markierte Favoriten generieren")
+        self.only_favorites.setToolTip(
+            "Berücksichtigt nur die mit ★ gekennzeichneten Begriffe im gewählten Profil.")
+        generator_box.addWidget(self.only_favorites)
         presets = QHBoxLayout()
         for number in range(3):
             self._button(presets, f"Vorlage {number + 1} laden",
@@ -145,6 +155,26 @@ class GenreRandomWindow(QWidget):
         history_box.addWidget(self.history_list)
         self._button(history_box, "Markiertes Ergebnis kopieren", self.copy_history)
         column.addWidget(history_frame)
+
+        stats_frame = QFrame()
+        stats_frame.setObjectName("innerCard")
+        stats_box = QVBoxLayout(stats_frame)
+        stats_box.addWidget(QLabel("Genres-Statistik · Monatsauswertung am Stichtag"))
+        stats_row = QHBoxLayout()
+        stats_row.addWidget(QLabel("Stichtag:"))
+        self.month_cutoff = QDateEdit()
+        self.month_cutoff.setCalendarPopup(True)
+        self.month_cutoff.setDate(QDate.currentDate())
+        self.month_cutoff.setDisplayFormat("dd.MM.yyyy")
+        self.month_cutoff.setAccessibleName("Stichtag für die monatliche Genres-Auswertung")
+        stats_row.addWidget(self.month_cutoff)
+        self._button(stats_row, "ⓘ Auswertung erklärt", self.report_help)
+        self._button(stats_row, "Monat ansehen", self.report_preview)
+        self._button(stats_row, "Monat als TXT exportieren", self.report_export)
+        stats_box.addLayout(stats_row)
+        stats_box.addWidget(QLabel(
+            "Ausgewertet werden nur Genre-Zufallsergebnisse vom Monatsanfang bis zum gewählten Tag."))
+        column.addWidget(stats_frame)
 
         scroll.setWidget(body)
         outer.addWidget(scroll, 1)
@@ -197,7 +227,16 @@ class GenreRandomWindow(QWidget):
             return
         self.count_label.setText(f"{len(entries)} Einträge")
         text = self.filter_entry.text().casefold()
-        self.archive_list.addItems(sorted((entry for entry in entries if text in entry.casefold()), key=str.casefold))
+        try:
+            stars = {v.casefold() for v in favorite_values(self.root, profile, category)}
+        except Exception as error:
+            self._message("Favoriten nicht lesbar", error)
+            return
+        for entry in sorted((entry for entry in entries if text in entry.casefold()), key=str.casefold):
+            from PySide6.QtWidgets import QListWidgetItem
+            item = QListWidgetItem(("★ " if entry.casefold() in stars else "☆ ") + entry)
+            item.setData(Qt.UserRole, entry)
+            self.archive_list.addItem(item)
 
     def create_profile(self) -> None:
         try:
@@ -227,7 +266,7 @@ class GenreRandomWindow(QWidget):
             return
         try:
             rename_value(self.root, self.profile_combo.currentText(),
-                         self.category_combo.currentText(), selected.text(), self.value_entry.text())
+                         self.category_combo.currentText(), selected.data(Qt.UserRole), self.value_entry.text())
         except Exception as error:
             self._message("Eintrag nicht bearbeitet", error)
             return
@@ -240,12 +279,12 @@ class GenreRandomWindow(QWidget):
             self.status.setText("Bitte zuerst einen Eintrag markieren.")
             return
         if QMessageBox.question(self, "Eintrag entfernen",
-                                f"„{selected.text()}“ wirklich entfernen?",
+                                f"„{selected.data(Qt.UserRole)}“ wirklich entfernen?",
                                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No) != QMessageBox.Yes:
             return
         try:
             remove_value(self.root, self.profile_combo.currentText(),
-                         self.category_combo.currentText(), selected.text())
+                         self.category_combo.currentText(), selected.data(Qt.UserRole))
         except Exception as error:
             self._message("Eintrag nicht entfernt", error)
             return
@@ -272,6 +311,62 @@ class GenreRandomWindow(QWidget):
             return
         self.refresh()
         self.status.setText(f"{result['profiles']} Profile und {result['values']} Werte ergänzt.")
+
+    def toggle_favorite(self) -> None:
+        selected = self.archive_list.currentItem()
+        if selected is None:
+            self.status.setText("Bitte zuerst einen Archivbegriff markieren.")
+            return
+        profile, category = self.profile_combo.currentText(), self.category_combo.currentText()
+        value = selected.data(Qt.UserRole)
+        try:
+            was_favorite = any(v.casefold() == value.casefold()
+                               for v in favorite_values(self.root, profile, category))
+            set_favorite(self.root, profile, category, value, not was_favorite)
+        except Exception as error:
+            self._message("Favorit konnte nicht geändert werden", error)
+            return
+        self._refresh_archive()
+        self.status.setText(
+            f"{'★ Als Favorit markiert' if not was_favorite else '☆ Favorit aufgehoben'}: {value}")
+
+    def _report_date(self) -> date:
+        return self.month_cutoff.date().toPython()
+
+    def report_help(self) -> None:
+        QMessageBox.information(
+            self, "Genres-Monatsauswertung",
+            "Hier werden ausschließlich die gespeicherten Zufallsergebnisse im Genres-Modul "
+            "vom 1. des gewählten Monats bis zum Stichtag (einschließlich) gezählt.\n\n"
+            "Das Ergebnis enthält die Anzahl der Ziehungen, verwendete Profile, Kategorien, "
+            "Favoriten-Zufallsziehungen und häufig gezogene Begriffe.\n\n"
+            "Mit „Monat ansehen“ erscheint ein Vorschaufenster. "
+            "„Monat als TXT exportieren“ speichert nur nach deiner Dateiauswahl "
+            "einen gut lesbaren Bericht. GitHub-Projekte gehören nicht zu dieser Auswertung.")
+
+    def report_preview(self) -> None:
+        try:
+            text = monthly_report_text(self.root, self._report_date())
+        except Exception as error:
+            self._message("Monatsauswertung nicht lesbar", error)
+            return
+        QMessageBox.information(self, "Genres-Monatsauswertung", text)
+
+    def report_export(self) -> None:
+        cutoff = self._report_date()
+        target, _ = QFileDialog.getSaveFileName(
+            self, "Monatsauswertung als Textdatei speichern",
+            f"genres-auswertung-{cutoff:%Y-%m}-{cutoff:%d}.txt",
+            "Textdatei (*.txt)")
+        if not target:
+            self.status.setText("Auswertung nicht exportiert: Dateiauswahl abgebrochen.")
+            return
+        try:
+            export_monthly_report(self.root, cutoff, Path(target))
+        except Exception as error:
+            self._message("Monatsbericht nicht gespeichert", error)
+            return
+        self.status.setText(f"Genres-Monatsbericht bis {cutoff:%d.%m.%Y} gespeichert.")
 
     def amounts(self) -> dict[str, int]:
         return {cat: spin.value() for cat, spin in self.spins.items()}
@@ -300,14 +395,16 @@ class GenreRandomWindow(QWidget):
             self.status.setText("Bitte zuerst ein Profil auswählen.")
             return
         try:
-            entry = generate(self.root, profile, self.amounts())
+            entry = generate(self.root, profile, self.amounts(),
+                             favorites_only=self.only_favorites.isChecked())
         except Exception as error:
             self._message("Zufall nicht generiert", error)
             return
         self.output.setPlainText(entry["output"])
         QApplication.clipboard().setText(entry["output"])
         self.refresh_history()
-        self.status.setText("Suno-Stiltext gespeichert und kopiert · in Sunos Feld »Styles« einfügen.")
+        kind = "Favoriten-Zufall" if self.only_favorites.isChecked() else "Gesamtes Archiv"
+        self.status.setText(f"{kind}: Stiltext gespeichert und kopiert · in Sunos Feld »Styles« einfügen.")
 
     def copy_result(self) -> None:
         QApplication.clipboard().setText(self.output.toPlainText())
@@ -322,7 +419,8 @@ class GenreRandomWindow(QWidget):
             return
         needle = self.history_filter.text().casefold()
         for entry in reversed(entries):
-            label = f"{entry['timestamp']} | {entry['profile']} | {entry['output']}"
+            mode = " ★ Favoriten" if entry.get("favorites_only") else ""
+            label = f"{entry['timestamp']} | {entry['profile']}{mode} | {entry['output']}"
             if needle in label.casefold():
                 self.history_list.addItem(label)
                 self.history_list.item(self.history_list.count() - 1).setData(
