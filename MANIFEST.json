@@ -808,6 +808,16 @@
       "purpose": "Profilbestand"
     },
     {
+      "path": "app/genre_random.py",
+      "release": true,
+      "purpose": "Wiederverwendbarer Zufallsgenerator mit sicheren Profilen, Verlauf, Import und Export"
+    },
+    {
+      "path": "app/genre_random_window.py",
+      "release": true,
+      "purpose": "Genres-Zufallsgenerator und lokales Profilarchiv mit zugänglicher Bedienoberfläche"
+    },
+    {
       "path": "app/profile_editor.py",
       "release": true,
       "purpose": "Laienfreundliche Profil- und Vorgabenverwaltung"
