@@ -808,6 +808,21 @@
       "purpose": "Profilbestand"
     },
     {
+      "path": "app/genre_favorites.py",
+      "release": true,
+      "purpose": "Favoriten im Genres-Archiv und monatliche TXT-Auswertungen"
+    },
+    {
+      "path": "app/github_projects.py",
+      "release": true,
+      "purpose": "Offline-Verzeichnis offener und abgeschlossener GitHub-Projekte mit sicherer Speicherung"
+    },
+    {
+      "path": "app/github_projects_window.py",
+      "release": true,
+      "purpose": "Einsteigerfreundliche GitHub-Projektübersicht mit Notizen und Aufgaben"
+    },
+    {
       "path": "app/genre_random.py",
       "release": true,
       "purpose": "Wiederverwendbarer Zufallsgenerator mit sicheren Profilen, Verlauf, Import und Export"
