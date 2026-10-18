@@ -379,14 +379,10 @@ class Dashboard(QWidget):
             row.addWidget(combo, 1)
             d.addLayout(row)
             self.db_boxes[label] = combo
-        project_link = QLabel('<a href="github-projects">GitHub-Projekte öffnen</a> · Prompts: In Planung')
-        project_link.setObjectName("cardHint")
-        project_link.setAccessibleName("GitHub-Projekte öffnen")
-        project_link.setToolTip("Lokale Übersicht offener und fertiger Projekte öffnen")
-        project_link.setTextInteractionFlags(Qt.LinksAccessibleByKeyboard | Qt.LinksAccessibleByMouse)
-        project_link.setFocusPolicy(Qt.StrongFocus)
-        project_link.linkActivated.connect(lambda _link: self.open_github_projects())
-        d.addWidget(project_link)
+        project_hint = QLabel("GitHub-Projekte: verfügbar · Prompts: In Planung")
+        project_hint.setObjectName("cardHint")
+        project_hint.setToolTip("GitHub-Projekte per Menü oder mit Strg+Umschalt+G öffnen")
+        d.addWidget(project_hint)
         d.addStretch(1)
         grid.addWidget(db, 0, 1)
 
@@ -460,6 +456,7 @@ class Dashboard(QWidget):
         QShortcut(QKeySequence("Ctrl+0"), self, activated=lambda: self.set_zoom(100))
         QShortcut(QKeySequence("Ctrl+R"), self, activated=self.open_recovery)
         QShortcut(QKeySequence("F1"), self, activated=self.open_recovery)
+        QShortcut(QKeySequence("Ctrl+Shift+G"), self, activated=self.open_github_projects)
 
     @staticmethod
     def _set_song_editor_zoom(editor: SongEditor, percent: int) -> None:
