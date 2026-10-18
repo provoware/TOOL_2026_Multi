@@ -7,6 +7,8 @@ from pathlib import Path
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QKeySequence
+from PySide6.QtGui import QShortcut
 from PySide6.QtWidgets import QApplication, QLabel
 
 from app.main import configure_dashboard_presentation
@@ -33,7 +35,7 @@ class GitHubLinkHighZoomTests(unittest.TestCase):
     def setUpClass(cls):
         cls.app = QApplication.instance() or QApplication([])
 
-    def test_link_is_accessible_without_covering_profile_fields(self):
+    def test_original_one_line_hint_has_no_overlap_and_shortcut_exists(self):
         with tempfile.TemporaryDirectory() as temp:
             dashboard = configure_dashboard_presentation(
                 Dashboard(FakeTexts(), FakeLogger(), Path(temp)))
@@ -45,12 +47,13 @@ class GitHubLinkHighZoomTests(unittest.TestCase):
                 for _ in range(8):
                     self.app.processEvents()
                 links = [x for x in dashboard.findChildren(QLabel)
-                         if "github-projects" in x.text()]
+                         if x.text().startswith("GitHub-Projekte:")]
                 self.assertEqual(len(links), 1)
                 link = links[0]
                 self.assertTrue(link.isVisibleTo(dashboard))
-                self.assertTrue(link.focusPolicy() & Qt.TabFocus)
-                self.assertIn("GitHub-Projekte", link.accessibleName())
+                shortcuts = dashboard.findChildren(QShortcut)
+                self.assertTrue(any(s.key() == QKeySequence("Ctrl+Shift+G")
+                                    for s in shortcuts))
                 link_rect = link.geometry()
                 top_left = link.mapTo(dashboard, link.rect().topLeft())
                 link_rect.moveTopLeft(top_left)
