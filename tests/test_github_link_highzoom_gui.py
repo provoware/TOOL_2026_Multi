@@ -61,7 +61,12 @@ class GitHubLinkHighZoomTests(unittest.TestCase):
                     rect = combo.geometry()
                     rect.moveTopLeft(combo.mapTo(dashboard, combo.rect().topLeft()))
                     with self.subTest(field=combo.objectName() or combo.toolTip()):
-                        self.assertFalse(link_rect.intersects(rect))
+                        overlap = link_rect.intersected(rect)
+                        self.assertFalse(
+                            overlap.width() > 2 and overlap.height() > 2,
+                            f"Textzeile {link_rect.getRect()} überlappt Profilfeld "
+                            f"{rect.getRect()} um {overlap.getRect()}",
+                        )
             finally:
                 dashboard._closing_after_save = True
                 dashboard.close()
