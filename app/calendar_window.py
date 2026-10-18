@@ -84,6 +84,16 @@ class CalendarWindow(QWidget):
         left.setObjectName("innerCard")
         left_layout = QVBoxLayout(left)
         self.calendar = QCalendarWidget()
+        # Qt erzeugt diese Navigationsknöpfe intern ohne zugänglichen Namen.
+        # Nur Screenreader-Metadaten ergänzen; sichtbare Darstellung bleibt gleich.
+        for object_name, label in (
+            ("qt_calendar_prevmonth", "Vorherigen Monat anzeigen"),
+            ("qt_calendar_nextmonth", "Nächsten Monat anzeigen"),
+        ):
+            button = self.calendar.findChild(QPushButton, object_name)
+            if button is not None:
+                button.setAccessibleName(label)
+                button.setAccessibleDescription(label)
         self.calendar.setGridVisible(True)
         self.calendar.selectionChanged.connect(self.refresh)
         left_layout.addWidget(self.calendar)
