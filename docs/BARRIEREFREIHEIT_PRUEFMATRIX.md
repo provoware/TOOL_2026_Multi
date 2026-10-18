@@ -32,3 +32,5 @@ Kontrast wird für alle vier Themes bei sämtlichen fünf freigegebenen Zoomstuf
 ### Datensicherheitsregeln
 
 Bestehende Tests für **Speichern, Abbrechen, Dokumentwechsel, Schließen und Wiederherstellung** dürfen nicht entfernt oder abgeschwächt werden. Neue Oberflächentests verwenden temporäre Projektverzeichnisse und dürfen keine echten Benutzerdateien verändern. Datenverluste werden als harte Fehler behandelt.
+
+**Bekannter Befund:** Qt-interne Kalender-Navigationsknöpfe (z. B. `qt_calendar_prevmonth`) haben im automatisierten Test keine auslesbare Schaltflächenbeschriftung. Die neuen Tests prüfen deren Tastaturfokus weiter, schließen sie aber von der *anwendungseigenen* Beschriftungspflicht aus. Ihre tatsächliche Bildschirmleseransage ist weiterhin **offen**, nicht bestanden.
