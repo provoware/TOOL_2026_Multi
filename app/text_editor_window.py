@@ -15,6 +15,7 @@ from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
 from app.text_editor_store import TextDocument, list_text_documents, load_text_document, save_text_document
 from app.ui_standards import SPACING, apply_global_style
+from app.text_structure import install_structure_tools
 
 AUTOSAVE_MS = 5 * 60 * 1000
 
@@ -121,6 +122,7 @@ class TextEditorWindow(QWidget):
         self.text_edit = QTextEdit()
         self.text_edit.setPlaceholderText("Hier schreiben …")
         work_layout.addWidget(self.text_edit, 1)
+        self.structure_highlighter = install_structure_tools(self.text_edit, work_layout)
 
         notes_label = QLabel("Abschließende Notizen")
         notes_label.setObjectName("cardTitle")
