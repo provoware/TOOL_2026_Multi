@@ -450,3 +450,26 @@ Noch nicht freigegeben und deshalb in der Oberfläche sichtbar als `In Planung` 
 - Duplikatprüfer
 
 Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md`; sie wird bewusst nicht mehrfach gepflegt.
+
+
+## Iteration 40 – Textbuttons und Buchwerkstatt
+
+- [x] Acht Funktionspakete der beiden neuen Module umgesetzt (siehe Abnahmebericht).
+- [x] Gemeinsame Modularchive, atomare Speicherung, Hilfe und Entwurfsschutz.
+- [x] 25 neue isolierte Daten-/GUI-Tests.
+- [ ] Sichtbare Kubuntu-/Plasma-Wayland-Abnahme einschließlich Zwischenablage und deutschem Wörterbuch.
+- [ ] Nächste Planung: datensparsame Qualitätskennzahlen in bestehende Diagnose integrieren; zunächst Konzept, keine automatische Übertragung.
+
+
+## Fortführung: Informationsstand und Entwicklungsreview · 18.10.2026
+
+- [x] Code-/Layoutstand cfc7353: CI #1007 einschließlich Wayland, Restore, ZIP und UI-Shadow 0/0 bestätigt.
+- [x] Infotexte zu PR-/main-Status, verfügbaren Modulen und geplantem Messkonzept berichtigt.
+- [x] Qualität, Effizienz, Fehlerursachen und unnötige Aktionen anhand der vorhandenen Nachweise bewertet.
+- [x] Eine belegte Formular-Doppelung durch vorhandene Resetfunktion ersetzt (vier Codezeilen weniger; kein neues Framework).
+- [x] Entwicklungsregeln und Info-Dateien-Checkliste um konkrete Lehren ergänzt.
+- [ ] Vollständigen Nachweis am neuen konsolidierten PR-Head bestätigen; Ergebnis in PR-Metadaten statt Evidenz-Commit pflegen.
+- [ ] Echte Kubuntu-/Plasma-Abnahme durchführen.
+- [ ] PR nach Abschlussprüfung mit main zusammenführen; bis dahin bleibt der ursprüngliche main-Stand unverändert.
+- [ ] Messkonzept separat umsetzen: zunächst Ladezeiten, Schreibzugriffe und unveränderte Autosaves, lokaler Überblick und Exportvorschau.
+- [ ] Wirkung der neuen Entwicklungsregeln nach vergleichbaren Iterationen prüfen; keine Effizienzverbesserung ohne Messung behaupten.

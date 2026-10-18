@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.17.4 · **Dokumentationsstand:** 17.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
+> **Version:** 0.18.0 · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; GitHub-Prüfungen erfolgreich, Prüfung am echten Kubuntu-Rechner noch offen.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -11,10 +11,10 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 | **Was ist Provoware?** | Ein Programm für Songtexte, eigene Texte, Figuren, Aufgaben und Termine. |
 | **Wie starte ich?** | Projektordner öffnen, Terminal starten und `bash schnellstart.sh` eingeben. |
 | **Was funktioniert?** | Songtexte, Texteditor, Charakterfibel, Profile, Aufgaben, Kalender und Hilfe. |
-| **Was fehlt noch?** | Genre-Zufall, Reimfinder, Dateisuche und mehrere zusätzliche Kreativmodule. |
+| **Was fehlt noch?** | Reimfinder, Dateisuche und weitere geplante Module; zusätzliche Leistungsdiagnose ist zunächst ein Konzept. |
 | **Wie sichere ich meine Arbeit?** | Programm schließen und den gesamten Ordner `daten/` auf einen anderen Datenträger kopieren. |
 | **Wo finde ich Hilfe?** | [Schritt-für-Schritt-Anleitung](ANLEITUNG_LAIEN.md) oder im Programm die Taste `F1`. |
-| **Was wurde zuletzt verbessert?** | Warnung vor ungespeicherten Texten, Schutz vor gleichen Dateinamen und besser lesbare Navigation. |
+| **Was wurde zuletzt verbessert?** | Textbuttons, Buchwerkstatt, gemeinsame Modularchive und Hochzoom-Schutz im Prüfkandidaten 0.18.0. |
 | **Was ist technisch noch offen?** | Praxistest auf echtem Kubuntu-Rechner und eigenständige automatische Datensicherung. |
 
 **Für die normale Nutzung brauchst du nur diese Übersicht und die [einfache Anleitung](ANLEITUNG_LAIEN.md).** Ausführliche technische Informationen stehen getrennt im [Dokumentenwegweiser](docs/README.md). Der folgende Abschnitt enthält zusätzliche Einzelheiten für Interessierte.
@@ -39,6 +39,12 @@ Die ausführliche einfache Bedienanleitung steht in:
 ANLEITUNG_LAIEN.md
 ```
 
+## Neu in 0.18.0: Textbuttons und Buchwerkstatt
+
+**Repository-Status:** als [PR #84](https://github.com/provoware/TOOL_2026_Multi/pull/84) übertragen, noch nicht mit main zusammengeführt. Code-/Layoutnachweis: [CI #1007](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39127077853), 188 Logik- und 144 GUI-Tests, UI-Shadow ohne Fehler/Warnungen, Wayland und Restore erfolgreich. Neuere Informationsänderungen benötigen ihren eigenen PR-Nachweis.
+
+Textbaustein-Buttons bieten Workflow-Reiter, Kategorien, Platzhalter, Unterversionen, Monatsstatistik und flexible Darstellung. Die Buchwerkstatt bietet Vorlagen für Hörspiel, Satire, Sachtext und Tutorial mit Kapiteln, Unterkapiteln, Notizen und Manuskriptexport. Beide nutzen gemeinsame Import-/Export- und Schutzfunktionen. Öffnen über die oberen Kacheln, das Menü oder Strg+Alt+T / Strg+Alt+B. Details: [Anleitung](ANLEITUNG_LAIEN.md) und [Abnahme](docs/TEXTBUTTONS_UND_BUCHWERKSTATT.md).
+
 ## Direkt nutzbar
 
 - 🟢 **Songtexte** – neue Songs schreiben, vorhandene Songs suchen, filtern, sortieren und öffnen
@@ -52,7 +58,11 @@ ANLEITUNG_LAIEN.md
 - 🟢 **Zoom 100–200 %** – gemeinsam für alle Hauptfenster
 - 🟢 **Farbthemes** – Amber, Türkis, Lila und Kontrast
 
-Die linke Navigation stellt diese fertigen Wege – einschließlich **Texteditor** und **Charakterfibel** – zuerst unter **Direkt nutzbar** bereit. Die zehn noch nicht fertigen Bereiche stehen getrennt unter **Noch nicht fertig** und sind standardmäßig eingeklappt. So bleibt das Menü ruhig; wer die geplanten Bereiche sehen möchte, kann sie mit einem einzigen Schalter einblenden.
+- 🟢 **Textbuttons** – Textfragmente, Platzhalter, Varianten und Monatsstatistik
+- 🟢 **Buchwerkstatt** – Vorlagen, Kapitel und Manuskripte
+- 🟢 **Genre-Zufall und GitHub-Projekte** – profilbasierter Generator sowie lokale Projektübersicht
+
+Die linke Navigation stellt diese fertigen Wege – einschließlich **Texteditor** und **Charakterfibel** – zuerst unter **Direkt nutzbar** bereit. Die acht noch nicht fertigen Bereiche stehen getrennt unter **Noch nicht fertig** und sind standardmäßig eingeklappt. So bleibt das Menü ruhig; wer die geplanten Bereiche sehen möchte, kann sie mit einem einzigen Schalter einblenden.
 
 ## Erscheinungsbild, Zoom und Barrierefreiheit
 
@@ -89,7 +99,7 @@ Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast
 
 **Fertig:** Songtexte schreiben und verwalten, Charakterfibel, allgemeiner Texteditor, Genre-/Stimmungs-/Stilprofile, Aufgabenliste, Kalender, Erinnerungen während das Hauptprogramm läuft sowie Hilfe & Fehlerhilfe.
 
-**Noch nicht fertig:** Genre-Zufallsgenerator, Reimfinder, Suche über alle Dateien, Duplikatprüfung, GitHub-Verwaltung, Blog-, Podcast-/Hörspielfunktionen und automatisches Update. Ein sichtbarer Planungsbereich bedeutet **nicht**, dass die Funktion bereits arbeitet.
+**Noch nicht fertig:** Reimfinder, Suche über alle Dateien, Duplikatprüfung, automatische GitHub-Verwaltung, eigenständige Blog-/Podcast-/Hörspielproduktion und automatisches Update. Genre-Zufall und lokale GitHub-Projektliste sind bereits nutzbar. Ein sichtbarer Planungsbereich bedeutet **nicht**, dass die Funktion bereits arbeitet.
 
 **Die wichtigsten drei Schritte zum Start:**
 1. Projektordner öffnen.
@@ -403,3 +413,8 @@ backups/    lokale Sicherungen, nicht versioniert
 2. Anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
 
 Die detaillierte Versionshistorie steht bewusst **nicht mehrfach in der README**, sondern im `CHANGELOG.md` und den Iterationsdokumenten.
+
+
+## Entwicklungsqualität und weitere Messung
+
+Die [Sitzungsauswertung](docs/ENTWICKLUNGSREVIEW_2026_10_18.md) unterscheidet echte Fehler, notwendige Prüfungen und vermeidbare Umwege. Die [Entwicklungsregeln](docs/ENTWICKLUNGSREGELN.md) wurden um konkrete Vorprüfungen und einen begrenzten Lernkreislauf ergänzt. Der [Messplan](docs/DIAGNOSE_MESSPLAN.md) beschreibt Ladezeiten, Schreibzugriffe, Cache und sichere Diagnoseweitergabe als nächste Planung. Zusätzliche Erhebung oder automatischer Versand sind nicht implementiert.

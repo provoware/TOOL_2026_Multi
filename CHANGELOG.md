@@ -1,5 +1,17 @@
 # Änderungsverlauf
 
+## 0.18.0 · 18.10.2026 – Textbuttons und Buchwerkstatt
+
+- Informationsdateien, Entwicklungsreview und konkrete Verbesserungsregeln konsolidiert; historische Prüfnachweise klar vom aktuellen PR-Head getrennt.
+- Vorhandenen Formularreset wiederverwendet: vier Codezeilen weniger ohne neue Abhängigkeit.
+
+- Textbuttons mit Workflow-Reitern, Kategorien, Suche, Farben, drei Größen, Spalten und Reihenfolge.
+- Platzhalter, Unterversionen, Zwischenablage-Einfügen und Monatsstatistik mit TXT-Export.
+- Buchwerkstatt mit fünf Vorlagen, bis acht Kapitelebenen, Schreibelementen, Charakterfibel, Status und Notizen.
+- Gemeinsame atomare Speicherung, validierte Modularchive, Importvorschau, Entwurfsschutz und optionale lokale Rechtschreibung.
+- Bei 175/200 % Zoom verdrängt der zusätzliche GitHub-Projekte-Button keine Profilfelder mehr; Strg+Umschalt+G bleibt als Zugang verfügbar.
+- 25 neue Tests; bestehende Nutzerdatenformate unverändert.
+
 ## Erweiterungen · 18.10.2026 (Version bleibt vor Praxisabnahme 0.17.4)
 
 - Genrearchiv: Sterne pro Profil/Kategorie, separater Zufall ausschließlich aus Favoriten und fortlaufende Historie mit Kennzeichnung der Favoritenziehungen.

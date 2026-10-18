@@ -511,3 +511,39 @@ Sie prüft unter anderem:
 - vollständige Wiederherstellung aus einem Projekt-ZIP.
 
 GitHub Actions prüft zusätzlich einen **echten nativen Qt-Wayland-Start** gegen einen isolierten headless Wayland-Compositor. Diese technische Prüfung ist wichtig, ersetzt aber nicht die sichtbare Abnahme auf einem echten Kubuntu-26.04-/Plasma-Rechner.
+
+## Textbaustein-Buttons: häufige Texte mit einem Klick kopieren
+
+1. Im Menü **Textbaustein-Buttons** öffnen (oder **Strg+Alt+T**).
+2. **Neuen Button anlegen** wählen. Arbeitsbereich, Kategorie, Titel und Text eingeben.
+3. Unter Kategorie, Titel und Text liegt jeweils **Aus Zwischenablage einfügen**. Text wird an der Schreibposition eingefügt.
+4. Optional Farbe und **Klein / Mittel / Groß** wählen. **Button speichern** drücken.
+5. Unter **Buttons verwenden** den Arbeitsbereich wählen und den Textbutton drücken. Danach im Zielprogramm **Strg+V** drücken.
+
+Mit **Workflow ergänzen** kommen weitere Arbeitsbereiche hinzu. Ein bis drei Spalten, Kategorien, Suche sowie **↑ / ↓** helfen beim Ordnen. Die Pfeile verschieben innerhalb derselben Kategorie; zum Umgruppieren **Bearbeiten** nutzen.
+
+**Variante anlegen** erzeugt eine Unterversion derselben Familie. Der Originaltext bleibt erhalten. Bei gleichem Text bietet das Programm auch beim Anlegen eine Unterversion an. Mit `{{Name}}` oder `{{Thema}}` lassen sich ausfüllbare Stellen vorbereiten. Beim Kopieren fragt das Programm die Werte ab; Abbrechen verändert die Zwischenablage nicht.
+
+**Monatliche Verwendungen** zählt Kopiervorgänge im Programm, getrennt nach Button und Monat. Die Nutzung des eingefügten Textes in anderen Programmen kann nicht erfasst werden. Der Monatsbericht lässt sich als Textdatei ausgeben.
+
+## Buchwerkstatt: vom ersten Kapitel zum Manuskript
+
+1. **Buchwerkstatt** öffnen (oder **Strg+Alt+B**).
+2. Vorlage **Hörspiel**, **Satire & Geschichte**, **Sachausarbeitung**, **Tutorial** oder **Leer** wählen und **Neues Buch aus Vorlage** drücken.
+3. Buchtitel eingeben. Im Kapitelbaum ein Kapitel wählen und schreiben.
+4. Über **＋ Kapitel** oder **＋ Unterkapitel** erweitern. Mit den Pfeilen Geschwisterkapitel verschieben; **Eine Ebene höher** löst ein Unterkapitel aus seiner bisherigen Ebene.
+5. Passende Textelemente oder Figuren aus der Charakterfibel an der Schreibposition einfügen. Kapitelstatus und Notizen helfen beim Überarbeiten.
+6. **Buch jetzt speichern** oder **Strg+S** drücken. Betitelte geänderte Entwürfe werden zusätzlich jede Minute gespeichert.
+7. Unter **Bücher & Vorlagen** das **Manuskript als Markdown oder Text exportieren**. Planungs- und Kapitelnotizen bleiben dabei im Buchbestand.
+
+**Planung & Notizen** hält Zielgruppe, Ideen, Quellen und offene Punkte fest. **Aktuelles Buch als neue Fassung kopieren** legt einen neuen Entwurf an; zum Behalten speichern. Bis zu acht Kapitelebenen sind möglich. Die Vorlagen helfen beim Strukturieren und schreiben keine fertigen Inhalte automatisch.
+
+### Gemeinsame Bedienung beider neuer Module
+
+- **Importieren / Exportieren** stehen immer oben. JSON-Export sichert den gespeicherten Bestand des jeweiligen Moduls, einschließlich Varianten beziehungsweise Kapitelstruktur und Notizen.
+- Beim Import zuerst die Vorschau prüfen. Neue Kennungen verhindern ein Überschreiben vorhandener Einträge. Wiederholter Import erzeugt weitere Kopien; Monatszähler dieser Kopien starten bei null.
+- Ungespeicherte Änderungen werden beim Wechsel oder Schließen abgefragt. **Abbrechen** lässt die Arbeit geöffnet. Das gilt auch beim Beenden des Dashboards.
+- **Rechtschreibung prüfen** arbeitet lokal und optional. Benötigt werden die Kubuntu-Pakete **aspell** und **aspell-de**. Unbekannte Namen oder Fachwörter können korrekt sein. Die Prüfung lässt ein Wort auswählen und dessen Schreibweise ausdrücklich ändern.
+- Die bestehenden Farbthemes und Zoomstufen gelten auch hier. Bei wenig Platz helfen Rollbalken; der Buchbereich wechselt bei hoher Vergrößerung zur Anordnung untereinander.
+
+Die Daten liegen unter `daten/textbausteine/bestand.json` und `daten/buecher/bestand.json`. Sichere weiterhin den gesamten Ordner `daten/` auf einem getrennten Datenträger.
