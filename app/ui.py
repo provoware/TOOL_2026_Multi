@@ -30,8 +30,8 @@ from app.todo_window import TodoWindow
 from app.text_editor_window import TextEditorWindow
 from app.ui_standards import COLORS, SPACING, apply_global_style
 from app.window_lifecycle import (
-    _ManagedWindowRegistration, _open_managed_window, _prepare_module_window,
-    _show_module_window,
+    _ManagedWindowRegistration, _activate_window, _open_managed_window,
+    _prepare_module_window, _show_module_window,
 )
 
 
@@ -690,8 +690,7 @@ class Dashboard(QWidget):
         """Registriert und aktiviert einen Songeditor über einen gemeinsamen Ablauf."""
         self._song_editors.append(editor)
         _show_module_window(editor)
-        editor.raise_()
-        editor.activateWindow()
+        _activate_window(editor)
 
     def open_song_editor(self) -> None:
         self._begin_song_editor_session()
@@ -718,8 +717,7 @@ class Dashboard(QWidget):
         visible_editors = [editor for editor in self._song_editors if editor.isVisible()]
         if visible_editors:
             editor = visible_editors[-1]
-            editor.raise_()
-            editor.activateWindow()
+            _activate_window(editor)
             self.quick_status.setText("Ein Songtexteditor ist geöffnet. Schließe ihn zuerst; danach erscheint die Songbibliothek wieder.")
             return
 
@@ -757,8 +755,7 @@ class Dashboard(QWidget):
             if self._song_library is not None:
                 self._song_library.refresh()
                 _show_module_window(self._song_library)
-                self._song_library.raise_()
-                self._song_library.activateWindow()
+                _activate_window(self._song_library)
 
     def save_open_song_editors(self) -> bool:
         success = True
