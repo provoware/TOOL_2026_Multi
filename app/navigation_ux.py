@@ -16,9 +16,8 @@ from app.presentation_policy import presentation_state
 
 
 PLANNED_GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("creative", ("Hörspiele", "Blogartikel", "Prompts", "Genre-Zufall", "Reimfinder")),
+    ("creative", ("Hörspiele", "Blogartikel", "Prompts", "Reimfinder")),
     ("files", ("Dateisuche", "Textinhalt suchen", "Trefferliste", "Duplikatprüfer")),
-    ("projects", ("GitHub-Repositories",)),
 )
 PLANNED_COUNT = sum(len(items) for _key, items in PLANNED_GROUPS)
 
@@ -145,6 +144,8 @@ class NavigationUxController(QObject):
         todo = _find_button(widgets, "Todo-Liste")
         calendar = _find_button(widgets, "Kalender")
         recovery = _find_button(widgets, "Hilfe & Fehlerhilfe")
+        genre_random = _find_button(widgets, "Genre-Zufall")
+        github_projects = _find_button(widgets, "GitHub-Projekte")
 
         overview.setText("⌂  Übersicht")
         overview.setAccessibleName("Übersicht")
@@ -162,6 +163,13 @@ class NavigationUxController(QObject):
             self._set_ready_button(recovery, "ⓘ  Hilfe && Fehlerhilfe"),
         ]
 
+        # Bei hoher Vergrößerung bleiben die sieben Kernaktionen im Fokus.
+        # Die beiden neuen Bereiche erscheinen zusätzlich bei genügend Platz.
+        self.feature_buttons = [
+            self._set_ready_button(genre_random, "◉  Genre-Zufall"),
+            self._set_ready_button(github_projects, "◈  GitHub-Projekte"),
+        ]
+
         # Der frühere Sammelpunkt "Alle Bereiche" führte ebenfalls nur zu einer
         # Planungsinfo. Er wird nicht gelöscht, sondern aus dem sichtbaren Menü
         # genommen, damit keine zweite bedeutungslose Sackgasse entsteht.
@@ -177,6 +185,7 @@ class NavigationUxController(QObject):
         self.planned_buttons = list(planned_by_name.values())
 
         used_ids = {id(overview), id(all_areas), *(id(button) for button in self.ready_buttons),
+                    *(id(button) for button in self.feature_buttons),
                     *(id(button) for button in self.planned_buttons)}
         for widget in widgets:
             if id(widget) not in used_ids:
@@ -236,6 +245,8 @@ class NavigationUxController(QObject):
         self.layout.addWidget(self.ready_heading)
         for button in self.ready_buttons:
             self.layout.addWidget(button)
+        for button in self.feature_buttons:
+            self.layout.addWidget(button)
         self.layout.addWidget(self.planned_heading)
         self.layout.addWidget(self.planned_hint)
         self.layout.addWidget(self.planned_toggle)
@@ -244,7 +255,7 @@ class NavigationUxController(QObject):
 
         self.core_entries: list[QWidget] = [
             overview, self.ready_heading, *self.ready_buttons,
-            self.planned_heading, self.planned_hint, self.planned_toggle,
+            *self.feature_buttons, self.planned_heading, self.planned_hint, self.planned_toggle,
         ]
         self.dashboard._nav_entries = self.core_entries  # type: ignore[attr-defined]
         self.dashboard.song_nav_button = song  # type: ignore[attr-defined]
@@ -317,6 +328,8 @@ class NavigationUxController(QObject):
         self.menu_title.setVisible(sidebar_open)
         for button in self.ready_buttons:
             button.setVisible(sidebar_open)
+        for button in self.feature_buttons:
+            self._set_vertical_presence(button, sidebar_open and not restricted)
         self._set_vertical_presence(self.overview_button, sidebar_open and not state.high_zoom)
         self._set_vertical_presence(self.ready_heading, sidebar_open and not state.high_zoom)
         self._set_vertical_presence(self.planned_heading, sidebar_open and not restricted)
