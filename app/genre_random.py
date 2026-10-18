@@ -94,10 +94,17 @@ def generate(root: Path, profile: str, amounts: dict[str, int],
         if count > len(data[cat]):
             raise ValueError(f"„{cat}“: {count} gewünscht, aber nur {len(data[cat])} vorhanden. Menge bitte verringern.")
     generator = rng or random.SystemRandom()
-    drawn = {cat: generator.sample(data[cat], checked[cat]) for cat in CATEGORIES}
-    unique = {cat: list(dict.fromkeys(x.casefold() for x in drawn[cat])) for cat in CATEGORIES}
-    if any(len(unique[cat]) != len(drawn[cat]) for cat in CATEGORIES):
-        raise ValueError("Eine unerwartete doppelte Ausgabe wurde verhindert.")
+    drawn: dict[str, list[str]] = {}
+    already_selected: set[str] = set()
+    for cat in CATEGORIES:
+        candidates = [item for item in data[cat] if item.casefold() not in already_selected]
+        if len(candidates) < checked[cat]:
+            raise ValueError(
+                f"„{cat}“: zu wenige unterschiedliche Begriffe für die Gesamtausgabe. "
+                "Menge verringern oder weitere Archivbegriffe hinzufügen."
+            )
+        drawn[cat] = generator.sample(candidates, checked[cat])
+        already_selected.update(item.casefold() for item in drawn[cat])
     output = ", ".join(item for cat in CATEGORIES for item in drawn[cat])
     entry = {
         "timestamp": datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds"),
