@@ -69,3 +69,11 @@ Die Entwicklung trifft reversible technische Entscheidungen autonom. Fehlende re
 ## Definition „fertig“
 
 Ein Punkt ist erst 🟢, wenn Änderung **und** passende Prüfung nachweisbar abgeschlossen sind. „Implementiert, aber nicht geprüft“ bleibt 🟡.
+
+## Vergleich der nächsten zehn Hauptzweig-Prüfungen
+
+Für die neue Messreihe werden nur **erfolgreiche, vollständige Prüfungen auf `main`** verwendet. Die Auswertung beginnt ab dem bereits dokumentierten Stand von PR #67. Sie darf erst bei **zehn abgeschlossenen und vergleichbaren neuen Läufen** als Gesamtergebnis bezeichnet werden. Bis dahin sind die Zahlen ausdrücklich vorläufig.
+
+Die GitHub-Prüfkette zeigt künftig die Zeit für **Systempakete**, **Python-Pakete** und **Programmtests** in getrennten Schritten. GitHub erfasst die Dauer dieser Schritte automatisch. Die bestehenden Pflichtprüfungen bleiben unverändert erhalten. Ein kürzerer Prüflauf ist noch kein Nachweis geringeren Netzwerkverkehrs.
+
+Vor der Änderung lagen zehn vergleichbare erfolgreiche Hauptzweig-Läufe durchschnittlich bei **117,2 Sekunden**. Die ersten fünf danach lagen bei **122,6 Sekunden**; wegen der kleinen Stichprobe ist daraus noch keine zuverlässige Wirkung abzuleiten. Für jeden neuen Lauf auch die Zahl bestandener Tests und den Stand des Quellcodes notieren.
