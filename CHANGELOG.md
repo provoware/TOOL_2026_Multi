@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## Entwicklungseffizienz – 18.10.2026 (Version weiterhin 0.17.4)
+
+- Letzte manuelle Signalsperre im Kompaktmodus des Songeditors durch zustandserhaltende Qt-Sperre ersetzt.
+- GitHub-Messwerkzeug um getrennte Installations- und Prüfzeiten sowie einen ehrlichen Zehn-Läufe-Vergleich erweitert.
+- Systempakete-Installation unverändert belassen: Schwankende Dauer ist noch kein ausreichender Grund, notwendige Aktualisierung oder Pakete wegzulassen.
+- Rückfalltests ergänzen die Nachweise; keine Änderungen an Benutzeroberfläche, Daten oder Dateiformaten.
+
+
 ## Interne Vereinfachung – 18.10.2026 (weiterhin 0.17.4)
 
 - Doppelte Aktualisierung der Charakterauswahl in Songeditor und allgemeinem Texteditor in eine gemeinsame Hilfsfunktion überführt.
