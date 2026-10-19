@@ -9,9 +9,9 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 63,
-    "goal": "Verwaltete Update-Slots, Modulbaukasten, Entwicklungspool und Multimedia-Basismodule",
-    "completed": 4,
+    "number": 64,
+    "goal": "Sichere Formulardatensätze, Medienausgabeprüfung, geprüfter Archivimport und Migrationsvorprüfung",
+    "completed": 0,
     "open_next": 3
   },
   "runtime": {
@@ -1582,6 +1582,51 @@
       "path": "docs/MEDIENMODULE.md",
       "release": true,
       "purpose": "Multimedia-Bedienung und Sicherheitsgrenzen"
+    },
+    {
+      "path": "app/module_runtime.py",
+      "release": true,
+      "purpose": "Datensatzspeicher für deklarative Module, ausschließlich erlaubte Felder"
+    },
+    {
+      "path": "tests/test_module_runtime.py",
+      "release": false,
+      "purpose": "Sicherheits- und Rechteprüfung für Modulinstanzen"
+    },
+    {
+      "path": "app/media_verify.py",
+      "release": true,
+      "purpose": "FFprobe-Ergebnisprüfung vor Veröffentlichung"
+    },
+    {
+      "path": "tests/test_media_verify.py",
+      "release": false,
+      "purpose": "Fehler- und Formatprüfungen für fertig gerenderte Videos"
+    },
+    {
+      "path": "app/development_pool_import.py",
+      "release": true,
+      "purpose": "Sicherer importierter neuer Projektordner ohne Überschreiben"
+    },
+    {
+      "path": "tests/test_development_pool_import.py",
+      "release": false,
+      "purpose": "ZIP-Traversal- und Kopierimport-Prüfungen"
+    },
+    {
+      "path": "app/update_legacy_audit.py",
+      "release": true,
+      "purpose": "Nur lesende Vorprüfung einer möglichen Legacy-Installation"
+    },
+    {
+      "path": "tests/test_update_legacy_audit.py",
+      "release": false,
+      "purpose": "Nichtverändernde Verweigerung unsicherer Migrationen"
+    },
+    {
+      "path": "docs/ITERATION64.md",
+      "release": true,
+      "purpose": "Sicherheitsumfang und fehlende Produktivfunktionen von Iteration 64"
     }
   ],
   "creative_modules": {

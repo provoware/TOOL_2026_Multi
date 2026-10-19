@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
     QListWidget, QMessageBox, QProgressBar, QSpinBox,
 )
 from app import media_files as media, media_jobs as jobs, module_archive as archive
+from app.media_verify import verify_video
 from app.atomic_io import atomic_write_json
 from app.module_widgets import ModuleWindow, button
 
@@ -278,6 +279,7 @@ class SlideshowWindow(ModuleWindow):
                 # inzwischen angelegter Zieldatei ab statt sie zu überschreiben.
                 with output.open("rb") as stream:
                     os.fsync(stream.fileno())
+                verify_video(output, require_audio=bool(self.audio))
                 os.link(output, self.final_output)
                 self.progress.setValue(100)
                 self.status.setText("Video fertig gespeichert: " + str(self.final_output))
