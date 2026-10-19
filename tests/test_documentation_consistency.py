@@ -94,9 +94,11 @@ class DocumentationConsistencyTests(unittest.TestCase):
     def test_unfinished_features_are_in_planned_section(self):
         document = (ROOT / "docs/AKTUELLER_STAND.md").read_text(encoding="utf-8")
         section = document.split("## Was ist noch nicht fertig?", 1)[1].split("## ", 1)[0]
-        for feature in ("Genre-Zufall", "Reimfinder", "Dateisuche", "Duplikatsuche"):
+        for feature in ("Reimfinder", "Duplikatsuche"):
             with self.subTest(feature=feature):
                 self.assertIn(feature, section)
+        working = document.split("## Was funktioniert bereits?", 1)[1].split("## ", 1)[0]
+        self.assertIn("Dateisuche", working)
 
 
 if __name__ == "__main__":

@@ -69,24 +69,25 @@ class LaymanUxGuiTests(unittest.TestCase):
         self.temp.cleanup()
 
     def test_dashboard_names_actions_truthfully(self):
-        self.assertIn("Songs", self.dashboard.search_entry.placeholderText())
+        self.assertIn("Suchtext", self.dashboard.search_entry.placeholderText())
+        self.assertIn("Dateien", self.dashboard.search_entry.toolTip())
         self.assertEqual(self.dashboard.quit_button.text(), "Programm beenden")
         self.assertEqual(self.dashboard.quick_info_label.text(), "Projekt-Notiz:")
         buttons = self.dashboard.findChildren(QPushButton)
         self.assertTrue(any(button.text().startswith("①  Songtexte öffnen") for button in buttons))
         self.assertFalse(any(button.text() == "Logout" for button in buttons))
 
-    def test_planned_tiles_are_visibly_marked(self):
+    def test_all_tiles_are_ready_including_data_search(self):
         tiles = [
             button for button in self.dashboard.findChildren(QPushButton)
             if button.objectName() == "tileButton"
         ]
         self.assertEqual(len(tiles), 7)
         planned = [button for button in tiles if button.property("planned") is True]
-        self.assertEqual(len(planned), 1)
+        self.assertEqual(len(planned), 0)
         ready = [button for button in tiles if button.property("ready") is True]
-        self.assertEqual(len(ready), 6)
-        self.assertTrue(all("In Planung" in button.text() for button in planned))
+        self.assertEqual(len(ready), 7)
+        self.assertTrue(any("Dateisuche" in button.text() for button in ready))
         self.assertTrue(any("Charakterfibel" in button.text() for button in ready))
         self.assertTrue(any("Texteditor" in button.text() for button in ready))
         self.assertTrue(any("Textbuttons" in button.text() for button in ready))

@@ -1,6 +1,6 @@
 # Aktueller Projektstand – leicht verständlich
 
-**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.2
+**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.3 (lokaler Prüfkandidat)
 
 ## Wozu dient Provoware?
 
@@ -21,12 +21,13 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 | Todo-Liste | Aufgaben anlegen, erledigen und archivieren. |
 | Kalender | Termine verwalten; Erinnerungen erscheinen, solange das Hauptprogramm läuft. |
 | Leistungsdiagnose | Zusätzliche lokale Messung einschalten, ausgewählte Tagesdaten ansehen, exportieren und löschen. |
+| Dateisuche | Gespeicherte Namen und Textinhalte mit Trefferliste und Vorschau finden. |
 | Hilfe | Erklärungen und technische Fehlermeldungen in verständlicher Sprache lesen. |
 | Anzeige | Zwischen vier Farben und fünf Zoomstufen von 100 bis 200 % wählen. |
 
 ## Was ist noch nicht fertig?
 
-Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: Reimfinder, Dateisuche, umfassende Textsuche, Duplikatsuche, automatische GitHub-Verwaltung sowie verschiedene zusätzliche Schreibbereiche. Genre-Zufall und die lokale GitHub-Projektliste sind bereits nutzbar. Hörspiel-Buchvorlagen erzeugen Texte, keine fertige Audioproduktion. Ein geplanter Knopf ist kein fertiges Werkzeug.
+Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: Reimfinder, Duplikatsuche, automatische GitHub-Verwaltung sowie verschiedene zusätzliche Schreibbereiche. Genre-Zufall und die lokale GitHub-Projektliste sind bereits nutzbar. Hörspiel-Buchvorlagen erzeugen Texte, keine fertige Audioproduktion. Ein geplanter Knopf ist kein fertiges Werkzeug.
 
 ## Was wurde zuletzt geprüft?
 
@@ -41,7 +42,7 @@ Die folgenden Nachweise betreffen frühere Stände:
 - Die vollständige automatische Oberflächenkontrolle erreichte **60 Fälle**, **180 geprüfte Fenster**, **0 Fehler** und **0 Warnungen**.
 - Der zugehörige GitHub-Arbeitsablauf wurde [erfolgreich abgeschlossen](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39065993768).
 
-**Wichtig:** Die GitHub-Prüfung ersetzt **nicht** den Praxistest auf einem echten Kubuntu-26.04-Rechner. Die persönliche Datensicherung ist eine weitere eigenständige Aufgabe.
+**Wichtig:** Die GitHub-Prüfung ersetzt **nicht** den Praxistest auf einem echten Kubuntu-26.04-Rechner. Die persönliche Datensicherung ist im lokalen 0.18.3-Kandidaten eigenständig umgesetzt; eine automatische Aktivierung zurückgeholter Daten erfolgt nicht.
 
 ## Wo fange ich an?
 
@@ -51,7 +52,7 @@ Die folgenden Nachweise betreffen frühere Stände:
 
 **Weiterentwickeln:** `TODO.md`, `CHANGELOG.md`, `AGENTS.md` und die technischen Berichte in `docs/` lesen.
 
-**Persönliche Arbeiten schützen:** `daten/` bei geschlossenem Programm regelmäßig auf einen zweiten Datenträger kopieren.
+**Persönliche Arbeiten schützen:** [Datensicherung](DATENSICHERUNG.md) bei geschlossenem Programm auf einen zweiten Datenträger erstellen.
 
 ## Was darf beim Aufräumen nicht verloren gehen?
 
@@ -59,10 +60,15 @@ Die Ordner `daten/`, `backups/`, `logs/` und `berichte/` dürfen nicht ohne Prü
 
 ## Was sollte als Nächstes geschehen?
 
-1. Den aktuellen PR-Head einschließlich Informationsrunde durch die vollständige GitHub-Prüfung bestätigen lassen.
-2. Echte Bedienprüfung auf Kubuntu 26.04 mit stark vergrößerter Schrift durchführen.
-3. Eine unabhängige, erprobte Datensicherung mit sicherer Wiederherstellung entwickeln.
+1. Gemäß Nutzerpriorität weitere unabhängige Entwicklungsaufgaben bearbeiten.
+2. Automatische Prüfungen und isolierte Wiederherstellungsprüfungen beibehalten.
+3. Zielrechner-Abnahme und Veröffentlichung später durchführen.
 
 Version 0.18.2 wird als eigener Änderungsantrag geprüft. Frühere CI-Nachweise gelten für den damaligen Stand.
 
 Die Bewertung der Entwicklung mit gemessenen Laufzeiten und Verbesserungsregeln steht im [Entwicklungsreview](ENTWICKLUNGSREVIEW_2026_10_18.md). Das Konzept zusätzlicher Leistungsdaten steht im [Messplan](DIAGNOSE_MESSPLAN.md); die erste ausdrücklich einschaltbare Ausbaustufe ist nun in 0.18.1 implementiert.
+
+
+Neu im lokalen Kandidaten 0.18.3: eigenständige Daten-ZIPs mit geprüftem Rückholen, Prüfung defekter Startumgebungen, Ladebenchmark mit Datenklassen und Auswertung gespeicherter UI-Kalibrierungsnachweise. Details und Freigabegrenzen: [Versionsunterlagen](FREIGABE_0_18_3.md). Keine Aussage, dass dieser Stand bereits in GitHub/main veröffentlicht wurde.
+
+Die zentrale Text-/Dateisuche ist im lokalen Kandidaten umgesetzt; Grenzen stehen in [Dateisuche](DATEISUCHE.md). Repository-/CI-Nachweise gehören zum zugehörigen neuen Pull Request.

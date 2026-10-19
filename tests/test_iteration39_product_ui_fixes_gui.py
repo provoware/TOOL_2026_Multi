@@ -184,7 +184,7 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                 apply_global_style(dashboard, 100, "Amber")
                 dashboard.resize(1334, 696)
                 _settle()
-                self.assertEqual(controller.planned_toggle.text(), "▸  Geplante Bereiche (8)")
+                self.assertEqual(controller.planned_toggle.text(), "▸  Geplante Bereiche (5)")
                 self.assertEqual(
                     controller.planned_toggle.accessibleName(),
                     "Geplante Bereiche anzeigen oder ausblenden",

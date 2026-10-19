@@ -4,6 +4,8 @@ Stand: 2026-10-18
 
 ## Aktuelle Übersicht – zuerst lesen
 
+**Nutzerpriorität:** Entwicklungsarbeit ohne manuelle Abnahme zuerst. Zielrechner-Abnahmen und Veröffentlichung bleiben für später offen; automatische Schutzprüfungen laufen weiter. Die neuen Änderungen werden gesammelt über den Branch `codex/central-search-and-todos` übertragen; ein Branch oder offener PR ist kein veröffentlichtes main-Release.
+
 **Erledigt und durch GitHub geprüft**
 - [x] Texteditor: vor dem Verlassen eines veränderten Textes Speichern, Verwerfen oder Abbrechen anbieten (PR #57).
 - [x] Dateinamen-Kollisionen bei Song- und allgemeinen Textdateien absichern (PR #57).
@@ -13,14 +15,15 @@ Stand: 2026-10-18
 
 **Noch offen – vor einer breiten Veröffentlichung**
 - [ ] Die Anzeige und Bedienung auf einem echten Kubuntu-26.04-/Plasma-Wayland-Rechner vollständig durchgehen.
-- [ ] Eine *eigenständige* Sicherung und geprüfte Wiederherstellung der persönlichen Daten aus `daten/` umsetzen.
+- [x] Eigenständige Sicherung und isoliert geprüfte Wiederherstellung persönlicher Daten umgesetzt; siehe `docs/DATENSICHERUNG.md` (lokale Tests, kein automatisches Ersetzen des Arbeitsbestands).
 - [ ] UI-Schattenprüfung erst nach bewusster Kalibrierung als blockierende Pflichtprüfung schalten.
-- [ ] Startprogramm nach beschädigter Umgebung und fehlenden Abhängigkeiten prüfen.
-- [ ] Einfache veröffentlichte Versionskennzeichnung und vollständige Freigabeunterlagen herstellen.
+- [x] Startprogramm bei beschädigter Umgebung und fehlenden Paketen trotz gültigem Marker absichern; sechs isolierte Starttests erfolgreich.
+- [x] Versionskennung 0.18.3 im Manifest und Fenstertitel sowie Freigabeunterlagen als lokalen Kandidaten vorbereiten.
+- [ ] Kandidaten nach späteren Abnahmen tatsächlich veröffentlichen.
 
 **Später geplante Funktionen**
-- [ ] Genre-Zufallsgenerator.
-- [ ] Zentrale Text- und Dateisuche.
+- [x] Genre-Zufallsgenerator bereits umgesetzt; bisherigen Übersichtsstatus mit vorhandener Anwendung und Tests abgeglichen.
+- [x] Zentrale Text-/Dateisuche mit Trefferliste, Vorschau, Abbruch und festen Schutzgrenzen umgesetzt; `docs/DATEISUCHE.md`.
 - [ ] Sicherer Update-Manager mit Rückkehr zur vorherigen Version.
 
 **Lesetipp:** Die längeren Iterationsabschnitte weiter unten sind historische Entwicklungsprotokolle. Dort noch offene Aufgaben können inzwischen durch die aktuelle Übersicht erledigt sein.
@@ -443,9 +446,6 @@ Noch nicht freigegeben und deshalb in der Oberfläche sichtbar als `In Planung` 
 - Prompts
 - Automatische GitHub-Verwaltung über die vorhandene lokale Projektliste hinaus
 - Reimfinder
-- Dateisuche
-- Textinhalt-Suche
-- Trefferliste
 - Duplikatprüfer
 
 Abgeschlossene Detailhistorie steht im `CHANGELOG.md` und in `docs/ITERATION*.md`; sie wird bewusst nicht mehrfach gepflegt.
@@ -498,3 +498,67 @@ Externe Abhängigkeiten bleiben unverändert: echte Kubuntu-/Plasma-Abnahme und 
 - [ ] Reale Kubuntu-/Plasma-Bedienung bleibt als externer Zielrechner-Schritt offen.
 
 Nächste Queue: vergleichbaren Overhead-Benchmark der freiwilligen Leistungsdiagnose erstellen; weiterführende Messgrößen bleiben nachrangig. Dieser Layoutauftrag ersetzt keine reale Bildschirmabnahme.
+
+## Iteration 43 – reproduzierbarer Diagnose-Benchmark
+
+- [x] Isoliertes Entwicklerscript mit drei Varianten, rotierter Reihenfolge, Rohwerten und separater Flush-Zeit.
+- [x] Identische synthetische Arbeitsmenge, geprüfte Inhalte/Zähler und begrenzte Argumente; keine persönlichen Daten.
+- [x] Lokale Vergleichsmessung durchgeführt; 1%-Ziel ausdrücklich nicht bestätigt.
+- [ ] Vergleich auf echtem Zielrechner durchführen und danach Optimierungsziel festlegen.
+
+Details und nächster Schritt: `docs/LEISTUNGSBENCHMARK.md`. Die externe Sichtabnahme und die finale GitHub-Abnahme der Layoutiteration bleiben unabhängig offen.
+
+## Iteration 44 – unabhängige Datensicherung
+
+- [x] Vollständige reguläre Dateien aus `daten/` mit Index und SHA-256 sichern.
+- [x] Sicherung automatisch isoliert zurückholen und Inhalte vergleichen.
+- [x] Vorhandene Ziele, Links, unsichere Archive und geänderte Quellen abweisen; zehn Schutztests erfolgreich.
+- [x] Anleitung und Release-Manifest ergänzen.
+
+Basis: 56528eb; Scope: Sicherungswerkzeug, Tests und Informationsdateien. Keine aktive Rückübernahme, keine Nutzerdatenmigration.
+
+## Iteration 45 – beschädigte Startumgebung
+
+- [x] Defekte/unvollständige vorhandene `.venv` erkennen und unverändert mit sicherer Anleitung abbrechen.
+- [x] Tatsächliche Paketversionen und Qt-Import zusätzlich zum Hash prüfen.
+- [x] Fehlende/defekte Pakete begrenzt neu installieren; Marker erst nach erfolgreicher Prüfung schreiben.
+- [x] Fehlerfälle ohne Netz in isolierter Startumgebung prüfen; keine Oberfläche nach fehlgeschlagener Prüfung öffnen.
+
+Basis f1c83f7. Scope: Startscript, Paketprüfung, Tests und Informationsdateien. Keine automatische Löschung oder Umbenennung einer Umgebung. Zeitgrenzen: Umgebung 60 s, Python 15 s, Paketprüfung 20 s, Installation 180 s, Vorprüfung 30 s.
+
+## Iteration 46 – getrennte Lademessungen
+
+- [x] Echten Bucharchiv-Lader mit festen synthetischen Datenklassen 1/25/100 Bücher prüfen.
+- [x] Neue Python-Prozesse, erstes Lesen und wiederholtes Lesen getrennt erfassen.
+- [x] Cachebestand prüfen: im gemessenen Buch-/Archivlader existiert kein app-eigener Cache; Kennzahlen nicht anwendbar.
+- [ ] Vollständigen Dashboard-/Betriebssystem-Kaltstart später getrennt messen; dieser Benchmark behauptet ihn nicht.
+
+Basis 6e60749. Nur Entwicklerwerkzeug und Schutztests, keine zusätzliche Datenerhebung in der Anwendung. Zwei isolierte Tests und eine vollständige lokale Messung erfolgreich.
+
+## Iteration 47 – Kalibrierungsnachweise vorbereiten
+
+- [x] Gespeicherte Shadow-Evidenz mit bestehender Infrastrukturprüfung und strengeren Eignungskriterien auswerten.
+- [x] Doppelte/lokale/PR-Nachweise nicht als drei saubere Release-Läufe zählen.
+- [x] Ohne Evidenz keine Empfehlung und niemals automatische Gate-Aktivierung; drei Schutztests erfolgreich.
+- [ ] Drei saubere Original-CI-Läufe belegen und einzelne Regeln fachlich kalibrieren; anschließend Pflicht-Gate getrennt entscheiden.
+
+REQUIRES: echte CI-Artefakte. Die Abnahme-/Aktivierungsentscheidung ist gemäß Nutzerpriorität zurückgestellt.
+
+## Iteration 48 – Versionsunterlagen ohne Veröffentlichung
+
+- [x] Versionskennung aus bestehender Manifest-/Logger-Kette im Fenstertitel anzeigen.
+- [x] Kandidatenstatus, Änderungen, Lieferumfang, Prüfwege und offene Freigaben dokumentieren.
+- [x] Informationsdateien und überholten Genre-Zufall-Übersichtsstatus abgleichen.
+- [ ] Kandidaten veröffentlichen; gemäß Nutzerpriorität nach den übrigen Entwicklungsarbeiten.
+
+Basis 6b823d4. Kein automatischer Merge und keine Veröffentlichung. Der Stand wird vor Abschluss vollständig automatisiert geprüft und isoliert wiederhergestellt.
+
+## Iteration 49 – zentrale Text-/Dateisuche
+
+- [x] Namen und UTF-8-Textinhalte unter `daten/` rein lesend suchen; keine Links oder versteckten Versionen.
+- [x] Trefferliste, Zeilennummer, Klartextvorschau, Abbruch und Fensterwiederverwendung.
+- [x] Dashboard-Kachel, Kopfsuche, vorhandene Kartenaktionen und Tastaturzugriff anbinden.
+- [x] Schutz- und GUI-Regressionen einschließlich 100/150/200 % ergänzen.
+- [ ] Finale Vollprüfung und Repository-Übertragung am identischen Quellbaum bestätigen; Nachweis am Pull Request.
+
+Basis 230f562, isolierter Branch central-search. Scope: Suchkern, Suchfenster, vorhandene Einstiege, Hilfe, Tests und Informationsdateien. Nutzerdaten, Suchindexdateien und Prüfgrenzen werden nicht verändert. Manuelle Abnahme bleibt auf Nutzerwunsch zurückgestellt.
