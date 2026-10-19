@@ -38,3 +38,20 @@ class LauncherSwitchTests(unittest.TestCase):
   (self.root/"start").write_text("existing user launcher")
   with self.assertRaises(ValueError):m.switch_managed_launcher(self.root,approved=True,verify=lambda x:True)
   self.assertEqual((self.root/"start").read_text(),"existing user launcher")
+
+ def test_next_start_recovers_pending_without_running_new_version(self):
+  from app.atomic_io import atomic_write_json
+  atomic_write_json(self.root/m.RECORD,{"schema":1,"state":"PENDING"})
+  m._set_pointer(self.root,"managed_start.sh")
+  seen=[]
+  result=m.launch_checked(self.root,runner=lambda path:(seen.append(path.name),0)[1])
+  self.assertEqual(result,0)
+  self.assertEqual(seen,["legacy_start.sh"])
+  self.assertEqual((self.root/"start").read_text(),"old")
+
+ def test_failed_new_launch_rolls_back_automatically(self):
+  self.assertTrue(m.switch_managed_launcher(self.root,approved=True,verify=lambda x:True))
+  result=m.launch_checked(self.root,runner=lambda path:17)
+  self.assertEqual(result,17)
+  self.assertEqual((self.root/"start").read_text(),"old")
+  self.assertEqual(m._record(self.root)["state"],"ROLLED_BACK")
