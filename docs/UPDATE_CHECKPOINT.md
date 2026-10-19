@@ -22,3 +22,5 @@ Der bestehende Update-Manager prüft ein fremdes ZIP zunächst statisch und kann
 - Ein vollständiger, automatischer Rollback erfordert später eine getrennte, geprüfte Aktivierung mit zwei Versionen und atomarer Umschaltung sowie Nachkontrolle; dieser Schritt ist **noch nicht implementiert**.
 
 Die automatische GitHub-Prüfung ist verbindlich. Die nächste vollständige manuelle Kubuntu-Abnahme erfolgt erst nach Fertigstellung aller vereinbarten Module.
+
+**Zusätzliche Schutzregel:** Auch das Ziel einer Rückkehrkopie muss nachweislich außerhalb des angegebenen aktiven Programmordners liegen. Ein Ziel unter `daten/` oder einem anderen aktiven Unterordner wird unmittelbar abgewiesen.

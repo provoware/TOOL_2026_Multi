@@ -56,7 +56,7 @@ class CheckpointTests(unittest.TestCase):
         self.assertEqual(ck.verify_checkpoint(backup), receipt)
         self.assertFalse((backup / "release/daten").exists())
         self.assertFalse(receipt["activation_allowed"])
-        new = ck.restore_to_new_slot(backup, self.restore)
+        new = ck.restore_to_new_slot(backup, self.restore, self.active)
         self.assertEqual((new / "release/MANIFEST.json").read_bytes(),
                          (self.active / "MANIFEST.json").read_bytes())
         self.assertFalse(json.loads((new / "restore-report.json").read_text())["activation_allowed"])
@@ -87,4 +87,6 @@ class CheckpointTests(unittest.TestCase):
     def test_refuse_restoring_into_checkpoint_tree(self):
         backup, _ = ck.create_checkpoint(self.active, self.owned, self.backups)
         with self.assertRaises(ValueError):
-            ck.restore_to_new_slot(backup, backup / "release")
+            ck.restore_to_new_slot(backup, backup / "release", self.active)
+        with self.assertRaises(ValueError):
+            ck.restore_to_new_slot(backup, self.active / "daten", self.active)

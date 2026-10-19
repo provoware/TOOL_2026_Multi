@@ -19,7 +19,7 @@ def main():
         path, receipt = create_checkpoint(args.root, args.staging, args.checkpoint_parent)
         print(f"Programmsicherung geprüft: {path}")
         if args.restore_parent is not None:
-            restored = restore_to_new_slot(path, args.restore_parent)
+            restored = restore_to_new_slot(path, args.restore_parent, args.root)
             print(f"Rückkehrkopie geprüft: {restored}")
     except (OSError, ValueError, KeyError, TypeError) as error:
         parser.exit(1, f"Sicherungs-/Rückkehrprüfung abgebrochen: {error}\n"

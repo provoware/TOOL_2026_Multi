@@ -173,10 +173,11 @@ def verify_checkpoint(folder):
     return receipt
 
 
-def restore_to_new_slot(checkpoint_folder, destination_parent):
+def restore_to_new_slot(checkpoint_folder, destination_parent, active_root):
     """Erzeugt eine unveränderliche, isolierte Rückkehrkopie, nie eine aktive Installation."""
     checkpoint = Path(checkpoint_folder).resolve(strict=True)
-    parent = _safe_parent(destination_parent)
+    active = Path(active_root).resolve(strict=True)
+    parent = _safe_parent(destination_parent, active)
     if parent.is_relative_to(checkpoint) or checkpoint.is_relative_to(parent):
         raise ValueError("Rückkehrkopie muss getrennt von der Sicherung liegen.")
     receipt = verify_checkpoint(checkpoint)
