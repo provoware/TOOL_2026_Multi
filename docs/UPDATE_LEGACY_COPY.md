@@ -1,0 +1,5 @@
+# Entwicklungsbaustein: unabhängige Altinstallationskopie
+
+Die Routine `app.update_legacy_copy.prepare_legacy_copy(altprogramm, freier_sicherungsordner)` erstellt unter einem neuen Zielordner zwei voneinander unabhängige Bereiche: `slots/base/` für die vom Manifest freigegebenen Betriebsdateien und `persistent/daten/` für die bisherigen persönlichen Daten. Sie verweigert symbolische Verknüpfungen, Spezialdateien, zu große Dateien und unsichere Zielorte. Die Dateien werden gelesen, erneut gehasht und geschrieben; bei einem Fehler wird nur das neu angelegte Kopierverzeichnis entfernt.
+
+Der alte Programmordner wird dabei nicht verändert oder gelöscht. Es wird **kein** aktiver Programmzeiger und **kein** automatischer Startweg eingerichtet. Die Kopie ist kein veröffentlichter Update-Assistent und nicht zur selbstständigen Produktivmigration freigegeben. Erst nach getrennter Prüfung von Schnellstart, Laufzeitdatenpfad und Rückkehrprotokoll kann eine finale Migration verantwortet werden. Eine manuelle Kubuntu-Gesamtabnahme erfolgt ausschließlich nach Abschluss aller Module.

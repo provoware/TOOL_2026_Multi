@@ -149,3 +149,7 @@ Dies ist zunächst ein separater Entwicklungszweig. Vor der Übernahme ist die v
 ## Iteration 65 – geprüfte Anschlussbausteine (Entwicklungszweig)
 
 Programmdaten: rein lesender Nachweis voneinander unabhängiger Code- und Datenordner; keine automatische Bestandsmigration. Modulbaukasten: ausschließlich fest kodierte Datenoperationen nach expliziter Rechtezustimmung; kein Fremdcode. Video: gespeicherte Auftragsliste mit Zuständen, Absturz-Unterbrechungsmarkierung und Sperre paralleler gestarteter Jobs; Effektparameter mit begrenzter Intensität als **Vorbereitung**, noch keine FFmpeg-/GUI-Einbindung oder fertige Übergangseffekte. Alle Funktionen sind noch CI-pflichtige Kandidaten.
+
+## Iteration 66 – verlustfreie Probe der Altdatenmigration
+
+Nach positiver statischer Prüfung kann eine unabhängige Kopierprobe einen neuen Programm-Slot unter `slots/base` und die persönlichen Arbeitsdaten unter `persistent/daten` erzeugen. Der bisherige Programmordner und seine Inhalte bleiben unverändert; eine Prüfrechnung verhindert bei beschädigten Quelldaten eine unbemerkte Übernahme. Die erzeugten Kopien werden ausdrücklich nicht aktiviert. Ein vollständiger Schnellstart- und Rückfallmechanismus für bestehende Installationen fehlt noch und wird gesondert getestet. Keine manuelle Kubuntu-Abnahme während der Modulentwicklung.

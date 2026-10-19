@@ -9,8 +9,8 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 65,
-    "goal": "Getrennte Datenpfade, kontrollierte Modulaktionen, Video-Warteschlangen und Fade-Basis",
+    "number": 66,
+    "goal": "Getrennte und prüfbare Programm-/Datenkopie ohne Produktivaktivierung",
     "completed": 0,
     "open_next": 3
   },
@@ -1657,6 +1657,21 @@
       "path": "docs/ITERATION65.md",
       "release": true,
       "purpose": "Sicherheitsgrenzen der nächsten Entwicklungsstufe"
+    },
+    {
+      "path": "app/update_legacy_copy.py",
+      "release": true,
+      "purpose": "Geprüfte Kopierprobe für alte Installation ohne Aktivierung und Datenverlust"
+    },
+    {
+      "path": "tests/test_update_legacy_copy.py",
+      "release": false,
+      "purpose": "Negativtests für alte Daten, Symlinks und getrennte Zielorte"
+    },
+    {
+      "path": "docs/UPDATE_LEGACY_COPY.md",
+      "release": true,
+      "purpose": "Abgesicherter Umfang und Grenzen der nicht aktivierenden Migrationskopie"
     }
   ],
   "creative_modules": {
