@@ -106,3 +106,7 @@ Alle drei Einzelzweige bestanden vollständige GitHub-Automatik auf unverändert
 - PR #98: unabhängige Checkpoint- und echte Modulsteuerungs-Erweiterung, PR-CI #1035 erfolgreich und danach in `main` integriert. Ein gesonderter Hauptzweig-Prüflauf #1036 wurde gestartet.
 - Alle bis dahin als „Entwicklungszweig“ bezeichneten Iterationsabschnitte 56 bis 59 sind **historische Entstehungsberichte**. Maßgeblich ist die aktuelle Statusmatrix oben.
 - Automatische Produktivaktivierung und Rollback fehlen weiterhin. Reale manuelle Kubuntu-Abnahme bleibt ausschließlich für den Abschluss aller Module vorgesehen.
+
+## Iteration 60 – atomarer Slotwechsel (Entwicklungszweig)
+
+Ein getrennter Sicherheitsprototyp kann bei **explizit vorbereiteten verwalteten Slot-Installationen** eine neue Version in einen zweiten Programmordner kopieren, isoliert prüfen und den relativen Zeiger atomar umschalten. Bei fehlgeschlagener Nachprüfung oder unterbrochenem Wechsel bleibt die alte Version verfügbar beziehungsweise wird sie wieder aktiviert. **Normale bestehende Kubuntu-Installationen können damit noch nicht automatisch aktualisiert werden.** Dafür fehlen die geprüfte einmalige Migration, Trennung persönlicher Daten und der sichere Aufruf aus dem normalen Schnellstart. Siehe `docs/UPDATE_SLOTS.md`; derzeit keine praktische Kubuntu-Abnahme.
