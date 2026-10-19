@@ -14,7 +14,7 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [ ] Update-Manager weiterentwickeln: Sandbox und Checkpoint integriert; isolierte Slot-Umschaltung und automatischer Test-Rollback als Kandidat vorhanden; Migration der bisherigen Installation, Datenverzeichnis-Auslagerung, Aufruf über den Schnellstart und produktive Freigabe fehlen.
 - [ ] Modulbaukasten weiterentwickeln: Verträge/Katalog und Modulsteuerung vorhanden; deklarativer Modulentwurfs-Editor samt Feldern/Rechten als Prüfkandidat; fremde Python-Plugins, signierte Erweiterungen und vollständige Workflow-Module weiterhin offen.
 - [x] Wikimodul mit Artikeln, Sammlungen, Verweisen, Versionen und GUI über Integrations-PR #97 in main übernommen (CI #1031 und #1033 erfolgreich).
-- [ ] Entwicklungspool, Medien- und weitere Datei-/Projektmodule nach dem verbindlichen Modulplan ergänzen.
+- [ ] Entwicklungspool als Prüfkandidat mit Status, Arbeitsordnern, Kopien und ZIP; anschließend Audioplayer, Bildvorschau, Slideshow und weitere Module implementieren.
 - [x] PR #94/#95/#96 konfliktfrei über PR #97 integriert; PR-CI #1031 und main-CI #1033 erfolgreich, Vorläufer-PRs geschlossen.
 - [x] Programmsicherung samt isolierter Rückkehrkopie und die echte Modulsteuerung über PR #98 integriert; PR-CI #1035 erfolgreich.
 - [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.
