@@ -149,3 +149,22 @@ Dies ist zunächst ein separater Entwicklungszweig. Vor der Übernahme ist die v
 ## Iteration 65 – geprüfte Anschlussbausteine (Entwicklungszweig)
 
 Programmdaten: rein lesender Nachweis voneinander unabhängiger Code- und Datenordner; keine automatische Bestandsmigration. Modulbaukasten: ausschließlich fest kodierte Datenoperationen nach expliziter Rechtezustimmung; kein Fremdcode. Video: gespeicherte Auftragsliste mit Zuständen, Absturz-Unterbrechungsmarkierung und Sperre paralleler gestarteter Jobs; Effektparameter mit begrenzter Intensität als **Vorbereitung**, noch keine FFmpeg-/GUI-Einbindung oder fertige Übergangseffekte. Alle Funktionen sind noch CI-pflichtige Kandidaten.
+
+
+## Iteration 66 – Video-Oberfläche und Auftragsausführung (Kandidat)
+
+Die gespeicherte Videowarteschlange ist über Einreihen und manuellen Einzelstart an QProcess angebunden. Ein-/Ausblendstärke 0–100 % wird in FFmpeg-Filter umgesetzt; **das ist noch kein Überblenden zweier Bilder**. FFprobe prüft vor Veröffentlichung die vollständige MP4-Grundstruktur. Fehlende und abgebrochene Aufträge werden nicht als fertige Ausgaben veröffentlicht. Nach Absturz gibt es keine automatische Wiederholung. Die Gesamtprüfkette und die tatsächlichen Medienergebnisse bleiben Voraussetzung für Integration; Kubuntu-Praxistest erst am Projektende.
+
+
+## Iteration 66 – benutzbare Datenmodule (gesonderter Kandidat)
+
+Der vorhandene Modulbaukasten kann gespeicherte Formularentwürfe in einem eigenen Dialog zur tatsächlichen Datenaufnahme öffnen. Vor jedem Schreiben ist eine ausdrückliche Zustimmung erforderlich, die zusätzlich vom Modulrechte-Vertrag geprüft wird. Fremder Python- oder Shellcode bleibt verboten; Module können nur vordefinierte sichere Datenoperationen durchführen. Vollständige GitHub-Prüfung vor Integration erforderlich.
+
+
+## Iteration 66 – verlustfreie Probe der Altdatenmigration
+
+Nach positiver statischer Prüfung kann eine unabhängige Kopierprobe einen neuen Programm-Slot unter `slots/base` und die persönlichen Arbeitsdaten unter `persistent/daten` erzeugen. Der bisherige Programmordner und seine Inhalte bleiben unverändert; eine Prüfrechnung verhindert bei beschädigten Quelldaten eine unbemerkte Übernahme. Die erzeugten Kopien werden ausdrücklich nicht aktiviert. Ein vollständiger Schnellstart- und Rückfallmechanismus für bestehende Installationen fehlt noch und wird gesondert getestet. Keine manuelle Kubuntu-Abnahme während der Modulentwicklung.
+
+## Zusammenführung der drei Teilbereiche
+
+PR #107, #108 und #109 sind einzeln zu prüfen. Dieser Integrationsstand beinhaltet **sämtliche** Code- und Manifestergänzungen aus allen drei Zweigen. Keine produktive Bestandsmigration, kein Löschen persönlicher Daten, keine automatische Wiederholung unterbrochener Videoberechnungen und keine Fremdprogrammlaufzeit. Gemeinsame vollständige GitHub-Prüfung auf demselben Commit erforderlich. Kubuntu-Gesamtabnahme erst am Projektende.

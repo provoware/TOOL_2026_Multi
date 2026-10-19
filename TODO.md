@@ -12,13 +12,13 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [x] Ursprüngliche und neue Modulplanung in einer verbindlichen Statusmatrix zusammenführen.
 - [x] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests in `main` integriert (PR #90, GitHub-Prüflauf #1019).
 - [x] Sicherheitsprototyp der Update-Slots und Rückkehr auf Altversion in PR #100 integriert (CI #1039 grün).
-- [ ] Update-Manager produktiv vervollständigen: klassische Installationen sicher migrieren, persönliche Daten trennen und Schnellstart/Startnachprüfung/Rollback vollständig anbinden.
+- [ ] Update-Manager produktiv vervollständigen: separate Kopierprobe für alte Programm-/Benutzerdaten als CI-Kandidat vorhanden, aber Schnellstart, Aktivierung und vollständiger Rückfall einer realen Altinstallation weiterhin gesperrt.
 - [x] Grafischen Modulbaukasten mit sicheren Datenvorlagen und Vorschau in PR #101 integriert (CI #1041 grün).
-- [ ] Sichere Erweiterungs-API für fremde Plugins, signierte Pakete und wirkliche Module-Funktionen fehlen weiterhin.
+- [ ] Formularmodule können mit Einwilligung bereits eigene Datensätze im Modulbaukasten öffnen (CI-Kandidat); sichere Ausführung fremder Plugins und signierte Pakete fehlen weiterhin.
 - [x] Wikimodul mit Artikeln, Sammlungen, Verweisen, Versionen und GUI über Integrations-PR #97 in main übernommen (CI #1031 und #1033 erfolgreich).
 - [x] Entwicklungspool mit Status, Arbeitsordnern, Kopien und ZIP in PR #102 integriert (CI #1043 grün).
 - [x] Audioplayer, Bildvorschau und Video-/Slideshow-Basismodule in PR #103 integriert (PR-CI #1046 erfolgreich).
-- [ ] Video: FFprobe integriert (PR #105). Dauerhafte Zustandswarteschlange und Fade-Effektvertrag als isolierte Kandidaten der Iteration 65; tatsächliche QProcess-Anbindung, echte Bildüberblendungen, UI-Regler und reale Medienvergleiche fehlen.
+- [ ] Video: FFprobe integriert (PR #105). Videowarteschlange und Ein-/Ausblendeffekte in Iteration 66 an die GUI gekoppelt (Prüfkandidat); echte Bild-zu-Bild-Übergänge, vollständiger Batch-Nachweis und visuelle Ergebnisvergleiche fehlen.
 - [x] PR #94/#95/#96 konfliktfrei über PR #97 integriert; PR-CI #1031 und main-CI #1033 erfolgreich, Vorläufer-PRs geschlossen.
 - [x] Programmsicherung samt isolierter Rückkehrkopie und die echte Modulsteuerung über PR #98 integriert; PR-CI #1035 erfolgreich.
 - [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.
