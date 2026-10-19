@@ -1,6 +1,6 @@
 # Verbindlicher Modulplan – TOOL_2026_Multi
 
-**Stand:** 19.10.2026 · **Grundlage:** Hauptzweig 0.18.5 nach PR #88/#89/#90. Keine öffentliche Veröffentlichung.
+**Stand:** 19.10.2026 · **Grundlage:** Integrationskandidat PR #94/#95/#96 auf Entwicklungsbasis 0.18.5; noch kein öffentliches Release.
 
 ## Maßgebliche Entwicklungsentscheidung
 Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament. **Die erneute vollständige praktische Kubuntu-/Plasma-Abnahme erfolgt ausschließlich am Ende des gesamten Modulaufbaus**, wenn alle vereinbarten Funktionen integriert und die Oberfläche weitgehend stabil ist. Zwischendurch bleiben Quellcodeprüfung, Logik-/GUI-Tests, Wayland-Startprobe, Daten- und Wiederherstellungstests sowie ZIP-Prüfung verbindlich. Ein automatisches Testergebnis ist keine erneute manuelle Abnahme.
@@ -74,3 +74,21 @@ Pro Iteration ein abgegrenzter Umfang: **Vertrag → Datenformat → sichere Log
 
 ## Qualitätsnachpflege zu 0.18.5
 GitHub-Main #1020 bestand 254 Logik- und 164 GUI-Tests, Wayland, Restore und ZIP. Das nicht blockierende 60-Fall/180-Fenster-UI-Profil meldete **0 harte Fehler, aber 16 Warnungen** (zu langes „Bearbeiten“-Label in der rechten Leiste). Der Folgepatch verkürzt den Text und schützt späte Qt-Theme-Rückrufe. Der neue Patch benötigt eine eigene vollständige Prüfung; diese historische Aussage bleibt unverändert.
+
+## Iteration 58 – lokales Wiki (Entwicklungszweig)
+
+Das Wiki wurde als separater Umsetzungskandidat mit mehreren Sammlungen, Artikeln, Schlagwortsuche, geprüften Querverweisen, bis zu 20 früheren Fassungen und sicherem Kopierimport vorbereitet. Es nutzt die bestehenden Fenster-, Theme-/Zoom- und Modularchiv-Standards. Noch nicht in `main`, automatische PR-Prüfung vor Integration erforderlich. Vollständige praktische Kubuntu-Abnahme erst am Ende der Modulentwicklung.
+
+
+## Iteration 56 – Update-Laufzeitprobe (Entwicklungszweig)
+
+Eine streng verweigernde Bubblewrap-Prüfung wird als separater Kandidat vorbereitet. Ohne wirksame Isolation darf keinerlei Paketcode ausgeführt werden. Die Probe ist ohne automatische Aktivierung und ohne Rückfallfunktion; vollständiger Update-Manager weiterhin **teilweise**. Die GUI- und Praxisabnahme bleibt bis zum Ende zurückgestellt, die GitHub-Vollprüfung ist für die Übernahme erforderlich.
+
+
+## Iteration 57 – Modulkatalog-Verträge (Entwicklungszweig)
+
+Stabile Schnittstellenbeschreibung und atomarer Modul-Katalog für geprüfte Kennungen werden aufgebaut. **Nur Metadatenregistrierung, kein dynamisches Laden und keine Produktaktivierung**. Die Navigation wird erst nach separater geprüfter Integration an diese Vertragsquelle gebunden. Dies ist ein Anfang des Plugin-Systems, noch keine vollständige Plugin-Plattform.
+
+## Integrationsgrenze (PR #94, #95, #96)
+
+Alle drei Einzelzweige bestanden vollständige GitHub-Automatik auf unveränderten Commits; die gemeinsame Integration benötigt einen eigenen erfolgreichen Prüfstand vor dem Hauptzweig. Die isolierte Probe ersetzt keine produktive Update-Aktivierung. Der Modulkatalog ist noch ohne wirksame Navigation. Die manuelle Kubuntu-/Plasma-Gesamtabnahme bleibt bis nach Fertigstellung aller Module ausgesetzt.

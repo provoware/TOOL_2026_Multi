@@ -6,7 +6,7 @@ from pathlib import Path
 from app.atomic_io import atomic_write_json
 
 MAX_BYTES = 10 * 1024 * 1024
-MODULES = {'textbausteine', 'buecher', 'ideen', 'konten', 'schnellstarter'}
+MODULES = {'textbausteine', 'buecher', 'ideen', 'konten', 'schnellstarter', 'wiki'}
 
 
 def text(value, label='Text', *, required=False, limit=200_000):

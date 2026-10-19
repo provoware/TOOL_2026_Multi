@@ -11,8 +11,10 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [x] PR #89 (0.18.4) nach Bereinigung des gestapelten Zweigs und grüner PR-Prüfung übernehmen.
 - [x] Ursprüngliche und neue Modulplanung in einer verbindlichen Statusmatrix zusammenführen.
 - [x] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests in `main` integriert (PR #90, GitHub-Prüflauf #1019).
-- [ ] Update-Manager nach statischer Vorprüfung sicher erweitern (Sandbox, Checkpoint, Aktivierung, Rollback in getrennten Schritten).
-- [ ] Modul-/Plugin-Verträge, Wiki, Entwicklungspool und weitere ursprünglich geplante Module iterativ ergänzen.
+- [ ] Update-Manager weiter absichern: Sandbox-Probe (PR #94) vorhanden, produktiver Checkpoint, Aktivierung und automatischer Rollback folgen getrennt.
+- [ ] Modulbaukasten vollständig anbinden: versionierter Katalog (PR #95) vorhanden, tatsächliche Modulsteuerung und geprüfter Plugin-Ladeweg folgen.
+- [ ] Wiki- und Entwicklungspool: Wiki-Modul im Integrationskandidaten (PR #96), Entwicklungspool und weitere Module noch offen.
+- [ ] Gemeinsame Integration PR #94/#95/#96 mit vollständig erfolgreicher automatischer Gesamtprüfung und aktualisierten Dokumenten abschließen.
 - [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.
 
 **Grundregel:** Während des Modulaufbaus bleiben die automatisierten Vollprüfungen aktiv. Die bereits erfolgte positive Basisabnahme wird nicht ständig wiederholt; die nächste vollständige **manuelle** Kubuntu-Abnahme ist ein Abschlussmeilenstein.
