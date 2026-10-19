@@ -1682,6 +1682,11 @@
       "path": "docs/UPDATE_LEGACY_COPY.md",
       "release": true,
       "purpose": "Abgesicherter Umfang und Grenzen der nicht aktivierenden Migrationskopie"
+    },
+    {
+      "path": "tests/test_media_real_effects.py",
+      "release": false,
+      "purpose": "Realer FFmpeg-Vergleich der Ein- und Ausblendintensitäten mit FFprobe"
     }
   ],
   "creative_modules": {
