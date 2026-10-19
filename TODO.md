@@ -628,3 +628,5 @@ Kein verschlüsselter Tresor und keine semantische Erkennung beliebiger Geheimni
 Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition leert auch deren sichtbaren Entwurf. Account-URL-Schutz umfasst Query und Fragment.
 
 - [ ] Opt-in-Datentrennung und verwalteter Programmstart als Entwicklungsprüfkandidat: alter Standardstart unverändert; vollständige Produktivmigration und Umschaltung bestehender Startsymbole noch gesperrt.
+
+- [ ] Bildübergänge in der Video-Warteschlange aus der Iteration 68 nach CI und Hauptzweigprüfung freigeben; langfristig Batch-Statistik, Fortschritt pro Auftrag und weitere reale Videoqualitätsvergleiche ergänzen.
