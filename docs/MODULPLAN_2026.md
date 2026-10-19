@@ -74,3 +74,7 @@ Pro Iteration ein abgegrenzter Umfang: **Vertrag → Datenformat → sichere Log
 
 ## Qualitätsnachpflege zu 0.18.5
 GitHub-Main #1020 bestand 254 Logik- und 164 GUI-Tests, Wayland, Restore und ZIP. Das nicht blockierende 60-Fall/180-Fenster-UI-Profil meldete **0 harte Fehler, aber 16 Warnungen** (zu langes „Bearbeiten“-Label in der rechten Leiste). Der Folgepatch verkürzt den Text und schützt späte Qt-Theme-Rückrufe. Der neue Patch benötigt eine eigene vollständige Prüfung; diese historische Aussage bleibt unverändert.
+
+## Iteration 57 – Modulkatalog-Verträge (Entwicklungszweig)
+
+Stabile Schnittstellenbeschreibung und atomarer Modul-Katalog für geprüfte Kennungen werden aufgebaut. **Nur Metadatenregistrierung, kein dynamisches Laden und keine Produktaktivierung**. Die Navigation wird erst nach separater geprüfter Integration an diese Vertragsquelle gebunden. Dies ist ein Anfang des Plugin-Systems, noch keine vollständige Plugin-Plattform.

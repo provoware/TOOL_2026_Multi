@@ -1367,6 +1367,21 @@
       "path": "docs/SCHNELLSTARTER.md",
       "release": true,
       "purpose": "Bedienung und Schutzgrenzen der Link-Schnellstarter"
+    },
+    {
+      "path": "app/module_contracts.py",
+      "release": true,
+      "purpose": "Stabile eingeschränkte Modulverträge und atomare Registrierung ohne Fremdcode"
+    },
+    {
+      "path": "tests/test_module_contracts.py",
+      "release": false,
+      "purpose": "Schutztests für Pluginverträge, Registry und Dateisicherheit"
+    },
+    {
+      "path": "docs/MODULBAUKASTEN.md",
+      "release": true,
+      "purpose": "Grenzen und spätere Integrationsschritte des Modulbaukastens"
     }
   ],
   "creative_modules": {
@@ -1479,5 +1494,13 @@
     "right_rail_min_width": 1500,
     "right_rail_max_zoom": 125,
     "automatic_navigation": false
+  },
+  "module_contracts": {
+    "schema_version": 1,
+    "api_version": 1,
+    "mode": "WHITELIST_METADATA_ONLY",
+    "exec_external_code": false,
+    "dynamic_loading": false,
+    "ui_activation_wired": false
   }
 }

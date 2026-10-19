@@ -12,7 +12,7 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [x] Ursprüngliche und neue Modulplanung in einer verbindlichen Statusmatrix zusammenführen.
 - [x] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests in `main` integriert (PR #90, GitHub-Prüflauf #1019).
 - [ ] Update-Manager nach statischer Vorprüfung sicher erweitern (Sandbox, Checkpoint, Aktivierung, Rollback in getrennten Schritten).
-- [ ] Modul-/Plugin-Verträge, Wiki, Entwicklungspool und weitere ursprünglich geplante Module iterativ ergänzen.
+- [ ] Modul-/Plugin-Verträge, Wiki, Entwicklungspool und weitere ursprünglich geplante Module iterativ ergänzen (Vertragsregister als gesonderter Entwicklungskandidat angelegt; dynamische Nutzung fehlt).
 - [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.
 
 **Grundregel:** Während des Modulaufbaus bleiben die automatisierten Vollprüfungen aktiv. Die bereits erfolgte positive Basisabnahme wird nicht ständig wiederholt; die nächste vollständige **manuelle** Kubuntu-Abnahme ist ein Abschlussmeilenstein.
