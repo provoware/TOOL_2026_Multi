@@ -1,0 +1,5 @@
+# Iteration 73: Altstarter-Sicherung und Fehlerfallregression
+
+Die neue Routine `prepare_launcher_backup()` erstellt eine **unabhängige, geprüfte Kopie** von `schnellstart.sh`. Sie benötigt ausdrückliche Zustimmung, eine reguläre Quelldatei und einen eigenständigen Sicherungsordner. Symlinks, verschachtelte Sicherungsziele und veränderte Hashwerte werden verweigert. `verify_launcher_backup()` prüft vor einem möglichen späteren Wechsel Original und Kopie erneut. **Keine Aktivierung:** Der produktive Schnellstart wird in dieser Iteration weder ersetzt noch modifiziert.
+
+Die Negativtests simulieren Plugin-Zeitüberschreitungen, beschädigte beziehungsweise fehlende Videoquellen und unerlaubte Queue-Zustandswechsel. Sie prüfen, dass keine vorhandene Ausgabedatei überschrieben und ein fehlerhafter Job nicht versehentlich erneut eingereiht wird. Später erforderlich: vollständige Echt-Isolationsmatrix, echte Prozessabbrüche und die sichere Erstinstallation eines Start-Wrappers mit nachvollziehbarer Rückkehr. Die vollständige manuelle Kubuntu-Gesamtabnahme bleibt bis zum Abschluss aller Module aufgeschoben.
