@@ -1,6 +1,6 @@
 # Verbindlicher Modulplan – TOOL_2026_Multi
 
-**Stand:** 19.10.2026 · **Grundlage:** Integrationskandidat PR #94/#95/#96 auf Entwicklungsbasis 0.18.5; noch kein öffentliches Release.
+**Stand:** 19.10.2026 · **Grundlage:** Hauptzweig 0.18.5 nach PR #97 und #98, erfolgreich geprüft mit CI #1033 bzw. PR-CI #1035. Noch kein öffentliches Release.
 
 ## Maßgebliche Entwicklungsentscheidung
 Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament. **Die erneute vollständige praktische Kubuntu-/Plasma-Abnahme erfolgt ausschließlich am Ende des gesamten Modulaufbaus**, wenn alle vereinbarten Funktionen integriert und die Oberfläche weitgehend stabil ist. Zwischendurch bleiben Quellcodeprüfung, Logik-/GUI-Tests, Wayland-Startprobe, Daten- und Wiederherstellungstests sowie ZIP-Prüfung verbindlich. Ein automatisches Testergebnis ist keine erneute manuelle Abnahme.
@@ -32,8 +32,10 @@ Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament
 | Zentrale Dateisuche | Gespeicherte Namen und Textinhalte mit Vorschau und Schutzgrenzen; kein vollwertiger Dateimanager |
 | Hilfe, Fehlerlog, Recovery | Anleitung, Ereignisse, Diagnose und Fehlerbehandlung |
 | Persönliche Datensicherung | Separates Daten-ZIP, Integritätsprüfung, isolierte Wiederherstellung |
-| Update-Vorprüfung | ZIP/Manifest/Hash im getrennten Staging prüfen; **keine** Aktivierung oder Rückkehr |
+| Update-Schutzstufen | Paket-ZIP/Manifest/Hash prüfen; optionale abgeschirmte Laufzeitprobe, geprüfter Programm-Checkpoint und isolierte Rückkehrkopie. **Keine Produktivaktivierung/automatischer Rollback.** |
 | Link-Schnellstarter | Offline gespeicherte Adressen/Gruppen mit bewusstem Browserstart und kompakter rechter Leiste |
+| Lokales Wiki | Wissenssammlungen, Artikel, Schlagwortsuche, Querverweise, Textversionen und sicherer Import/Export |
+| Modulsteuerung | Vier fest bekannte Zusatzmodule (Ideen, Kontometadaten, Schnellstarter, Wiki) mit speicherbarer Ein-/Aus-Schaltung, ohne Fremdcode |
 | Leistungsdiagnose | Freiwillige lokale Werte und Benchmarkwerkzeuge |
 
 ## B. Begonnene oder unvollständige Bestandteile
@@ -45,7 +47,7 @@ Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament
 | Eigenständige Notizen | Titelgestützter TXT-/MD-Speicher und eigenständiges Notizfenster statt nur Projekt-Kurznotiz |
 | Einstellungen | Zentrale persistente Einstellungsverwaltung statt lediglich Zoom/Theme |
 | Dateimanager | Ordneransicht, sicheres Umbenennen, Papierkorb, Vorschau, Import/Export |
-| Update-Manager | Isolierte Laufzeitprobe, vollständiger Checkpoint, atomare Aktivierung, Nachprüfung und Rollback |
+| Update-Manager | Isolierte Probe und Checkpoint/Rückkehrkopie vorhanden; noch ausstehend: atomare Aktivierung, Startnachprüfung und automatischer Rollback |
 | Automatische GitHub-Verwaltung | Erst nach klar definiertem Offline-/Online- und Sicherheitskonzept |
 | Hörspiel-, Blog-, Prompt-Produktion | Dedizierte Arbeitsabläufe über vorhandene Schreibvorlagen hinaus |
 
@@ -53,17 +55,16 @@ Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament
 
 | Priorität | Modul | Erwartete nächste Iteration |
 |---|---|---|
-| 1 | Sicherer Update-Manager, nächste Ausbaustufe | Isolierte Prüfung vor Aktivierung, danach Checkpoint/Rollback in gesonderten Iterationen |
-| 2 | Projektmodulbaukasten / Plugin-System | Verträge, Modulmanifest, stabile Schnittstellen und Testbereich vor dynamischem Laden |
-| 3 | Wiki / lokale Wissensbasen | Mehrere Sammlungen, Artikel, Tags, Querverweise, Suche, Versionsschutz, Import/Export |
-| 4 | Arbeitsverzeichnis-/Entwicklungspool | Ordner, Status, sichere Kopien, Archive und nachvollziehbare Organisation |
-| 5 | Audioplayer | Playlist mit Speicherung, Wiedergabe, Sprung und Lautstärke |
-| 6 | Bildvorschau | Dateiauswahl, skalierbare Ansicht und Bildnavigation |
-| 7 | Video- und Slideshow-Generator | FFmpeg-Verarbeitung, Auftragsschlange, Fortschritt, Abbruch, Ausgabeprüfung |
-| 8 | Reimfinder | Lokales deutsches Nachschlage-/Reimwerkzeug |
-| 9 | Duplikatprüfer | Dateihash-/Vorschauprüfung, niemals automatische Löschung |
-| 10 | Read-only-Konsole / Entwicklerbereich | Diagnoseanzeige und begrenzte Entwicklerrechte ohne versteckte Schreibwege |
-| 11 | Zusätzliche Datei-/Projektwerkzeuge | Vereinbarte Restfunktionen aus B nach getrennten Prüfverträgen |
+| 1 | Produktive Update-Umschaltung | Atomare Aktivierung erst nach geprüftem Checkpoint, Startnachprüfung und gesichertem automatischem Rollback |
+| 2 | Erweiterter Projektmodulbaukasten / Plugin-System | Bestehende Modulverträge und Menüsteuerung um geprüfte Modulbau- und Fremdplugin-Funktionen ergänzen |
+| 3 | Arbeitsverzeichnis-/Entwicklungspool | Ordner, Status, sichere Kopien, Archive und nachvollziehbare Organisation |
+| 4 | Audioplayer | Playlist mit Speicherung, Wiedergabe, Sprung und Lautstärke |
+| 5 | Bildvorschau | Dateiauswahl, skalierbare Ansicht und Bildnavigation |
+| 6 | Video- und Slideshow-Generator | FFmpeg-Verarbeitung, Auftragsschlange, Fortschritt, Abbruch, Ausgabeprüfung |
+| 7 | Reimfinder | Lokales deutsches Nachschlage-/Reimwerkzeug |
+| 8 | Duplikatprüfer | Dateihash-/Vorschauprüfung, niemals automatische Löschung |
+| 9 | Read-only-Konsole / Entwicklerbereich | Diagnoseanzeige und begrenzte Entwicklerrechte ohne versteckte Schreibwege |
+| 10 | Zusätzliche Datei-/Projektwerkzeuge | Vereinbarte Restfunktionen aus B nach getrennten Prüfverträgen |
 
 ## Iterationsregel
 Pro Iteration ein abgegrenzter Umfang: **Vertrag → Datenformat → sichere Logik → Oberfläche → Tests → Dokumentation → PR → grüne GitHub-Prüfung → Integration**. Das gemeinsame `MANIFEST.json`, die Texte, Hilfe, Fensterverwaltung, Zoom/Themes, Atomarspeicherung, Import-/Export- und Fehlerwege werden konsequent wiederverwendet.
@@ -98,3 +99,10 @@ Alle drei Einzelzweige bestanden vollständige GitHub-Automatik auf unverändert
 - Update: Nach validiertem Staging können nur die im Release-Manifest freigegebenen Betriebsdateien in einen eigenen, schreibgeschützten Sicherungsbestand kopiert, erneut geprüft und in ein neues Rückkehrverzeichnis wiederhergestellt werden. **Das laufende Programm wird nicht ersetzt.** Ein automatischer Rückwechsel erfordert später eine getrennte atomare Slot-Umschaltung mit Rückfallvertrag. Die bestehende persönliche Datensicherung bleibt eigenständig.
 - Modulkatalog: Nutzer können die bereits fest einkompilierten Zusatzmodule **Ideen, Kontometadaten, Schnellstarter und Wiki** mit realen Menü- und Tastenkürzel-Sperren aktivieren/deaktivieren. Voreinstellung: alle zugänglich. Die Daten werden beim Abschalten nicht gelöscht; ein derzeit offenes Modulfenster verhindert die Deaktivierung. Kernmodule bleiben unangetastet. **Drittmodule können weiterhin nicht ausgeführt werden**.
 - Beide Bereiche werden im eigenen Pull Request vollständig automatisch geprüft. Kein manueller Kubuntu-Test vor Abschluss aller Module.
+
+## Verbindlicher Hauptzweig-Nachweis – Iteration 59
+
+- PR #97: Vereinigung von Update-Sandbox, Modulvertrag und Wiki, vollständige Integrations-CI #1031 erfolgreich; danach Hauptzweig-CI #1033 erfolgreich.
+- PR #98: unabhängige Checkpoint- und echte Modulsteuerungs-Erweiterung, PR-CI #1035 erfolgreich und danach in `main` integriert. Ein gesonderter Hauptzweig-Prüflauf #1036 wurde gestartet.
+- Alle bis dahin als „Entwicklungszweig“ bezeichneten Iterationsabschnitte 56 bis 59 sind **historische Entstehungsberichte**. Maßgeblich ist die aktuelle Statusmatrix oben.
+- Automatische Produktivaktivierung und Rollback fehlen weiterhin. Reale manuelle Kubuntu-Abnahme bleibt ausschließlich für den Abschluss aller Module vorgesehen.

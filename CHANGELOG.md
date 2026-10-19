@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Neu in 0.18.5-Entwicklung nach PR #97 und #98 (19.10.2026, kein öffentliches Release)
+
+- PR #97 integriert updateisolierte Laufzeitprobe, versionierte Modulverträge und das lokale Wiki nach gemeinsamer grüner CI #1031; main-CI #1033 ebenfalls erfolgreich.
+- PR #98 ergänzt eine rein programmbezogene Checkpoint-Sicherung und eine prüfbar getrennte Rückkehrkopie. Die aktive Installation wird dabei nicht überschrieben; produktive Aktivierung und automatischer Rollback fehlen weiterhin.
+- Vier schon vorhandene Zusatzmodule können über „Module verwalten“ tatsächlich ein-/ausgeschaltet werden. Bestehende Arbeitsdaten bleiben erhalten und offene Modulfenster verhindern unbeabsichtigtes Abschalten.
+- PR-CI #1035 erfolgreich; Hauptzweig-CI #1036 nach der Integration gestartet. Keine vorgezogene manuelle Kubuntu-Abnahme.
+
 ## 0.18.5 – Modulplan und Link-Schnellstarter (Entwicklungskandidat, 19.10.2026)
 
 - Offene PRs bereinigt: #83 als durch #87 überholt geschlossen, #88 und #89 nach automatischer Prüfung integriert.

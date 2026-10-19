@@ -1,6 +1,6 @@
 # Getrennte Programmsicherung und Rückkehrkopie (Iteration 59)
 
-**Entwicklungskandidat, keine automatische Programminstallation.**
+**Seit PR #98 im Entwicklungs-Hauptzweig integriert. Noch keine öffentliche Veröffentlichung und keine automatische Programminstallation.**
 
 Der bestehende Update-Manager prüft ein fremdes ZIP zunächst statisch und kann es optional in Linux-Isolierung testen. Die neue Checkpoint-Stufe ergänzt eine eigene Sicherung **des aktiven Programmcodes**. Dabei werden ausschließlich jene Dateien erfasst, die das aktive `MANIFEST.json` als Betriebsdateien freigibt. Persönliche Ordner wie `daten/` werden nicht erfasst und nicht berührt. Sie haben eine **eigene** Datensicherung.
 

@@ -23,6 +23,9 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 | Leistungsdiagnose | Zusätzliche lokale Messung einschalten, ausgewählte Tagesdaten ansehen, exportieren und löschen. |
 | Dateisuche | Gespeicherte Namen und Textinhalte mit Trefferliste und Vorschau finden. |
 | Link-Schnellstarter (0.18.5) | Namen und Gruppen lokaler Webverknüpfungen verwalten; bewusst im Browser öffnen. |
+| Lokales Wiki | Eigene Sammlungen und Artikel anlegen, suchen, verknüpfen und ältere Fassungen aufrufen. |
+| Module verwalten | Ideenarchiv, Kontometadaten, Schnellstarter und Wiki im Menü ein- oder ausschalten. |
+| Programmsicherung für Updates | Nach Paketprüfung nur Betriebsdateien gesondert sichern und in einen neuen Ordner zurückholen; die laufende Installation bleibt unberührt. |
 | Hilfe | Erklärungen und technische Fehlermeldungen in verständlicher Sprache lesen. |
 | Anzeige | Zwischen vier Farben und fünf Zoomstufen von 100 bis 200 % wählen. |
 
@@ -34,7 +37,9 @@ Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: Reimfinder
 
 ## Was wurde zuletzt geprüft?
 
-Textbuttons/Buchwerkstatt (PR #84) und die freiwillige Leistungsdiagnose (PR #85) sind nach ausdrücklicher Freigabe in `main` enthalten. Der [Main-Lauf #1011](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39132402699) auf `526a423` bestand 200 Logiktests, 148 GUI-Tests, Wayland-Start, Restore und ZIP-Erzeugung. Seine größere Oberflächenmatrix meldete jedoch 24 Fehler und acht Warnungen; ein technisch erfolgreicher Lauf bedeutet deshalb kein fehlerfreies Layout.
+**Aktueller Bestand:** Die gemeinsame Modul-Integration wurde in [PR #97](https://github.com/provoware/TOOL_2026_Multi/pull/97) nach erfolgreicher [CI #1031](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39288221387) übernommen; der anschließende [main-Prüflauf #1033](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39289592547) war ebenfalls erfolgreich. [PR #98](https://github.com/provoware/TOOL_2026_Multi/pull/98) ergänzt die geprüfte Programmsicherung und echte Zusatzmodulschalter (CI #1035 erfolgreich); der zugehörige neue Hauptzweiglauf #1036 wurde gestartet. Ein automatischer Update-Rollback fehlt weiterhin. Die komplette manuelle Kubuntu-Abnahme erfolgt nur einmal ganz am Projektende.
+
+**Ältere Nachweise (historisch):** Textbuttons/Buchwerkstatt (PR #84) und die freiwillige Leistungsdiagnose (PR #85) sind nach ausdrücklicher Freigabe in `main` enthalten. Der [Main-Lauf #1011](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39132402699) auf `526a423` bestand 200 Logiktests, 148 GUI-Tests, Wayland-Start, Restore und ZIP-Erzeugung. Seine größere Oberflächenmatrix meldete jedoch 24 Fehler und acht Warnungen; ein technisch erfolgreicher Lauf bedeutet deshalb kein fehlerfreies Layout.
 
 Version **0.18.2** behebt diese Befunde als eigene Iteration zu [Issue #86](https://github.com/provoware/TOOL_2026_Multi/issues/86). Die lokale Release-Matrix erreicht nun **60 Fälle / 180 Fenster, 0 Fehler, 0 Warnungen**. Die vollständige GitHub-Abnahme muss zum finalen neuen Head gehören; ihr Nachweis wird am zugehörigen Pull Request geführt. Details: [Iteration 42](ITERATION42_LAYOUT.md).
 
