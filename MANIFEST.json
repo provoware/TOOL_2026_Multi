@@ -9,8 +9,8 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 72,
-    "goal": "Geprüfter Launcher-Zeiger mit Rückkehrjournal und praktische Isolations-/Retry-Negativtests",
+    "number": 73,
+    "goal": "Unabhängige Altstarter-Sicherung und negative Plugin-/Videoprüfungen",
     "completed": 0,
     "open_next": 3
   },
@@ -1833,6 +1833,26 @@
       "path": "docs/ITERATION72.md",
       "release": true,
       "purpose": "Kontrollierte Launcherprobe mit Grenzen zur produktiven Altinstallation"
+    },
+    {
+      "path": "app/launcher_backup.py",
+      "release": true,
+      "purpose": "Unabhängige Sicherung und Hashprüfung regulärer Altstartskripte ohne Aktivierung"
+    },
+    {
+      "path": "tests/test_launcher_backup.py",
+      "release": false,
+      "purpose": "Altstarter-, Manipulations- und Sicherungszielprüfungen"
+    },
+    {
+      "path": "tests/test_iteration73_failure_injection.py",
+      "release": false,
+      "purpose": "Negativprüfungen für Plugin-Zeitlimit und fehlgeschlagene Medienjobs"
+    },
+    {
+      "path": "docs/ITERATION73.md",
+      "release": true,
+      "purpose": "Grenzen der vorbereiteten Schnellstartmigration und Testabdeckung"
     }
   ],
   "creative_modules": {
