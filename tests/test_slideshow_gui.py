@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from PySide6.QtWidgets import QApplication
 from app.slideshow_window import SlideshowWindow
+from app import media_queue
 
 
 class SlideshowGuiTests(unittest.TestCase):
@@ -29,6 +30,24 @@ class SlideshowGuiTests(unittest.TestCase):
                 self.assertEqual(window.zoom_percent, 150)
             finally:
                 window.close()
+                self.app.processEvents()
+
+    def test_queue_visible_and_fade_control_persisted(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            image = root / "photo.png"
+            image.write_bytes(b"image bytes")
+            win = SlideshowWindow(root)
+            try:
+                win.fade.setValue(45)
+                win.images = [str(image)]
+                win.output.setText(str(root / "result.mp4"))
+                win.enqueue_current()
+                self.assertEqual(win.queue_list.count(), 1)
+                self.assertEqual(media_queue.load(root)["jobs"][0]["fade"], 45)
+                self.assertEqual(media_queue.load(root)["jobs"][0]["status"], "waiting")
+            finally:
+                win.close()
                 self.app.processEvents()
 
     def test_invalid_preset_refused(self):

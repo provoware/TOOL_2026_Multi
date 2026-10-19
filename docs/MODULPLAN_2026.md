@@ -149,3 +149,7 @@ Dies ist zunächst ein separater Entwicklungszweig. Vor der Übernahme ist die v
 ## Iteration 65 – geprüfte Anschlussbausteine (Entwicklungszweig)
 
 Programmdaten: rein lesender Nachweis voneinander unabhängiger Code- und Datenordner; keine automatische Bestandsmigration. Modulbaukasten: ausschließlich fest kodierte Datenoperationen nach expliziter Rechtezustimmung; kein Fremdcode. Video: gespeicherte Auftragsliste mit Zuständen, Absturz-Unterbrechungsmarkierung und Sperre paralleler gestarteter Jobs; Effektparameter mit begrenzter Intensität als **Vorbereitung**, noch keine FFmpeg-/GUI-Einbindung oder fertige Übergangseffekte. Alle Funktionen sind noch CI-pflichtige Kandidaten.
+
+## Iteration 66 – Video-Oberfläche und Auftragsausführung (Kandidat)
+
+Die gespeicherte Videowarteschlange ist über Einreihen und manuellen Einzelstart an QProcess angebunden. Ein-/Ausblendstärke 0–100 % wird in FFmpeg-Filter umgesetzt; **das ist noch kein Überblenden zweier Bilder**. FFprobe prüft vor Veröffentlichung die vollständige MP4-Grundstruktur. Fehlende und abgebrochene Aufträge werden nicht als fertige Ausgaben veröffentlicht. Nach Absturz gibt es keine automatische Wiederholung. Die Gesamtprüfkette und die tatsächlichen Medienergebnisse bleiben Voraussetzung für Integration; Kubuntu-Praxistest erst am Projektende.

@@ -9,8 +9,8 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 65,
-    "goal": "Getrennte Datenpfade, kontrollierte Modulaktionen, Video-Warteschlangen und Fade-Basis",
+    "number": 66,
+    "goal": "Videowarteschlange und Fade-Parameter an die Desktop-Oberfläche angebunden",
     "completed": 0,
     "open_next": 3
   },

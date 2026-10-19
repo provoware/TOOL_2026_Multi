@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 from app import media_files as media
 from app import module_archive
+from app.media_effects import fade_filter
 
 
 def output_target(root, destination, sources):
@@ -26,7 +27,7 @@ def output_target(root, destination, sources):
     return target
 
 
-def slideshow_command(root, images, destination, *, seconds=5, audio=None):
+def slideshow_command(root, images, destination, *, seconds=5, audio=None, fade=0):
     if (not isinstance(images, (list, tuple)) or not 1 <= len(images) <= 20
             or isinstance(seconds, bool) or not isinstance(seconds, (int, float))
             or not 1 <= seconds <= 30):
@@ -44,7 +45,9 @@ def slideshow_command(root, images, destination, *, seconds=5, audio=None):
     if sound:
         inputs += ["-stream_loop", "-1", "-i", str(sound)]
     blocks = [f"[{i}:v]scale=1280:720:force_original_aspect_ratio=decrease,"
-              f"pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps=25,setsar=1,format=yuv420p[v{i}]"
+              f"pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps=25,setsar=1,"
+              + fade_filter(i, seconds, fade)
+              + f"format=yuv420p[v{i}]"
               for i in range(len(pics))]
     blocks.append("".join(f"[v{i}]" for i in range(len(pics))) +
                   f"concat=n={len(pics)}:v=1:a=0[outv]")
