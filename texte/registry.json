@@ -237,5 +237,16 @@
     "modules.custom_name": "Feldname",
     "modules.custom_value": "Wert",
     "modules.custom_duplicate": "Jedes Zusatzfeld braucht einen eigenen, nicht leeren Namen."
+  },
+  "modules": {
+    "quicklinks": "Link-Schnellstarter",
+    "quicklinks_name": "Name des Schnellstarters",
+    "quicklinks_url": "Webadresse (https:// oder http://)",
+    "quicklinks_group": "Gruppe, optional",
+    "quicklinks_icon": "Kurzer Symboltext, optional",
+    "quicklinks_open": "Ausgewählte Webseite öffnen",
+    "quicklinks_delete": "Ausgewählten Eintrag löschen",
+    "quicklinks_opened": "Adresse an den Standardbrowser übergeben.",
+    "quicklinks_deleted": "Schnellstarter entfernt."
   }
 }

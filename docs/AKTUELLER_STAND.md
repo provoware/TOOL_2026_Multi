@@ -1,6 +1,6 @@
 # Aktueller Projektstand – leicht verständlich
 
-**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.4 (lokaler Prüfkandidat)
+**Stand:** 19. Oktober 2026 · **Programmversion:** 0.18.5 (Entwicklungskandidat)
 
 ## Wozu dient Provoware?
 
@@ -22,8 +22,11 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 | Kalender | Termine verwalten; Erinnerungen erscheinen, solange das Hauptprogramm läuft. |
 | Leistungsdiagnose | Zusätzliche lokale Messung einschalten, ausgewählte Tagesdaten ansehen, exportieren und löschen. |
 | Dateisuche | Gespeicherte Namen und Textinhalte mit Trefferliste und Vorschau finden. |
+| Link-Schnellstarter (Kandidat 0.18.5) | Namen und Gruppen lokaler Webverknüpfungen verwalten; bewusst im Browser öffnen. |
 | Hilfe | Erklärungen und technische Fehlermeldungen in verständlicher Sprache lesen. |
 | Anzeige | Zwischen vier Farben und fünf Zoomstufen von 100 bis 200 % wählen. |
+
+Maßgeblich für die vollständige Alt- und Neuplanung ist der [Modulplan](MODULPLAN_2026.md). Die positive Basisabnahme bleibt gültig; eine erneute praktische Gesamt-Kubuntu-Abnahme ist erst nach allen geplanten Modulen vorgesehen. Zwischendurch bleiben sämtliche automatisierten Prüfungen verbindlich.
 
 ## Was ist noch nicht fertig?
 

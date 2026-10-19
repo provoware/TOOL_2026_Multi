@@ -8,7 +8,7 @@ Du musst diese Dateien **nicht** lesen, um Provoware zu benutzen. Für den Allta
 
 | Frage | Passende Datei |
 |---|---|
-| Was funktioniert heute, was fehlt noch? | [Aktueller Stand](AKTUELLER_STAND.md) und [Aufgabenübersicht](../TODO.md) |
+| Was funktioniert heute, was fehlt noch? | [Aktueller Stand](AKTUELLER_STAND.md), [verbindlicher Modulplan](MODULPLAN_2026.md) und [Aufgabenübersicht](../TODO.md) |
 | Welche Ordner enthalten persönliche Daten? | [Ordnerstruktur](ORDNERSTRUKTUR.md) |
 | Wie sind Sicherung und Wiederherstellung bisher geplant? | [Sicherungskonzept](BACKUP_KONZEPT.md) |
 | Welche Regeln gelten bei Änderungen? | [Entwicklungsregeln](ENTWICKLUNGSREGELN.md) und [AGENTS](../AGENTS.md) |
@@ -60,3 +60,5 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein P
 - [Prozessstartmessung und Text-Strukturhilfen](STARTMESSUNG_UND_STRUKTUR.md)
 
 - [Versionsunterlagen 0.18.4](FREIGABE_0_18_4.md)
+
+- [Rechte Link-Schnellstarter-Leiste](SCHNELLSTARTER.md) – Bedienung, Datenschutz und Zoomgrenzen.

@@ -45,7 +45,13 @@ Ablauf:
 
 Offene Punkte aus einer Iteration werden mit Ursache, Priorität und Abhängigkeit in die nächste Iterationsplanung übernommen. Nichts wird stillschweigend vergessen.
 
-## 3a. Effiziente Übertragung und verlässliche Tests
+## 3a. Dauerhafte Reihenfolge der Produktabnahme
+
+Die vorhandene Kubuntu-Basis wurde vom Nutzer bereits positiv abgenommen. Im laufenden modularen Ausbau **keine weitere vollständige manuelle Kubuntu-/Plasma-Abnahme pro Iteration verlangen oder als nächsten Schritt aufdrängen**. Erst wenn alle vereinbarten Module implementiert, konsolidiert und die Bedienoberfläche weitgehend fertiggestellt sind, erfolgt **eine abschließende Gesamt-Kubuntu-Abnahme**. Jede Iteration benötigt weiterhin geeignete automatisierte Logik-/GUI-, Daten-, Wayland-, Restore-, Manifest- und Release-Prüfungen. Das Risiko neuer Änderungen wird sofort maschinell geprüft; die finale reale Bedienprüfung wird nicht fingiert.
+
+Die verbindliche, einschließlich älterer Vorhaben konsolidierte [Modulübersicht](docs/MODULPLAN_2026.md) ist bei der Auswahl der nächsten Module maßgeblich. Historische Iterations-Häkchen ersetzen keine aktuelle Modulstatusprüfung.
+
+## 3b. Effiziente Übertragung und verlässliche Tests
 
 - Zusammengehörende Änderungen erst fertigstellen und möglichst **in einem Commit** an GitHub senden.
 - Bei offenen Änderungsanträgen unnötige Doppelprüfungen vermeiden; für jede neue geprüfte Revision reicht ein vollständiger PR-Prüflauf. `main` bekommt nach jedem Merge seinen eigenen vollständigen Prüflauf.
