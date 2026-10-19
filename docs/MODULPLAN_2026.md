@@ -114,3 +114,7 @@ Ein getrennter Sicherheitsprototyp kann bei **explizit vorbereiteten verwalteten
 ## Iteration 61 – Sicherer grafischer Modulbaukasten
 
 Der neue Modulbaukasten verwaltet ausschließlich **beschreibende** lokale Modulvorlagen (Name, Felder, erlaubte Fähigkeiten, Formularvorschau). Die eingebaute API gibt nur geprüfte Daten zurück, führt keine externen Python-Module aus und enthält keine Shell-, Netz- oder Dateilösch-Berechtigung. Module können als JSON mit bestehenden Import-/Export-Grenzen kopiert werden. Noch fehlen generierte ausführbare Funktionen, Berechtigungssandboxes und Plugin-Signaturprüfung; diese werden nicht als erledigt verbucht. Menü: „Modulbaukasten · Entwürfe“, Strg+Alt+E. GitHub-Vollprüfung verpflichtend, manuelle Kubuntu-Abnahme am Ende.
+
+## Iteration 62 – Entwicklungspool (eigener Kandidat)
+
+Der lokale Projektpool erhält Status, projektbezogene Arbeitsordner, geprüfte sichere Verzeichniskopien und einen ZIP-Export. Keine automatische Löschung. Links, Spezialdateien, große Einzeldateien, zu große Archivbestände und bestehende Exportdateien werden abgewehrt. Der sichere Rückimport gesamter Verzeichnisse fehlt noch; das wird offen ausgewiesen. Menü- und Tastaturzugang Strg+Alt+P, Nutzung der bekannten Fenster-/Zoom- und Speicherstandards. Automatische GitHub-Prüfungen vor Integration; keine wiederholte manuelle Kubuntu-Abnahme.

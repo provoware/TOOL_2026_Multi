@@ -55,6 +55,7 @@ BUILTIN_MODULES = (
     ModuleDefinition("quicklinks", "Link-Schnellstarter", "1.0.0", ("edit",)),
     ModuleDefinition("wiki", "Wiki", "1.0.0", ("edit", "search")),
     ModuleDefinition("module_builder", "Modulbaukasten", "1.0.0", ("view", "edit", "import", "export")),
+    ModuleDefinition("development_pool", "Entwicklungspool", "1.0.0", ("view", "edit", "export")),
 )
 
 # Erst diese bereits mit fester Fensterklasse bekannten Zusatzmodule sind

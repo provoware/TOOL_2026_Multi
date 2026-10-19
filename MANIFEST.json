@@ -1497,6 +1497,31 @@
       "path": "docs/MODULENTWURF.md",
       "release": true,
       "purpose": "Laiengerechte Nutzung und ausdrückliche Erweiterungsgrenzen des Baukastens"
+    },
+    {
+      "path": "app/development_pool.py",
+      "release": true,
+      "purpose": "Lokaler Entwicklungsprojektbestand und schreibgeschützte Verzeichnisprüfung"
+    },
+    {
+      "path": "app/development_pool_window.py",
+      "release": true,
+      "purpose": "Entwicklungspool-Oberfläche für Projektstatus, Arbeitskopien und ZIP-Export"
+    },
+    {
+      "path": "tests/test_development_pool.py",
+      "release": false,
+      "purpose": "Schutztests für Projektordner, Kopien, Archive, Daten und Schreibfehler"
+    },
+    {
+      "path": "tests/test_development_pool_gui.py",
+      "release": false,
+      "purpose": "GUI-Tests für Projektverwaltung und Zoom"
+    },
+    {
+      "path": "docs/ENTWICKLUNGSPOOL.md",
+      "release": true,
+      "purpose": "Projektpool-Anleitung, Kopier- und Archivschutz"
     }
   ],
   "creative_modules": {
@@ -1672,5 +1697,12 @@
     "max_blueprints": 200,
     "max_fields": 12,
     "max_capabilities": 5
+  },
+  "development_pool": {
+    "schema_version": 1,
+    "max_projects": 200,
+    "max_files_per_project": 500,
+    "archive_limit": 67108864,
+    "local_only": true
   }
 }
