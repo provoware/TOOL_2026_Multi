@@ -9,9 +9,9 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 66,
-    "goal": "Kombinierte Video-Warteschlange, Modulformulare und getrennte Altinstallationskopie",
-    "completed": 3,
+    "number": 67,
+    "goal": "Echte Videobildübergänge und sichere manuelle Wiederholung",
+    "completed": 0,
     "open_next": 3
   },
   "runtime": {
@@ -1687,6 +1687,16 @@
       "path": "tests/test_media_real_effects.py",
       "release": false,
       "purpose": "Realer FFmpeg-Vergleich der Ein- und Ausblendintensitäten mit FFprobe"
+    },
+    {
+      "path": "tests/test_media_crossfade.py",
+      "release": false,
+      "purpose": "Sicherheits-/Kommandotests echter Bild-zu-Bild-Übergänge"
+    },
+    {
+      "path": "tests/test_media_real_crossfade.py",
+      "release": false,
+      "purpose": "FFmpeg/FFprobe-Integrationstest für echte Bildübergänge"
     }
   ],
   "creative_modules": {
