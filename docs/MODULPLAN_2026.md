@@ -188,3 +188,7 @@ Die Warteschlange erfasst bei jedem neuen Bildauftrag zusätzlich eine ausdrück
 ## Iteration 68 – Erststart der unabhängigen Migrationskopie (Kandidat)
 
 Nach abgeschlossener statischer Kopierprobe kann eine separate **neue** Installation nach ausdrücklicher Zustimmung und erfolgreichem Headless-Starttest einen eigenen relativen Programmzeiger und ein ausführbares `verwaltet_starten.sh` erhalten. Es gibt keine Änderung am alten Schnellstart oder dem alten Programmordner. Die neue Kopie nutzt die getrennt kopierten persönlichen Daten. Erneute Fehlstarts späterer Versions-Slots fallen auf den letzten Programm-Slot zurück, ohne die Nutzerdaten umzuschreiben. Das Verfahren ist **keine automatische Ersetzung bestehender Altinstallationen**; vor einer endgültigen Produktivfreigabe fehlen Datenformat-Migrationsverträge, reale Start-/Kubuntu-Endabnahme und die automatische Übernahme alter Desktop-Verknüpfungen.
+
+## Iteration 69 – Erweiterungsvertrag (Entwicklungszweig)
+
+Fremde deklarative Erweiterungen dürfen ausschließlich geprüfte JSON-Aufträge mit einer einzelnen Aktion (Ansicht, Suche oder Bearbeitung) ausgeben. Jeder Aufruf benötigt eine ausdrückliche Freigabe und wird nochmals gegen den Modulrechtevertrag geprüft. Python-Code, Shell, Netzwerkzugriffe, Fremdbibliotheken und Mehrfachausführungen werden grundsätzlich verweigert. Das ist **keine** Freigabe für ausführbare Drittplugins. Vor Integration ist eine vollständige CI erforderlich. Praktische Kubuntu-Gesamtabnahme am Projektende.

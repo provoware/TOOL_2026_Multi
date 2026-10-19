@@ -9,9 +9,9 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 68,
-    "goal": "Persistente Video-Bildübergänge und ausdrücklich startbare unabhängige Migrationskopie",
-    "completed": 1,
+    "number": 69,
+    "goal": "Streng geprüfte einzelne Datenaktionen als sichere Erweiterungsschnittstelle",
+    "completed": 0,
     "open_next": 3
   },
   "runtime": {
@@ -1768,6 +1768,21 @@
       "path": "docs/INDEPENDENT_COPY_ACTIVATION.md",
       "release": true,
       "purpose": "Grenzen eines eigenen Starters ohne Austausch der Altinstallation"
+    },
+    {
+      "path": "app/module_extension.py",
+      "release": true,
+      "purpose": "Geprüfter deklarativer Erweiterungsvertrag ohne Python-/Shellausführung"
+    },
+    {
+      "path": "tests/test_module_extension.py",
+      "release": false,
+      "purpose": "Negativtests unbekannter Aktionen und ausdrücklicher Zustimmung"
+    },
+    {
+      "path": "docs/ERWEITERUNGSVERTRAG.md",
+      "release": true,
+      "purpose": "Vertragsgrenzen und sichere Nutzung der Datenaktionen"
     }
   ],
   "creative_modules": {
