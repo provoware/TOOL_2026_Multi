@@ -11,10 +11,13 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [x] PR #89 (0.18.4) nach Bereinigung des gestapelten Zweigs und grüner PR-Prüfung übernehmen.
 - [x] Ursprüngliche und neue Modulplanung in einer verbindlichen Statusmatrix zusammenführen.
 - [x] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests in `main` integriert (PR #90, GitHub-Prüflauf #1019).
-- [ ] Update-Manager weiterentwickeln: Sandbox und Checkpoint integriert; isolierte Slot-Umschaltung und automatischer Test-Rollback als Kandidat vorhanden; Migration der bisherigen Installation, Datenverzeichnis-Auslagerung, Aufruf über den Schnellstart und produktive Freigabe fehlen.
-- [ ] Modulbaukasten weiterentwickeln: Verträge/Katalog und Modulsteuerung vorhanden; deklarativer Modulentwurfs-Editor samt Feldern/Rechten als Prüfkandidat; fremde Python-Plugins, signierte Erweiterungen und vollständige Workflow-Module weiterhin offen.
+- [x] Sicherheitsprototyp der Update-Slots und Rückkehr auf Altversion in PR #100 integriert (CI #1039 grün).
+- [ ] Update-Manager produktiv vervollständigen: klassische Installationen sicher migrieren, persönliche Daten trennen und Schnellstart/Startnachprüfung/Rollback vollständig anbinden.
+- [x] Grafischen Modulbaukasten mit sicheren Datenvorlagen und Vorschau in PR #101 integriert (CI #1041 grün).
+- [ ] Sichere Erweiterungs-API für fremde Plugins, signierte Pakete und wirkliche Module-Funktionen fehlen weiterhin.
 - [x] Wikimodul mit Artikeln, Sammlungen, Verweisen, Versionen und GUI über Integrations-PR #97 in main übernommen (CI #1031 und #1033 erfolgreich).
-- [ ] Entwicklungspool als Prüfkandidat mit Status, Arbeitsordnern, Kopien und ZIP; anschließend Audioplayer, Bildvorschau, Slideshow und weitere Module implementieren.
+- [x] Entwicklungspool mit Status, Arbeitsordnern, Kopien und ZIP in PR #102 integriert (CI #1043 grün).
+- [ ] Audio-/Bild-/Video-Basismodule werden als eigenständiger Kandidat entwickelt; konfigurierbare Überblendungen, ffprobe-Ausgabeprüfung und Stapelaufträge fehlen noch.
 - [x] PR #94/#95/#96 konfliktfrei über PR #97 integriert; PR-CI #1031 und main-CI #1033 erfolgreich, Vorläufer-PRs geschlossen.
 - [x] Programmsicherung samt isolierter Rückkehrkopie und die echte Modulsteuerung über PR #98 integriert; PR-CI #1035 erfolgreich.
 - [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.
