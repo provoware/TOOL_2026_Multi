@@ -145,3 +145,7 @@ Die früheren Abschnitte 60 bis 63 mit „Entwicklungszweig“ sind Entstehungsn
 - **Entwicklungspool:** Vollständiger ZIP-Rückimport als separate neue Projektkopie mit Prüfung gegen absolute Pfade, Traversal, Dateiverknüpfungen und Größenüberschreitungen. Kein Überschreiben vorhandener Arbeitsordner.
 
 Dies ist zunächst ein separater Entwicklungszweig. Vor der Übernahme ist die vollständige GitHub-Prüfung verpflichtend. Manuelle Kubuntu-Gesamtabnahme erst am Ende des Gesamtprojekts.
+
+## Iteration 65 – geprüfte Anschlussbausteine (Entwicklungszweig)
+
+Programmdaten: rein lesender Nachweis voneinander unabhängiger Code- und Datenordner; keine automatische Bestandsmigration. Modulbaukasten: ausschließlich fest kodierte Datenoperationen nach expliziter Rechtezustimmung; kein Fremdcode. Video: gespeicherte Auftragsliste mit Zuständen, Absturz-Unterbrechungsmarkierung und Sperre paralleler gestarteter Jobs; Effektparameter mit begrenzter Intensität als **Vorbereitung**, noch keine FFmpeg-/GUI-Einbindung oder fertige Übergangseffekte. Alle Funktionen sind noch CI-pflichtige Kandidaten.
