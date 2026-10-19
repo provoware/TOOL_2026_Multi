@@ -25,6 +25,7 @@ class LauncherBackupTests(unittest.TestCase):
         self.assertFalse((self.root / "start").exists())
     def test_modified_backup_or_original_fails_closed(self):
         folder = b.prepare_launcher_backup(self.root, self.target, approved=True)
+        (folder / "schnellstart.sh").chmod(0o700)
         (folder / "schnellstart.sh").write_text("manipuliert")
         with self.assertRaises(ValueError):
             b.verify_launcher_backup(folder)
