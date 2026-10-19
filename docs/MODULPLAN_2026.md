@@ -92,3 +92,9 @@ Stabile Schnittstellenbeschreibung und atomarer Modul-Katalog für geprüfte Ken
 ## Integrationsgrenze (PR #94, #95, #96)
 
 Alle drei Einzelzweige bestanden vollständige GitHub-Automatik auf unveränderten Commits; die gemeinsame Integration benötigt einen eigenen erfolgreichen Prüfstand vor dem Hauptzweig. Die isolierte Probe ersetzt keine produktive Update-Aktivierung. Der Modulkatalog ist noch ohne wirksame Navigation. Die manuelle Kubuntu-/Plasma-Gesamtabnahme bleibt bis nach Fertigstellung aller Module ausgesetzt.
+
+## Iteration 59 – Programmsicherung und Modulsteuerung (Folgeentwicklungszweig)
+
+- Update: Nach validiertem Staging können nur die im Release-Manifest freigegebenen Betriebsdateien in einen eigenen, schreibgeschützten Sicherungsbestand kopiert, erneut geprüft und in ein neues Rückkehrverzeichnis wiederhergestellt werden. **Das laufende Programm wird nicht ersetzt.** Ein automatischer Rückwechsel erfordert später eine getrennte atomare Slot-Umschaltung mit Rückfallvertrag. Die bestehende persönliche Datensicherung bleibt eigenständig.
+- Modulkatalog: Nutzer können die bereits fest einkompilierten Zusatzmodule **Ideen, Kontometadaten, Schnellstarter und Wiki** mit realen Menü- und Tastenkürzel-Sperren aktivieren/deaktivieren. Voreinstellung: alle zugänglich. Die Daten werden beim Abschalten nicht gelöscht; ein derzeit offenes Modulfenster verhindert die Deaktivierung. Kernmodule bleiben unangetastet. **Drittmodule können weiterhin nicht ausgeführt werden**.
+- Beide Bereiche werden im eigenen Pull Request vollständig automatisch geprüft. Kein manueller Kubuntu-Test vor Abschluss aller Module.

@@ -34,3 +34,7 @@ Zusätzlich zur statischen Prüfung ist jetzt eine *optionale, verweigernde* Lau
 `python3 scripts/update_sandbox.py --root . --staging /pfad/zum/provoware-update-ordner`
 
 Die Probe startet ausschließlich im getrennten Namensraum, bindet den Kandidaten nur lesend ein, hat kein eingebundenes HOME/Projekt-/Datenverzeichnis und keinen Netzwerkzugriff. Sie führt ausschließlich den schon vorhandenen Headless-Programmeinstieg des Kandidaten aus. Fehler, abweichende Prüfsummen und Zeitüberschreitung blockieren den Lauf. Der Bericht `sandbox-report.json` ist **kein Aktivierungsticket**: `activation_allowed=false` bleibt immer bestehen. Ein echter Sicherheitsnachweis gegen bösartigen Kernel-Code oder ein vollständiger GUI-/Regressionstest ist dies nicht. Ein künftiger Update-Installer benötigt weitere unabhängige Schutzschritte; Rückkehr zur alten Version und Produktiv-Checkpoint fehlen weiterhin.
+
+## Nachfolgende Programmsicherung
+
+Nach erfolgreichem statischem Staging ist eine gesonderte **reine Programmsicherung** möglich. Sie erstellt eine Checkpoint-Kopie ausschließlich der freigegebenen Betriebsdateien und kann sie in einen neuen, isolierten Rückkehrordner übertragen. Das ersetzt weder die persönliche Datensicherung noch eine Aktivierung und kann das laufende Programm nicht überschreiben. Anleitung und Grenzen: [Programmsicherung](UPDATE_CHECKPOINT.md).
