@@ -10,7 +10,7 @@
   },
   "iteration": {
     "number": 68,
-    "goal": "Externe Laufzeitdaten und persistent gespeicherte xfade-Videoaufträge",
+    "goal": "Persistente Video-Bildübergänge und ausdrücklich startbare unabhängige Migrationskopie",
     "completed": 1,
     "open_next": 3
   },
@@ -1748,6 +1748,26 @@
       "path": "tests/test_crossfade_queue.py",
       "release": false,
       "purpose": "Persistente Überblendungen, Legacy-Aufträge und bestätigte Wiederholung im GUI testen"
+    },
+    {
+      "path": "app/update_independent_activation.py",
+      "release": true,
+      "purpose": "Nur die unabhängige geprüfte Migrationskopie nach ausdrücklicher Freigabe aktivieren"
+    },
+    {
+      "path": "tests/test_update_independent_activation.py",
+      "release": false,
+      "purpose": "Kopierfreigabe, Starter und Unverändertheit persönlicher Daten prüfen"
+    },
+    {
+      "path": "tests/test_independent_copy_roundtrip.py",
+      "release": false,
+      "purpose": "Gesamttest Kopierprobe und getrennte Erstaktivierung"
+    },
+    {
+      "path": "docs/INDEPENDENT_COPY_ACTIVATION.md",
+      "release": true,
+      "purpose": "Grenzen eines eigenen Starters ohne Austausch der Altinstallation"
     }
   ],
   "creative_modules": {

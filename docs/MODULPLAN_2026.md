@@ -184,3 +184,7 @@ Mit `PROVOWARE_DATA_ROOT` kann ein gesonderter Datenordner nur nach Prüfung ein
 ## Iteration 68 – Gespeicherte Bildübergänge in der Videowarteschlange (Kandidat)
 
 Die Warteschlange erfasst bei jedem neuen Bildauftrag zusätzlich eine ausdrücklich ausgewählte Übergangsart und Intensität. Gespeicherte alte Aufträge ohne Übergangsfeld bleiben kompatibel und werden als „ohne Bildübergänge“ gelesen. Vor dem Einreihen wird erneut dieselbe FFmpeg-Parameterprüfung wie beim direkten Start ausgeführt. Unbekannte Übergangsarten werden verweigert. Nach einem Fehler ist eine Wiederholung weiterhin ausschließlich mit Bestätigung zulässig. GUI-, Datendatei- und Negativtests werden vor dem Merge durchgeführt.
+
+## Iteration 68 – Erststart der unabhängigen Migrationskopie (Kandidat)
+
+Nach abgeschlossener statischer Kopierprobe kann eine separate **neue** Installation nach ausdrücklicher Zustimmung und erfolgreichem Headless-Starttest einen eigenen relativen Programmzeiger und ein ausführbares `verwaltet_starten.sh` erhalten. Es gibt keine Änderung am alten Schnellstart oder dem alten Programmordner. Die neue Kopie nutzt die getrennt kopierten persönlichen Daten. Erneute Fehlstarts späterer Versions-Slots fallen auf den letzten Programm-Slot zurück, ohne die Nutzerdaten umzuschreiben. Das Verfahren ist **keine automatische Ersetzung bestehender Altinstallationen**; vor einer endgültigen Produktivfreigabe fehlen Datenformat-Migrationsverträge, reale Start-/Kubuntu-Endabnahme und die automatische Übernahme alter Desktop-Verknüpfungen.
