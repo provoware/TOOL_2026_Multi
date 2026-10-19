@@ -192,3 +192,7 @@ Nach abgeschlossener statischer Kopierprobe kann eine separate **neue** Installa
 ## Iteration 69 – Erweiterungsvertrag (Entwicklungszweig)
 
 Fremde deklarative Erweiterungen dürfen ausschließlich geprüfte JSON-Aufträge mit einer einzelnen Aktion (Ansicht, Suche oder Bearbeitung) ausgeben. Jeder Aufruf benötigt eine ausdrückliche Freigabe und wird nochmals gegen den Modulrechtevertrag geprüft. Python-Code, Shell, Netzwerkzugriffe, Fremdbibliotheken und Mehrfachausführungen werden grundsätzlich verweigert. Das ist **keine** Freigabe für ausführbare Drittplugins. Vor Integration ist eine vollständige CI erforderlich. Praktische Kubuntu-Gesamtabnahme am Projektende.
+
+## Iteration 70 – Wiederversuch und isolierte Pluginprobe (Entwicklungszweig)
+
+Videoaufträge mit Status failed/interrupted dürfen erst nach ausdrücklicher Zustimmung erneut als wartend markiert werden; alle Eingabedateien und das noch freie Ausgabeziel werden vorher erneut überprüft. Es erfolgt weder automatische Ausführung noch eine Überschreibung. Der experimentelle Fremdcode-Probelauf benötigt Bubblewrap und eine ausdrückliche Freigabe, isoliert Netzwerk, Programme und Hostdateien und akzeptiert als Ergebnis ausschließlich einen streng geprüften deklarativen JSON-Vertrag. **Kein produktiver Fremdplugin-Lader und keine allgemein bestätigte Sandboxgarantie; reale Isolationstests sind weiterhin erforderlich.** Bestandsmigration bestehender Schnellstarts bleibt gesperrt.
