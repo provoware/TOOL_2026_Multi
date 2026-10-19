@@ -172,3 +172,7 @@ PR #107, #108 und #109 sind einzeln zu prüfen. Dieser Integrationsstand beinhal
 ## Iteration 67 – Echte Bildübergänge und sichere Wiederholung (Kandidat)
 
 Echte FFmpeg-xfade-Übergänge zwischen zwei bis zwanzig Bildern: Überblenden, links wischen, rechts schieben und Kreisöffnung mit geprüfter Intensität. Aufträge können direkt über die Oberfläche gestartet werden. Die bestehende Videowarteschlange unterstützt weiterhin nur den einfachen Diashow-Modus: Bildübergangsarten werden dort ausdrücklich nicht stillschweigend verloren, sondern das Einreihen wird verweigert. Fehlgeschlagene und unterbrochene Aufträge können ausschließlich nach ausdrücklicher Bestätigung erneut eingereiht werden, niemals automatisch. FFprobe-Fehler verhindern weiterhin die Freigabe. Getrennte automatische Prüfkette und echter kurzer Medienlauf erforderlich.
+
+## Iteration 67 – Experimentelle Erweiterungssandbox
+
+Strenger Datenvertrag für ein minimales fremdes Python-Erweiterungspaket und ein isolierter opt-in-Start in Linux-Namensräumen ohne Netzwerk. Die Freigabe beliebiger Drittplugins ist weiterhin **nicht** erteilt; tatsächliche Sicherheits- und Ressourcenbeweise, Berechtigungsdialoge, Signaturprüfung und Kernanbindung fehlen. CI-pflichtiger Entwicklungszweig.
