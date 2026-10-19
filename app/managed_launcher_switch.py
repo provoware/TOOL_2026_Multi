@@ -97,3 +97,23 @@ def switch_managed_launcher(directory, *, approved=False, verify=None):
         # Bei einem Fehler vor oder nach dem Zeigertausch bleibt die Altdatei erhalten.
         recover_launcher(root)
         raise
+
+
+def launch_checked(directory, *, runner):
+    """Rückkehr bei unbestätigtem Wechsel und bei Fehler des neuen Starters.
+
+    Der Aufrufer liefert einen kontrollierten Prozessstarter, statt beliebige
+    Shellbefehle aus JSON oder Dateinamen zu übernehmen.
+    """
+    if not callable(runner):
+        raise ValueError("Ein geprüfter Prozessstarter fehlt.")
+    root, pointer, old, new = _roots(directory)
+    recover_launcher(root)
+    target = os.readlink(pointer)
+    status = runner(root / target)
+    if type(status) is not int:
+        raise ValueError("Startvorgang lieferte keinen gültigen Status.")
+    if status != 0 and target == "managed_start.sh":
+        _set_pointer(root, "legacy_start.sh")
+        atomic_write_json(root / RECORD, {"schema": 1, "state": "ROLLED_BACK"})
+    return status
