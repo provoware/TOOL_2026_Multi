@@ -63,13 +63,9 @@ class UpdateSandboxTests(unittest.TestCase):
     def test_sandbox_launch_only_with_unshare_and_read_only_mount(self):
         with patch.object(sandbox.shutil, "which", return_value="/usr/bin/bwrap"), patch.object(
             sandbox.subprocess, "run", return_value=SimpleNamespace(returncode=0)
-        ) as process, patch.object(sandbox.Path, "is_file", autospec=True, wraps=Path.is_file):
-            # is_file bleibt auf realen Pfaden erhalten; wir simulieren lediglich die
-            # Verfügbarkeit von Bubblewrap, nie seine tatsächliche Schutzwirkung.
-            try:
-                result = sandbox.run_isolated(self.active, self.folder)
-            except (TypeError, AttributeError):
-                self.skipTest("Umgebung kann den isolierten Dummy-Aufruf nicht emulieren.")
+        ) as process:
+            # Nur den externen Lauf simulieren; Datei- und Hashprüfungen bleiben real.
+            result = sandbox.run_isolated(self.active, self.folder)
         argv = process.call_args.args[0]
         self.assertIn("--unshare-all", argv)
         self.assertIn("--ro-bind", argv)
