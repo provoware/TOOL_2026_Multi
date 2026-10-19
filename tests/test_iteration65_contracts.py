@@ -11,6 +11,10 @@ class Contracts(unittest.TestCase):
   self.assertEqual(q.load(self.root)["jobs"][0]["status"],"interrupted")
   q.transition(self.root,item["id"],"waiting")
   with self.assertRaises(ValueError):q.transition(self.root,item["id"],"done")
+ def test_running_job_can_finish_without_false_crash_recovery(self):
+  item=q.enqueue(self.root,kind="slideshow",inputs=["/tmp/a.png"],output="/tmp/new.mp4")
+  q.transition(self.root,item["id"],"running")
+  self.assertEqual(q.transition(self.root,item["id"],"done")["status"],"done")
  def test_fade_parameter_bounds(self):
   self.assertIn("fade=t=in",f.fade_filter(0,5,60))
   self.assertEqual(f.fade_filter(0,5,0),"")
