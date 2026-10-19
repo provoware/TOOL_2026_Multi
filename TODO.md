@@ -1,10 +1,25 @@
 # TODO – TOOL_2026_Multi
 
-Stand: 2026-10-18
+Stand: 2026-10-19
+
+## Aktueller Entwicklungsauftrag – einzige verbindliche Kurzliste
+
+Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtplan. Die vielen weiter unten stehenden Kontrollkästchen sind historische Arbeitsprotokolle und dürfen nicht als aktuelle, voneinander unabhängige To-dos addiert werden.
+
+- [x] PR #83 als durch #87 überholte Layoutalternative schließen.
+- [x] PR #88 (0.18.3) mit automatischer PR- und Hauptzweigprüfung übernehmen.
+- [x] PR #89 (0.18.4) nach Bereinigung des gestapelten Zweigs und grüner PR-Prüfung übernehmen.
+- [x] Ursprüngliche und neue Modulplanung in einer verbindlichen Statusmatrix zusammenführen.
+- [ ] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests auf `main` integrieren (eigener PR).
+- [ ] Update-Manager nach statischer Vorprüfung sicher erweitern (Sandbox, Checkpoint, Aktivierung, Rollback in getrennten Schritten).
+- [ ] Modul-/Plugin-Verträge, Wiki, Entwicklungspool und weitere ursprünglich geplante Module iterativ ergänzen.
+- [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.
+
+**Grundregel:** Während des Modulaufbaus bleiben die automatisierten Vollprüfungen aktiv. Die bereits erfolgte positive Basisabnahme wird nicht ständig wiederholt; die nächste vollständige **manuelle** Kubuntu-Abnahme ist ein Abschlussmeilenstein.
 
 ## Aktuelle Übersicht – zuerst lesen
 
-**Nutzerpriorität:** Entwicklungsarbeit ohne manuelle Abnahme zuerst. Zielrechner-Abnahmen und Veröffentlichung bleiben für später offen; automatische Schutzprüfungen laufen weiter. Die neuen Änderungen werden gesammelt über den Branch `codex/central-search-and-todos` übertragen; ein Branch oder offener PR ist kein veröffentlichtes main-Release.
+**Nutzerpriorität:** Entwicklungsarbeit ohne manuelle Abnahme zuerst. Zielrechner-Abnahmen und Veröffentlichung bleiben für später offen; automatische Schutzprüfungen laufen weiter. PR #88 und PR #89 sind bereits in `main` integriert. Neue Module werden in getrennten Entwicklungszweigen geprüft; ein offener PR ist kein veröffentlichtes Release.
 
 **Erledigt und durch GitHub geprüft**
 - [x] Texteditor: vor dem Verlassen eines veränderten Textes Speichern, Verwerfen oder Abbrechen anbieten (PR #57).
@@ -494,7 +509,7 @@ Externe Abhängigkeiten bleiben unverändert: echte Kubuntu-/Plasma-Abnahme und 
 - [x] Acht GitHub-Warnungen anhand des originalen Artefakts geklärt: Textbaustein-Menü bei 150 % zu breit.
 - [x] Kleine Korrektur mit vorhandenem Kompaktmodus und kurzem Textbutton-Label; keine gelockerten Prüfgrenzen.
 - [x] Lokale Release-Matrix mit 60 Fällen / 180 Fenstern: 0 Fehler / 0 Warnungen.
-- [ ] Vollprüfung und GitHub-Prüfung am finalen Head bestätigen; Nachweis wird am Pull Request ergänzt.
+- [x] Vollprüfung und GitHub-Prüfung abgeschlossen (PR #87, Main-Lauf #1013); historischer Haken nachgezogen.
 - [ ] Reale Kubuntu-/Plasma-Bedienung bleibt als externer Zielrechner-Schritt offen.
 
 Nächste Queue: vergleichbaren Overhead-Benchmark der freiwilligen Leistungsdiagnose erstellen; weiterführende Messgrößen bleiben nachrangig. Dieser Layoutauftrag ersetzt keine reale Bildschirmabnahme.

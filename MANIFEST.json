@@ -3,15 +3,15 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.18.4",
+    "version": "0.18.5",
     "status": "AUSFUEHRBARER_KERN",
-    "date": "2026-10-18",
+    "date": "2026-10-19",
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 54,
-    "goal": "Priorisierte Folgeaufträge Staging, Ideen, Kontometadaten, Prozessstart und Strukturhilfen",
-    "completed": 5,
+    "number": 55,
+    "goal": "Verbindlicher Modulplan und rechter sicherer Link-Schnellstarter",
+    "completed": 0,
     "open_next": 3
   },
   "runtime": {
@@ -40,7 +40,8 @@
     "snippet_data": "daten/textbausteine/bestand.json",
     "book_data": "daten/buecher/bestand.json",
     "idea_data": "daten/ideen/bestand.json",
-    "account_data": "daten/konten/bestand.json"
+    "account_data": "daten/konten/bestand.json",
+    "quicklinks_data": "daten/schnellstarter/bestand.json"
   },
   "validation": {
     "command": "bash scripts/pruefen.sh --full",
@@ -1331,6 +1332,41 @@
       "path": "docs/FREIGABE_0_18_4.md",
       "release": true,
       "purpose": "Änderungen, Lieferung und offene Freigabegrenzen von 0.18.4"
+    },
+    {
+      "path": "app/quicklinks_store.py",
+      "release": true,
+      "purpose": "Validierter und atomarer Schnellstarterbestand mit Dublettenschutz"
+    },
+    {
+      "path": "app/quicklinks_window.py",
+      "release": true,
+      "purpose": "Einsteigerfreundliche Link-Verwaltung mit bewusstem Browserstart"
+    },
+    {
+      "path": "app/quicklinks_rail.py",
+      "release": true,
+      "purpose": "Schmale responsive rechte Schnellstarter-Leiste"
+    },
+    {
+      "path": "tests/test_quicklinks.py",
+      "release": false,
+      "purpose": "Schutztests für URLs, Dopplungen, Import und Speicherfehler"
+    },
+    {
+      "path": "tests/test_quicklinks_gui.py",
+      "release": false,
+      "purpose": "GUI-Tests für Navigation, Löschdialog, Zoom und Browseraufruf"
+    },
+    {
+      "path": "docs/MODULPLAN_2026.md",
+      "release": false,
+      "purpose": "Verbindlicher Gesamtmodulplan und spätere einmalige Kubuntu-Abnahme"
+    },
+    {
+      "path": "docs/SCHNELLSTARTER.md",
+      "release": true,
+      "purpose": "Bedienung und Schutzgrenzen der Link-Schnellstarter"
     }
   ],
   "creative_modules": {
@@ -1430,5 +1466,18 @@
     "encrypted_vault": false,
     "arbitrary_text_secret_detection": false,
     "custom_secret_field_names_rejected": true
+  },
+  "quicklinks": {
+    "schema_version": 1,
+    "local_only": true,
+    "max_items": 2000,
+    "allowed_schemes": [
+      "https",
+      "http"
+    ],
+    "saved_under": "daten/schnellstarter/bestand.json",
+    "right_rail_min_width": 1500,
+    "right_rail_max_zoom": 125,
+    "automatic_navigation": false
   }
 }

@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.18.4 (lokaler Prüfkandidat) · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; neue Änderungen lokal geprüft, noch nicht veröffentlicht. Manuelle Abnahmen sind zurückgestellt.
+> **Version:** 0.18.5 (Entwicklungskandidat) · **Dokumentationsstand:** 19.10.2026 · **Status:** nutzbarer Desktop-Kern; Modulergänzungen werden automatisch geprüft. Abschließende Kubuntu-Abnahme erst nach Fertigstellung aller Module.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -16,6 +16,8 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 | **Wo finde ich Hilfe?** | [Schritt-für-Schritt-Anleitung](ANLEITUNG_LAIEN.md) oder im Programm die Taste `F1`. |
 | **Was wurde zuletzt verbessert?** | Eigenständige Datensicherung, robusterer Start und zusätzliche isolierte Messwerkzeuge (0.18.3, lokal). |
 | **Was ist technisch noch offen?** | Zielrechner-Abnahme, finale GitHub-Prüfung des neuen Stands und Veröffentlichung. |
+
+**Vollständiger Entwicklungsumfang:** [Verbindlicher Modulplan](docs/MODULPLAN_2026.md). Neu im 0.18.5-Kandidaten: [rechte Link-Schnellstarter-Leiste](docs/SCHNELLSTARTER.md) mit lokal gespeicherten Webadressen, Gruppen und bewusstem Browserstart.
 
 **Für die normale Nutzung brauchst du nur diese Übersicht und die [einfache Anleitung](ANLEITUNG_LAIEN.md).** Ausführliche technische Informationen stehen getrennt im [Dokumentenwegweiser](docs/README.md). Der folgende Abschnitt enthält zusätzliche Einzelheiten für Interessierte.
 

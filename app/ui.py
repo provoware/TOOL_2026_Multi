@@ -21,6 +21,8 @@ from app.snippet_window import SnippetWindow
 from app.search_window import SearchWindow
 from app.idea_window import IdeaWindow
 from app.account_window import AccountWindow
+from app.quicklinks_window import QuicklinksWindow
+from app.quicklinks_rail import QuicklinksRail
 from app.module_widgets import t as module_text
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
@@ -70,6 +72,7 @@ class Dashboard(QWidget):
         self._search_window: SearchWindow | None = None
         self._idea_window: IdeaWindow | None = None
         self._account_window: AccountWindow | None = None
+        self._quicklinks_window: QuicklinksWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -113,6 +116,9 @@ class Dashboard(QWidget):
         main.addWidget(self._build_recent_strip())
         main.addLayout(self._build_dashboard_grid(), 1)
         body.addLayout(main, 1)
+        self.quicklinks_rail = QuicklinksRail(self.project_root, self.open_quicklinks, self)
+        body.addWidget(self.quicklinks_rail)
+        self.quicklinks_rail.hide()  # Schmale Geräte behalten den vollen Hauptbereich.
         outer.addLayout(body, 1)
         outer.addWidget(self._build_statusbar())
 
@@ -132,6 +138,7 @@ class Dashboard(QWidget):
         self.module_menu = QMenu(logo)
         self.module_menu.addAction(module_text("ideas", "Textfragmente & Ideenarchiv"), self.open_ideas)
         self.module_menu.addAction(module_text("accounts", "Profil- & Accountmanager"), self.open_accounts)
+        self.module_menu.addAction(module_text("quicklinks", "Link-Schnellstarter"), self.open_quicklinks)
         logo.setMenu(self.module_menu)
         layout.addWidget(logo)
 
@@ -478,6 +485,7 @@ class Dashboard(QWidget):
     def _bind_shortcuts(self) -> None:
         QShortcut(QKeySequence("Ctrl+Alt+A"), self, activated=self.open_accounts)
         QShortcut(QKeySequence("Ctrl+Alt+I"), self, activated=self.open_ideas)
+        QShortcut(QKeySequence("Ctrl+Alt+L"), self, activated=self.open_quicklinks)
         QShortcut(QKeySequence("Ctrl+Shift+F"), self, activated=self.open_search)
         QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
         QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
@@ -528,6 +536,7 @@ class Dashboard(QWidget):
             (self._search_window, False),
             (self._idea_window, False),
             (self._account_window, False),
+            (self._quicklinks_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -723,6 +732,14 @@ class Dashboard(QWidget):
             reuse_hidden=True,
         )
 
+    def open_quicklinks(self) -> None:
+        self._quicklinks_window = _open_managed_window(
+            self._quicklinks_window,
+            lambda: QuicklinksWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+        self.quicklinks_rail.refresh()
+
     def open_ideas(self) -> None:
         self._idea_window = _open_managed_window(
             self._idea_window,
@@ -746,7 +763,8 @@ class Dashboard(QWidget):
 
     def _confirm_creative_modules(self) -> bool:
         return all(window.confirm_leave() for window in
-                   (self._book_window, self._snippet_window, self._idea_window, self._account_window) if window is not None)
+                   (self._book_window, self._snippet_window, self._idea_window,
+                    self._account_window, self._quicklinks_window) if window is not None)
 
     def open_todo(self) -> None:
         self._todo_window = _open_managed_window(
@@ -914,6 +932,7 @@ class Dashboard(QWidget):
         event.accept()
 
     def refresh(self) -> None:
+        self.quicklinks_rail.refresh()
         self.refresh_recent_songs()
         self.refresh_db_profiles()
         self.quick_status.setText("Bereit · Wähle Songtexte, Todo-Liste oder Kalender.")
@@ -927,6 +946,15 @@ class Dashboard(QWidget):
         target = max(0, min(len(ZOOM_LEVELS) - 1, current + direction))
         self.set_zoom(ZOOM_LEVELS[target])
 
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        if hasattr(self, 'quicklinks_rail'):
+            self._update_quicklinks_visibility()
+
+    def _update_quicklinks_visibility(self) -> None:
+        # Nicht mit Profilfeldern oder Hochzoom um wertvolle Breite konkurrieren.
+        self.quicklinks_rail.setVisible(self.width() >= 1500 and self.zoom_percent <= 125)
+
     def set_zoom(self, percent: int) -> None:
         if percent not in ZOOM_LEVELS:
             return
@@ -936,6 +964,7 @@ class Dashboard(QWidget):
         # Menü und Tastenkürzel bleiben als unabhängige Zugänge erhalten.
         self.github_project_open_button.setVisible(percent < 175)
         self.zoom_label.setText(f"{percent} %")
+        self._update_quicklinks_visibility()
         for registration in self._managed_window_registry():
             if registration.apply_zoom is not None:
                 registration.apply_zoom(percent)

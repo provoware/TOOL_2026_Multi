@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## 0.18.5 – Modulplan und Link-Schnellstarter (Entwicklungskandidat, 19.10.2026)
+
+- Offene PRs bereinigt: #83 als durch #87 überholt geschlossen, #88 und #89 nach automatischer Prüfung integriert.
+- Verbindlicher Modulplan umfasst ältere Multimedia-, Verwaltungs- und Entwicklerfunktionen; doppelte/veraltete Todo-Einträge in der aktuellen Übersicht geklärt.
+- Link-Schnellstarter: sichere lokale Webadressen, Gruppen, kurzer Symboltext, Import/Export, eigener Editor und platzsparende rechte Leiste.
+- Praktische vollständige Kubuntu-Abnahme bleibt ausdrücklich bis zum vollständigen Modulabschluss zurückgestellt; automatisierte Prüfungen laufen fort.
+
+
 ### Text-Strukturhilfen
 - Abschaltbare Strukturfarben für Überschriften, Aufgaben und Codeblöcke; begrenzte Gliederung mit Sprungfunktion.
 - Darstellung bleibt vom gespeicherten Klartext und seinem Änderungsstatus getrennt.
