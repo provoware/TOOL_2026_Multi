@@ -1457,6 +1457,21 @@
       "path": "docs/UPDATE_CHECKPOINT.md",
       "release": true,
       "purpose": "Schutz und Bedienung von Checkpoint/Rückkehrkopie vor Aktivierung"
+    },
+    {
+      "path": "app/update_slots.py",
+      "release": true,
+      "purpose": "Verwaltete atomare Slotumschaltung mit isolierter Startnachprüfung und Rückkehr auf Altversion"
+    },
+    {
+      "path": "tests/test_update_slots.py",
+      "release": false,
+      "purpose": "Regressionen für Startfehler, Rollback, Unterbrechung und Datenschutz beim Slotwechsel"
+    },
+    {
+      "path": "docs/UPDATE_SLOTS.md",
+      "release": true,
+      "purpose": "Sicherheitsgrenzen des verwalteten Slot-Updaters ohne Migration alter Installationen"
     }
   ],
   "creative_modules": {
@@ -1614,5 +1629,14 @@
     "default_enabled": true,
     "atomic_preferences": true,
     "exec_external_code": false
+  },
+  "update_slots": {
+    "schema_version": 1,
+    "managed_slot_only": true,
+    "normal_install_update_allowed": false,
+    "legacy_migration": false,
+    "automatic_rollback_on_health_failure": true,
+    "protected_user_data": true,
+    "requires_isolation": true
   }
 }
