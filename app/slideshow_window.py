@@ -233,7 +233,7 @@ class SlideshowWindow(ModuleWindow):
                 args, target, estimate = jobs.crossfade_command(
                     self.root, self.images, self.output.text(),
                     seconds=self.seconds.value(), audio=self.audio or None,
-                    transition=name, intensity=max(1, self.fade.value()))
+                    transition=name, intensity=self.fade.value())
             elif self.mode.currentIndex() == 0:
                 args, target, estimate = jobs.slideshow_command(
                     self.root, self.images, self.output.text(),
@@ -270,24 +270,29 @@ class SlideshowWindow(ModuleWindow):
             self.status.setText("Warteschlange nicht lesbar: " + str(error))
 
     def enqueue_current(self):
-        if self.transition.currentIndex() > 0:
-            self.status.setText("Bildübergänge vorerst nur über Starten verfügbar; die Warteschlange speichert noch keine Übergangsart.")
-            return
         if self.process is not None and self.process.state() != QProcess.NotRunning:
             self.status.setText("Laufender Auftrag zuerst fertigstellen.")
             return
         try:
             if self.mode.currentIndex() == 0:
-                jobs.slideshow_command(self.root, self.images, self.output.text(),
-                    seconds=self.seconds.value(), audio=self.audio or None, fade=self.fade.value())
+                if self.transition.currentIndex() > 0:
+                    selected = ("none", "fade", "wipeleft", "slideright", "circleopen")[self.transition.currentIndex()]
+                    jobs.crossfade_command(self.root, self.images, self.output.text(),
+                        seconds=self.seconds.value(), audio=self.audio or None,
+                        transition=selected, intensity=self.fade.value())
+                else:
+                    jobs.slideshow_command(self.root, self.images, self.output.text(),
+                        seconds=self.seconds.value(), audio=self.audio or None, fade=self.fade.value())
                 kind = "slideshow"
                 inputs = self.images + ([self.audio] if self.audio else [])
             else:
                 jobs.video_audio_command(self.root, self.video, self.audio, self.output.text())
                 kind = "video_audio"
                 inputs = [self.video, self.audio]
+            selected = ("none", "fade", "wipeleft", "slideright", "circleopen")[self.transition.currentIndex()] if kind == "slideshow" else "none"
             media_queue.enqueue(self.root, kind=kind, inputs=inputs,
-                output=self.output.text(), seconds=self.seconds.value(), fade=self.fade.value())
+                output=self.output.text(), seconds=self.seconds.value(),
+                fade=self.fade.value(), transition=selected)
             self.refresh_queue()
             self.status.setText("Auftrag gespeichert. Über 'Nächsten Auftrag' starten.")
         except (OSError, ValueError) as error:
@@ -318,7 +323,7 @@ class SlideshowWindow(ModuleWindow):
                 self.audio_label.setText(self.audio)
             self.seconds.setValue(waiting["seconds"])
             self.fade.setValue(waiting["fade"])
-            self.transition.setCurrentIndex(0)
+            self.transition.setCurrentIndex(("none", "fade", "wipeleft", "slideright", "circleopen").index(waiting["transition"]))
             self.output.setText(waiting["output"])
             media_queue.transition(self.root, waiting["id"], "running")
             self.active_queue_id = waiting["id"]

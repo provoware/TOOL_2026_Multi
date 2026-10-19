@@ -10,6 +10,7 @@ from uuid import uuid4
 from app.atomic_io import atomic_write_json
 
 STATES={"waiting","running","failed","done","interrupted"}
+TRANSITIONS={"none","fade","wipeleft","slideright","circleopen"}
 MAX_JOBS=100
 
 def _location(root):
@@ -25,13 +26,21 @@ def validate(data):
         raise ValueError("Ungültige Warteschlange.")
     result=[]; seen=set()
     for job in data["jobs"]:
-        if not isinstance(job,dict) or set(job)!={"id","kind","status","inputs","output","seconds","fade"}:
+        if not isinstance(job,dict) or set(job) not in (
+            {"id","kind","status","inputs","output","seconds","fade"},
+            {"id","kind","status","inputs","output","seconds","fade","transition"}):
             raise ValueError("Ungültige Auftragsfelder.")
         from app.module_archive import identifier
         identifier(job["id"])
         if job["id"] in seen or job["kind"] not in ("slideshow","video_audio") or job["status"] not in STATES:
             raise ValueError("Unzulässiger Auftrag oder doppelte Kennung.")
         seen.add(job["id"])
+        transition_name=job.get("transition","none")
+        if (not isinstance(transition_name,str) or transition_name not in TRANSITIONS
+                or (transition_name!="none" and (job["kind"]!="slideshow"
+                    or not isinstance(job["inputs"],list) or len(job["inputs"])<2
+                    or type(job["fade"]) is not int or job["fade"]<1))):
+            raise ValueError("Unzulässiger Bildübergang in der Warteschlange.")
         if (not isinstance(job["inputs"],list) or not 1<=len(job["inputs"])<=21
             or any(not isinstance(v,str) or not Path(v).is_absolute() or ".." in Path(v).parts for v in job["inputs"])
             or not isinstance(job["output"],str) or not Path(job["output"]).is_absolute()
@@ -39,7 +48,7 @@ def validate(data):
             or type(job["seconds"]) is not int or not 1<=job["seconds"]<=30
             or type(job["fade"]) is not int or not 0<=job["fade"]<=100):
             raise ValueError("Ungültige Auftragsparameter.")
-        result.append(dict(job))
+        result.append({**job,"transition":transition_name})
     return {"schema_version":1,"jobs":result}
 
 def load(root, *, recover_running=True):
@@ -57,14 +66,14 @@ def load(root, *, recover_running=True):
         atomic_write_json(path,data)
     return data
 
-def enqueue(root,*,kind,inputs,output,seconds=5,fade=0):
+def enqueue(root,*,kind,inputs,output,seconds=5,fade=0,transition="none"):
     state=load(root)
     job={"id":uuid4().hex,"kind":kind,"status":"waiting","inputs":list(inputs),
-         "output":output,"seconds":seconds,"fade":fade}
+         "output":output,"seconds":seconds,"fade":fade,"transition":transition}
     state["jobs"].append(job)
-    validate(state)
+    state=validate(state)
     atomic_write_json(_location(root),state)
-    return job
+    return dict(job)
 
 def transition(root,job_id,to_status):
     if to_status not in {"running","done","failed","waiting"}:

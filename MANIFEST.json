@@ -9,9 +9,9 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 67,
-    "goal": "Echte Videobildübergänge, isolierte Erweiterung und bewusster externer Nutzerdatenstart",
-    "completed": 2,
+    "number": 68,
+    "goal": "Externe Laufzeitdaten und persistent gespeicherte xfade-Videoaufträge",
+    "completed": 1,
     "open_next": 3
   },
   "runtime": {
@@ -1743,6 +1743,11 @@
       "path": "docs/EXTERNAL_DATA_ROOT.md",
       "release": true,
       "purpose": "Grenzen und Bedienung unabhängig verwalteter Datenpfade"
+    },
+    {
+      "path": "tests/test_crossfade_queue.py",
+      "release": false,
+      "purpose": "Persistente Überblendungen, Legacy-Aufträge und bestätigte Wiederholung im GUI testen"
     }
   ],
   "creative_modules": {
