@@ -33,7 +33,7 @@ Beim Aufräumen **niemals blind** die Ordner `daten/`, `backups/`, `logs/` oder 
 - Die GitHub-Automatik überprüft zusätzlich einen Start unter Qt/Wayland, eine Projekt-Wiederherstellung und die Oberflächendiagnose.
 - Die vollständige Oberflächenmatrix umfasst 60 Prüffälle; ein Erfolg im automatischen Test ersetzt keine Sichtprüfung auf dem Zielrechner.
 
-Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.3 ist ein lokaler Prüfkandidat; die Veröffentlichung bleibt getrennt.
+Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein Prüfkandidat; die Veröffentlichung bleibt getrennt.
 
 
 ## Neue Kreativmodule und nächste Leistungsdiagnose
@@ -53,3 +53,10 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.3 ist ein l
 - [Versionsunterlagen 0.18.3](FREIGABE_0_18_3.md)
 
 - [Zentrale Text-/Dateisuche](DATEISUCHE.md)
+
+- [Statisches Update-Staging](UPDATE_STAGING.md)
+
+- [Ideenarchiv und Kontometadaten](IDEEN_UND_KONTEN.md)
+- [Prozessstartmessung und Text-Strukturhilfen](STARTMESSUNG_UND_STRUKTUR.md)
+
+- [Versionsunterlagen 0.18.4](FREIGABE_0_18_4.md)

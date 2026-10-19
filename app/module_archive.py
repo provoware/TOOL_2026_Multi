@@ -6,7 +6,7 @@ from pathlib import Path
 from app.atomic_io import atomic_write_json
 
 MAX_BYTES = 10 * 1024 * 1024
-MODULES = {'textbausteine', 'buecher'}
+MODULES = {'textbausteine', 'buecher', 'ideen', 'konten'}
 
 
 def text(value, label='Text', *, required=False, limit=200_000):
@@ -42,7 +42,7 @@ def state_path(root, module):
 def load(root, module, validate, empty):
     target = state_path(root, module)
     from app.performance import observe
-    area = {'buecher': 'books', 'textbausteine': 'snippets'}[module]
+    area = {'buecher': 'books', 'textbausteine': 'snippets'}.get(module, 'other')
     with observe('archive.load', area):
         return validate(read_json(target)) if target.exists() else validate(empty())
 

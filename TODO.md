@@ -370,29 +370,29 @@ Stand: 2026-10-18
 - [x] Zugriff aus weiteren Schreibmodulen standardisieren
 
 ### 2. Profil- & Accountmanager
-- [ ] Webseite/URL, Profilname optional, verwendete E-Mail-Adresse, Passworthinweis und Sonstiges
-- [ ] frei ergänzbare Felder
-- [ ] Gruppen, Suche, Filter und Schnellwiederfinden
-- [ ] Schutzkonzept: keine Passwörter unverschlüsselt speichern
-- [ ] Import/Export, Backup, Restore und Datenschutzprüfung
+- [x] Webseite/URL, Profilname optional, verwendete E-Mail-Adresse, Passworthinweis und Sonstiges
+- [x] frei ergänzbare Felder
+- [x] Gruppen, Suche, Filter und Schnellwiederfinden
+- [x] Schutzkonzept: kein Passwortfeld, keine Zugangsdaten-URLs; bekannte Geheimnisfeldnamen abweisen. Metadaten bleiben unverschlüsselt.
+- [x] Modulimport/-export mit Datenschutzhinweis; reguläre Datenablage durch vorhandene Datensicherung erfasst.
 
 ### 3. Universeller Texteditor
 - [x] Titel bestimmt sicheren Dateinamen
 - [x] große Schreibfläche und Abschlussnotizenfeld
 - [x] atomare Speicherung, Versionierung und Autosave
 - [x] Charakterfibel-Zugriff
-- [ ] farbliche Text-/Strukturhilfen weiter ausbauen
+- [x] Flüchtige Strukturfarben, Codeblöcke und begrenzte Gliederung mit Sprungfunktion ergänzen
 
 ### 4. Textfragment- und Ideenarchiv
-- [ ] einzelne oder mehrere Verse, Sätze, Fragmente und Schlagworte speichern
-- [ ] Tags, Herkunft und Volltextsuche
-- [ ] übersichtliche Karten-/Listenansicht
-- [ ] Drag-and-drop in einen seitlichen Kompositionsbereich
-- [ ] neue Texte aus Fragmenten erzeugen, ohne Originale zu löschen
+- [x] einzelne oder mehrere Verse, Sätze, Fragmente und Schlagworte speichern
+- [x] Tags, Herkunft und Volltextsuche
+- [x] übersichtliche Karten-/Listenansicht
+- [x] Drag-and-drop in einen seitlichen Kompositionsbereich
+- [x] neue Texte aus Fragmenten erzeugen, ohne Originale zu löschen
 
 ### 5. Autonomes Updatemodul
-- [ ] ZIP-Dateien sicher prüfen und entpacken
-- [ ] Manifest, Version, Prüfsummen und Integrität vor Änderung validieren
+- [x] Runtime-ZIPs begrenzt prüfen und ausschließlich in neues getrenntes Staging entpacken
+- [x] Manifest, Versionsfortschritt, Paket-/Basis-/Dateihashes und Integrität vor weiterer Nutzung validieren
 - [ ] vollständigen Checkpoint/Backup vor jedem Update erzeugen
 - [ ] Update zuerst isoliert im Staging testen
 - [ ] automatisierte Tests vor Aktivierung erzwingen
@@ -562,3 +562,44 @@ Basis 6b823d4. Kein automatischer Merge und keine Veröffentlichung. Der Stand w
 - [ ] Finale Vollprüfung und Repository-Übertragung am identischen Quellbaum bestätigen; Nachweis am Pull Request.
 
 Basis 230f562, isolierter Branch central-search. Scope: Suchkern, Suchfenster, vorhandene Einstiege, Hilfe, Tests und Informationsdateien. Nutzerdaten, Suchindexdateien und Prüfgrenzen werden nicht verändert. Manuelle Abnahme bleibt auf Nutzerwunsch zurückgestellt.
+
+## Iteration 50 – statisches Update-Staging
+
+- [x] Runtime-ZIP-Prüfung, Pfad-/Größen-/Identitäts-/Versionsschutz und Ausgangs-SHA.
+- [x] Eigenen privaten Kandidatenordner außerhalb des aktiven Projekts erzeugen; bei Fehler nur diesen aufräumen.
+- [x] Statische Python-/JSON-/Abhängigkeitsprüfung und nicht aktivierbaren Bericht ergänzen; elf Schutztests bestanden.
+- [ ] Kandidat in echter Sandbox dynamisch testen; kein Code aus Kandidaten auf dem Host ausführen.
+- [ ] Checkpoint, atomare Aktivierung und Rollback später separat umsetzen.
+
+Nutzerreihenfolge nach diesem Staging-Schritt: Ideenarchiv → Accountmanager → Kaltstartmessung → Text-Strukturhilfen.
+
+## Iteration 51 – Ideenarchiv
+
+- [x] Atomare Fragmente mit Tags/Herkunft, Suche, Liste, Bearbeitung und Modulimport/-export.
+- [x] Drag-and-drop als Klartextkopie in die Komposition; neue allgemeine Texte ohne Löschen/Überschreiben der Quellen.
+- [x] Entwurfs-/Kompositionsschutz, gemeinsamer Zoom/Theme-Standard und zwei Daten-/zwei GUI-Schutztests.
+
+Basis 95f184c. Zugriff über das Modulmenü am bisherigen Logo und Strg+Alt+I. Kein zusätzlicher Sidebar-Eintrag.
+
+## Iteration 52 – Accountmetadaten
+
+- [x] URL, optionaler Profilname, E-Mail, Merkhilfe, Notizen, Gruppen und freie Textfelder in einer Tabelle.
+- [x] Suche/Gruppe, geprüfter Browseraufruf und Datenschutzhinweis vor Export.
+- [x] Kein Passwortfeld; bekannte Geheimnisfelder und Zugangsdaten-URLs abweisen. Drei Daten- und zwei GUI-Schutztests.
+
+Kein verschlüsselter Tresor und keine semantische Erkennung beliebiger Geheimnisse in Freitext. Diese Grenze ist direkt im Modul sichtbar. Tatsächliche Passwörter gehören in einen Passwortmanager.
+
+## Iteration 53 – Prozess-Kaltstart und wiederholter Start
+
+- [x] Echten Einstieg `app.main.main()` in neuen Prozessen bis zur ersten Ereignisschleife messen.
+- [x] Synthetische Datenklassen mit 1/100 Songs; erster und wiederholter Start derselben Testinstallation getrennt.
+- [x] Eigene temporäre Messbereiche, feste Arbeits-/Prozesszeitgrenzen und zwei Schutztests.
+- [ ] Betriebssystem-Kaltstart und echte Zielrechnerwerte separat messen; keine kontrollierte OS-Cache-Leerung behaupten.
+
+## Iteration 54 – Text-Strukturhilfen
+
+- [x] Überschriften, eigene Bereiche, Aufgaben und Codeblöcke flüchtig hervorheben.
+- [x] Theme-Kontrast, Abschalten und begrenzte Gliederung mit Sprungfunktion.
+- [x] Zwei GUI-Tests: Klartextbytes und Änderungsstatus bleiben durch die Hilfen unverändert.
+
+Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition leert auch deren sichtbaren Entwurf. Account-URL-Schutz umfasst Query und Fragment.

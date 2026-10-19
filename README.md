@@ -1,6 +1,6 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.18.3 (lokaler Prüfkandidat) · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; neue Änderungen lokal geprüft, noch nicht veröffentlicht. Manuelle Abnahmen sind zurückgestellt.
+> **Version:** 0.18.4 (lokaler Prüfkandidat) · **Dokumentationsstand:** 18.10.2026 · **Status:** nutzbarer Desktop-Kern; neue Änderungen lokal geprüft, noch nicht veröffentlicht. Manuelle Abnahmen sind zurückgestellt.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -10,7 +10,7 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 |---|---|
 | **Was ist Provoware?** | Ein Programm für Songtexte, eigene Texte, Figuren, Aufgaben und Termine. |
 | **Wie starte ich?** | Projektordner öffnen, Terminal starten und `bash schnellstart.sh` eingeben. |
-| **Was funktioniert?** | Songtexte, Texteditor, Charakterfibel, Textbuttons, Buchwerkstatt, Profile, Aufgaben, Kalender, zentrale Text-/Dateisuche und Hilfe. |
+| **Was funktioniert?** | Songtexte, Texteditor, Charakterfibel, Textbuttons, Buchwerkstatt, Ideenarchiv, Kontometadaten, Profile, Aufgaben, Kalender, zentrale Text-/Dateisuche und Hilfe. |
 | **Was fehlt noch?** | Reimfinder, Update-Manager und weitere geplante Module; eine freiwillige lokale Leistungsdiagnose ist bereits verfügbar. |
 | **Wie sichere ich meine Arbeit?** | Programm schließen und die [eigenständige Datensicherung](docs/DATENSICHERUNG.md) nutzen. |
 | **Wo finde ich Hilfe?** | [Schritt-für-Schritt-Anleitung](ANLEITUNG_LAIEN.md) oder im Programm die Taste `F1`. |
@@ -430,3 +430,9 @@ Eigenständige persönliche Datensicherung: [Anleitung](docs/DATENSICHERUNG.md).
 Versionskennung und vorbereitete Freigabeunterlagen: [0.18.3](docs/FREIGABE_0_18_3.md). Der Kandidatenstatus ist keine Veröffentlichung.
 
 Zentrale gespeicherte Text-/Dateisuche: [Bedienung und Grenzen](docs/DATEISUCHE.md). Über Dateisuche-Kachel, Kopfsuchfeld oder Strg+Umschalt+F erreichbar.
+
+Update-Pakete getrennt statisch prüfen: [Update-Staging](docs/UPDATE_STAGING.md). Aktivierung und Ausführung von Paketcode bleiben gesperrt.
+
+Neu im 0.18.4-Prüfkandidaten: [Ideenarchiv und Kontometadaten](docs/IDEEN_UND_KONTEN.md), [Prozessstartmessung und Strukturhilfen](docs/STARTMESSUNG_UND_STRUKTUR.md). Weitere Module über das Symbol oben links öffnen.
+
+Aktuelle vorbereitete Versionsunterlagen: [0.18.4](docs/FREIGABE_0_18_4.md).

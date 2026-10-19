@@ -3,15 +3,15 @@
   "tool": {
     "name": "TOOL_2026_Multi",
     "repository": "provoware/TOOL_2026_Multi",
-    "version": "0.18.3",
+    "version": "0.18.4",
     "status": "AUSFUEHRBARER_KERN",
     "date": "2026-10-18",
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 49,
-    "goal": "Zentrale Text- und Dateisuche mit begrenztem rein lesendem Zugriff",
-    "completed": 3,
+    "number": 54,
+    "goal": "Priorisierte Folgeaufträge Staging, Ideen, Kontometadaten, Prozessstart und Strukturhilfen",
+    "completed": 5,
     "open_next": 3
   },
   "runtime": {
@@ -38,7 +38,9 @@
     "character_data": "daten/charaktere/charaktere.json",
     "text_editor_data": "daten/texte/",
     "snippet_data": "daten/textbausteine/bestand.json",
-    "book_data": "daten/buecher/bestand.json"
+    "book_data": "daten/buecher/bestand.json",
+    "idea_data": "daten/ideen/bestand.json",
+    "account_data": "daten/konten/bestand.json"
   },
   "validation": {
     "command": "bash scripts/pruefen.sh --full",
@@ -1259,6 +1261,76 @@
       "path": "docs/DATEISUCHE.md",
       "release": true,
       "purpose": "Bedienung und Schutzgrenzen der zentralen Text-/Dateisuche"
+    },
+    {
+      "path": "app/update_staging.py",
+      "release": true,
+      "purpose": "Begrenzte rein statische Update-Paketprüfung in getrenntem Staging"
+    },
+    {
+      "path": "scripts/update_staging.py",
+      "release": true,
+      "purpose": "Kommandozeile für Update-Staging ohne Aktivierung"
+    },
+    {
+      "path": "docs/UPDATE_STAGING.md",
+      "release": true,
+      "purpose": "Bedienung und offene Aktivierungsgrenzen des Update-Stagings"
+    },
+    {
+      "path": "app/record_store.py",
+      "release": true,
+      "purpose": "Ideenarchiv und gemeinsame einfache Datensatzbedienung"
+    },
+    {
+      "path": "app/idea_store.py",
+      "release": true,
+      "purpose": "Ideenarchiv und gemeinsame einfache Datensatzbedienung"
+    },
+    {
+      "path": "app/record_window.py",
+      "release": true,
+      "purpose": "Ideenarchiv und gemeinsame einfache Datensatzbedienung"
+    },
+    {
+      "path": "app/idea_window.py",
+      "release": true,
+      "purpose": "Ideenarchiv und gemeinsame einfache Datensatzbedienung"
+    },
+    {
+      "path": "app/account_store.py",
+      "release": true,
+      "purpose": "Kontometadaten ohne Passwortspeicherung"
+    },
+    {
+      "path": "app/account_window.py",
+      "release": true,
+      "purpose": "Kontometadaten ohne Passwortspeicherung"
+    },
+    {
+      "path": "app/text_structure.py",
+      "release": true,
+      "purpose": "Flüchtige Strukturfarben und begrenzte Gliederung im Texteditor"
+    },
+    {
+      "path": "docs/IDEEN_UND_KONTEN.md",
+      "release": true,
+      "purpose": "Bedienung und Schutzgrenzen der neuen lokalen Werkzeuge"
+    },
+    {
+      "path": "docs/STARTMESSUNG_UND_STRUKTUR.md",
+      "release": true,
+      "purpose": "Bedienung und Schutzgrenzen der neuen lokalen Werkzeuge"
+    },
+    {
+      "path": "app/custom_fields.py",
+      "release": true,
+      "purpose": "Laienfreundliche Tabelle für freie Kontometadaten"
+    },
+    {
+      "path": "docs/FREIGABE_0_18_4.md",
+      "release": true,
+      "purpose": "Änderungen, Lieferung und offene Freigabegrenzen von 0.18.4"
     }
   ],
   "creative_modules": {
@@ -1330,11 +1402,11 @@
   "release_candidate": {
     "published": false,
     "manual_acceptance": "deferred_by_user",
-    "documentation": "docs/FREIGABE_0_18_3.md",
+    "documentation": "docs/FREIGABE_0_18_4.md",
     "pending": [
+      "dynamic_update_sandbox_and_activation",
       "target_device_acceptance",
-      "github_final_head_checks",
-      "release_publication"
+      "final_repository_checks"
     ]
   },
   "data_search": {
@@ -1346,5 +1418,17 @@
     "max_hits": 200,
     "max_seconds": 10,
     "follow_symlinks": false
+  },
+  "update_staging": {
+    "activation_allowed": false,
+    "candidate_code_executed": false,
+    "runtime_tests": "NOT_RUN",
+    "documentation": "docs/UPDATE_STAGING.md"
+  },
+  "account_manager": {
+    "password_field": false,
+    "encrypted_vault": false,
+    "arbitrary_text_secret_detection": false,
+    "custom_secret_field_names_rejected": true
   }
 }

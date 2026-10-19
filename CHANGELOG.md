@@ -1,5 +1,25 @@
 # Änderungsverlauf
 
+### Text-Strukturhilfen
+- Abschaltbare Strukturfarben für Überschriften, Aufgaben und Codeblöcke; begrenzte Gliederung mit Sprungfunktion.
+- Darstellung bleibt vom gespeicherten Klartext und seinem Änderungsstatus getrennt.
+
+### Prozessstartmessung
+- Echten Programmstart mit synthetischen Daten in neuen Prozessen bis zur ersten Ereignisschleife messen.
+- Ersten und wiederholten Start unterscheiden; Betriebssystem-Dateicache bleibt ausdrücklich unkontrolliert.
+
+### Accountmetadaten
+- Konten nach Name, E-Mail, Gruppe und Zusatzangaben wiederfinden; validierte Webadressen bewusst öffnen.
+- Kein Passwortfeld; sensible Feldnamen/Zugangsdaten-URLs abweisen und unverschlüsselten Metadatenexport bestätigen lassen.
+
+### Ideenarchiv
+- Fragmente mit Schlagworten/Herkunft suchen und als Kopien zu neuen Texten zusammenstellen.
+- Import/Export, atomare Ablage, Entwurfsschutz und vorhandene Textdatei-Kollisionssicherung wiederverwendet.
+
+## 0.18.4 – Entwicklungskandidat
+- Update-Runtime-ZIPs anhand von Paket-/Basis-SHA, Manifest, Version, Dateiliste und Grenzen statisch prüfen.
+- Ausschließlich getrenntes Staging; keine Ausführung, Installation oder Aktivierung des Kandidaten.
+
 ## 0.18.3 – Ergänzung zentrale Suche
 - Gespeicherte Dateinamen und UTF-8-Textinhalte unter daten/ mit Treffern, Zeilennummer und Klartextvorschau suchen.
 - Abbruch, feste Suchgrenzen und Schutz vor Linkverfolgung; keine Indexdateien oder automatischen Dateiöffnungen.

@@ -10,7 +10,7 @@ from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
-    QMessageBox, QPushButton, QSizePolicy, QVBoxLayout, QWidget,
+    QMessageBox, QPushButton, QSizePolicy, QVBoxLayout, QWidget, QMenu, QToolButton,
 )
 
 from app.calendar_reminders import CalendarReminderController
@@ -19,6 +19,8 @@ from app.character_window import CharacterWindow
 from app.book_window import BookWindow
 from app.snippet_window import SnippetWindow
 from app.search_window import SearchWindow
+from app.idea_window import IdeaWindow
+from app.account_window import AccountWindow
 from app.module_widgets import t as module_text
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
@@ -66,6 +68,8 @@ class Dashboard(QWidget):
         self._book_window: BookWindow | None = None
         self._snippet_window: SnippetWindow | None = None
         self._search_window: SearchWindow | None = None
+        self._idea_window: IdeaWindow | None = None
+        self._account_window: AccountWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -119,9 +123,16 @@ class Dashboard(QWidget):
         layout.setContentsMargins(12, 7, 10, 7)
         layout.setSpacing(8)
 
-        logo = QLabel("▦")
-        logo.setObjectName("accent")
-        logo.setStyleSheet(f"font-size: 23pt; color: {COLORS['accent']}; font-weight: 700;")
+        logo = QToolButton()
+        logo.setText("▦")
+        logo.setAccessibleName(module_text("more_modules", "Weitere Module öffnen"))
+        logo.setToolTip(module_text("more_modules", "Weitere Module öffnen"))
+        logo.setPopupMode(QToolButton.InstantPopup)
+        logo.setStyleSheet(f"font-size: 18pt; color: {COLORS['accent']};")
+        self.module_menu = QMenu(logo)
+        self.module_menu.addAction(module_text("ideas", "Textfragmente & Ideenarchiv"), self.open_ideas)
+        self.module_menu.addAction(module_text("accounts", "Profil- & Accountmanager"), self.open_accounts)
+        logo.setMenu(self.module_menu)
         layout.addWidget(logo)
 
         title_box = QVBoxLayout()
@@ -465,6 +476,8 @@ class Dashboard(QWidget):
         return frame
 
     def _bind_shortcuts(self) -> None:
+        QShortcut(QKeySequence("Ctrl+Alt+A"), self, activated=self.open_accounts)
+        QShortcut(QKeySequence("Ctrl+Alt+I"), self, activated=self.open_ideas)
         QShortcut(QKeySequence("Ctrl+Shift+F"), self, activated=self.open_search)
         QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
         QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
@@ -513,6 +526,8 @@ class Dashboard(QWidget):
             (self._book_window, False),
             (self._snippet_window, False),
             (self._search_window, False),
+            (self._idea_window, False),
+            (self._account_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -701,6 +716,20 @@ class Dashboard(QWidget):
             reuse_hidden=True,
         )
 
+    def open_accounts(self) -> None:
+        self._account_window = _open_managed_window(
+            self._account_window,
+            lambda: AccountWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
+    def open_ideas(self) -> None:
+        self._idea_window = _open_managed_window(
+            self._idea_window,
+            lambda: IdeaWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
     def open_search(self) -> None:
         self._search_window = _open_managed_window(
             self._search_window,
@@ -717,7 +746,7 @@ class Dashboard(QWidget):
 
     def _confirm_creative_modules(self) -> bool:
         return all(window.confirm_leave() for window in
-                   (self._book_window, self._snippet_window) if window is not None)
+                   (self._book_window, self._snippet_window, self._idea_window, self._account_window) if window is not None)
 
     def open_todo(self) -> None:
         self._todo_window = _open_managed_window(

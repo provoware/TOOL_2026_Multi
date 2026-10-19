@@ -1,6 +1,6 @@
 # Aktueller Projektstand – leicht verständlich
 
-**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.3 (lokaler Prüfkandidat)
+**Stand:** 18. Oktober 2026 · **Programmversion:** 0.18.4 (lokaler Prüfkandidat)
 
 ## Wozu dient Provoware?
 
@@ -72,3 +72,7 @@ Die Bewertung der Entwicklung mit gemessenen Laufzeiten und Verbesserungsregeln 
 Neu im lokalen Kandidaten 0.18.3: eigenständige Daten-ZIPs mit geprüftem Rückholen, Prüfung defekter Startumgebungen, Ladebenchmark mit Datenklassen und Auswertung gespeicherter UI-Kalibrierungsnachweise. Details und Freigabegrenzen: [Versionsunterlagen](FREIGABE_0_18_3.md). Keine Aussage, dass dieser Stand bereits in GitHub/main veröffentlicht wurde.
 
 Die zentrale Text-/Dateisuche ist im lokalen Kandidaten umgesetzt; Grenzen stehen in [Dateisuche](DATEISUCHE.md). Repository-/CI-Nachweise gehören zum zugehörigen neuen Pull Request.
+
+Neu im 0.18.4-Kandidaten: [statisches Update-Staging](UPDATE_STAGING.md), ohne Codeausführung oder Aktivierung.
+
+Die fünf Folgeaufträge sind im lokalen 0.18.4-Kandidaten umgesetzt: statisches Update-Staging (keine Ausführung/Aktivierung), Ideenarchiv, Kontometadaten ohne Passworttresor, Prozessstartmessung und flüchtige Text-Strukturhilfen. Das Modulmenü liegt am Symbol oben links. Echte dynamische Update-Sandbox, Checkpoint/Aktivierung/Rollback und Zielrechner-Abnahmen bleiben offen.

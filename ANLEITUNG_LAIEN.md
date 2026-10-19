@@ -574,3 +574,10 @@ Wenn die Meldung ausdrücklich eine beschädigte `.venv` nennt: Programm schlie�
 ### Dateien und Textstellen wiederfinden
 
 Im Dashboard oben **Dateisuche** wählen oder **Strg+Umschalt+F** drücken. Suchtext eingeben, Dateinamen und/oder Textinhalte wählen und **Suchen** drücken. Markiere einen Treffer, um Datei, Zeile und Textausschnitt darunter zu lesen oder zu kopieren. **Abbrechen** beendet weitere Suche, bisherige Treffer bleiben sichtbar. Dateien werden nicht verändert oder automatisch geöffnet. Gesucht wird nur im gespeicherten Datenbestand; versteckte Dateien und ältere Versionen bleiben außen vor. Bei Suchgrenzen den Begriff genauer wählen. [Weitere Grenzen](docs/DATEISUCHE.md).
+
+
+### Ideen und Kontometadaten
+
+Das Symbol oben links öffnet ein Modulmenü. **Ideenarchiv** (Strg+Alt+I) sammelt Fragmente, Schlagworte und Herkunft. Ziehe ein gespeichertes Fragment als Kopie in die Komposition; daraus lässt sich ein neuer Text speichern, ohne die Ideen zu löschen. **Accountmanager** (Strg+Alt+A) sammelt Kontometadaten und Gruppen. Er ist kein verschlüsselter Passworttresor: keine echten Passwörter oder Tokens eingeben. [Bedienung und Datenschutz](docs/IDEEN_UND_KONTEN.md).
+
+Im Texteditor helfen **Strukturfarben** und die Gliederung bei Überschriften und Abschnitten. Sie verändern keine gespeicherten Textzeichen. [Details](docs/STARTMESSUNG_UND_STRUKTUR.md).
