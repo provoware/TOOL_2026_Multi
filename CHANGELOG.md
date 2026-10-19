@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+## Weitere Modulentwicklung (PR #100–#103, 19.10.2026; kein Release)
+
+- Vorbereitete Update-Slot-Installationen können nach abgeschirmter Prüfung atomar zwischen Programmversionen wechseln und bei Startfehlern zurückfallen. Bestehende Normalinstallationen bleiben unverändert.
+- Formularorientierter Modulbaukasten: geprüfte nicht ausführbare Entwürfe, Import/Export und Vorschau.
+- Entwicklungspool: lokale Projektordner, Status, Dateiübersicht, unabhängige Kopien und ZIP-Archive.
+- Audioplayer mit Playlist, skalierte Bildvorschau und FFmpeg-Slideshow mit Video-Tonspur-Umsetzung, Abbruch und exklusiven Ausgabedateien.
+- GitHub-Prüfungen #1039/#1041/#1043/#1046 erfolgreich; die jeweiligen Hauptzweigprüfungen #1040/#1042/#1044 erfolgreich, #1047 nach letzter Integration gestartet.
+- Verbleibende Arbeiten: Altinstallations-Migration, echte Drittplugins, Entwicklungs-ZIP-Rückimport, Videoeffekte und ffprobe-Validierung. Kubuntu-Gesamtabnahme weiterhin am Ende.
+
 ## Neu in 0.18.5-Entwicklung nach PR #97 und #98 (19.10.2026, kein öffentliches Release)
 
 - PR #97 integriert updateisolierte Laufzeitprobe, versionierte Modulverträge und das lokale Wiki nach gemeinsamer grüner CI #1031; main-CI #1033 ebenfalls erfolgreich.

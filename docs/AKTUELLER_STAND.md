@@ -24,7 +24,12 @@ Provoware ist ein Desktopprogramm für kreative Texte und die persönliche Organ
 | Dateisuche | Gespeicherte Namen und Textinhalte mit Trefferliste und Vorschau finden. |
 | Link-Schnellstarter (0.18.5) | Namen und Gruppen lokaler Webverknüpfungen verwalten; bewusst im Browser öffnen. |
 | Lokales Wiki | Eigene Sammlungen und Artikel anlegen, suchen, verknüpfen und ältere Fassungen aufrufen. |
-| Module verwalten | Ideenarchiv, Kontometadaten, Schnellstarter und Wiki im Menü ein- oder ausschalten. |
+| Module verwalten | Ideenarchiv, Kontometadaten, Schnellstarter, Wiki, Audioplayer, Bildvorschau und Slideshow ein- oder ausschalten. |
+| Modulbaukasten | Eigene Modulvorlagen, Feldbezeichnungen und eine harmlose Formularvorschau entwerfen. |
+| Entwicklungspool | Projektordner und Bearbeitungsstände verwalten, Kopien und ZIP-Archive erstellen. |
+| Audioplayer | Playlist speichern, Musik abspielen, pausieren, Titel wechseln und Lautstärke ändern. |
+| Bildvorschau | Lokale Bilder skalieren, anzeigen und per Liste auswählen. |
+| Slideshow & Video | Bilder als MP4 erzeugen, optional Ton hinzufügen oder die Audiospur eines Videos ersetzen. |
 | Programmsicherung für Updates | Nach Paketprüfung nur Betriebsdateien gesondert sichern und in einen neuen Ordner zurückholen; die laufende Installation bleibt unberührt. |
 | Hilfe | Erklärungen und technische Fehlermeldungen in verständlicher Sprache lesen. |
 | Anzeige | Zwischen vier Farben und fünf Zoomstufen von 100 bis 200 % wählen. |
@@ -36,6 +41,8 @@ Maßgeblich für die vollständige Alt- und Neuplanung ist der [Modulplan](MODUL
 Die Oberfläche nennt diese Dinge ausdrücklich **„In Planung“**: Reimfinder, Duplikatsuche, automatische GitHub-Verwaltung sowie verschiedene zusätzliche Schreibbereiche. Genre-Zufall und die lokale GitHub-Projektliste sind bereits nutzbar. Hörspiel-Buchvorlagen erzeugen Texte, keine fertige Audioproduktion. Ein geplanter Knopf ist kein fertiges Werkzeug.
 
 ## Was wurde zuletzt geprüft?
+
+**Neue Entwicklungsrunde:** Update-Slotmechanismus PR #100 (CI #1039, main #1040), Modulbaukasten PR #101 (CI #1041, main #1042), Entwicklungspool PR #102 (CI #1043, main #1044), Multimedia PR #103 (CI #1046 grün, Hauptzweigprüfung #1047 gestartet). Alle vier Pull Requests wurden in `main` übernommen. Diese Nachweise sind automatische Prüfungen, keine erneute manuelle Kubuntu-Abnahme. Es fehlen unter anderem produktive Altinstallations-Migration, echte Fremdplugin-Sandbox, ZIP-Rückimport und erweiterte Videofunktionen.
 
 **Aktueller Bestand:** Die gemeinsame Modul-Integration wurde in [PR #97](https://github.com/provoware/TOOL_2026_Multi/pull/97) nach erfolgreicher [CI #1031](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39288221387) übernommen; der anschließende [main-Prüflauf #1033](https://github.com/provoware/TOOL_2026_Multi/actions/runs/39289592547) war ebenfalls erfolgreich. [PR #98](https://github.com/provoware/TOOL_2026_Multi/pull/98) ergänzt die geprüfte Programmsicherung und echte Zusatzmodulschalter (CI #1035 erfolgreich); der zugehörige neue Hauptzweiglauf #1036 wurde gestartet. Ein automatischer Update-Rollback fehlt weiterhin. Die komplette manuelle Kubuntu-Abnahme erfolgt nur einmal ganz am Projektende.
 

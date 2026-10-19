@@ -9,9 +9,9 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 59,
-    "goal": "Integrierte Module, Update-Checkpoint und optionale Modulsteuerung",
-    "completed": 5,
+    "number": 63,
+    "goal": "Verwaltete Update-Slots, Modulbaukasten, Entwicklungspool und Multimedia-Basismodule",
+    "completed": 4,
     "open_next": 3
   },
   "runtime": {

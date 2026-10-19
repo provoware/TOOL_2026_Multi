@@ -1,6 +1,6 @@
 # Verbindlicher Modulplan – TOOL_2026_Multi
 
-**Stand:** 19.10.2026 · **Grundlage:** Hauptzweig 0.18.5 nach PR #97 und #98, erfolgreich geprüft mit CI #1033 bzw. PR-CI #1035. Noch kein öffentliches Release.
+**Stand:** 19.10.2026 · **Grundlage:** Hauptzweig 0.18.5 nach PR #100–#103; CI der Entwicklungsstände #1039/#1041/#1043/#1046 erfolgreich. Keine öffentliche Veröffentlichung.
 
 ## Maßgebliche Entwicklungsentscheidung
 Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament. **Die erneute vollständige praktische Kubuntu-/Plasma-Abnahme erfolgt ausschließlich am Ende des gesamten Modulaufbaus**, wenn alle vereinbarten Funktionen integriert und die Oberfläche weitgehend stabil ist. Zwischendurch bleiben Quellcodeprüfung, Logik-/GUI-Tests, Wayland-Startprobe, Daten- und Wiederherstellungstests sowie ZIP-Prüfung verbindlich. Ein automatisches Testergebnis ist keine erneute manuelle Abnahme.
@@ -32,10 +32,15 @@ Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament
 | Zentrale Dateisuche | Gespeicherte Namen und Textinhalte mit Vorschau und Schutzgrenzen; kein vollwertiger Dateimanager |
 | Hilfe, Fehlerlog, Recovery | Anleitung, Ereignisse, Diagnose und Fehlerbehandlung |
 | Persönliche Datensicherung | Separates Daten-ZIP, Integritätsprüfung, isolierte Wiederherstellung |
-| Update-Schutzstufen | Paket-ZIP/Manifest/Hash prüfen; optionale abgeschirmte Laufzeitprobe, geprüfter Programm-Checkpoint und isolierte Rückkehrkopie. **Keine Produktivaktivierung/automatischer Rollback.** |
+| Update-Schutzstufen | Paket-Staging, isolierte Probe, Checkpoint, Rückkehrkopie sowie atomarer Slotwechsel **für vorbereitete Slot-Installationen**; keine Migration gewöhnlicher Bestandsinstallationen. |
 | Link-Schnellstarter | Offline gespeicherte Adressen/Gruppen mit bewusstem Browserstart und kompakter rechter Leiste |
 | Lokales Wiki | Wissenssammlungen, Artikel, Schlagwortsuche, Querverweise, Textversionen und sicherer Import/Export |
-| Modulsteuerung | Vier fest bekannte Zusatzmodule (Ideen, Kontometadaten, Schnellstarter, Wiki) mit speicherbarer Ein-/Aus-Schaltung, ohne Fremdcode |
+| Modulsteuerung | Sieben bekannte Zusatzmodule mit speicherbarer Ein-/Aus-Schaltung; fremde Plugins werden nicht ausgeführt. |
+| Modulbaukasten | Beschreibende eigene Modulvorlagen, 1–12 Eingabefelder, begrenzte Fähigkeiten und sichere GUI-Vorschau. |
+| Entwicklungspool | Projektstatus, eigene Arbeitsordner, Kopieren und geprüfte ZIP-Exporte, ohne automatischen Voll-Rückimport. |
+| Audioplayer | Persistente Playlist, Play/Pause/Stopp, Vor-/Zurück, Lautstärke, Position. |
+| Bildvorschau | Gespeicherte Bildliste, Größenlimit, skalierter Decoder, Navigation. |
+| Video/Slideshow – Basis | FFmpeg-Einzelauftrag, bis 20 Bilder, optionaler Ton, Video-Tonmischung, Fortschritt/Abbruch; keine Übergänge/Warteschlange. |
 | Leistungsdiagnose | Freiwillige lokale Werte und Benchmarkwerkzeuge |
 
 ## B. Begonnene oder unvollständige Bestandteile
@@ -47,7 +52,9 @@ Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament
 | Eigenständige Notizen | Titelgestützter TXT-/MD-Speicher und eigenständiges Notizfenster statt nur Projekt-Kurznotiz |
 | Einstellungen | Zentrale persistente Einstellungsverwaltung statt lediglich Zoom/Theme |
 | Dateimanager | Ordneransicht, sicheres Umbenennen, Papierkorb, Vorschau, Import/Export |
-| Update-Manager | Isolierte Probe und Checkpoint/Rückkehrkopie vorhanden; noch ausstehend: atomare Aktivierung, Startnachprüfung und automatischer Rollback |
+| Update-Manager | Slotwechsel samt Rückkehr bei Fehlern nur für vorbereitete Slot-Installationen. Bestandsmigration, Datenauslagerung, Schnellstart-Anbindung und produktive Freigabe fehlen. |
+| Plugin-Laufzeit | Fremder Code und signierte Drittmodule benötigen erst eine getrennte geschützte Ausführung mit realer Rechteprüfung. |
+| Multimedia-Erweiterungen | ffprobe-Ausgangsprüfung, Überblendungseffekte, Intensitäten, Warteschlange und umfangreiche Codec-Tests fehlen. |
 | Automatische GitHub-Verwaltung | Erst nach klar definiertem Offline-/Online- und Sicherheitskonzept |
 | Hörspiel-, Blog-, Prompt-Produktion | Dedizierte Arbeitsabläufe über vorhandene Schreibvorlagen hinaus |
 
@@ -57,14 +64,12 @@ Die bereits vom Nutzer bestätigte Kubuntu-Basis dient als Entwicklungsfundament
 |---|---|---|
 | 1 | Produktive Update-Umschaltung | Atomare Aktivierung erst nach geprüftem Checkpoint, Startnachprüfung und gesichertem automatischem Rollback |
 | 2 | Erweiterter Projektmodulbaukasten / Plugin-System | Bestehende Modulverträge und Menüsteuerung um geprüfte Modulbau- und Fremdplugin-Funktionen ergänzen |
-| 3 | Arbeitsverzeichnis-/Entwicklungspool | Ordner, Status, sichere Kopien, Archive und nachvollziehbare Organisation |
-| 4 | Audioplayer | Playlist mit Speicherung, Wiedergabe, Sprung und Lautstärke |
-| 5 | Bildvorschau | Dateiauswahl, skalierbare Ansicht und Bildnavigation |
-| 6 | Video- und Slideshow-Generator | FFmpeg-Verarbeitung, Auftragsschlange, Fortschritt, Abbruch, Ausgabeprüfung |
-| 7 | Reimfinder | Lokales deutsches Nachschlage-/Reimwerkzeug |
-| 8 | Duplikatprüfer | Dateihash-/Vorschauprüfung, niemals automatische Löschung |
-| 9 | Read-only-Konsole / Entwicklerbereich | Diagnoseanzeige und begrenzte Entwicklerrechte ohne versteckte Schreibwege |
-| 10 | Zusätzliche Datei-/Projektwerkzeuge | Vereinbarte Restfunktionen aus B nach getrennten Prüfverträgen |
+| 3 | Video/Slideshow technisch vervollständigen | ffprobe-Validierung, Übergänge, Intensitätssteuerung und Auftragswarteschlange |
+| 4 | Entwicklungspool sicher erweitern | Archiv-Rückimport, bestehende Arbeitsordner bei Kollisionen schützen |
+| 5 | Reimfinder | Lokales deutsches Nachschlage-/Reimwerkzeug |
+| 6 | Duplikatprüfer | Dateihash-/Vorschauprüfung, niemals automatische Löschung |
+| 7 | Read-only-Konsole / Entwicklerbereich | Diagnoseanzeige und begrenzte Entwicklerrechte ohne versteckte Schreibwege |
+| 8 | Zusätzliche Datei-/Projektwerkzeuge | Vereinbarte Restfunktionen aus B nach getrennten Prüfverträgen |
 
 ## Iterationsregel
 Pro Iteration ein abgegrenzter Umfang: **Vertrag → Datenformat → sichere Logik → Oberfläche → Tests → Dokumentation → PR → grüne GitHub-Prüfung → Integration**. Das gemeinsame `MANIFEST.json`, die Texte, Hilfe, Fensterverwaltung, Zoom/Themes, Atomarspeicherung, Import-/Export- und Fehlerwege werden konsequent wiederverwendet.
@@ -122,3 +127,12 @@ Der lokale Projektpool erhält Status, projektbezogene Arbeitsordner, geprüfte 
 ## Iteration 63 – Multimedia-Basismodule (Entwicklungszweig)
 
 Drei eigenständige PySide6-Module mit einheitlicher Tastatur/Zoom/Theme-Steuerung werden ergänzt: ① Audioplayer mit lokaler persistenter Playlist, Play/Pause/Stopp/Sprung und Lautstärke. ② Bildvorschau mit Bildlisten, Größenlimit und skaliertem Leser. ③ FFmpeg-Slideshow (1–20 Bilder, Dauer, optionale Tonspur), Video→Audio-Umsetzung, asynchroner Einzelausführung, Fortschritt/ETA, Abbruch und niemals überschreibender MP4-Veröffentlichung. Bisher **keine konfigurierbaren Überblendeffekte**, keine echte Warteschlange für mehrere Aufträge und keine vollständig garantierte Ergebnisprüfung mit ffprobe. Import/Export bei Playlist, Bildliste und Slideshowvorgaben ist vorhanden. Automatische Logik- und GUI-Prüfungen laufen vor der Übernahme. Die vollständige manuelle Kubuntu-Abnahme erfolgt erst am Projektende.
+
+## Aktuelle Integration – Iterationen 60 bis 63
+
+- PR #100: Verwaltete Update-Slots mit automatischer Rückkehr bei Startproblemen, CI #1039, Hauptzweig #1040.
+- PR #101: Modulbaukasten mit sicheren Vorlagen, CI #1041, Hauptzweig #1042.
+- PR #102: Entwicklungspool mit Arbeitsordnern und Kopien, CI #1043, Hauptzweig #1044.
+- PR #103: Audioplayer, Bildvorschau und FFmpeg-Slideshow-Basis, CI #1046 erfolgreich; Hauptzweig #1047 gestartet.
+
+Die früheren Abschnitte 60 bis 63 mit „Entwicklungszweig“ sind Entstehungsnachweise und keine zweite aktuelle Aufgabenliste. Die Funktionsdefizite stehen weiterhin in Abschnitt B/C. Keine vorgezogene manuelle Kubuntu-Abnahme.
