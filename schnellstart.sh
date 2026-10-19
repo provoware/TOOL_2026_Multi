@@ -3,8 +3,9 @@ set -Eeuo pipefail
 
 PROJEKTORDNER="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 UMGEBUNG="$PROJEKTORDNER/.venv"
+DATENBASIS="${PROVOWARE_DATA_ROOT:-$PROJEKTORDNER}"
 PYTHON="${PYTHON:-python3}"
-STATUSDATEI="$PROJEKTORDNER/logs/startstatus.json"
+STATUSDATEI="$DATENBASIS/logs/startstatus.json"
 STATUSWERKZEUG="$PROJEKTORDNER/scripts/start_status.py"
 AKTUELLER_SCHRITT=1
 
@@ -28,7 +29,10 @@ fehler() {
 command -v timeout >/dev/null 2>&1 || { printf '🔴 Das Systemwerkzeug timeout fehlt (Paket coreutils).\n' >&2; exit 1; }
 cd "$PROJEKTORDNER"
 command -v "$PYTHON" >/dev/null 2>&1 || { printf '🔴 Die benötigte Python-3-Grundlage wurde nicht gefunden.\n' >&2; exit 1; }
-mkdir -p "$PROJEKTORDNER/logs"
+if [[ -n "${PROVOWARE_DATA_ROOT:-}" ]]; then
+  "$PYTHON" -c 'import sys; from app.runtime_roots import runtime_root; runtime_root(sys.argv[1])' "$PROJEKTORDNER" || fehler "Der getrennte Datenordner ist nicht sicher vorbereitet. Die alte Installation wurde nicht verändert."
+fi
+mkdir -p "$DATENBASIS/logs"
 "$PYTHON" "$STATUSWERKZEUG" init "$STATUSDATEI" >/dev/null 2>&1 || true
 checkpoint 1 ok "Grundlage ist vorhanden."
 
@@ -72,4 +76,4 @@ checkpoint 6 running "Provoware wird geöffnet."
 [[ -f "$PROJEKTORDNER/app/main.py" ]] || fehler "Die Hauptprogrammdatei app/main.py fehlt."
 checkpoint 6 ok "Alle Startprüfungen sind erfolgreich."
 "$PYTHON" "$STATUSWERKZEUG" finish "$STATUSDATEI" "🟢 Start erfolgreich. Provoware wird jetzt geöffnet." >/dev/null 2>&1 || true
-exec "$UMGEBUNG/bin/python" -m scripts.process_watch --root "$PROJEKTORDNER" -- "$UMGEBUNG/bin/python" -m app.main
+exec "$UMGEBUNG/bin/python" -m scripts.process_watch --root "$DATENBASIS" -- "$UMGEBUNG/bin/python" -m app.main

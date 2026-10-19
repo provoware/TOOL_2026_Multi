@@ -9,6 +9,7 @@ from pathlib import Path
 from app.event_log import EventLogger, emergency_message
 from app.process_guard import CONTROLLED_ALREADY_RUNNING_EXIT, acquire_instance_guard
 from app.texts import TextRegistry
+from app.runtime_roots import runtime_root
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -31,6 +32,7 @@ def configure_dashboard_presentation(dashboard):
 
 def headless_check() -> int:
     try:
+        runtime_root(ROOT)  # auch der isolierte Startmodus prüft externe Datenpfade
         manifest = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
         version = manifest["tool"]["version"]
         TextRegistry(ROOT / "texte" / "registry.json").get("app.name", "TOOL_2026_Multi")
@@ -48,6 +50,7 @@ def main() -> int:
     logger = None
     tracker = None
     try:
+        data_root = runtime_root(ROOT)
         from PySide6.QtWidgets import QApplication
         from app.ui import Dashboard, install_exception_handler
         from app.ui_standards import configure_application
@@ -57,10 +60,10 @@ def main() -> int:
         app.setApplicationName("Provoware-Datenbank-Dashboard 2026")
         configure_application(app)
 
-        if not ensure_runtime_folders_gui(ROOT):
+        if not ensure_runtime_folders_gui(data_root):
             return 2
 
-        guard = acquire_instance_guard(ROOT)
+        guard = acquire_instance_guard(data_root)
         if guard is None:
             from PySide6.QtWidgets import QMessageBox
             QMessageBox.information(
@@ -74,10 +77,10 @@ def main() -> int:
         from app.performance import activate
         from PySide6.QtCore import QTimer
         from time import perf_counter
-        tracker = activate(ROOT, version)
+        tracker = activate(data_root, version)
         dashboard_started = perf_counter()
-        logger = EventLogger(ROOT, version)
-        dashboard = Dashboard(TextRegistry(ROOT / "texte" / "registry.json"), logger, ROOT)
+        logger = EventLogger(data_root, version)
+        dashboard = Dashboard(TextRegistry(ROOT / "texte" / "registry.json"), logger, data_root)
         configure_dashboard_presentation(dashboard)
         install_exception_handler(app, logger, dashboard.refresh, dashboard)
         logger.record(

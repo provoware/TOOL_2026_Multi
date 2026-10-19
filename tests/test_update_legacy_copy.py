@@ -24,6 +24,7 @@ class RehearsalTests(unittest.TestCase):
   self.assertFalse(report["activation_allowed"])
   self.assertFalse(report["old_installation_changed"])
   self.assertFalse((output/"current").exists())
+  self.assertTrue((output/"persistent/.provoware-managed-data.json").is_file())
  def test_link_and_nested_target_refused(self):
   (self.source/"daten/link").symlink_to(self.root)
   with self.assertRaises(ValueError):prepare_legacy_copy(self.source,self.out)

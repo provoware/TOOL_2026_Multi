@@ -176,3 +176,7 @@ Echte FFmpeg-xfade-Übergänge zwischen zwei bis zwanzig Bildern: Überblenden, 
 ## Iteration 67 – Experimentelle Erweiterungssandbox
 
 Strenger Datenvertrag für ein minimales fremdes Python-Erweiterungspaket und ein isolierter opt-in-Start in Linux-Namensräumen ohne Netzwerk. Die Freigabe beliebiger Drittplugins ist weiterhin **nicht** erteilt; tatsächliche Sicherheits- und Ressourcenbeweise, Berechtigungsdialoge, Signaturprüfung und Kernanbindung fehlen. CI-pflichtiger Entwicklungszweig.
+
+## Iteration 67 – Unabhängige Datenablage und verwalteter Programmstart (Kandidat)
+
+Mit `PROVOWARE_DATA_ROOT` kann ein gesonderter Datenordner nur nach Prüfung eines lokalen Migrationsmarkers gewählt werden. Ohne Variable ist der bisherige Programm-/Projektstart unverändert. Der neue verwaltete Start prüft einen zulässigen relativen Slot-Zeiger, externe Daten, Programmvertrag und den Schnellstart. Bei Fehlern einer zuvor aktivierten neuen Version darf nur der Programmzeiger zum alten Slot zurückkehren. Der Nutzerdatenbestand wird **nicht** zurückkopiert. Eine unveränderte Altinstallation wird nicht automatisch migriert oder ersetzt. Eine frisch vorbereitete Kopie ohne aktiven Zeiger wird weiterhin verweigert. Vor produktivem Migrationsassistenten fehlen insbesondere Aktivierungsfreigabe, vollständige Ressourcen-/Format-Kompatibilität und der Kubuntu-Endtest.
