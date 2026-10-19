@@ -52,7 +52,13 @@ BUILTIN_MODULES = (
     ModuleDefinition("ideas", "Ideenarchiv", "1.0.0", ("edit", "search")),
     ModuleDefinition("books", "Buchwerkstatt", "1.0.0", ("edit",)),
     ModuleDefinition("accounts", "Kontometadaten", "1.0.0", ("edit", "search")),
+    ModuleDefinition("quicklinks", "Link-Schnellstarter", "1.0.0", ("edit",)),
+    ModuleDefinition("wiki", "Wiki", "1.0.0", ("edit", "search")),
 )
+
+# Erst diese bereits mit fester Fensterklasse bekannten Zusatzmodule sind
+# zur Laufzeit abschaltbar. Kernmodule bleiben hiervon unangetastet.
+OPTIONAL_MODULES = ("ideas", "accounts", "quicklinks", "wiki")
 
 
 def _catalog_path(root):
@@ -116,3 +122,31 @@ def describe(root, definitions=BUILTIN_MODULES):
              "api_version": d.api_version, "capabilities": list(d.capabilities),
              "catalog_enabled": registered.get(d.module_id, False)}
             for d in definitions]
+
+
+def is_module_enabled(root, module_id, definitions=BUILTIN_MODULES):
+    """Bereits vorhandene Module sind standardmäßig weiterhin zugänglich."""
+    known = {d.module_id for d in definitions}
+    if module_id not in known:
+        raise ValueError("Unbekannte Modulkennung.")
+    entries = load_catalog(root, definitions)["modules"]
+    return next((item["enabled"] for item in entries if item["id"] == module_id), True)
+
+
+def set_module_preferences(root, selections, definitions=BUILTIN_MODULES):
+    """Alle ausgewählten Menüschalter werden zusammen und atomar gespeichert."""
+    if (not isinstance(selections, dict) or not selections
+            or any(key not in OPTIONAL_MODULES or type(value) is not bool
+                   for key, value in selections.items())):
+        raise ValueError("Nur bekannte Zusatzmodule dürfen geschaltet werden.")
+    definitions_by_id = {item.module_id: item for item in definitions}
+    if any(key not in definitions_by_id for key in selections):
+        raise ValueError("Unbekannte Modulversion.")
+    previous = load_catalog(root, definitions)
+    old = {item["id"]: item for item in previous["modules"]}
+    for name, enabled in selections.items():
+        old[name] = {"id": name, "version": definitions_by_id[name].version,
+                     "enabled": enabled}
+    state = validate_catalog({"schema_version": 1, "modules": list(old.values())}, definitions)
+    atomic_write_json(_catalog_path(root), state)
+    return state

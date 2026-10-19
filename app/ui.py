@@ -23,6 +23,8 @@ from app.idea_window import IdeaWindow
 from app.account_window import AccountWindow
 from app.quicklinks_window import QuicklinksWindow
 from app.wiki_window import WikiWindow
+from app.module_controls_window import ModuleControlsWindow
+from app import module_contracts
 from app.quicklinks_rail import QuicklinksRail
 from app.module_widgets import t as module_text
 from app.event_log import EventLogger
@@ -75,6 +77,7 @@ class Dashboard(QWidget):
         self._account_window: AccountWindow | None = None
         self._quicklinks_window: QuicklinksWindow | None = None
         self._wiki_window: WikiWindow | None = None
+        self._module_controls_window: ModuleControlsWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -138,10 +141,14 @@ class Dashboard(QWidget):
         logo.setPopupMode(QToolButton.InstantPopup)
         logo.setStyleSheet(f"font-size: 18pt; color: {COLORS['accent']};")
         self.module_menu = QMenu(logo)
-        self.module_menu.addAction(module_text("ideas", "Textfragmente & Ideenarchiv"), self.open_ideas)
-        self.module_menu.addAction(module_text("accounts", "Profil- & Accountmanager"), self.open_accounts)
-        self.module_menu.addAction(module_text("quicklinks", "Link-Schnellstarter"), self.open_quicklinks)
-        self.module_menu.addAction(module_text("wiki", "Wiki · Wissenssammlungen"), self.open_wiki)
+        self._optional_actions = {
+            "ideas": self.module_menu.addAction(module_text("ideas", "Textfragmente & Ideenarchiv"), self.open_ideas),
+            "accounts": self.module_menu.addAction(module_text("accounts", "Profil- & Accountmanager"), self.open_accounts),
+            "quicklinks": self.module_menu.addAction(module_text("quicklinks", "Link-Schnellstarter"), self.open_quicklinks),
+            "wiki": self.module_menu.addAction(module_text("wiki", "Wiki · Wissenssammlungen"), self.open_wiki),
+        }
+        self.module_menu.addSeparator()
+        self.module_menu.addAction("Module verwalten", self.open_module_controls)
         logo.setMenu(self.module_menu)
         layout.addWidget(logo)
 
@@ -490,6 +497,7 @@ class Dashboard(QWidget):
         QShortcut(QKeySequence("Ctrl+Alt+I"), self, activated=self.open_ideas)
         QShortcut(QKeySequence("Ctrl+Alt+L"), self, activated=self.open_quicklinks)
         QShortcut(QKeySequence("Ctrl+Alt+W"), self, activated=self.open_wiki)
+        QShortcut(QKeySequence("Ctrl+Alt+M"), self, activated=self.open_module_controls)
         QShortcut(QKeySequence("Ctrl+Shift+F"), self, activated=self.open_search)
         QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
         QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
@@ -542,6 +550,7 @@ class Dashboard(QWidget):
             (self._account_window, False),
             (self._quicklinks_window, False),
             (self._wiki_window, False),
+            (self._module_controls_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -731,6 +740,8 @@ class Dashboard(QWidget):
         )
 
     def open_accounts(self) -> None:
+        if not self._optional_allowed("accounts"):
+            return
         self._account_window = _open_managed_window(
             self._account_window,
             lambda: AccountWindow(self.project_root, self.zoom_percent, parent=self),
@@ -738,6 +749,8 @@ class Dashboard(QWidget):
         )
 
     def open_quicklinks(self) -> None:
+        if not self._optional_allowed("quicklinks"):
+            return
         self._quicklinks_window = _open_managed_window(
             self._quicklinks_window,
             lambda: QuicklinksWindow(self.project_root, self.zoom_percent, parent=self,
@@ -747,13 +760,55 @@ class Dashboard(QWidget):
         self.quicklinks_rail.refresh()
 
     def open_wiki(self) -> None:
+        if not self._optional_allowed("wiki"):
+            return
         self._wiki_window = _open_managed_window(
             self._wiki_window,
             lambda: WikiWindow(self.project_root, self.zoom_percent, parent=self),
             reuse_hidden=True,
         )
 
+    def _optional_allowed(self, ident: str) -> bool:
+        try:
+            enabled = module_contracts.is_module_enabled(self.project_root, ident)
+        except (OSError, ValueError) as error:
+            self.quick_status.setText("Modulregister nicht lesbar: " + str(error))
+            return False
+        if not enabled:
+            self.quick_status.setText("Modul deaktiviert. Im Modulmenü unter „Module verwalten“ einschalten.")
+        return enabled
+
+    def _may_disable_module(self, ident: str) -> bool:
+        windows = {
+            "ideas": self._idea_window, "accounts": self._account_window,
+            "quicklinks": self._quicklinks_window, "wiki": self._wiki_window,
+        }
+        window = windows.get(ident)
+        return window is None or not window.isVisible()
+
+    def _sync_optional_actions(self) -> None:
+        for ident, action in self._optional_actions.items():
+            try:
+                action.setEnabled(module_contracts.is_module_enabled(self.project_root, ident))
+            except (OSError, ValueError):
+                action.setEnabled(False)
+        if hasattr(self, "quicklinks_rail"):
+            self._update_quicklinks_visibility()
+
+    def open_module_controls(self) -> None:
+        self._module_controls_window = _open_managed_window(
+            self._module_controls_window,
+            lambda: ModuleControlsWindow(
+                self.project_root, self.zoom_percent,
+                can_disable=self._may_disable_module,
+                on_saved=self._sync_optional_actions, parent=self,
+            ),
+            reuse_hidden=True,
+        )
+
     def open_ideas(self) -> None:
+        if not self._optional_allowed("ideas"):
+            return
         self._idea_window = _open_managed_window(
             self._idea_window,
             lambda: IdeaWindow(self.project_root, self.zoom_percent, parent=self),
@@ -777,7 +832,8 @@ class Dashboard(QWidget):
     def _confirm_creative_modules(self) -> bool:
         return all(window.confirm_leave() for window in
                    (self._book_window, self._snippet_window, self._idea_window,
-                    self._account_window, self._quicklinks_window, self._wiki_window) if window is not None)
+                    self._account_window, self._quicklinks_window, self._wiki_window,
+                    self._module_controls_window) if window is not None)
 
     def open_todo(self) -> None:
         self._todo_window = _open_managed_window(
@@ -946,6 +1002,7 @@ class Dashboard(QWidget):
 
     def refresh(self) -> None:
         self.quicklinks_rail.refresh()
+        self._sync_optional_actions()
         self.refresh_recent_songs()
         self.refresh_db_profiles()
         self.quick_status.setText("Bereit · Wähle Songtexte, Todo-Liste oder Kalender.")
@@ -966,7 +1023,8 @@ class Dashboard(QWidget):
 
     def _update_quicklinks_visibility(self) -> None:
         # Nicht mit Profilfeldern oder Hochzoom um wertvolle Breite konkurrieren.
-        self.quicklinks_rail.setVisible(self.width() >= 1500 and self.zoom_percent <= 125)
+        self.quicklinks_rail.setVisible(self.width() >= 1500 and self.zoom_percent <= 125
+                                        and self._optional_allowed("quicklinks"))
 
     def set_zoom(self, percent: int) -> None:
         if percent not in ZOOM_LEVELS:

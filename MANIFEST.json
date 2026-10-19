@@ -1422,6 +1422,41 @@
       "path": "docs/WIKI.md",
       "release": true,
       "purpose": "Wikimodul-Bedienung und Sicherheitsgrenzen"
+    },
+    {
+      "path": "app/update_checkpoint.py",
+      "release": true,
+      "purpose": "Rein lesende Programmsicherung mit geprüftem Rückkehr-Slot, keine Aktivierung"
+    },
+    {
+      "path": "scripts/update_checkpoint.py",
+      "release": true,
+      "purpose": "CLI für separaten Checkpoint und geprüfte Rückkehrkopie"
+    },
+    {
+      "path": "tests/test_update_checkpoint.py",
+      "release": false,
+      "purpose": "Negativtests Programmsicherung, Checksummen und Wiederherstellung ohne Produktivwechsel"
+    },
+    {
+      "path": "app/module_controls_window.py",
+      "release": true,
+      "purpose": "Benutzersteuerung erlaubter Zusatzmodule ohne Fremdcode"
+    },
+    {
+      "path": "tests/test_module_preferences.py",
+      "release": false,
+      "purpose": "Persistente Modulschalter und atomare Sammeländerungen"
+    },
+    {
+      "path": "tests/test_module_controls_gui.py",
+      "release": false,
+      "purpose": "GUI-Tests für echte Deaktivierung in Menü, Route und Zoom"
+    },
+    {
+      "path": "docs/UPDATE_CHECKPOINT.md",
+      "release": true,
+      "purpose": "Schutz und Bedienung von Checkpoint/Rückkehrkopie vor Aktivierung"
     }
   ],
   "creative_modules": {
@@ -1559,5 +1594,25 @@
     "revisions_per_article": 20,
     "store": "daten/wiki/bestand.json",
     "import_as_copies": true
+  },
+  "update_checkpoint": {
+    "schema_version": 1,
+    "scope": "release_files_only",
+    "restore_to_new_slot": true,
+    "production_overwrite": false,
+    "automatic_rollback": false,
+    "activation_allowed": false
+  },
+  "module_control": {
+    "schema_version": 1,
+    "optional_builtin_ids": [
+      "ideas",
+      "accounts",
+      "quicklinks",
+      "wiki"
+    ],
+    "default_enabled": true,
+    "atomic_preferences": true,
+    "exec_external_code": false
   }
 }
