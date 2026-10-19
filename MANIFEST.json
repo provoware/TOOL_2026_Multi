@@ -1367,6 +1367,21 @@
       "path": "docs/SCHNELLSTARTER.md",
       "release": true,
       "purpose": "Bedienung und Schutzgrenzen der Link-Schnellstarter"
+    },
+    {
+      "path": "app/update_sandbox.py",
+      "release": true,
+      "purpose": "Fail-closed Laufzeitprobe von Updatekandidaten ausschließlich in bubblewrap-Isolation"
+    },
+    {
+      "path": "scripts/update_sandbox.py",
+      "release": true,
+      "purpose": "Optionale Kommandozeile für sichere isolierte Updateprobe ohne Aktivierung"
+    },
+    {
+      "path": "tests/test_update_sandbox.py",
+      "release": false,
+      "purpose": "Negativtests für getrennte Kandidatenprüfung und gesperrte Aktivierung"
     }
   ],
   "creative_modules": {
@@ -1479,5 +1494,13 @@
     "right_rail_min_width": 1500,
     "right_rail_max_zoom": 125,
     "automatic_navigation": false
+  },
+  "update_sandbox": {
+    "schema_version": 1,
+    "requires_bubblewrap": true,
+    "network_unshared": true,
+    "host_code_execution": false,
+    "activation_allowed": false,
+    "probe_timeout_seconds": 25
   }
 }

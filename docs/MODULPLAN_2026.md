@@ -74,3 +74,7 @@ Pro Iteration ein abgegrenzter Umfang: **Vertrag → Datenformat → sichere Log
 
 ## Qualitätsnachpflege zu 0.18.5
 GitHub-Main #1020 bestand 254 Logik- und 164 GUI-Tests, Wayland, Restore und ZIP. Das nicht blockierende 60-Fall/180-Fenster-UI-Profil meldete **0 harte Fehler, aber 16 Warnungen** (zu langes „Bearbeiten“-Label in der rechten Leiste). Der Folgepatch verkürzt den Text und schützt späte Qt-Theme-Rückrufe. Der neue Patch benötigt eine eigene vollständige Prüfung; diese historische Aussage bleibt unverändert.
+
+## Iteration 56 – Update-Laufzeitprobe (Entwicklungszweig)
+
+Eine streng verweigernde Bubblewrap-Prüfung wird als separater Kandidat vorbereitet. Ohne wirksame Isolation darf keinerlei Paketcode ausgeführt werden. Die Probe ist ohne automatische Aktivierung und ohne Rückfallfunktion; vollständiger Update-Manager weiterhin **teilweise**. Die GUI- und Praxisabnahme bleibt bis zum Ende zurückgestellt, die GitHub-Vollprüfung ist für die Übernahme erforderlich.
