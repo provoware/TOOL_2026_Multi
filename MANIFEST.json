@@ -9,8 +9,8 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 64,
-    "goal": "Sichere Formulardatensätze, Medienausgabeprüfung, geprüfter Archivimport und Migrationsvorprüfung",
+    "number": 65,
+    "goal": "Getrennte Datenpfade, kontrollierte Modulaktionen, Video-Warteschlangen und Fade-Basis",
     "completed": 0,
     "open_next": 3
   },
@@ -1627,6 +1627,36 @@
       "path": "docs/ITERATION64.md",
       "release": true,
       "purpose": "Sicherheitsumfang und fehlende Produktivfunktionen von Iteration 64"
+    },
+    {
+      "path": "app/media_queue.py",
+      "release": true,
+      "purpose": "Persistente geprüfte Videowarteschlange ohne automatischen Neustart"
+    },
+    {
+      "path": "app/media_effects.py",
+      "release": true,
+      "purpose": "Geprüfte Fade-Effektparameter für spätere FFmpeg-Integration"
+    },
+    {
+      "path": "app/module_permissions.py",
+      "release": true,
+      "purpose": "Explizit freizugebende eingebaute harmlose Modulaktionen"
+    },
+    {
+      "path": "app/update_data_layout.py",
+      "release": true,
+      "purpose": "Nichtverändernde Trennungsprüfung von Daten und Programmpfaden"
+    },
+    {
+      "path": "tests/test_iteration65_contracts.py",
+      "release": false,
+      "purpose": "Auftrags-, Effekt- und Rechte-Negativtests"
+    },
+    {
+      "path": "docs/ITERATION65.md",
+      "release": true,
+      "purpose": "Sicherheitsgrenzen der nächsten Entwicklungsstufe"
     }
   ],
   "creative_modules": {
