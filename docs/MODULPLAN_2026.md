@@ -149,3 +149,7 @@ Dies ist zunächst ein separater Entwicklungszweig. Vor der Übernahme ist die v
 ## Iteration 65 – geprüfte Anschlussbausteine (Entwicklungszweig)
 
 Programmdaten: rein lesender Nachweis voneinander unabhängiger Code- und Datenordner; keine automatische Bestandsmigration. Modulbaukasten: ausschließlich fest kodierte Datenoperationen nach expliziter Rechtezustimmung; kein Fremdcode. Video: gespeicherte Auftragsliste mit Zuständen, Absturz-Unterbrechungsmarkierung und Sperre paralleler gestarteter Jobs; Effektparameter mit begrenzter Intensität als **Vorbereitung**, noch keine FFmpeg-/GUI-Einbindung oder fertige Übergangseffekte. Alle Funktionen sind noch CI-pflichtige Kandidaten.
+
+## Iteration 66 – benutzbare Datenmodule (gesonderter Kandidat)
+
+Der vorhandene Modulbaukasten kann gespeicherte Formularentwürfe in einem eigenen Dialog zur tatsächlichen Datenaufnahme öffnen. Vor jedem Schreiben ist eine ausdrückliche Zustimmung erforderlich, die zusätzlich vom Modulrechte-Vertrag geprüft wird. Fremder Python- oder Shellcode bleibt verboten; Module können nur vordefinierte sichere Datenoperationen durchführen. Vollständige GitHub-Prüfung vor Integration erforderlich.

@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
     QListWidget, QListWidgetItem, QMessageBox, QTextEdit, QSplitter, QVBoxLayout, QWidget,
 )
 from app import module_blueprints as store
+from app.module_records_dialog import ModuleRecordsDialog
 from app.module_widgets import ModuleWindow, button, scroll_panel
 
 
@@ -60,6 +61,7 @@ class BlueprintWindow(ModuleWindow):
             box.addWidget(check)
         button(box, "Entwurf speichern", self.save)
         button(box, "Vorschau erzeugen", self.preview)
+        button(box, "Datensätze des Moduls öffnen", self.open_records)
         self.preview_frame = QWidget()
         self.preview_layout = QFormLayout(self.preview_frame)
         box.addWidget(self.preview_frame)
@@ -164,6 +166,18 @@ class BlueprintWindow(ModuleWindow):
             editor.setPlaceholderText("Vorschau: " + field["label"])
             self.preview_layout.addRow(field["label"], editor)
         self.status.setText("Vorschau erstellt – nur Darstellung, keine Programmausführung.")
+
+    def open_records(self):
+        if not self.confirm_leave():
+            return
+        if self.current_id is None:
+            self.status.setText("Bitte zuerst einen Modulentwurf speichern.")
+            return
+        try:
+            dialog = ModuleRecordsDialog(self.root, self.current_id, self)
+            dialog.exec()
+        except (OSError, ValueError) as error:
+            self.error("Moduldaten nicht geöffnet", error)
 
     def delete(self):
         if self.current_id is None:
