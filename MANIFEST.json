@@ -9,8 +9,8 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 71,
-    "goal": "CPU-/RAM-/Dateigrenzen experimenteller Linux-Plugins; produktive Altstartmigration weiterhin gesperrt",
+    "number": 72,
+    "goal": "Geprüfter Launcher-Zeiger mit Rückkehrjournal und praktische Isolations-/Retry-Negativtests",
     "completed": 0,
     "open_next": 3
   },
@@ -1813,6 +1813,26 @@
       "path": "tests/test_plugin_resource_limits.py",
       "release": false,
       "purpose": "Ressourcenbeschränkungen des isolierten Fremdcode-Kindprozesses nachweisen"
+    },
+    {
+      "path": "app/managed_launcher_switch.py",
+      "release": true,
+      "purpose": "Atomarer Starter-Zeigertausch nur für vorbereitete Links, mit Rückkehrjournal"
+    },
+    {
+      "path": "tests/test_managed_launcher_switch.py",
+      "release": false,
+      "purpose": "Abbruch-, Stromausfall- und Datenunverändertheitstests der Startrückkehr"
+    },
+    {
+      "path": "tests/test_runtime_negative_probes.py",
+      "release": false,
+      "purpose": "Reale Sandbox-Praxisprobe (bei verfügbarem bwrap) und Wiederholung nach Abbruch"
+    },
+    {
+      "path": "docs/ITERATION72.md",
+      "release": true,
+      "purpose": "Kontrollierte Launcherprobe mit Grenzen zur produktiven Altinstallation"
     }
   ],
   "creative_modules": {
