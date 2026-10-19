@@ -1367,6 +1367,31 @@
       "path": "docs/SCHNELLSTARTER.md",
       "release": true,
       "purpose": "Bedienung und Schutzgrenzen der Link-Schnellstarter"
+    },
+    {
+      "path": "app/wiki_store.py",
+      "release": true,
+      "purpose": "Lokale Wissenssammlungen, Linkvalidierung und versionierte Artikel"
+    },
+    {
+      "path": "app/wiki_window.py",
+      "release": true,
+      "purpose": "Wikimodul mit Suche, Sammlungen, Querverweisen und Entwurfsschutz"
+    },
+    {
+      "path": "tests/test_wiki.py",
+      "release": false,
+      "purpose": "Sicherheits- und Versionsprüfungen des Wikimoduls"
+    },
+    {
+      "path": "tests/test_wiki_gui.py",
+      "release": false,
+      "purpose": "GUI-, Bedien- und Zoomtests des Wikimoduls"
+    },
+    {
+      "path": "docs/WIKI.md",
+      "release": true,
+      "purpose": "Wikimodul-Bedienung und Sicherheitsgrenzen"
     }
   ],
   "creative_modules": {
@@ -1479,5 +1504,14 @@
     "right_rail_min_width": 1500,
     "right_rail_max_zoom": 125,
     "automatic_navigation": false
+  },
+  "wiki": {
+    "schema_version": 1,
+    "local_only": true,
+    "max_bases": 100,
+    "max_articles": 2000,
+    "revisions_per_article": 20,
+    "store": "daten/wiki/bestand.json",
+    "import_as_copies": true
   }
 }
