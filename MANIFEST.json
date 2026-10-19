@@ -1522,6 +1522,66 @@
       "path": "docs/ENTWICKLUNGSPOOL.md",
       "release": true,
       "purpose": "Projektpool-Anleitung, Kopier- und Archivschutz"
+    },
+    {
+      "path": "app/media_files.py",
+      "release": true,
+      "purpose": "Lokale Dateiprüfung und atomare Audio-Playlist"
+    },
+    {
+      "path": "app/audio_player_window.py",
+      "release": true,
+      "purpose": "Audioplayer mit QtMultimedia, Navigation und Lautstärke"
+    },
+    {
+      "path": "app/image_preview_window.py",
+      "release": true,
+      "purpose": "Skalierte sichere Bildvorschau mit persistenter Liste"
+    },
+    {
+      "path": "app/media_jobs.py",
+      "release": true,
+      "purpose": "Strikte FFmpeg-Argumente für Diashow und Video-Audio-Umsetzung"
+    },
+    {
+      "path": "app/slideshow_window.py",
+      "release": true,
+      "purpose": "Asynchrone FFmpeg-Jobs mit Fortschritt, ETA, Abbruch und exklusiver Ausgabe"
+    },
+    {
+      "path": "tests/test_media_files.py",
+      "release": false,
+      "purpose": "Sicherheitstests für Medienpfade und Playlist"
+    },
+    {
+      "path": "tests/test_media_jobs.py",
+      "release": false,
+      "purpose": "FFmpeg-Auftragsformat und sichere Ausgabepfade"
+    },
+    {
+      "path": "tests/test_audio_player_gui.py",
+      "release": false,
+      "purpose": "Headless-Oberflächenprüfungen des Audioplayers"
+    },
+    {
+      "path": "tests/test_image_preview_gui.py",
+      "release": false,
+      "purpose": "Bildleser-/Zoomtests"
+    },
+    {
+      "path": "tests/test_slideshow_gui.py",
+      "release": false,
+      "purpose": "GUI-Tests für Slideshow-Vorgaben"
+    },
+    {
+      "path": "tests/test_media_integration_gui.py",
+      "release": false,
+      "purpose": "Dashboard- und Modulsteuerungsregressionen der Medienmodule"
+    },
+    {
+      "path": "docs/MEDIENMODULE.md",
+      "release": true,
+      "purpose": "Multimedia-Bedienung und Sicherheitsgrenzen"
     }
   ],
   "creative_modules": {
@@ -1704,5 +1764,15 @@
     "max_files_per_project": 500,
     "archive_limit": 67108864,
     "local_only": true
+  },
+  "media_modules": {
+    "schema_version": 1,
+    "audio_playlist": true,
+    "image_preview": true,
+    "slideshow_ffmpeg": true,
+    "video_audio_mix": true,
+    "serial_jobs": true,
+    "non_overwriting_output": true,
+    "transitions_implemented": false
   }
 }

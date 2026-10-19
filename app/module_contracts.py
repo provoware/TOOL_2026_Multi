@@ -56,11 +56,14 @@ BUILTIN_MODULES = (
     ModuleDefinition("wiki", "Wiki", "1.0.0", ("edit", "search")),
     ModuleDefinition("module_builder", "Modulbaukasten", "1.0.0", ("view", "edit", "import", "export")),
     ModuleDefinition("development_pool", "Entwicklungspool", "1.0.0", ("view", "edit", "export")),
+    ModuleDefinition("audio", "Audioplayer", "1.0.0", ("view", "edit", "import", "export")),
+    ModuleDefinition("pictures", "Bildvorschau", "1.0.0", ("view", "edit", "import", "export")),
+    ModuleDefinition("slideshow", "Video/Slideshow", "1.0.0", ("view", "edit", "export")),
 )
 
 # Erst diese bereits mit fester Fensterklasse bekannten Zusatzmodule sind
 # zur Laufzeit abschaltbar. Kernmodule bleiben hiervon unangetastet.
-OPTIONAL_MODULES = ("ideas", "accounts", "quicklinks", "wiki")
+OPTIONAL_MODULES = ("ideas", "accounts", "quicklinks", "wiki", "audio", "pictures", "slideshow")
 
 
 def _catalog_path(root):

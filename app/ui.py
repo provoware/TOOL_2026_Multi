@@ -26,6 +26,9 @@ from app.wiki_window import WikiWindow
 from app.module_controls_window import ModuleControlsWindow
 from app.module_blueprints_window import BlueprintWindow
 from app.development_pool_window import DevelopmentPoolWindow
+from app.audio_player_window import AudioPlayerWindow
+from app.image_preview_window import ImagePreviewWindow
+from app.slideshow_window import SlideshowWindow
 from app import module_contracts
 from app.quicklinks_rail import QuicklinksRail
 from app.module_widgets import t as module_text
@@ -82,6 +85,9 @@ class Dashboard(QWidget):
         self._module_controls_window: ModuleControlsWindow | None = None
         self._blueprint_window: BlueprintWindow | None = None
         self._development_pool_window: DevelopmentPoolWindow | None = None
+        self._audio_window: AudioPlayerWindow | None = None
+        self._pictures_window: ImagePreviewWindow | None = None
+        self._slideshow_window: SlideshowWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -150,6 +156,9 @@ class Dashboard(QWidget):
             "accounts": self.module_menu.addAction(module_text("accounts", "Profil- & Accountmanager"), self.open_accounts),
             "quicklinks": self.module_menu.addAction(module_text("quicklinks", "Link-Schnellstarter"), self.open_quicklinks),
             "wiki": self.module_menu.addAction(module_text("wiki", "Wiki · Wissenssammlungen"), self.open_wiki),
+            "audio": self.module_menu.addAction("Audioplayer", self.open_audio_player),
+            "pictures": self.module_menu.addAction("Bildvorschau", self.open_picture_preview),
+            "slideshow": self.module_menu.addAction("Video & Slideshow", self.open_slideshow),
         }
         self.module_menu.addSeparator()
         self.module_menu.addAction("Module verwalten", self.open_module_controls)
@@ -506,6 +515,9 @@ class Dashboard(QWidget):
         QShortcut(QKeySequence("Ctrl+Alt+M"), self, activated=self.open_module_controls)
         QShortcut(QKeySequence("Ctrl+Alt+E"), self, activated=self.open_module_blueprints)
         QShortcut(QKeySequence("Ctrl+Alt+P"), self, activated=self.open_development_pool)
+        QShortcut(QKeySequence("Ctrl+Alt+U"), self, activated=self.open_audio_player)
+        QShortcut(QKeySequence("Ctrl+Alt+O"), self, activated=self.open_picture_preview)
+        QShortcut(QKeySequence("Ctrl+Alt+V"), self, activated=self.open_slideshow)
         QShortcut(QKeySequence("Ctrl+Shift+F"), self, activated=self.open_search)
         QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
         QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
@@ -561,6 +573,9 @@ class Dashboard(QWidget):
             (self._module_controls_window, False),
             (self._blueprint_window, False),
             (self._development_pool_window, False),
+            (self._audio_window, False),
+            (self._pictures_window, False),
+            (self._slideshow_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -792,6 +807,8 @@ class Dashboard(QWidget):
         windows = {
             "ideas": self._idea_window, "accounts": self._account_window,
             "quicklinks": self._quicklinks_window, "wiki": self._wiki_window,
+            "audio": self._audio_window, "pictures": self._pictures_window,
+            "slideshow": self._slideshow_window,
         }
         window = windows.get(ident)
         return window is None or not window.isVisible()
@@ -804,6 +821,33 @@ class Dashboard(QWidget):
                 action.setEnabled(False)
         if hasattr(self, "quicklinks_rail"):
             self._update_quicklinks_visibility()
+
+    def open_audio_player(self) -> None:
+        if not self._optional_allowed('audio'):
+            return
+        self._audio_window = _open_managed_window(
+            self._audio_window,
+            lambda: AudioPlayerWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
+    def open_picture_preview(self) -> None:
+        if not self._optional_allowed('pictures'):
+            return
+        self._pictures_window = _open_managed_window(
+            self._pictures_window,
+            lambda: ImagePreviewWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
+    def open_slideshow(self) -> None:
+        if not self._optional_allowed('slideshow'):
+            return
+        self._slideshow_window = _open_managed_window(
+            self._slideshow_window,
+            lambda: SlideshowWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
 
     def open_development_pool(self) -> None:
         self._development_pool_window = _open_managed_window(
@@ -858,7 +902,8 @@ class Dashboard(QWidget):
                    (self._book_window, self._snippet_window, self._idea_window,
                     self._account_window, self._quicklinks_window, self._wiki_window,
                     self._module_controls_window, self._blueprint_window,
-                    self._development_pool_window) if window is not None)
+                    self._development_pool_window, self._audio_window,
+                    self._pictures_window, self._slideshow_window) if window is not None)
 
     def open_todo(self) -> None:
         self._todo_window = _open_managed_window(

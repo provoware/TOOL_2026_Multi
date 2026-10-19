@@ -118,3 +118,7 @@ Der neue Modulbaukasten verwaltet ausschließlich **beschreibende** lokale Modul
 ## Iteration 62 – Entwicklungspool (eigener Kandidat)
 
 Der lokale Projektpool erhält Status, projektbezogene Arbeitsordner, geprüfte sichere Verzeichniskopien und einen ZIP-Export. Keine automatische Löschung. Links, Spezialdateien, große Einzeldateien, zu große Archivbestände und bestehende Exportdateien werden abgewehrt. Der sichere Rückimport gesamter Verzeichnisse fehlt noch; das wird offen ausgewiesen. Menü- und Tastaturzugang Strg+Alt+P, Nutzung der bekannten Fenster-/Zoom- und Speicherstandards. Automatische GitHub-Prüfungen vor Integration; keine wiederholte manuelle Kubuntu-Abnahme.
+
+## Iteration 63 – Multimedia-Basismodule (Entwicklungszweig)
+
+Drei eigenständige PySide6-Module mit einheitlicher Tastatur/Zoom/Theme-Steuerung werden ergänzt: ① Audioplayer mit lokaler persistenter Playlist, Play/Pause/Stopp/Sprung und Lautstärke. ② Bildvorschau mit Bildlisten, Größenlimit und skaliertem Leser. ③ FFmpeg-Slideshow (1–20 Bilder, Dauer, optionale Tonspur), Video→Audio-Umsetzung, asynchroner Einzelausführung, Fortschritt/ETA, Abbruch und niemals überschreibender MP4-Veröffentlichung. Bisher **keine konfigurierbaren Überblendeffekte**, keine echte Warteschlange für mehrere Aufträge und keine vollständig garantierte Ergebnisprüfung mit ffprobe. Import/Export bei Playlist, Bildliste und Slideshowvorgaben ist vorhanden. Automatische Logik- und GUI-Prüfungen laufen vor der Übernahme. Die vollständige manuelle Kubuntu-Abnahme erfolgt erst am Projektende.
