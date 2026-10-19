@@ -69,3 +69,50 @@ def video_audio_command(root, video, audio, destination):
              "-i", str(movie), "-stream_loop", "-1", "-i", str(sound),
              "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy",
              "-c:a", "aac", "-shortest", "-movflags", "+faststart"], target, None)
+
+
+def crossfade_command(root, images, destination, *, seconds=5, transition="fade", intensity=50, audio=None):
+    """Echte Bild-zu-Bild-Überblendungen mit verkürzter Gesamtdauer."""
+    if transition not in ("fade", "wipeleft", "slideright", "circleopen"):
+        raise ValueError("Unbekannter Übergangstyp.")
+    if type(intensity) is not int or not 1 <= intensity <= 100:
+        raise ValueError("Übergangsstärke muss zwischen 1 und 100 liegen.")
+    if not isinstance(images, (list, tuple)) or not 2 <= len(images) <= 20:
+        raise ValueError("Mindestens zwei, höchstens zwanzig Bilder benötigt.")
+    if type(seconds) not in (int, float) or not 2 <= seconds <= 30:
+        raise ValueError("Jedes Bild benötigt 2 bis 30 Sekunden.")
+    pics = [media.media_path(item, media.IMAGE) for item in images]
+    if len(set(pics)) != len(pics):
+        raise ValueError("Doppelte Bilder sind nicht zulässig.")
+    if any(path.stat().st_size > media.MAX_IMAGE for path in pics):
+        raise ValueError("Bildgröße überschreitet die Schutzgrenze.")
+    sound = media.media_path(audio, media.AUDIO) if audio else None
+    target = output_target(root, destination, pics + ([sound] if sound else []))
+    duration = round(min(1.5, seconds * 0.45) * intensity / 100, 3)
+    duration = max(0.1, duration)
+    total = round(len(pics) * seconds - (len(pics) - 1) * duration, 3)
+    args = ["-hide_banner", "-loglevel", "error", "-nostdin", "-progress", "pipe:1", "-n"]
+    for picture in pics:
+        args += ["-loop", "1", "-t", f"{seconds:.3f}", "-i", str(picture)]
+    if sound:
+        args += ["-stream_loop", "-1", "-i", str(sound)]
+    parts = []
+    for i in range(len(pics)):
+        parts.append(
+            f"[{i}:v]scale=1280:720:force_original_aspect_ratio=decrease,"
+            f"pad=1280:720:(ow-iw)/2:(oh-ih)/2,fps=25,"
+            f"setsar=1,format=yuv420p,settb=AVTB[v{i}]"
+        )
+    last = "v0"
+    for i in range(1, len(pics)):
+        output = f"x{i}"
+        offset = round(i * (seconds - duration), 3)
+        parts.append(f"[{last}][v{i}]xfade=transition={transition}:"
+                     f"duration={duration:.3f}:offset={offset:.3f}[{output}]")
+        last = output
+    args += ["-filter_complex", ";".join(parts), "-map", f"[{last}]"]
+    if sound:
+        args += ["-map", f"{len(pics)}:a:0", "-c:a", "aac"]
+    args += ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-movflags",
+             "+faststart", "-t", f"{total:.3f}"]
+    return args, target, total

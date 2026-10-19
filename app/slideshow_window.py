@@ -60,6 +60,10 @@ class SlideshowWindow(ModuleWindow):
         self.fade.setSuffix(" %")
         self.fade.setAccessibleName("Intensität der Ein- und Ausblendung")
         form.addRow("Ein-/Ausblendung", self.fade)
+        self.transition = QComboBox()
+        self.transition.addItems(["Keine Bildübergänge", "Überblenden", "Nach links wischen", "Nach rechts schieben", "Kreis öffnen"])
+        self.transition.setAccessibleName("Übergangsart zwischen Bildern")
+        form.addRow("Bildübergang", self.transition)
         row2 = QHBoxLayout()
         self.audio_label = QLineEdit()
         self.audio_label.setReadOnly(True)
@@ -87,6 +91,7 @@ class SlideshowWindow(ModuleWindow):
         button(controls, "Starten", self.start)
         button(controls, "Einreihen", self.enqueue_current)
         button(controls, "Nächsten Auftrag", self.run_next)
+        button(controls, "Fehlgeschlagenen wiederholen", self.retry_failed)
         button(controls, "Abbrechen", self.cancel)
         self.outer.addLayout(controls)
         self.queue_list = QListWidget()
@@ -223,7 +228,13 @@ class SlideshowWindow(ModuleWindow):
             self.status.setText("FFmpeg fehlt. Bitte die Start-/Diagnosefunktion verwenden.")
             return False
         try:
-            if self.mode.currentIndex() == 0:
+            if self.mode.currentIndex() == 0 and self.transition.currentIndex() > 0:
+                name = ("", "fade", "wipeleft", "slideright", "circleopen")[self.transition.currentIndex()]
+                args, target, estimate = jobs.crossfade_command(
+                    self.root, self.images, self.output.text(),
+                    seconds=self.seconds.value(), audio=self.audio or None,
+                    transition=name, intensity=max(1, self.fade.value()))
+            elif self.mode.currentIndex() == 0:
                 args, target, estimate = jobs.slideshow_command(
                     self.root, self.images, self.output.text(),
                     seconds=self.seconds.value(), audio=self.audio or None,
@@ -259,6 +270,9 @@ class SlideshowWindow(ModuleWindow):
             self.status.setText("Warteschlange nicht lesbar: " + str(error))
 
     def enqueue_current(self):
+        if self.transition.currentIndex() > 0:
+            self.status.setText("Bildübergänge vorerst nur über Starten verfügbar; die Warteschlange speichert noch keine Übergangsart.")
+            return
         if self.process is not None and self.process.state() != QProcess.NotRunning:
             self.status.setText("Laufender Auftrag zuerst fertigstellen.")
             return
@@ -304,6 +318,7 @@ class SlideshowWindow(ModuleWindow):
                 self.audio_label.setText(self.audio)
             self.seconds.setValue(waiting["seconds"])
             self.fade.setValue(waiting["fade"])
+            self.transition.setCurrentIndex(0)
             self.output.setText(waiting["output"])
             media_queue.transition(self.root, waiting["id"], "running")
             self.active_queue_id = waiting["id"]
@@ -314,6 +329,26 @@ class SlideshowWindow(ModuleWindow):
         except (OSError, ValueError) as error:
             self.active_queue_id = None
             self.error("Warteschlangenstart fehlgeschlagen", error)
+
+    def retry_failed(self):
+        if self.process is not None and self.process.state() != QProcess.NotRunning:
+            return
+        try:
+            entries = media_queue.load(self.root)["jobs"]
+            failed = next((x for x in entries if x["status"] in ("failed", "interrupted")), None)
+            if failed is None:
+                self.status.setText("Kein fehlgeschlagener oder unterbrochener Auftrag.")
+                return
+            if QMessageBox.question(self, "Erneuter Versuch",
+                "Diesen Auftrag bewusst erneut einreihen? Originaldateien bleiben unverändert.",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No) != QMessageBox.Yes:
+                return
+            # Die erneute Dateikontrolle erfolgt erneut im Startvorgang.
+            media_queue.transition(self.root, failed["id"], "waiting")
+            self.refresh_queue()
+            self.status.setText("Auftrag erneut eingereiht. Bitte bewusst starten.")
+        except (OSError, ValueError) as error:
+            self.error("Erneutes Einreihen fehlgeschlagen", error)
 
     def read_progress(self):
         if self.process is None:
@@ -367,8 +402,8 @@ class SlideshowWindow(ModuleWindow):
                 self.status.setText("Video fertig gespeichert: " + str(self.final_output))
             else:
                 self.status.setText("Kein fertiges Video erzeugt; Originaldateien bleiben erhalten.")
-        except OSError as error:
-            self.status.setText("Ausgabe konnte nicht veröffentlicht werden: " + str(error))
+        except (OSError, ValueError) as error:
+            self.status.setText("Ausgabe wurde nicht freigegeben: " + str(error))
         finally:
             if self.active_queue_id is not None:
                 try:

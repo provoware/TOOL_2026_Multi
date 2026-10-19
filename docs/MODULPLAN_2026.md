@@ -168,3 +168,7 @@ Nach positiver statischer Prüfung kann eine unabhängige Kopierprobe einen neue
 ## Zusammenführung der drei Teilbereiche
 
 PR #107, #108 und #109 sind einzeln zu prüfen. Dieser Integrationsstand beinhaltet **sämtliche** Code- und Manifestergänzungen aus allen drei Zweigen. Keine produktive Bestandsmigration, kein Löschen persönlicher Daten, keine automatische Wiederholung unterbrochener Videoberechnungen und keine Fremdprogrammlaufzeit. Gemeinsame vollständige GitHub-Prüfung auf demselben Commit erforderlich. Kubuntu-Gesamtabnahme erst am Projektende.
+
+## Iteration 67 – Echte Bildübergänge und sichere Wiederholung (Kandidat)
+
+Echte FFmpeg-xfade-Übergänge zwischen zwei bis zwanzig Bildern: Überblenden, links wischen, rechts schieben und Kreisöffnung mit geprüfter Intensität. Aufträge können direkt über die Oberfläche gestartet werden. Die bestehende Videowarteschlange unterstützt weiterhin nur den einfachen Diashow-Modus: Bildübergangsarten werden dort ausdrücklich nicht stillschweigend verloren, sondern das Einreihen wird verweigert. Fehlgeschlagene und unterbrochene Aufträge können ausschließlich nach ausdrücklicher Bestätigung erneut eingereiht werden, niemals automatisch. FFprobe-Fehler verhindern weiterhin die Freigabe. Getrennte automatische Prüfkette und echter kurzer Medienlauf erforderlich.
