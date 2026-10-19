@@ -626,3 +626,5 @@ Kein verschlüsselter Tresor und keine semantische Erkennung beliebiger Geheimni
 - [x] Zwei GUI-Tests: Klartextbytes und Änderungsstatus bleiben durch die Hilfen unverändert.
 
 Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition leert auch deren sichtbaren Entwurf. Account-URL-Schutz umfasst Query und Fragment.
+
+- [ ] Opt-in-Datentrennung und verwalteter Programmstart als Entwicklungsprüfkandidat: alter Standardstart unverändert; vollständige Produktivmigration und Umschaltung bestehender Startsymbole noch gesperrt.

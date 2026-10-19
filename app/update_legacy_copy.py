@@ -101,6 +101,10 @@ def prepare_legacy_copy(source_root, empty_target_parent):
                 raise ValueError("Kopiermenge überschritten.")
         if sha256(manifest)!=sha256(slot/"MANIFEST.json"):
             raise ValueError("Programmmanifest wurde beim Kopieren verändert.")
+        atomic_write_json(target/"persistent"/".provoware-managed-data.json", {
+            "schema_version": 1, "purpose": "provoware-managed-data",
+            "activation_allowed": False,
+        })
         atomic_write_json(target/"migration-report.json",{
             "schema_version":1,
             "status":"COPY_VERIFIED_NOT_ACTIVATED",

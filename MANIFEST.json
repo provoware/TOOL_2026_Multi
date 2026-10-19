@@ -10,8 +10,8 @@
   },
   "iteration": {
     "number": 67,
-    "goal": "Echte Bildüberblendungen sowie isolierte experimentelle Plugin-Laufzeit",
-    "completed": 1,
+    "goal": "Echte Videobildübergänge, isolierte Erweiterung und bewusster externer Nutzerdatenstart",
+    "completed": 2,
     "open_next": 3
   },
   "runtime": {
@@ -21,7 +21,8 @@
     "requirements": "requirements.txt",
     "headless_check": "python3 -m app.main --headless-check",
     "watcher": "scripts/process_watch.py",
-    "diagnostic_package": "scripts/diagnosepaket.py"
+    "diagnostic_package": "scripts/diagnosepaket.py",
+    "external_data_root": true
   },
   "separation": {
     "source": "app/",
@@ -1712,6 +1713,36 @@
       "path": "docs/PLUGIN_SANDBOX.md",
       "release": true,
       "purpose": "Grenzen und Voraussetzungen für isolierte fremde Erweiterungen"
+    },
+    {
+      "path": "app/runtime_roots.py",
+      "release": true,
+      "purpose": "Expliziter kontrollierter Datenpfad unabhängig vom Programmcode"
+    },
+    {
+      "path": "app/managed_bootstrap.py",
+      "release": true,
+      "purpose": "Verwalteter Slot-Schnellstart mit Absturz-Rückkehr des Versionszeigers"
+    },
+    {
+      "path": "scripts/managed_start.py",
+      "release": true,
+      "purpose": "Expliziter Startbefehl für bereits aktivierte verwaltete Installationen"
+    },
+    {
+      "path": "tests/test_runtime_roots.py",
+      "release": false,
+      "purpose": "Negativtests für Datenpfadmarker und unerlaubte Ziele"
+    },
+    {
+      "path": "tests/test_managed_bootstrap.py",
+      "release": false,
+      "purpose": "Verwalteter Start, Sperrvertrag, Fehler-Rückkehr und Schutz persönlicher Daten"
+    },
+    {
+      "path": "docs/EXTERNAL_DATA_ROOT.md",
+      "release": true,
+      "purpose": "Grenzen und Bedienung unabhängig verwalteter Datenpfade"
     }
   ],
   "creative_modules": {
