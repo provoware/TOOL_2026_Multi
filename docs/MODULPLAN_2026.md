@@ -136,3 +136,12 @@ Drei eigenständige PySide6-Module mit einheitlicher Tastatur/Zoom/Theme-Steueru
 - PR #103: Audioplayer, Bildvorschau und FFmpeg-Slideshow-Basis, CI #1046 erfolgreich; Hauptzweig #1047 gestartet.
 
 Die früheren Abschnitte 60 bis 63 mit „Entwicklungszweig“ sind Entstehungsnachweise und keine zweite aktuelle Aufgabenliste. Die Funktionsdefizite stehen weiterhin in Abschnitt B/C. Keine vorgezogene manuelle Kubuntu-Abnahme.
+
+## Iteration 64 – geprüfter Entwicklungskandidat
+
+- **Update:** Nichtverändernde Migrations-Eignungsprüfung bestehender Installation und Zielordner. Eine produktive Migration wird weiterhin ausdrücklich **nicht** freigegeben: externer dauerhafter Datenstart, Sicherung, atomare Migration und Wiederanlauf fehlen.
+- **Modulbaukasten:** Modulvorlagen können nun geprüfte lokale Datensätze mit Feld-Typkontrolle speichern und durchsuchen, nur wenn die jeweilige deklarative Fähigkeit erlaubt wurde. Kein dynamisches Laden fremder Plugins, keine Shell- oder Netzwerkrechte.
+- **Multimedia:** Vor MP4-Veröffentlichung wird FFprobe zur Prüfung auf Dauer, Videoauflösung und gegebenenfalls Tonspur verwendet. Fehlende oder fehlerhafte FFprobe-Ausgaben verhindern die Veröffentlichung. Übergänge, Effektintensität und Stapelaufträge fehlen noch.
+- **Entwicklungspool:** Vollständiger ZIP-Rückimport als separate neue Projektkopie mit Prüfung gegen absolute Pfade, Traversal, Dateiverknüpfungen und Größenüberschreitungen. Kein Überschreiben vorhandener Arbeitsordner.
+
+Dies ist zunächst ein separater Entwicklungszweig. Vor der Übernahme ist die vollständige GitHub-Prüfung verpflichtend. Manuelle Kubuntu-Gesamtabnahme erst am Ende des Gesamtprojekts.
