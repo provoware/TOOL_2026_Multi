@@ -5,7 +5,8 @@ from pathlib import Path
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QCoreApplication, QEvent
+from shiboken6 import isValid
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 
 from app.laptop_layout import install_laptop_layout
@@ -42,14 +43,27 @@ class NavigationUxGuiTests(unittest.TestCase):
         self._events()
 
     def tearDown(self):
-        self.dashboard._closing_after_save = True
-        self.dashboard.close()
+        if isValid(self.dashboard):
+            self.dashboard._closing_after_save = True
+            self.dashboard.close()
         self._events()
         self.temp.cleanup()
 
     def _events(self):
         self.app.processEvents()
         self.app.processEvents()
+
+    def test_queued_layout_sync_after_dashboard_deletion_is_harmless(self):
+        controller = self.dashboard._provoware_navigation_ux
+        controller._queued = True
+        self.dashboard._closing_after_save = True
+        self.dashboard.close()
+        self.dashboard.deleteLater()
+        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+        self.assertFalse(isValid(self.dashboard))
+        # Dieser ausstehende Aufruf erzeugte vorher einen libshiboken-Fehler.
+        controller._finish_sync()
+        self._events()
 
     def test_textbutton_label_fits_at_150_and_restores_full_label(self):
         button = self.dashboard._provoware_navigation_ux.feature_buttons[2]

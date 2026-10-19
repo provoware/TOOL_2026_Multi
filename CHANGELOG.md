@@ -6,6 +6,7 @@
 - Verbindlicher Modulplan umfasst ältere Multimedia-, Verwaltungs- und Entwicklerfunktionen; doppelte/veraltete Todo-Einträge in der aktuellen Übersicht geklärt.
 - Link-Schnellstarter: sichere lokale Webadressen, Gruppen, kurzer Symboltext, Import/Export, eigener Editor und platzsparende rechte Leiste.
 - Nachpflege: Link-Leiste nach Änderungen aktualisieren, Menülabel kürzen und späte Qt-Theme-Rückrufe nach Fensterende sicher ignorieren.
+- Navigation: verzögerte Layout-Nachsynchronisierung darf nach zerstörtem Dashboard nicht mehr auf Qt-Objekte zugreifen (Issue #92).
 - Praktische vollständige Kubuntu-Abnahme bleibt ausdrücklich bis zum vollständigen Modulabschluss zurückgestellt; automatisierte Prüfungen laufen fort.
 
 
