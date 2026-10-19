@@ -25,6 +25,18 @@ class TextStructureTests(unittest.TestCase):
             self.assertGreaterEqual(contrast_ratio(colors['accent'],colors['input_bg']),4.5)
             self.assertGreaterEqual(contrast_ratio(colors['text'],colors['input_bg']),4.5)
 
+    def test_queued_theme_refresh_after_editor_disposal_is_harmless(self):
+        from shiboken6 import isValid
+        from PySide6.QtCore import QCoreApplication, QEvent
+        from PySide6.QtWidgets import QTextEdit
+        from app.text_structure import StructureHighlighter
+        editor = QTextEdit()
+        highlighter = StructureHighlighter(editor)
+        editor.deleteLater()
+        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
+        self.assertFalse(isValid(editor))
+        highlighter.refresh_theme()
+
     def test_highlighting_outline_and_theme_do_not_change_saved_plaintext(self):
         with tempfile.TemporaryDirectory() as folder:
             window=TextEditorWindow(Path(folder))

@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtWidgets import QApplication, QMessageBox, QPushButton
 from app.quicklinks_rail import QuicklinksRail
 from app.quicklinks_window import QuicklinksWindow
 from app import quicklinks_store as store
@@ -47,8 +47,11 @@ class QuicklinksGuiTests(unittest.TestCase):
         rail = QuicklinksRail(self.root, lambda: calls.append('manage'))
         self.addCleanup(rail.deleteLater)
         self.assertEqual(rail.items.count(), 1)
+        self.assertEqual(rail.findChild(QPushButton, 'quicklinks_manage_button').text(), 'Liste')
         with patch('app.quicklinks_rail.QDesktopServices.openUrl', return_value=True) as opened:
             self.assertTrue(rail.open_url('https://suno.com'))
             opened.assert_called_once()
         self.assertFalse(rail.open_url('file:///tmp/private'))
+        with patch('app.quicklinks_rail.QDesktopServices.openUrl', return_value=False):
+            self.assertFalse(rail.open_url('https://suno.com'))
         self.assertEqual(rail.items.count(), 1)

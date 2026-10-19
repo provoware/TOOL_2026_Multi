@@ -1,5 +1,6 @@
 """Flüchtige Strukturfarben und begrenzte Gliederung; gespeicherter Text bleibt Klartext."""
 import re
+from shiboken6 import isValid
 from PySide6.QtCore import QEvent, Qt, QSignalBlocker, QTimer
 from PySide6.QtGui import QColor, QFont, QSyntaxHighlighter, QTextCharFormat, QTextCursor
 from PySide6.QtWidgets import QCheckBox, QComboBox, QHBoxLayout
@@ -33,6 +34,9 @@ class StructureHighlighter(QSyntaxHighlighter):
         self.refresh_theme()
 
     def refresh_theme(self):
+        # Qt kann einen schon geplanten Rückruf erst nach dem Schließen zustellen.
+        if not isValid(self) or not isValid(self.editor):
+            return
         self.pending = False
         self.theme_name = getattr(self.editor.window(), 'theme_name', DEFAULT_THEME)
         colors = theme_colors(self.theme_name)

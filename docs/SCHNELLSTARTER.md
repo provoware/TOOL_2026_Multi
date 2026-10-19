@@ -11,7 +11,7 @@ Im Modulfenster einen Eintrag anlegen, Name und `https://`- oder `http://`-Adres
 - URL-Prüfung verwendet den bereits vorhandenen Konten-Webadressvertrag; keine `file:`-, `javascript:`- oder bekannten Geheimnisparameter.
 - Atomare Speicherung und unveränderte Daten bei Fehlern; bestätigtes Löschen, kein automatisches Löschen doppelter Bestände.
 - Schutz vor ungültigen JSON-Importen, 10-MB-Limit und maximal 2000 Einträgen; Exportpfade dürfen keine Projektdateien überschreiben.
-- Die schmale Leiste zeigt bis zu sechs Verknüpfungen; alle Einträge bleiben über **Bearbeiten** erreichbar.
+- Die schmale Leiste zeigt bis zu sechs Verknüpfungen; alle Einträge bleiben über **Liste** erreichbar.
 - Barrierearm: zugängliche Beschriftungen, Tastaturbedienung und dieselben Zoom-/Theme-Standards wie andere Module.
 
 ## Prüfstand
