@@ -42,7 +42,7 @@ def validate(data):
         result.append(dict(job))
     return {"schema_version":1,"jobs":result}
 
-def load(root):
+def load(root, *, recover_running=True):
     path=_location(root)
     if not path.exists():
         return {"schema_version":1,"jobs":[]}
@@ -51,7 +51,7 @@ def load(root):
     data=validate(json.loads(path.read_text(encoding="utf-8")))
     changed=False
     for job in data["jobs"]:
-        if job["status"]=="running":
+        if recover_running and job["status"]=="running":
             job["status"]="interrupted";changed=True
     if changed:
         atomic_write_json(path,data)
@@ -69,7 +69,7 @@ def enqueue(root,*,kind,inputs,output,seconds=5,fade=0):
 def transition(root,job_id,to_status):
     if to_status not in {"running","done","failed","waiting"}:
         raise ValueError("Unzulässiger Zustand.")
-    state=load(root)
+    state=load(root,recover_running=False)
     job=next((x for x in state["jobs"] if x["id"]==job_id),None)
     if job is None:
         raise ValueError("Auftrag nicht vorhanden.")
