@@ -9,8 +9,8 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 70,
-    "goal": "Videowiederholung nur nach Freigabe sowie experimentelle Linux-isolierte Pluginprobe",
+    "number": 71,
+    "goal": "CPU-/RAM-/Dateigrenzen experimenteller Linux-Plugins; produktive Altstartmigration weiterhin gesperrt",
     "completed": 0,
     "open_next": 3
   },
@@ -1808,6 +1808,11 @@
       "path": "docs/ITERATION70.md",
       "release": true,
       "purpose": "Sicherheitsgrenzen von Fremdcodeprobe und Videoauftragwiederholung"
+    },
+    {
+      "path": "tests/test_plugin_resource_limits.py",
+      "release": false,
+      "purpose": "Ressourcenbeschränkungen des isolierten Fremdcode-Kindprozesses nachweisen"
     }
   ],
   "creative_modules": {
