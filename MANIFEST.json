@@ -1472,6 +1472,31 @@
       "path": "docs/UPDATE_SLOTS.md",
       "release": true,
       "purpose": "Sicherheitsgrenzen des verwalteten Slot-Updaters ohne Migration alter Installationen"
+    },
+    {
+      "path": "app/module_blueprints.py",
+      "release": true,
+      "purpose": "Validierte sichere Modulvorlagen, nur Daten, ohne fremde Codeausführung"
+    },
+    {
+      "path": "app/module_blueprints_window.py",
+      "release": true,
+      "purpose": "Oberfläche für Modulfelder, Fähigkeiten und Formularvorschau"
+    },
+    {
+      "path": "tests/test_module_blueprints.py",
+      "release": false,
+      "purpose": "Modulbaukasten-Validierung, Schutz vor fremden Aktionen und Kollisionen"
+    },
+    {
+      "path": "tests/test_module_blueprints_gui.py",
+      "release": false,
+      "purpose": "Oberflächenprüfungen für Modulvorlagen und Formularvorschau"
+    },
+    {
+      "path": "docs/MODULENTWURF.md",
+      "release": true,
+      "purpose": "Laiengerechte Nutzung und ausdrückliche Erweiterungsgrenzen des Baukastens"
     }
   ],
   "creative_modules": {
@@ -1638,5 +1663,14 @@
     "automatic_rollback_on_health_failure": true,
     "protected_user_data": true,
     "requires_isolation": true
+  },
+  "module_blueprints": {
+    "schema_version": 1,
+    "local_only": true,
+    "data_only": true,
+    "exec_external_code": false,
+    "max_blueprints": 200,
+    "max_fields": 12,
+    "max_capabilities": 5
   }
 }

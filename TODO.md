@@ -12,7 +12,7 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [x] Ursprüngliche und neue Modulplanung in einer verbindlichen Statusmatrix zusammenführen.
 - [x] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests in `main` integriert (PR #90, GitHub-Prüflauf #1019).
 - [ ] Update-Manager weiterentwickeln: Sandbox und Checkpoint integriert; isolierte Slot-Umschaltung und automatischer Test-Rollback als Kandidat vorhanden; Migration der bisherigen Installation, Datenverzeichnis-Auslagerung, Aufruf über den Schnellstart und produktive Freigabe fehlen.
-- [ ] Modulbaukasten weiterentwickeln: Verträge/Katalog (PR #97) und echte Steuerung von vier Bestandsmodulen (PR #98) integriert; sicherer Drittplugin-Ladeweg und Projektmodulbau-Werkzeuge fehlen.
+- [ ] Modulbaukasten weiterentwickeln: Verträge/Katalog und Modulsteuerung vorhanden; deklarativer Modulentwurfs-Editor samt Feldern/Rechten als Prüfkandidat; fremde Python-Plugins, signierte Erweiterungen und vollständige Workflow-Module weiterhin offen.
 - [x] Wikimodul mit Artikeln, Sammlungen, Verweisen, Versionen und GUI über Integrations-PR #97 in main übernommen (CI #1031 und #1033 erfolgreich).
 - [ ] Entwicklungspool, Medien- und weitere Datei-/Projektmodule nach dem verbindlichen Modulplan ergänzen.
 - [x] PR #94/#95/#96 konfliktfrei über PR #97 integriert; PR-CI #1031 und main-CI #1033 erfolgreich, Vorläufer-PRs geschlossen.

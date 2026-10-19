@@ -110,3 +110,7 @@ Alle drei Einzelzweige bestanden vollständige GitHub-Automatik auf unverändert
 ## Iteration 60 – atomarer Slotwechsel (Entwicklungszweig)
 
 Ein getrennter Sicherheitsprototyp kann bei **explizit vorbereiteten verwalteten Slot-Installationen** eine neue Version in einen zweiten Programmordner kopieren, isoliert prüfen und den relativen Zeiger atomar umschalten. Bei fehlgeschlagener Nachprüfung oder unterbrochenem Wechsel bleibt die alte Version verfügbar beziehungsweise wird sie wieder aktiviert. **Normale bestehende Kubuntu-Installationen können damit noch nicht automatisch aktualisiert werden.** Dafür fehlen die geprüfte einmalige Migration, Trennung persönlicher Daten und der sichere Aufruf aus dem normalen Schnellstart. Siehe `docs/UPDATE_SLOTS.md`; derzeit keine praktische Kubuntu-Abnahme.
+
+## Iteration 61 – Sicherer grafischer Modulbaukasten
+
+Der neue Modulbaukasten verwaltet ausschließlich **beschreibende** lokale Modulvorlagen (Name, Felder, erlaubte Fähigkeiten, Formularvorschau). Die eingebaute API gibt nur geprüfte Daten zurück, führt keine externen Python-Module aus und enthält keine Shell-, Netz- oder Dateilösch-Berechtigung. Module können als JSON mit bestehenden Import-/Export-Grenzen kopiert werden. Noch fehlen generierte ausführbare Funktionen, Berechtigungssandboxes und Plugin-Signaturprüfung; diese werden nicht als erledigt verbucht. Menü: „Modulbaukasten · Entwürfe“, Strg+Alt+E. GitHub-Vollprüfung verpflichtend, manuelle Kubuntu-Abnahme am Ende.
