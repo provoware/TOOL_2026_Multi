@@ -24,6 +24,7 @@ from app.account_window import AccountWindow
 from app.quicklinks_window import QuicklinksWindow
 from app.wiki_window import WikiWindow
 from app.module_controls_window import ModuleControlsWindow
+from app.module_blueprints_window import BlueprintWindow
 from app import module_contracts
 from app.quicklinks_rail import QuicklinksRail
 from app.module_widgets import t as module_text
@@ -78,6 +79,7 @@ class Dashboard(QWidget):
         self._quicklinks_window: QuicklinksWindow | None = None
         self._wiki_window: WikiWindow | None = None
         self._module_controls_window: ModuleControlsWindow | None = None
+        self._blueprint_window: BlueprintWindow | None = None
         self.nav_collapsed = False
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
@@ -149,6 +151,7 @@ class Dashboard(QWidget):
         }
         self.module_menu.addSeparator()
         self.module_menu.addAction("Module verwalten", self.open_module_controls)
+        self.module_menu.addAction("Modulbaukasten · Entwürfe", self.open_module_blueprints)
         logo.setMenu(self.module_menu)
         layout.addWidget(logo)
 
@@ -498,6 +501,7 @@ class Dashboard(QWidget):
         QShortcut(QKeySequence("Ctrl+Alt+L"), self, activated=self.open_quicklinks)
         QShortcut(QKeySequence("Ctrl+Alt+W"), self, activated=self.open_wiki)
         QShortcut(QKeySequence("Ctrl+Alt+M"), self, activated=self.open_module_controls)
+        QShortcut(QKeySequence("Ctrl+Alt+E"), self, activated=self.open_module_blueprints)
         QShortcut(QKeySequence("Ctrl+Shift+F"), self, activated=self.open_search)
         QShortcut(QKeySequence("Ctrl+Alt+T"), self, activated=self.open_snippets)
         QShortcut(QKeySequence("Ctrl+Alt+B"), self, activated=self.open_books)
@@ -551,6 +555,7 @@ class Dashboard(QWidget):
             (self._quicklinks_window, False),
             (self._wiki_window, False),
             (self._module_controls_window, False),
+            (self._blueprint_window, False),
         )
         for window, refresh_with_dashboard in optional_windows:
             if window is None:
@@ -795,6 +800,13 @@ class Dashboard(QWidget):
         if hasattr(self, "quicklinks_rail"):
             self._update_quicklinks_visibility()
 
+    def open_module_blueprints(self) -> None:
+        self._blueprint_window = _open_managed_window(
+            self._blueprint_window,
+            lambda: BlueprintWindow(self.project_root, self.zoom_percent, parent=self),
+            reuse_hidden=True,
+        )
+
     def open_module_controls(self) -> None:
         self._module_controls_window = _open_managed_window(
             self._module_controls_window,
@@ -833,7 +845,7 @@ class Dashboard(QWidget):
         return all(window.confirm_leave() for window in
                    (self._book_window, self._snippet_window, self._idea_window,
                     self._account_window, self._quicklinks_window, self._wiki_window,
-                    self._module_controls_window) if window is not None)
+                    self._module_controls_window, self._blueprint_window) if window is not None)
 
     def open_todo(self) -> None:
         self._todo_window = _open_managed_window(
