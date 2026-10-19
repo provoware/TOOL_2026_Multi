@@ -10,8 +10,8 @@
   },
   "iteration": {
     "number": 67,
-    "goal": "Echte Videobildübergänge und sichere manuelle Wiederholung",
-    "completed": 0,
+    "goal": "Echte Bildüberblendungen sowie isolierte experimentelle Plugin-Laufzeit",
+    "completed": 1,
     "open_next": 3
   },
   "runtime": {
@@ -1697,6 +1697,21 @@
       "path": "tests/test_media_real_crossfade.py",
       "release": false,
       "purpose": "FFmpeg/FFprobe-Integrationstest für echte Bildübergänge"
+    },
+    {
+      "path": "app/plugin_sandbox.py",
+      "release": true,
+      "purpose": "Opt-in-Linux-Sandbox zum isolierten Ausführen begrenzter Zusatzprogramme"
+    },
+    {
+      "path": "tests/test_plugin_sandbox.py",
+      "release": false,
+      "purpose": "Negativtests für unbekannte Rechte, Fremddateien und fehlende Sandbox"
+    },
+    {
+      "path": "docs/PLUGIN_SANDBOX.md",
+      "release": true,
+      "purpose": "Grenzen und Voraussetzungen für isolierte fremde Erweiterungen"
     }
   ],
   "creative_modules": {
