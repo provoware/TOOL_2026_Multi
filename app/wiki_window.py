@@ -110,7 +110,10 @@ class WikiWindow(ModuleWindow):
                 if previous in state["bases"]:
                     self.bases.setCurrentText(previous)
             self.render()
-            self._populate_links()
+            current = next((item for item in self.articles if item["id"] == self.current_id), None)
+            self._populate_links(current["links"] if current is not None else ())
+            if current is not None:
+                self.remember()
         except (OSError, ValueError) as error:
             self.error("Wiki konnte nicht geladen werden", error)
 
@@ -132,11 +135,14 @@ class WikiWindow(ModuleWindow):
         item = self.listing.item(index)
         if item is None:
             return
+        selected_id = item.data(Qt.UserRole)
         if not self.confirm_leave():
             with QSignalBlocker(self.listing):
                 self.listing.setCurrentRow(-1)
             return
-        match = next((a for a in self.articles if a["id"] == item.data(Qt.UserRole)), None)
+        # Bestätigung mit "Speichern" kann die Liste neu laden und das alte
+        # Qt-Item zerstören; die Kennung muss deshalb vorab gesichert sein.
+        match = next((a for a in self.articles if a["id"] == selected_id), None)
         if match is None:
             return
         self.current_id = match["id"]
