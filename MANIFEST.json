@@ -9,8 +9,8 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 69,
-    "goal": "Streng geprüfte einzelne Datenaktionen als sichere Erweiterungsschnittstelle",
+    "number": 70,
+    "goal": "Videowiederholung nur nach Freigabe sowie experimentelle Linux-isolierte Pluginprobe",
     "completed": 0,
     "open_next": 3
   },
@@ -1783,6 +1783,31 @@
       "path": "docs/ERWEITERUNGSVERTRAG.md",
       "release": true,
       "purpose": "Vertragsgrenzen und sichere Nutzung der Datenaktionen"
+    },
+    {
+      "path": "app/media_retry.py",
+      "release": true,
+      "purpose": "Explizit freizugebende nichtdestruktive Wiederholung gescheiterter Videoaufträge"
+    },
+    {
+      "path": "tests/test_media_retry.py",
+      "release": false,
+      "purpose": "Negativtests für Wiederholungsfreigabe und belegte Ausgabe"
+    },
+    {
+      "path": "app/plugin_isolation.py",
+      "release": true,
+      "purpose": "Experimenteller isolierter Fremdcode-Probelauf nur mit Linux-Bubblewrap"
+    },
+    {
+      "path": "tests/test_plugin_isolation.py",
+      "release": false,
+      "purpose": "Fail-closed-Tests fehlender Sandbox und unerlaubter Plugin-Aktionen"
+    },
+    {
+      "path": "docs/ITERATION70.md",
+      "release": true,
+      "purpose": "Sicherheitsgrenzen von Fremdcodeprobe und Videoauftragwiederholung"
     }
   ],
   "creative_modules": {
