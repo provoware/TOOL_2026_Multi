@@ -1,4 +1,4 @@
-# Rechte Link-Schnellstarter-Leiste (0.18.5 Kandidat)
+# Rechte Link-Schnellstarter-Leiste (in main seit 0.18.5)
 
 ## Aufgabe und Einstieg
 Lokale Webadressen – beispielsweise YouTube, Suno und eigene Projektseiten – nach Name, Gruppe und optionalem kurzen Symboltext speichern. Die rechte schmale Leiste wird bei großen Fenstern (mindestens 1500 px, Zoom bis 125 %) gezeigt. Bei kleineren Fenstern bleibt der gesamte Arbeitsbereich frei; die Verwaltung ist immer im Modulmenü oben links oder mit **Strg+Alt+L** erreichbar.
@@ -11,7 +11,7 @@ Im Modulfenster einen Eintrag anlegen, Name und `https://`- oder `http://`-Adres
 - URL-Prüfung verwendet den bereits vorhandenen Konten-Webadressvertrag; keine `file:`-, `javascript:`- oder bekannten Geheimnisparameter.
 - Atomare Speicherung und unveränderte Daten bei Fehlern; bestätigtes Löschen, kein automatisches Löschen doppelter Bestände.
 - Schutz vor ungültigen JSON-Importen, 10-MB-Limit und maximal 2000 Einträgen; Exportpfade dürfen keine Projektdateien überschreiben.
-- Die schmale Leiste zeigt bis zu sechs Verknüpfungen; alle Einträge bleiben über **Bearbeiten** erreichbar.
+- Die schmale Leiste zeigt bis zu sechs Verknüpfungen; alle Einträge bleiben über **Liste** erreichbar.
 - Barrierearm: zugängliche Beschriftungen, Tastaturbedienung und dieselben Zoom-/Theme-Standards wie andere Module.
 
 ## Prüfstand

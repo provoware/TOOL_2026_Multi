@@ -21,7 +21,8 @@ class QuicklinksRail(QFrame):
         self.items = QVBoxLayout()
         self.box.addLayout(self.items)
         self.box.addStretch(1)
-        manage = QPushButton('Bearbeiten')
+        manage = QPushButton('Liste')
+        manage.setObjectName('quicklinks_manage_button')
         manage.setAccessibleName('Link-Schnellstarter verwalten')
         manage.setToolTip('Namen, Gruppen und Webadressen der Schnellstarter verwalten')
         manage.clicked.connect(on_manage)
@@ -62,7 +63,6 @@ class QuicklinksRail(QFrame):
     @staticmethod
     def open_url(url):
         try:
-            QDesktopServices.openUrl(QUrl(validate_url(url)))
+            return bool(QDesktopServices.openUrl(QUrl(validate_url(url))))
         except ValueError:
             return False
-        return True

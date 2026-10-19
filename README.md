@@ -17,7 +17,7 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 | **Was wurde zuletzt verbessert?** | Eigenständige Datensicherung, robusterer Start und zusätzliche isolierte Messwerkzeuge (0.18.3, lokal). |
 | **Was ist technisch noch offen?** | Zielrechner-Abnahme, finale GitHub-Prüfung des neuen Stands und Veröffentlichung. |
 
-**Vollständiger Entwicklungsumfang:** [Verbindlicher Modulplan](docs/MODULPLAN_2026.md). Neu im 0.18.5-Kandidaten: [rechte Link-Schnellstarter-Leiste](docs/SCHNELLSTARTER.md) mit lokal gespeicherten Webadressen, Gruppen und bewusstem Browserstart.
+**Vollständiger Entwicklungsumfang:** [Verbindlicher Modulplan](docs/MODULPLAN_2026.md). Neu in 0.18.5: [rechte Link-Schnellstarter-Leiste](docs/SCHNELLSTARTER.md) mit lokal gespeicherten Webadressen, Gruppen und bewusstem Browserstart.
 
 **Für die normale Nutzung brauchst du nur diese Übersicht und die [einfache Anleitung](ANLEITUNG_LAIEN.md).** Ausführliche technische Informationen stehen getrennt im [Dokumentenwegweiser](docs/README.md). Der folgende Abschnitt enthält zusätzliche Einzelheiten für Interessierte.
 
