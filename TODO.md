@@ -17,7 +17,8 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [ ] Sichere Erweiterungs-API für fremde Plugins, signierte Pakete und wirkliche Module-Funktionen fehlen weiterhin.
 - [x] Wikimodul mit Artikeln, Sammlungen, Verweisen, Versionen und GUI über Integrations-PR #97 in main übernommen (CI #1031 und #1033 erfolgreich).
 - [x] Entwicklungspool mit Status, Arbeitsordnern, Kopien und ZIP in PR #102 integriert (CI #1043 grün).
-- [ ] Audio-/Bild-/Video-Basismodule werden als eigenständiger Kandidat entwickelt; konfigurierbare Überblendungen, ffprobe-Ausgabeprüfung und Stapelaufträge fehlen noch.
+- [x] Audioplayer, Bildvorschau und Video-/Slideshow-Basismodule in PR #103 integriert (PR-CI #1046 erfolgreich).
+- [ ] Video weiterentwickeln: ffprobe-Prüfung fertiger Videos, Übergangseffekte/Intensität, Stapelwarteschlange und vollständige reale Medienvergleichstests fehlen.
 - [x] PR #94/#95/#96 konfliktfrei über PR #97 integriert; PR-CI #1031 und main-CI #1033 erfolgreich, Vorläufer-PRs geschlossen.
 - [x] Programmsicherung samt isolierter Rückkehrkopie und die echte Modulsteuerung über PR #98 integriert; PR-CI #1035 erfolgreich.
 - [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.

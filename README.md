@@ -10,14 +10,14 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 |---|---|
 | **Was ist Provoware?** | Ein Programm für Songtexte, eigene Texte, Figuren, Aufgaben und Termine. |
 | **Wie starte ich?** | Projektordner öffnen, Terminal starten und `bash schnellstart.sh` eingeben. |
-| **Was funktioniert?** | Songtexte, Texteditor, Charakterfibel, Textbuttons, Buchwerkstatt, Ideenarchiv, Kontometadaten, Wiki, Modulschalter, Profile, Aufgaben, Kalender, zentrale Text-/Dateisuche und Hilfe. |
+| **Was funktioniert?** | Songtexte, Texteditor, Charakterfibel, Buchwerkstatt, Wiki, Modulbaukasten, Entwicklungspool, Audioplayer, Bildvorschau, einfache FFmpeg-Diashows, Aufgaben, Kalender, Profile und Dateisuche. |
 | **Was fehlt noch?** | Reimfinder, vollständige automatische Update-Aktivierung samt Rollback, Drittplugin-Laden und weitere geplante Module; die statische und isolierte Updateprüfung ist bereits verfügbar. |
 | **Wie sichere ich meine Arbeit?** | Programm schließen und die [eigenständige Datensicherung](docs/DATENSICHERUNG.md) nutzen. |
 | **Wo finde ich Hilfe?** | [Schritt-für-Schritt-Anleitung](ANLEITUNG_LAIEN.md) oder im Programm die Taste `F1`. |
-| **Was wurde zuletzt verbessert?** | Lokales Wiki, geprüfter Update-Checkpoint und schaltbare Zusatzmodule (PR #97/#98), ohne automatische Softwareinstallation. |
+| **Was wurde zuletzt verbessert?** | Neue Update-Slot-Basis, Formular-Modulbaukasten, Entwicklungspool sowie Audio-, Bild- und Video-Basismodule (PR #100 bis #103). |
 | **Was ist technisch noch offen?** | Spätere einmalige Kubuntu-Gesamtabnahme, Weiterentwicklung noch fehlender Module und endgültige Veröffentlichung. |
 
-**Vollständiger Entwicklungsumfang:** [Verbindlicher Modulplan](docs/MODULPLAN_2026.md). Nachweis PR #97/#98 (CI #1031/#1033/#1035): [Wikimodul](docs/WIKI.md), [Update-Checkpoint](docs/UPDATE_CHECKPOINT.md), [Modulbaukasten](docs/MODULBAUKASTEN.md). Neu in 0.18.5: [rechte Link-Schnellstarter-Leiste](docs/SCHNELLSTARTER.md) mit lokal gespeicherten Webadressen, Gruppen und bewusstem Browserstart.
+**Vollständiger Entwicklungsumfang:** [Verbindlicher Modulplan](docs/MODULPLAN_2026.md). [Medienmodule](docs/MEDIENMODULE.md) · [Entwicklungspool](docs/ENTWICKLUNGSPOOL.md) · [Modulentwürfe](docs/MODULENTWURF.md) · [Update-Slots](docs/UPDATE_SLOTS.md). Nachweis PR #97/#98 (CI #1031/#1033/#1035): [Wikimodul](docs/WIKI.md), [Update-Checkpoint](docs/UPDATE_CHECKPOINT.md), [Modulbaukasten](docs/MODULBAUKASTEN.md). Neu in 0.18.5: [rechte Link-Schnellstarter-Leiste](docs/SCHNELLSTARTER.md) mit lokal gespeicherten Webadressen, Gruppen und bewusstem Browserstart.
 
 **Für die normale Nutzung brauchst du nur diese Übersicht und die [einfache Anleitung](ANLEITUNG_LAIEN.md).** Ausführliche technische Informationen stehen getrennt im [Dokumentenwegweiser](docs/README.md). Der folgende Abschnitt enthält zusätzliche Einzelheiten für Interessierte.
 
