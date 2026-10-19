@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 )
 from app import media_files as media, media_jobs as jobs, module_archive as archive
 from app.media_verify import verify_video
+from app import media_queue
 from app.atomic_io import atomic_write_json
 from app.module_widgets import ModuleWindow, button
 
@@ -33,6 +34,7 @@ class SlideshowWindow(ModuleWindow):
         self.process = None
         self.buffer = ""
         self.progress_seconds = 0
+        self.active_queue_id = None
         super().__init__(root, "Video & Slideshow · FFmpeg", zoom_percent, parent)
         form = QFormLayout()
         form.setRowWrapPolicy(QFormLayout.WrapAllRows)
@@ -53,6 +55,11 @@ class SlideshowWindow(ModuleWindow):
         self.seconds.setValue(5)
         self.seconds.setSuffix(" Sekunden je Bild")
         form.addRow("Bilddauer", self.seconds)
+        self.fade = QSpinBox()
+        self.fade.setRange(0, 100)
+        self.fade.setSuffix(" %")
+        self.fade.setAccessibleName("Intensität der Ein- und Ausblendung")
+        form.addRow("Ein-/Ausblendung", self.fade)
         row2 = QHBoxLayout()
         self.audio_label = QLineEdit()
         self.audio_label.setReadOnly(True)
@@ -78,8 +85,15 @@ class SlideshowWindow(ModuleWindow):
         self.outer.addWidget(self.progress)
         controls = QHBoxLayout()
         button(controls, "Starten", self.start)
+        button(controls, "Einreihen", self.enqueue_current)
+        button(controls, "Nächsten Auftrag", self.run_next)
         button(controls, "Abbrechen", self.cancel)
         self.outer.addLayout(controls)
+        self.queue_list = QListWidget()
+        self.queue_list.setMaximumHeight(105)
+        self.queue_list.setAccessibleName("Gespeicherte Videowarteschlange")
+        self.outer.addWidget(self.queue_list)
+        self.refresh_queue()
         self.outer.addWidget(QLabel(
             "FFmpeg arbeitet einzeln im Hintergrund. Bis zu 20 Bilder, maximal 30 Sekunden je Bild. "
             "Bestehende Ausgabedateien werden nie überschrieben."
@@ -89,7 +103,7 @@ class SlideshowWindow(ModuleWindow):
 
     def snapshot(self):
         return (tuple(self.images), self.audio, self.video, self.mode.currentIndex(),
-                self.seconds.value(), self.output.text())
+                self.seconds.value(), self.fade.value(), self.output.text())
 
     def _preset(self):
         return {"schema_version": 1, "images": list(self.images),
@@ -204,21 +218,22 @@ class SlideshowWindow(ModuleWindow):
     def start(self):
         if self.process is not None and self.process.state() != QProcess.NotRunning:
             self.status.setText("Erst den laufenden Auftrag beenden oder abbrechen.")
-            return
+            return False
         if shutil.which("ffmpeg") is None:
             self.status.setText("FFmpeg fehlt. Bitte die Start-/Diagnosefunktion verwenden.")
-            return
+            return False
         try:
             if self.mode.currentIndex() == 0:
                 args, target, estimate = jobs.slideshow_command(
                     self.root, self.images, self.output.text(),
-                    seconds=self.seconds.value(), audio=self.audio or None)
+                    seconds=self.seconds.value(), audio=self.audio or None,
+                    fade=self.fade.value())
             else:
                 args, target, estimate = jobs.video_audio_command(
                     self.root, self.video, self.audio, self.output.text())
         except (OSError, ValueError) as error:
             self.error("Videoauftrag nicht gestartet", error)
-            return
+            return False
         self.final_output = target
         self.temp_output = target.parent / (".provoware-" + uuid4().hex + ".mp4")
         self.estimate = estimate
@@ -232,6 +247,73 @@ class SlideshowWindow(ModuleWindow):
         self.process.errorOccurred.connect(self.process_error)
         self.process.start("ffmpeg", [*args, str(self.temp_output)])
         self.status.setText("Videoauftrag läuft. Ein Auftrag zur Zeit.")
+        return True
+
+    def refresh_queue(self):
+        try:
+            jobs = media_queue.load(self.root, recover_running=self.process is None)
+            self.queue_list.clear()
+            self.queue_list.addItems([x["status"] + " · " + Path(x["output"]).name
+                                      for x in jobs["jobs"]])
+        except (OSError, ValueError) as error:
+            self.status.setText("Warteschlange nicht lesbar: " + str(error))
+
+    def enqueue_current(self):
+        if self.process is not None and self.process.state() != QProcess.NotRunning:
+            self.status.setText("Laufender Auftrag zuerst fertigstellen.")
+            return
+        try:
+            if self.mode.currentIndex() == 0:
+                jobs.slideshow_command(self.root, self.images, self.output.text(),
+                    seconds=self.seconds.value(), audio=self.audio or None, fade=self.fade.value())
+                kind = "slideshow"
+                inputs = self.images + ([self.audio] if self.audio else [])
+            else:
+                jobs.video_audio_command(self.root, self.video, self.audio, self.output.text())
+                kind = "video_audio"
+                inputs = [self.video, self.audio]
+            media_queue.enqueue(self.root, kind=kind, inputs=inputs,
+                output=self.output.text(), seconds=self.seconds.value(), fade=self.fade.value())
+            self.refresh_queue()
+            self.status.setText("Auftrag gespeichert. Über 'Nächsten Auftrag' starten.")
+        except (OSError, ValueError) as error:
+            self.error("Einreihen nicht möglich", error)
+
+    def run_next(self):
+        if self.process is not None and self.process.state() != QProcess.NotRunning:
+            return
+        try:
+            waiting = next((x for x in media_queue.load(self.root)["jobs"]
+                            if x["status"] == "waiting"), None)
+            if waiting is None:
+                self.status.setText("Keine wartenden Videoaufträge.")
+                return
+            if waiting["kind"] == "slideshow":
+                self.mode.setCurrentIndex(0)
+                self.images = list(waiting["inputs"])
+                self.audio = ""
+                if self.images and Path(self.images[-1]).suffix.lower() in media.AUDIO:
+                    self.audio = self.images.pop()
+                self.image_list.clear()
+                self.image_list.addItems([Path(p).name for p in self.images])
+                self.audio_label.setText(self.audio)
+            else:
+                self.mode.setCurrentIndex(1)
+                self.video, self.audio = waiting["inputs"]
+                self.video_label.setText(self.video)
+                self.audio_label.setText(self.audio)
+            self.seconds.setValue(waiting["seconds"])
+            self.fade.setValue(waiting["fade"])
+            self.output.setText(waiting["output"])
+            media_queue.transition(self.root, waiting["id"], "running")
+            self.active_queue_id = waiting["id"]
+            if not self.start():
+                media_queue.transition(self.root, waiting["id"], "failed")
+                self.active_queue_id = None
+            self.refresh_queue()
+        except (OSError, ValueError) as error:
+            self.active_queue_id = None
+            self.error("Warteschlangenstart fehlgeschlagen", error)
 
     def read_progress(self):
         if self.process is None:
@@ -288,6 +370,14 @@ class SlideshowWindow(ModuleWindow):
         except OSError as error:
             self.status.setText("Ausgabe konnte nicht veröffentlicht werden: " + str(error))
         finally:
+            if self.active_queue_id is not None:
+                try:
+                    media_queue.transition(self.root, self.active_queue_id,
+                        "done" if self.progress.value() == 100 and not self.cancelled else "failed")
+                except (OSError, ValueError) as error:
+                    self.status.setText("Warteschlangenstatus nicht gesichert: " + str(error))
+                self.active_queue_id = None
+                self.refresh_queue()
             if output is not None:
                 output.unlink(missing_ok=True)
             if process is not None:
