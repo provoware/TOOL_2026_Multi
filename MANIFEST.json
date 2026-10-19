@@ -9,9 +9,9 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 55,
-    "goal": "Verbindlicher Modulplan und rechter sicherer Link-Schnellstarter",
-    "completed": 2,
+    "number": 58,
+    "goal": "Gemeinsame Integration von Update-Sandbox, Modulverträgen und Wiki",
+    "completed": 3,
     "open_next": 3
   },
   "runtime": {
@@ -1367,6 +1367,61 @@
       "path": "docs/SCHNELLSTARTER.md",
       "release": true,
       "purpose": "Bedienung und Schutzgrenzen der Link-Schnellstarter"
+    },
+    {
+      "path": "app/update_sandbox.py",
+      "release": true,
+      "purpose": "Fail-closed Laufzeitprobe von Updatekandidaten ausschließlich in bubblewrap-Isolation"
+    },
+    {
+      "path": "scripts/update_sandbox.py",
+      "release": true,
+      "purpose": "Optionale Kommandozeile für sichere isolierte Updateprobe ohne Aktivierung"
+    },
+    {
+      "path": "tests/test_update_sandbox.py",
+      "release": false,
+      "purpose": "Negativtests für getrennte Kandidatenprüfung und gesperrte Aktivierung"
+    },
+    {
+      "path": "app/module_contracts.py",
+      "release": true,
+      "purpose": "Stabile eingeschränkte Modulverträge und atomare Registrierung ohne Fremdcode"
+    },
+    {
+      "path": "tests/test_module_contracts.py",
+      "release": false,
+      "purpose": "Schutztests für Pluginverträge, Registry und Dateisicherheit"
+    },
+    {
+      "path": "docs/MODULBAUKASTEN.md",
+      "release": true,
+      "purpose": "Grenzen und spätere Integrationsschritte des Modulbaukastens"
+    },
+    {
+      "path": "app/wiki_store.py",
+      "release": true,
+      "purpose": "Lokale Wissenssammlungen, Linkvalidierung und versionierte Artikel"
+    },
+    {
+      "path": "app/wiki_window.py",
+      "release": true,
+      "purpose": "Wikimodul mit Suche, Sammlungen, Querverweisen und Entwurfsschutz"
+    },
+    {
+      "path": "tests/test_wiki.py",
+      "release": false,
+      "purpose": "Sicherheits- und Versionsprüfungen des Wikimoduls"
+    },
+    {
+      "path": "tests/test_wiki_gui.py",
+      "release": false,
+      "purpose": "GUI-, Bedien- und Zoomtests des Wikimoduls"
+    },
+    {
+      "path": "docs/WIKI.md",
+      "release": true,
+      "purpose": "Wikimodul-Bedienung und Sicherheitsgrenzen"
     }
   ],
   "creative_modules": {
@@ -1479,5 +1534,30 @@
     "right_rail_min_width": 1500,
     "right_rail_max_zoom": 125,
     "automatic_navigation": false
+  },
+  "update_sandbox": {
+    "schema_version": 1,
+    "requires_bubblewrap": true,
+    "network_unshared": true,
+    "host_code_execution": false,
+    "activation_allowed": false,
+    "probe_timeout_seconds": 25
+  },
+  "module_contracts": {
+    "schema_version": 1,
+    "api_version": 1,
+    "mode": "WHITELIST_METADATA_ONLY",
+    "exec_external_code": false,
+    "dynamic_loading": false,
+    "ui_activation_wired": false
+  },
+  "wiki": {
+    "schema_version": 1,
+    "local_only": true,
+    "max_bases": 100,
+    "max_articles": 2000,
+    "revisions_per_article": 20,
+    "store": "daten/wiki/bestand.json",
+    "import_as_copies": true
   }
 }

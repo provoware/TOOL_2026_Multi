@@ -26,3 +26,11 @@ Grenzen: ZIP bis 32 MiB, 1000 Dateien, 8 MiB je entpackter Datei und 64 MiB Gesa
 Nicht enthalten: Ausführung von Paketcode, Netzinstallation, aktive Programmumschaltung, Produktivbackup, Rollback oder eine bestandene Laufzeitprüfung des Kandidaten. Vor späterer Aktivierung sind eine echte isolierte Ausführungsumgebung, vertrauenswürdige Herkunft, Checkpoint, vollständige Laufzeitprüfung und atomare Umschaltung mit Rückfallweg erforderlich.
 
 Elf Schutztests prüfen falsche Paket-/Basis-SHAs, Versionsrückschritte, fremde Identität, Traversal, Datenpfade, Links, unerwartete/fehlende/kollidierende Dateien, Syntaxfehler, Installationsoptionen, Größenlimits, fehlgeschlagenes Berichtsschreiben und Änderung der Basis während der Prüfung. Ein Paket mit ausführbarem Sentinel-Code beweist, dass dieser nicht ausgeführt wird. Alle Mutationen erfolgen in temporären Testbereichen.
+
+## Optionale Laufzeitprobe im getrennten Linux-Namensraum
+
+Zusätzlich zur statischen Prüfung ist jetzt eine *optionale, verweigernde* Laufzeitprobe verfügbar. Sie darf nur bereits unverändert geprüfte Kandidaten testen. Benötigt wird `bubblewrap` (`bwrap`) mit funktionierenden Benutzer-/Netz-/Dateinamensräumen. Ohne diese Voraussetzungen wird **kein Kandidat gestartet**; die Anwendung installiert nichts automatisch.
+
+`python3 scripts/update_sandbox.py --root . --staging /pfad/zum/provoware-update-ordner`
+
+Die Probe startet ausschließlich im getrennten Namensraum, bindet den Kandidaten nur lesend ein, hat kein eingebundenes HOME/Projekt-/Datenverzeichnis und keinen Netzwerkzugriff. Sie führt ausschließlich den schon vorhandenen Headless-Programmeinstieg des Kandidaten aus. Fehler, abweichende Prüfsummen und Zeitüberschreitung blockieren den Lauf. Der Bericht `sandbox-report.json` ist **kein Aktivierungsticket**: `activation_allowed=false` bleibt immer bestehen. Ein echter Sicherheitsnachweis gegen bösartigen Kernel-Code oder ein vollständiger GUI-/Regressionstest ist dies nicht. Ein künftiger Update-Installer benötigt weitere unabhängige Schutzschritte; Rückkehr zur alten Version und Produktiv-Checkpoint fehlen weiterhin.
