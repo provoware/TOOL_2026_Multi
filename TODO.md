@@ -630,3 +630,5 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 - [ ] Opt-in-Datentrennung und verwalteter Programmstart als Entwicklungsprüfkandidat: alter Standardstart unverändert; vollständige Produktivmigration und Umschaltung bestehender Startsymbole noch gesperrt.
 
 - [ ] Bildübergänge in der Video-Warteschlange aus der Iteration 68 nach CI und Hauptzweigprüfung freigeben; langfristig Batch-Statistik, Fortschritt pro Auftrag und weitere reale Videoqualitätsvergleiche ergänzen.
+
+- [ ] Unabhängigen Kopie-Start (Iteration 68) nach vollständiger CI integrieren; bestehende Desktop-Verknüpfungen und alte Standardinstallation bis zur Schlussabnahme nicht umstellen.
