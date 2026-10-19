@@ -65,4 +65,4 @@ def video_audio_command(root, video, audio, destination):
              "-progress", "pipe:1", "-n",
              "-i", str(movie), "-stream_loop", "-1", "-i", str(sound),
              "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy",
-             "-c:a", "aac", "-shortest", "-movflags", "+faststart"], target, None
+             "-c:a", "aac", "-shortest", "-movflags", "+faststart"], target, None)
