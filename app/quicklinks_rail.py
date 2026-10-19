@@ -62,7 +62,6 @@ class QuicklinksRail(QFrame):
     @staticmethod
     def open_url(url):
         try:
-            QDesktopServices.openUrl(QUrl(validate_url(url)))
+            return bool(QDesktopServices.openUrl(QUrl(validate_url(url))))
         except ValueError:
             return False
-        return True

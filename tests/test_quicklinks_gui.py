@@ -24,16 +24,21 @@ class QuicklinksGuiTests(unittest.TestCase):
         store.put(self.root, item())
 
     def test_window_open_delete_and_zoom(self):
-        window = QuicklinksWindow(self.root)
+        changes = []
+        window = QuicklinksWindow(self.root, on_changed=lambda: changes.append('refresh'))
         self.addCleanup(lambda: (window.discard_draft(), window.close()))
         window.listing.setCurrentRow(0)
         self.assertEqual(window.fields['name'].text(), 'Suno')
+        window.fields['group'].setText('Arbeit')
+        self.assertTrue(window.save())
+        self.assertEqual(changes, ['refresh'])
         with patch('app.quicklinks_window.QDesktopServices.openUrl', return_value=True) as opened:
             window.open_selected()
             opened.assert_called_once()
         with patch('app.quicklinks_window.QMessageBox.question', return_value=QMessageBox.Yes):
             window.delete_selected()
         self.assertEqual(store.load(self.root)['links'], [])
+        self.assertEqual(changes, ['refresh', 'refresh'])
         for zoom in (100, 150, 200):
             window.set_zoom(zoom)
 

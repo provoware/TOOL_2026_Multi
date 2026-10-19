@@ -1,4 +1,4 @@
-# Rechte Link-Schnellstarter-Leiste (0.18.5 Kandidat)
+# Rechte Link-Schnellstarter-Leiste (in main seit 0.18.5)
 
 ## Aufgabe und Einstieg
 Lokale Webadressen – beispielsweise YouTube, Suno und eigene Projektseiten – nach Name, Gruppe und optionalem kurzen Symboltext speichern. Die rechte schmale Leiste wird bei großen Fenstern (mindestens 1500 px, Zoom bis 125 %) gezeigt. Bei kleineren Fenstern bleibt der gesamte Arbeitsbereich frei; die Verwaltung ist immer im Modulmenü oben links oder mit **Strg+Alt+L** erreichbar.

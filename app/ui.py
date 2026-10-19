@@ -735,7 +735,8 @@ class Dashboard(QWidget):
     def open_quicklinks(self) -> None:
         self._quicklinks_window = _open_managed_window(
             self._quicklinks_window,
-            lambda: QuicklinksWindow(self.project_root, self.zoom_percent, parent=self),
+            lambda: QuicklinksWindow(self.project_root, self.zoom_percent, parent=self,
+                                     on_changed=self.quicklinks_rail.refresh),
             reuse_hidden=True,
         )
         self.quicklinks_rail.refresh()

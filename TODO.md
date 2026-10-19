@@ -10,7 +10,7 @@ Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtpla
 - [x] PR #88 (0.18.3) mit automatischer PR- und Hauptzweigprüfung übernehmen.
 - [x] PR #89 (0.18.4) nach Bereinigung des gestapelten Zweigs und grüner PR-Prüfung übernehmen.
 - [x] Ursprüngliche und neue Modulplanung in einer verbindlichen Statusmatrix zusammenführen.
-- [ ] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests auf `main` integrieren (eigener PR).
+- [x] 0.18.5 Link-Schnellstarter mit GUI, Daten-, Browser- und Release-Tests in `main` integriert (PR #90, GitHub-Prüflauf #1019).
 - [ ] Update-Manager nach statischer Vorprüfung sicher erweitern (Sandbox, Checkpoint, Aktivierung, Rollback in getrennten Schritten).
 - [ ] Modul-/Plugin-Verträge, Wiki, Entwicklungspool und weitere ursprünglich geplante Module iterativ ergänzen.
 - [ ] Erst nach Abschluss **aller** vereinbarten Module: vollständige praktische Kubuntu-/Plasma-Gesamtabnahme und Veröffentlichung.

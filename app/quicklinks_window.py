@@ -9,7 +9,8 @@ from app.record_window import RecordWindow
 
 
 class QuicklinksWindow(RecordWindow):
-    def __init__(self, root, zoom_percent=100, parent=None):
+    def __init__(self, root, zoom_percent=100, parent=None, on_changed=None):
+        self.on_changed = on_changed
         fields = [
             ('name', t('quicklinks_name', 'Name des Schnellstarters'), False),
             ('url', t('quicklinks_url', 'Webadresse (https:// oder http://)'), False),
@@ -24,6 +25,18 @@ class QuicklinksWindow(RecordWindow):
     def record_label(self, record):
         prefix = (record['icon'] + '  ') if record['icon'] else ''
         return prefix + record['name'] + (' · ' + record['group'] if record['group'] else '')
+
+    def save(self):
+        result = super().save()
+        if result and self.on_changed is not None:
+            self.on_changed()
+        return result
+
+    def import_copies(self, raw):
+        count = super().import_copies(raw)
+        if count and self.on_changed is not None:
+            self.on_changed()
+        return count
 
     def open_selected(self):
         try:
@@ -48,6 +61,8 @@ class QuicklinksWindow(RecordWindow):
             return
         try:
             store.remove(self.root, self.current_id)
+            if self.on_changed is not None:
+                self.on_changed()
             self._reset_form()
             self.refresh()
             self.status.setText(t('quicklinks_deleted', 'Schnellstarter entfernt.'))
