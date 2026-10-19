@@ -9,9 +9,9 @@
     "release_state": "PRUEFKANDIDAT"
   },
   "iteration": {
-    "number": 58,
-    "goal": "Gemeinsame Integration von Update-Sandbox, Modulverträgen und Wiki",
-    "completed": 3,
+    "number": 59,
+    "goal": "Integrierte Module, Update-Checkpoint und optionale Modulsteuerung",
+    "completed": 5,
     "open_next": 3
   },
   "runtime": {
