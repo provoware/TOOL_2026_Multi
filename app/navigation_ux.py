@@ -8,6 +8,7 @@ stehen dauerhaft oben, geplante Bereiche werden bedarfsgesteuert gruppiert.
 from __future__ import annotations
 
 from collections.abc import Iterable
+from shiboken6 import isValid
 
 from PySide6.QtCore import QEvent, QObject, Qt, QTimer
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
@@ -381,6 +382,10 @@ class NavigationUxController(QObject):
 
     def _finish_sync(self) -> None:
         self._queued = False
+        # Ein schon eingereihter Layout-Rückruf kann nach dem Fensterende ankommen.
+        # Dann weder den Qt-Controller noch das Dashboard anfassen.
+        if not isValid(self) or not isValid(self.dashboard):
+            return
         self.sync_visibility()
 
     def eventFilter(self, watched: QObject, event: QEvent) -> bool:
