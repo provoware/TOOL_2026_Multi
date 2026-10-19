@@ -47,6 +47,7 @@ class SlideshowGuiTests(unittest.TestCase):
                 self.assertEqual(media_queue.load(root)["jobs"][0]["fade"], 45)
                 self.assertEqual(media_queue.load(root)["jobs"][0]["status"], "waiting")
             finally:
+                win.discard_draft()
                 win.close()
                 self.app.processEvents()
 
