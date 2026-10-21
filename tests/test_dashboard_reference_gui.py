@@ -262,6 +262,20 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.assertLess(int(COLORS["background"][1:3], 16), 20)
         self.assertTrue(type(self.dashboard).__mro__[1].__module__.startswith("PySide6"))
 
+    def test_dashboard_area_ratios_can_be_changed_and_restored(self):
+        grid = self.dashboard.dashboard_grid
+        actions = self.dashboard.area_size_menu.actions()
+        self.assertEqual(len(actions), 3)
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (1, 1))
+        actions[1].trigger()
+        self.app.processEvents()
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (3, 2))
+        actions[2].trigger()
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (2, 3))
+        actions[0].trigger()
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (1, 1))
+        self.assertEqual(len([f for f in self.dashboard.findChildren(QFrame) if f.objectName() == "card"]), 4)
+
     def test_reference_has_sidebar_tile_strip_and_responsive_two_by_two_cards(self):
         self.assertGreaterEqual(self.dashboard.sidebar.width(), 210)
         self.assertLessEqual(self.dashboard.sidebar.width(), 240)
