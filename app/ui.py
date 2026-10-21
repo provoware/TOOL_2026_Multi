@@ -164,6 +164,17 @@ class Dashboard(QWidget):
         self.module_menu.addAction("Module verwalten", self.open_module_controls)
         self.module_menu.addAction("Modulbaukasten · Entwürfe", self.open_module_blueprints)
         self.module_menu.addAction("Entwicklungspool · Projekte", self.open_development_pool)
+        # Bereichsverteilung anpassen, ohne die bestehenden Karten umzubauen.
+        self.area_size_menu = self.module_menu.addMenu("Dashboard-Bereichsgrößen")
+        for label, left, right in (
+            ("Gleich breit", 1, 1),
+            ("Links etwas breiter", 3, 2),
+            ("Rechts etwas breiter", 2, 3),
+        ):
+            action = self.area_size_menu.addAction(label)
+            action.triggered.connect(
+                lambda _checked=False, ratio=(left, right): self.set_dashboard_column_ratio(*ratio)
+            )
         logo.setMenu(self.module_menu)
         layout.addWidget(logo)
 
@@ -361,6 +372,14 @@ class Dashboard(QWidget):
         heading.setObjectName("cardTitle")
         layout.addWidget(heading)
         return card, layout
+
+    def set_dashboard_column_ratio(self, left: int, right: int) -> None:
+        """Verteilt den Platz der vorhandenen Karten ohne deren Inhalt zu ändern."""
+        if (left, right) not in {(1, 1), (3, 2), (2, 3)}:
+            return
+        self.dashboard_grid.setColumnStretch(0, left)
+        self.dashboard_grid.setColumnStretch(1, right)
+        self.dashboard_grid.invalidate()
 
     def _build_dashboard_grid(self) -> QGridLayout:
         grid = QGridLayout()
