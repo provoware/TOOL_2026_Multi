@@ -10,7 +10,7 @@ from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
-    QMessageBox, QPushButton, QSizePolicy, QVBoxLayout, QWidget, QMenu, QToolButton,
+    QMessageBox, QPushButton, QSizePolicy, QSplitter, QVBoxLayout, QWidget, QMenu, QToolButton,
 )
 
 from app.calendar_reminders import CalendarReminderController
@@ -89,6 +89,7 @@ class Dashboard(QWidget):
         self._pictures_window: ImagePreviewWindow | None = None
         self._slideshow_window: SlideshowWindow | None = None
         self.nav_collapsed = False
+        self._sidebar_manual_width: int | None = None
         self._nav_entries: list[QWidget] = []
         self._closing_after_save = False
         self._event_filter_installed = False
@@ -123,14 +124,27 @@ class Dashboard(QWidget):
         body = QHBoxLayout()
         body.setSpacing(SPACING["s"])
         self.sidebar = self._build_sidebar()
-        body.addWidget(self.sidebar)
+        self.dashboard_splitter = QSplitter(Qt.Horizontal)
+        self.dashboard_splitter.setObjectName("dashboardAreaSplitter")
+        self.dashboard_splitter.setAccessibleName("Verstellbare Navigation und Arbeitsfläche")
+        self.dashboard_splitter.setHandleWidth(10)
+        self.dashboard_splitter.setChildrenCollapsible(False)
+        self.dashboard_splitter.addWidget(self.sidebar)
 
         main = QVBoxLayout()
         main.setSpacing(SPACING["s"])
         main.addWidget(self._build_quick_info())
         main.addWidget(self._build_recent_strip())
         main.addLayout(self._build_dashboard_grid(), 1)
-        body.addLayout(main, 1)
+        main_widget = QWidget()
+        main_widget.setLayout(main)
+        self.dashboard_splitter.addWidget(main_widget)
+        self.dashboard_splitter.setStretchFactor(1, 1)
+        self.dashboard_splitter.handle(1).setToolTip(
+            "Mit der Maus verschieben: Navigation breiter oder schmaler machen."
+        )
+        self.dashboard_splitter.splitterMoved.connect(self._remember_sidebar_width)
+        body.addWidget(self.dashboard_splitter, 1)
         self.quicklinks_rail = QuicklinksRail(self.project_root, self.open_quicklinks, self)
         body.addWidget(self.quicklinks_rail)
         self.quicklinks_rail.hide()  # Schmale Geräte behalten den vollen Hauptbereich.
@@ -175,6 +189,7 @@ class Dashboard(QWidget):
             action.triggered.connect(
                 lambda _checked=False, ratio=(left, right): self.set_dashboard_column_ratio(*ratio)
             )
+        self.module_menu.addAction("Navigationsbreite zurücksetzen", self.reset_sidebar_width)
         logo.setMenu(self.module_menu)
         layout.addWidget(logo)
 
@@ -372,6 +387,17 @@ class Dashboard(QWidget):
         heading.setObjectName("cardTitle")
         layout.addWidget(heading)
         return card, layout
+
+    def _remember_sidebar_width(self, _position: int, _handle: int) -> None:
+        """Nur bewusstes Verschieben merkt sich die Navigation innerhalb der Sitzung."""
+        if not self.nav_collapsed:
+            self._sidebar_manual_width = self.sidebar.width()
+
+    def reset_sidebar_width(self) -> None:
+        """Stellt die Bildschirm- und Schriftgrößen-abhängige Standardbreite wieder her."""
+        self._sidebar_manual_width = None
+        from app.ui_standards import refresh_responsive_layout
+        refresh_responsive_layout(self)
 
     def set_dashboard_column_ratio(self, left: int, right: int) -> None:
         """Verteilt den Platz der vorhandenen Karten ohne deren Inhalt zu ändern."""
