@@ -298,8 +298,12 @@ class DashboardReferenceGuiTests(unittest.TestCase):
     def test_reference_has_sidebar_tile_strip_and_responsive_two_by_two_cards(self):
         self.assertGreaterEqual(self.dashboard.sidebar.width(), 210)
         self.assertLessEqual(self.dashboard.sidebar.width(), 240)
-        cards = [frame for frame in self.dashboard.findChildren(QFrame) if frame.objectName() == "card"]
-        self.assertEqual(len(cards), 4)
+        all_cards = [frame for frame in self.dashboard.findChildren(QFrame) if frame.objectName() == "card"]
+        self.assertEqual(len(all_cards), 4)
+        # In der kompakten Ansicht bleiben Planungskarten verborgen: deren
+        # alte Qt-Geometrie hat keinen Einfluss auf die sichtbare Oberfläche.
+        cards = [card for card in all_cards if card.isVisibleTo(self.dashboard)]
+        self.assertEqual(len(cards), 2)
         widths = [card.width() for card in cards]
         heights = [card.height() for card in cards]
         self.assertGreater(min(widths), 300)
