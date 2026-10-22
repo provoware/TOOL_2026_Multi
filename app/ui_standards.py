@@ -440,7 +440,25 @@ def _apply_responsive_layout(window: QWidget) -> None:
                 # Kurze Hochzoom-Labels erlauben eine schmalere Navigation und
                 # geben dem eigentlichen Arbeitsbereich wieder mehr Platz.
                 base = 224
-            _set_width(sidebar, round(base * width_factor))
+            preferred = round(base * width_factor)
+            splitter = getattr(window, "dashboard_splitter", None)
+            if window.__class__.__name__ == "Dashboard" and isinstance(splitter, QSplitter):
+                # Vor dem ersten Ziehen gilt die bisherige responsive Standardbreite.
+                minimum = max(180, round((210 if high_zoom else 180) * width_factor))
+                maximum = min(440, max(minimum + 16, round(width * 0.38)))
+                sidebar.setMinimumWidth(minimum)
+                sidebar.setMaximumWidth(maximum)
+                chosen = getattr(window, "_sidebar_manual_width", None)
+                desired = max(minimum, min(maximum, preferred if chosen is None else chosen))
+                # Automatische Größenkorrekturen dürfen nicht als Mausklick gespeichert werden.
+                previous = splitter.blockSignals(True)
+                try:
+                    available = max(1, splitter.width() - splitter.handleWidth())
+                    splitter.setSizes([desired, max(1, available - desired)])
+                finally:
+                    splitter.blockSignals(previous)
+            else:
+                _set_width(sidebar, preferred)
 
         search = getattr(window, "search_entry", None)
         if isinstance(search, QWidget):

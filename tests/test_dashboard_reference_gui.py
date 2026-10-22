@@ -276,6 +276,25 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (1, 1))
         self.assertEqual(len([f for f in self.dashboard.findChildren(QFrame) if f.objectName() == "card"]), 4)
 
+    def test_mouse_splitter_preserves_sidebar_width_and_can_reset(self):
+        self.dashboard.resize(1500, 880)
+        self.app.processEvents()
+        splitter = self.dashboard.dashboard_splitter
+        self.assertIs(splitter.widget(0), self.dashboard.sidebar)
+        self.assertEqual(splitter.count(), 2)
+        splitter.moveSplitter(330, 1)
+        self.app.processEvents()
+        self.assertGreaterEqual(self.dashboard.sidebar.width(), 290)
+        chosen = self.dashboard._sidebar_manual_width
+        self.assertIsNotNone(chosen)
+        self.dashboard.resize(1440, 850)
+        self.app.processEvents()
+        self.assertAlmostEqual(self.dashboard.sidebar.width(), chosen, delta=3)
+        self.dashboard.reset_sidebar_width()
+        self.app.processEvents()
+        self.assertIsNone(self.dashboard._sidebar_manual_width)
+        self.assertLess(self.dashboard.sidebar.width(), 290)
+
     def test_reference_has_sidebar_tile_strip_and_responsive_two_by_two_cards(self):
         self.assertGreaterEqual(self.dashboard.sidebar.width(), 210)
         self.assertLessEqual(self.dashboard.sidebar.width(), 240)
