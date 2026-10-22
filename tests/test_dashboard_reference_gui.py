@@ -262,6 +262,33 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         self.assertLess(int(COLORS["background"][1:3], 16), 20)
         self.assertTrue(type(self.dashboard).__mro__[1].__module__.startswith("PySide6"))
 
+    def test_dashboard_card_dividers_keep_cards_and_compact_navigation(self):
+        self.dashboard.resize(1600, 950)
+        self.app.processEvents()
+        self.assertEqual(self.dashboard.dashboard_top_splitter.count(), 2)
+        self.assertEqual(self.dashboard.dashboard_bottom_splitter.count(), 2)
+        self.assertEqual(self.dashboard.dashboard_cards_splitter.count(), 2)
+        all_cards = [c for c in self.dashboard.findChildren(QFrame) if c.objectName() == "card"]
+        self.assertEqual(len(all_cards), 4)
+        self.assertTrue(self.dashboard.dashboard_bottom_splitter.isVisibleTo(self.dashboard))
+
+        top = self.dashboard.dashboard_top_splitter
+        top.moveSplitter(370, 1)
+        self.app.processEvents()
+        sizes = top.sizes()
+        self.assertGreater(min(sizes), 200)
+        self.assertNotEqual(sizes[0], sizes[1])
+
+        self.dashboard.dashboard_cards_splitter.moveSplitter(290, 1)
+        self.app.processEvents()
+        heights = self.dashboard.dashboard_cards_splitter.sizes()
+        self.assertGreater(min(heights), 150)
+
+        self.dashboard.resize(1366, 768)
+        self.app.processEvents()
+        self.assertFalse(self.dashboard.dashboard_bottom_splitter.isVisibleTo(self.dashboard))
+        self.assertEqual(len(all_cards), 4)
+
     def test_dashboard_area_ratios_can_be_changed_and_restored(self):
         grid = self.dashboard.dashboard_grid
         actions = self.dashboard.area_size_menu.actions()

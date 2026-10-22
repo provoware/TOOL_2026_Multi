@@ -406,6 +406,11 @@ def _apply_responsive_layout(window: QWidget) -> None:
             # Auf knapper Höhe bekommen fertige Arbeitswege Vorrang vor reinen
             # Planungskarten. Dieselben geplanten Funktionen bleiben über die
             # bedarfsgesteuerte Sidebar vollständig erreichbar.
+            # Bei kompakten Fenstern sind Planungskarten ohnehin ausgeblendet.
+            # Ihre QSplitter-Zeile darf dann keinen leeren Höhenanteil belegen.
+            bottom_divider = getattr(window, "dashboard_bottom_splitter", None)
+            if isinstance(bottom_divider, QSplitter):
+                bottom_divider.setVisible(not dashboard_dense)
             for card in window.findChildren(QFrame):
                 if card.objectName() != "card":
                     continue

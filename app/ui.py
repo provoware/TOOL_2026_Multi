@@ -405,6 +405,8 @@ class Dashboard(QWidget):
             return
         self.dashboard_grid.setColumnStretch(0, left)
         self.dashboard_grid.setColumnStretch(1, right)
+        for divider in (self.dashboard_top_splitter, self.dashboard_bottom_splitter):
+            divider.setSizes([left * 100, right * 100])
         self.dashboard_grid.invalidate()
 
     def _build_dashboard_grid(self) -> QGridLayout:
@@ -520,6 +522,34 @@ class Dashboard(QWidget):
             s.addWidget(button)
         s.addStretch(1)
         grid.addWidget(system, 1, 1)
+
+        # Bestehende Karten bleiben unverändert; native Qt-Trennlinien
+        # erlauben horizontales und vertikales Anpassen per Maus.
+        for card in (workflow, db, functions, system):
+            grid.removeWidget(card)
+
+        self.dashboard_top_splitter = QSplitter(Qt.Horizontal)
+        self.dashboard_bottom_splitter = QSplitter(Qt.Horizontal)
+        self.dashboard_cards_splitter = QSplitter(Qt.Vertical)
+        for divider, name in (
+            (self.dashboard_top_splitter, "dashboardTopCardsSplitter"),
+            (self.dashboard_bottom_splitter, "dashboardBottomCardsSplitter"),
+            (self.dashboard_cards_splitter, "dashboardVerticalCardsSplitter"),
+        ):
+            divider.setObjectName(name)
+            divider.setChildrenCollapsible(False)
+            divider.setHandleWidth(10)
+            divider.setAccessibleName("Dashboard-Karten mit der Maus verstellen")
+            divider.setToolTip("Trennlinie mit der Maus ziehen; Karten bleiben erhalten.")
+        self.dashboard_top_splitter.addWidget(workflow)
+        self.dashboard_top_splitter.addWidget(db)
+        self.dashboard_bottom_splitter.addWidget(functions)
+        self.dashboard_bottom_splitter.addWidget(system)
+        self.dashboard_cards_splitter.addWidget(self.dashboard_top_splitter)
+        self.dashboard_cards_splitter.addWidget(self.dashboard_bottom_splitter)
+        self.dashboard_cards_splitter.setStretchFactor(0, 1)
+        self.dashboard_cards_splitter.setStretchFactor(1, 1)
+        grid.addWidget(self.dashboard_cards_splitter, 0, 0, 2, 2)
         return grid
 
     def _build_statusbar(self) -> QFrame:
