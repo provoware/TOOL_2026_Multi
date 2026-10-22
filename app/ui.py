@@ -545,6 +545,10 @@ class Dashboard(QWidget):
         self.dashboard_top_splitter.addWidget(db)
         self.dashboard_bottom_splitter.addWidget(functions)
         self.dashboard_bottom_splitter.addWidget(system)
+        for divider in (self.dashboard_top_splitter, self.dashboard_bottom_splitter):
+            divider.setStretchFactor(0, 1)
+            divider.setStretchFactor(1, 1)
+            divider.setSizes([1, 1])
         self.dashboard_cards_splitter.addWidget(self.dashboard_top_splitter)
         self.dashboard_cards_splitter.addWidget(self.dashboard_bottom_splitter)
         self.dashboard_cards_splitter.setStretchFactor(0, 1)

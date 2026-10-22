@@ -436,7 +436,13 @@ def _apply_responsive_layout(window: QWidget) -> None:
         for card in window.findChildren(QFrame):
             if card.objectName() in {"card", "innerCard"}:
                 card.setMinimumWidth(0)
-                card.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+                # QSplitter muss die unterschiedlich großen Profil-/Arbeitskarten
+                # wirklich nach Benutzerwunsch verteilen können. Ignored betrifft
+                # nur die Dashboard-Karten, nicht andere Fenster.
+                if window.__class__.__name__ == "Dashboard" and card.objectName() == "card":
+                    card.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Expanding)
+                else:
+                    card.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         sidebar = getattr(window, "sidebar", None)
         if isinstance(sidebar, QWidget) and not getattr(window, "nav_collapsed", False):
