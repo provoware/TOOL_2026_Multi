@@ -2,6 +2,8 @@
 
 Stand: 2026-10-19
 
+> **Neu (22.10.2026):** [Priorisierter Architektur-, Sicherheits- und Interoperabilitätsaudit mit 30 Befunden, Wiederverwendung, Nutzerabläufen, Tests und Next Queue](#neuer-prüf--und-entwicklungsbedarf--nutzerinteroperabilität-audit-vom-22102026). Der bestehende Plan bleibt eingefroren; neue Punkte stehen **am Ende** dieser Datei und sind noch nicht umgesetzt.
+
 ## Aktueller Entwicklungsauftrag – einzige verbindliche Kurzliste
 
 Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtplan. Die vielen weiter unten stehenden Kontrollkästchen sind historische Arbeitsprotokolle und dürfen nicht als aktuelle, voneinander unabhängige To-dos addiert werden.
@@ -632,3 +634,209 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 - [ ] Bildübergänge in der Video-Warteschlange aus der Iteration 68 nach CI und Hauptzweigprüfung freigeben; langfristig Batch-Statistik, Fortschritt pro Auftrag und weitere reale Videoqualitätsvergleiche ergänzen.
 
 - [ ] Unabhängigen Kopie-Start (Iteration 68) nach vollständiger CI integrieren; bestehende Desktop-Verknüpfungen und alte Standardinstallation bis zur Schlussabnahme nicht umstellen.
+
+<!-- PROVOWARE_2026_AUDIT_2026-10-22_BEGIN -->
+## Neuer Prüf- und Entwicklungsbedarf – Nutzerinteroperabilität (Audit vom 22.10.2026)
+
+> **Status:** Neuaufnahme in die `Next Queue`, **keine Implementierung und keine Freigabe** durch dieses Dokument. Ausgangspunkt: Quellcode- und GitHub-Prüfung von `main` (Grundstand `dca61e9` / aktualisierter Stand `536902e95c`). Alle historischen Aufgaben und der bisher freigegebene Modulplan bleiben erhalten. Dies ist **kein zweiter konkurrierender Ist-Stand**. Vor jeder Umsetzung aktuellen HEAD, `AGENTS.md`, `docs/MODULPLAN_2026.md`, bereits laufende PRs und Tests erneut abgleichen. Die hier erfassten neuen Produktkonzepte werden ausschließlich in eigenständig freigegebenen Folgeiterationen umgesetzt.
+
+**Verbindliches Ziel:** Aus eigenständigen Werkzeugen ein projektorientiertes, durchgängig verknüpftes Offline-Kreativsystem entwickeln: **Projekt → einmal erfasste Daten → kontrolliert wiederverwenden → Ergebnis zuordnen → wiederfinden → vollständig sichern**. Vorhandene Module, Datenformate, Prüfungen, die positive Basisabnahme und die spätere **einmalige** Kubuntu-Gesamtabnahme bleiben geschützt.
+
+**Nachweis- und Statussprache:** `Bestand` = im überprüften Code sichtbar; `Offen: PR` = Patch vorhanden, nicht als `main`-Funktion zählen; `Prüfbedarf` = Risiko oder historischer Befund, erneute Bestätigung erforderlich; `Teilweise` = Grundfunktion vorhanden, Abschluss fehlt. Die Prio bewertet zuerst Datenbewahrung/Sicherheit, dann Nutzerwirkung. **Checkbox [ ] bedeutet Auftrag, nicht nachgewiesenen Fehler.** Ein `[x]` wird erst nach implementiertem Code, Tests und passender GitHub-Evidenz gesetzt.
+
+**Umfang:** 30 nummerierte Befunde (2× P0 / 20× P1 / 8× P2), 19 fachliche Modulverbindungen, 14 Wiederverwendungsdienste, 8 Umsetzungsphasen, 6 echte Nutzerszenarien und 16 Ende-zu-Ende-Abnahmetests. Alle Punkte haben eine stabile Kennung und sind nur einmal in dieser Next Queue führend.
+
+### A. Detaillierter Maßnahmenkatalog – 30 Befunde
+
+| ID | Prio | Nachweisstatus | Ist / Schwachstelle | Maßnahme / Warum | Abnahme | Bezug |
+|---|---|---|---|---|---|---|
+| PV-AUD-01 | P0 | Bestand | Dashboard-Kurznotiz liegt als `Entwicklerinformation.txt` im Code-/Projektstamm; Daten-ZIP umfasst `daten/`. | Bestehende Kurznotizen vollständig sichern und künftig datenseitig ablegen; alte Datei nur geprüft, mit Sicherung und Zustimmung übernehmen. | Sicherungs-Roundtrip enthält Kurznotizen; keine stillschweigende Löschung oder Überschreibung. | `app/quick_note.py`, `docs/DATENSICHERUNG.md` |
+| PV-AUD-02 | P0 | Offen: PR #121 | Defekte UTF-8-Bytes können den Ereignislog-Leseweg stören; Korrektur ist als PR #121 geprüft, aber nicht in `main` integriert. | PR #121 konfliktfrei einordnen und Lesefehler ohne Veränderung alter Logbytes abfangen. | Lesen, weiteres Schreiben und Diagnoseexport bei defektem Log automatisiert geprüft; Originalbytes unverändert. | `app/log_maintenance.py`, `app/event_log.py`, PR #121 |
+| PV-AUD-03 | P1 | Bestand | Keine stabile modulübergreifende Projektzuordnung für Songs, Bücher, Bilder, Videoaufträge und Aufgaben. | Projektobjekt mit beständiger Kennung und getrenntem Referenzindex ergänzen; Originaldaten zunächst unverändert lassen. | Alle erfassten Projektbestandteile auffindbar; Wechsel der Projektbezeichnung erhält Beziehungen. | `app/development_pool.py`, `app/song_document.py`, `app/media_queue.py` |
+| PV-AUD-04 | P1 | Bestand | Todo-Fälligkeit und Kalendereintrag sind eigenständige Datensätze. | Verknüpfte Fälligkeiten und Termine über IDs und definierte Änderungsregeln anbieten; keine automatische Dublette. | Terminkorrektur und Aufgabenerledigung bleiben in beiden Ansichten widerspruchsfrei. | `app/todo_store.py`, `app/calendar_store.py` |
+| PV-AUD-05 | P1 | Bestand | Erstes Öffnen der Todo-Liste ruft `ensure_project_module_backlog()` auf und kann Entwicklungsaufgaben in persönliche Todos schreiben. | Produktbacklog und persönliche Todos trennen; automatische Altaufträge erkennen und konfliktfrei migrieren, nichts löschen. | Frisches Nutzerprojekt öffnet leere persönliche Aufgabenliste; vorhandene Aufgaben bleiben vollständig. | `app/todo_window.py`, `app/todo_store.py` |
+| PV-AUD-06 | P1 | Bestand | GitHub-Projekte speichern eigene `todos`, getrennt von zentralen Aufgaben. | Ein gemeinsames Aufgabenmodell bzw. explizite Referenzierung einführen; bestehende Projektaufgaben erhalten. | Doppelte Anzeige ohne doppelte Speicherung; Erledigt-Status und Herkunft nachvollziehbar. | `app/github_projects.py`, `app/todo_store.py` |
+| PV-AUD-07 | P1 | Bestand | Songidentität basiert auf Titel/Dateiname; keine dauerhafte Song-ID im `SongDocument`. | Persistente Song-ID über kompatible Metadaten/Index einführen, mit Altdatei-Einlesung und Titelwechsel. | Umbenannter Song behält Cover-, Audio- und Projektverknüpfungen; Text-Export bleibt lesbar. | `app/song_document.py`, `app/song_library.py` |
+| PV-AUD-08 | P1 | Bestand | Texteditor speichert Charakter-IDs; Song/Buch verwenden sichtbar eingefügte Namensmarker. | Strukturierte Charakterrelation separat zum unveränderten Text speichern; historische Formulierungen nie unaufgefordert umschreiben. | Figurenumbenennung bricht keine Beziehung und ändert keinen veröffentlichten Text. | `app/text_editor_store.py`, `app/character_store.py`, `app/song_editor.py`, `app/book_window.py` |
+| PV-AUD-09 | P1 | Bestand | Buchkapitel, Wikiartikel und Songtexte haben keine allgemeine modulübergreifende Quellen-/Werksrelation. | Typisierte Beziehungen `source`, `references`, `contains`, `variant_of`, `derived_from` zentral prüfen und speichern. | Quellen im Zielmodul öffnen; Löschen/Import von Zielobjekten behandelt verwaiste Referenzen sicher. | `app/wiki_store.py`, `app/book_store.py`, `app/song_document.py` |
+| PV-AUD-10 | P1 | Bestand | Dateisuche listet Dateizeilen, öffnet aber nicht zielgenau den zugehörigen Facheditor. | Sicheren Treffer-Router Datei/Datensatz → zugehöriges Modul inklusive Fehlerhinweis ergänzen. | Ein Treffer führt zum richtigen bearbeitbaren Datensatz; ungültiger Pfad führt zu sicherem Hinweis. | `app/data_search.py`, `app/search_window.py` |
+| PV-AUD-11 | P1 | Bestand | Suche erfasst nur gespeicherte erlaubte Dateien unter `daten/`, nicht ungespeicherte Entwürfe, Versionen oder externe Medien. | Suchumfang ausdrücklich kennzeichnen; fachlichen Index für registrierte Datensätze mit auswählbaren Scopes konzipieren. | Benutzer erkennt fehlende Suchbereiche; Suchtreffer und Sichtbarkeit sind reproduzierbar. | `app/data_search.py`, `docs/DATEISUCHE.md` |
+| PV-AUD-12 | P1 | Bestand | Textbuttons-Platzhalter werden nicht allgemein aus Projekt, Genreprofil und Figurenzuordnung gespeist. | Gemeinsamen, lesenden Kontextdienst mit ausdrücklich gewählter Platzhalterquelle und Vorschau aufbauen. | Platzhalterauflösung ist deterministisch; Originalbausteine bleiben unverändert. | `app/snippet_store.py`, `app/profile_store.py` |
+| PV-AUD-13 | P1 | Bestand | Datenformate/Validierung variieren zwischen TXT-Songs, JSON-Dokumenten und Modularchiven. | Gemeinsame IDs, Schema-Metadaten, Fehlerverträge und sichere Import-/Export-Schnittstellen ohne sofortige Datenbankmigration definieren. | Altdaten laden unverändert; unbekannte Versionen werden geschützt abgewiesen. | `app/module_archive.py`, `app/atomic_io.py`, `app/song_document.py` |
+| PV-AUD-14 | P1 | Bestand | Playlists und Videoaufträge speichern absolute Dateipfade. | Projekt-relative Pfade bzw. Medien-ID mit sicheren Auflösungsregeln und Nachverknüpfen fehlender Quellen ergänzen. | Ordnerumzug gelingt ohne Datenänderung an Originalmedien; fehlende Medien werden klar markiert. | `app/media_files.py`, `app/media_queue.py` |
+| PV-AUD-15 | P1 | Bestand | Persönliches Daten-ZIP enthält nicht automatisch extern referenzierte Audio-/Bild-/Videodateien. | Von normaler Datensicherung getrenntes vollständiges Projektpaket mit optionalen, geprüften Mediendateien entwickeln. | Wiederherstellung auf anderem Rechner enthält Quellen/Prüfsummen; keine fremden Pfade werden überschrieben. | `docs/DATENSICHERUNG.md`, `app/media_files.py` |
+| PV-AUD-16 | P1 | Bestand | `module_contracts.describe()` meldet bei fehlendem Katalogeintrag deaktiviert; `is_module_enabled()` liefert aktiviert. | Eine zentrale Statusfunktion mit identischer Voreinstellung für Anzeige, Menü und Laufzeit etablieren. | Kaltstart, De-/Aktivierung, Menü und Beschreibung stimmen für alle sieben optionalen Module überein. | `app/module_contracts.py` |
+| PV-AUD-17 | P1 | Prüfbedarf | Link-/Pfadschutz im allgemeinen Modularchiv ist nicht mit allen spezialisierten Datenablagen gleich stark. | Datei-/Verzeichnis-Links sowie Austausch zwischen Prüfung und Schreiben systematisch prüfen; gemeinsame sichere Speicher-API verwenden. | Negativtests zu Links, Umbenennung, Pfadwechsel, Symlink-Race und abgewiesenen Exportzielen bestehen. | `app/module_archive.py`, `app/module_runtime.py`, `app/data_search.py` |
+| PV-AUD-18 | P1 | Bestand | `app/ui.py` ist zentral für zahlreiche Fenster und Navigation verantwortlich und überschreitet den Richtwert von 500 Zeilen. | Modul-Routing registrieren und schrittweise auslagern; funktionierende UI ohne Komplettneubau beibehalten. | Module werden aus Registry geöffnet; bestehende Tastenkürzel und Fensterzustände funktionieren. | `app/ui.py`, `app/window_lifecycle.py`, `app/module_contracts.py` |
+| PV-AUD-19 | P1 | Bestand | README, TODO und Modulplan enthalten historische Aussagen, die neueren `main`-Funktionen widersprechen. | Eine aus Code/Tests abgeleitete, aktuelle Statusmatrix als einzige Quelle pflegen; Historie als Historie kennzeichnen. | ffprobe, echte Übergänge und gespeicherte Warteschlange werden entsprechend HEAD beschrieben. | `README.md`, `TODO.md`, `docs/MODULPLAN_2026.md` |
+| PV-AUD-20 | P1 | Bestand | UI-Shadow ist bei fachlichen Bildbefunden weiterhin teilweise nicht blockierend. | Bekannte echte Befunde beheben, Fehlalarme kalibrieren und ausgewählte Regeln erst danach als harte Prüfung verwenden. | Mindestens drei sauber geprüfte Läufe und reproduzierbare Schwellen vor Pflicht-Gate; echter GUI-Befund blockiert. | `.github/workflows/qualitaet.yml`, `scripts/ui_shadow_entry.py` |
+| PV-AUD-21 | P1 | Prüfbedarf: Issue #92 | Späte `QTimer`-Navigationsrückrufe verursachten früher einen Qt-Objektlebenszyklusfehler; `isValid`-Schutz steht im Hauptzweig. | Issue #92 gegen aktuelle Codeversion und gezielten Zerstörungs-Regressionsfall prüfen, erst dann schließen. | Nach Fensterzerstörung und ausstehenden Timerereignissen keine Ausnahme; Zoom und Navigation unverändert. | `app/navigation_ux.py`, Issue #92 |
+| PV-AUD-22 | P1 | Bestand | Song/Audioplayer/Bildvorschau/Video verfügen über keine durchgängige Ergebnisweitergabe mit Projektbezug. | Direkte Übernahme als referenzierter Medien-/Produktionsauftrag samt Quelle, Typ und Version anbieten. | Vom Song aus Audio/Cover wählen, Video erzeugen und Ergebnis dem Songprojekt zuordnen. | `app/song_document.py`, `app/slideshow_window.py`, `app/media_queue.py` |
+| PV-AUD-23 | P2 | Bestand | Hauptfläche nutzt feste 2×2-Karten statt frei belegbarer 3×3-Modulplätze. | Frei belegbares 3×3-Raster mit Fokus, Fensterzustand und zurücksetzbarer Belegung nach Modulrouter planen. | Kleine Auflösungen, 100–200 % Zoom, Tastaturbedienung und Persistenz getestet. | `app/ui.py`, `docs/MODULPLAN_2026.md` |
+| PV-AUD-24 | P2 | Teilweise erledigt | PR #123 für frei verschiebbare Navigation wurde in `main` übernommen; verstellbare Dashboard-Karten folgen separat in PR #124. | PR #124 nur nach grüner Prüfung integrieren; persistente Einstellungen und Rücksetzen anschließend konsistent prüfen. | Mausverschiebung und Reset stabil, kein Regression bei Kompaktmodus/Zoom; kein Doppelpatch für #123. | PR #123, PR #124, `app/ui.py` |
+| PV-AUD-25 | P2 | Bestand | Dashboard-Mindestgröße ist etwa 1020×650; Unterstützung kleinerer Flächen bleibt begrenzt. | 800×600 als zusätzlichem Testprofil nur nach Layoutkonzept nachgehen; Bedienwege in Kompaktansicht priorisieren. | Auf Zielgrößen kein abgeschnittener kritischer Ablauf und keine horizontale Pflichtscrollleiste. | `app/ui.py`, `app/presentation_policy.py` |
+| PV-AUD-26 | P2 | Teilweise | Zoom/Themes und modulspezifische Optionen haben kein vollständiges gemeinsames Einstellungszentrum. | Persistenten Einstellungsdienst mit klaren Geltungsbereichen (Programm/Projekt/Modul) ergänzen. | Neustart, Export, ungültiger Zustand und Rücksetzen geprüft. | `app/ui.py`, `app/module_contracts.py` |
+| PV-AUD-27 | P2 | Teilweise | Plugin-Ausführung ist nur kontrollierte isolierte Probe, keine produktiv freigegebene Erweiterungsplattform. | Signatur, Berechtigungen, Isolation, Ressourcenlimits, Lebenszyklus und Rücknahme getrennt nachweisen. | Ohne Freigabe nie ausführen; Negativtests für Netzwerk, Nutzerdatenzugang und Zeit-/Speicherlimits. | `app/plugin_sandbox.py`, `app/module_extension.py` |
+| PV-AUD-28 | P2 | Bestand | Textbuttons, Ideenarchiv und Buchvorlagen überschneiden sich bei Textfragmenten. | Gemeinsame Baustein-Referenzfunktion prüfen; getrennte Fachoberflächen erhalten. | Vorlage einmal pflegen und bewusst in mehrere Projekte übernehmen, ohne Ursprungsinhalt zu verändern. | `app/snippet_store.py`, `app/idea_store.py`, `app/book_store.py` |
+| PV-AUD-29 | P2 | Bestand | Einzelmodul-Import/Export ist nicht gleich einem vollständigen Austausch zusammengehöriger Projektdaten. | Ein Projekt-Austauschformat mit Version, Beziehungsindex, Konfliktvorschau, ID-Remapping und optionalen Medien definieren. | Hin-/Rückimport erhält Beziehungen, Originale und Versionsstände; Kollisionen sind transparent. | `app/module_archive.py`, `app/wiki_store.py`, `app/book_store.py` |
+| PV-AUD-30 | P2 | Teilweise | Slot-Updates und Altinstallations-Migration besitzen geprüfte Bausteine, aber keine allgemeine produktive Altinstallation-Umstellung. | Vorhandene Sicherheitsgates konsolidieren; echter Schnellstart-/Rollbackpfad nur nach isolierter und nachvollziehbarer Freigabe. | Fehler-Injektionen, Code-/Datentrennung, Checkpoint und Rückfall auf unveränderte Altdaten geprüft. | `app/update_slots.py`, `app/runtime_roots.py`, `app/managed_launcher_switch.py` |
+
+#### A1. Umsetzbare Aufgaben (jede Kennung ist ein eigenständiger, zu prüfender Auftrag)
+
+- [ ] **PV-AUD-01 [P0]** – Bestehende Kurznotizen vollständig sichern und künftig datenseitig ablegen; alte Datei nur geprüft, mit Sicherung und Zustimmung übernehmen. **Fertig erst wenn:** Sicherungs-Roundtrip enthält Kurznotizen; keine stillschweigende Löschung oder Überschreibung. (Bestand; Bezug: `app/quick_note.py`, `docs/DATENSICHERUNG.md`).
+- [ ] **PV-AUD-02 [P0]** – PR #121 konfliktfrei einordnen und Lesefehler ohne Veränderung alter Logbytes abfangen. **Fertig erst wenn:** Lesen, weiteres Schreiben und Diagnoseexport bei defektem Log automatisiert geprüft; Originalbytes unverändert. (Offen: PR #121; Bezug: `app/log_maintenance.py`, `app/event_log.py`, PR #121).
+- [ ] **PV-AUD-03 [P1]** – Projektobjekt mit beständiger Kennung und getrenntem Referenzindex ergänzen; Originaldaten zunächst unverändert lassen. **Fertig erst wenn:** Alle erfassten Projektbestandteile auffindbar; Wechsel der Projektbezeichnung erhält Beziehungen. (Bestand; Bezug: `app/development_pool.py`, `app/song_document.py`, `app/media_queue.py`).
+- [ ] **PV-AUD-04 [P1]** – Verknüpfte Fälligkeiten und Termine über IDs und definierte Änderungsregeln anbieten; keine automatische Dublette. **Fertig erst wenn:** Terminkorrektur und Aufgabenerledigung bleiben in beiden Ansichten widerspruchsfrei. (Bestand; Bezug: `app/todo_store.py`, `app/calendar_store.py`).
+- [ ] **PV-AUD-05 [P1]** – Produktbacklog und persönliche Todos trennen; automatische Altaufträge erkennen und konfliktfrei migrieren, nichts löschen. **Fertig erst wenn:** Frisches Nutzerprojekt öffnet leere persönliche Aufgabenliste; vorhandene Aufgaben bleiben vollständig. (Bestand; Bezug: `app/todo_window.py`, `app/todo_store.py`).
+- [ ] **PV-AUD-06 [P1]** – Ein gemeinsames Aufgabenmodell bzw. explizite Referenzierung einführen; bestehende Projektaufgaben erhalten. **Fertig erst wenn:** Doppelte Anzeige ohne doppelte Speicherung; Erledigt-Status und Herkunft nachvollziehbar. (Bestand; Bezug: `app/github_projects.py`, `app/todo_store.py`).
+- [ ] **PV-AUD-07 [P1]** – Persistente Song-ID über kompatible Metadaten/Index einführen, mit Altdatei-Einlesung und Titelwechsel. **Fertig erst wenn:** Umbenannter Song behält Cover-, Audio- und Projektverknüpfungen; Text-Export bleibt lesbar. (Bestand; Bezug: `app/song_document.py`, `app/song_library.py`).
+- [ ] **PV-AUD-08 [P1]** – Strukturierte Charakterrelation separat zum unveränderten Text speichern; historische Formulierungen nie unaufgefordert umschreiben. **Fertig erst wenn:** Figurenumbenennung bricht keine Beziehung und ändert keinen veröffentlichten Text. (Bestand; Bezug: `app/text_editor_store.py`, `app/character_store.py`, `app/song_editor.py`, `app/book_window.py`).
+- [ ] **PV-AUD-09 [P1]** – Typisierte Beziehungen `source`, `references`, `contains`, `variant_of`, `derived_from` zentral prüfen und speichern. **Fertig erst wenn:** Quellen im Zielmodul öffnen; Löschen/Import von Zielobjekten behandelt verwaiste Referenzen sicher. (Bestand; Bezug: `app/wiki_store.py`, `app/book_store.py`, `app/song_document.py`).
+- [ ] **PV-AUD-10 [P1]** – Sicheren Treffer-Router Datei/Datensatz → zugehöriges Modul inklusive Fehlerhinweis ergänzen. **Fertig erst wenn:** Ein Treffer führt zum richtigen bearbeitbaren Datensatz; ungültiger Pfad führt zu sicherem Hinweis. (Bestand; Bezug: `app/data_search.py`, `app/search_window.py`).
+- [ ] **PV-AUD-11 [P1]** – Suchumfang ausdrücklich kennzeichnen; fachlichen Index für registrierte Datensätze mit auswählbaren Scopes konzipieren. **Fertig erst wenn:** Benutzer erkennt fehlende Suchbereiche; Suchtreffer und Sichtbarkeit sind reproduzierbar. (Bestand; Bezug: `app/data_search.py`, `docs/DATEISUCHE.md`).
+- [ ] **PV-AUD-12 [P1]** – Gemeinsamen, lesenden Kontextdienst mit ausdrücklich gewählter Platzhalterquelle und Vorschau aufbauen. **Fertig erst wenn:** Platzhalterauflösung ist deterministisch; Originalbausteine bleiben unverändert. (Bestand; Bezug: `app/snippet_store.py`, `app/profile_store.py`).
+- [ ] **PV-AUD-13 [P1]** – Gemeinsame IDs, Schema-Metadaten, Fehlerverträge und sichere Import-/Export-Schnittstellen ohne sofortige Datenbankmigration definieren. **Fertig erst wenn:** Altdaten laden unverändert; unbekannte Versionen werden geschützt abgewiesen. (Bestand; Bezug: `app/module_archive.py`, `app/atomic_io.py`, `app/song_document.py`).
+- [ ] **PV-AUD-14 [P1]** – Projekt-relative Pfade bzw. Medien-ID mit sicheren Auflösungsregeln und Nachverknüpfen fehlender Quellen ergänzen. **Fertig erst wenn:** Ordnerumzug gelingt ohne Datenänderung an Originalmedien; fehlende Medien werden klar markiert. (Bestand; Bezug: `app/media_files.py`, `app/media_queue.py`).
+- [ ] **PV-AUD-15 [P1]** – Von normaler Datensicherung getrenntes vollständiges Projektpaket mit optionalen, geprüften Mediendateien entwickeln. **Fertig erst wenn:** Wiederherstellung auf anderem Rechner enthält Quellen/Prüfsummen; keine fremden Pfade werden überschrieben. (Bestand; Bezug: `docs/DATENSICHERUNG.md`, `app/media_files.py`).
+- [ ] **PV-AUD-16 [P1]** – Eine zentrale Statusfunktion mit identischer Voreinstellung für Anzeige, Menü und Laufzeit etablieren. **Fertig erst wenn:** Kaltstart, De-/Aktivierung, Menü und Beschreibung stimmen für alle sieben optionalen Module überein. (Bestand; Bezug: `app/module_contracts.py`).
+- [ ] **PV-AUD-17 [P1]** – Datei-/Verzeichnis-Links sowie Austausch zwischen Prüfung und Schreiben systematisch prüfen; gemeinsame sichere Speicher-API verwenden. **Fertig erst wenn:** Negativtests zu Links, Umbenennung, Pfadwechsel, Symlink-Race und abgewiesenen Exportzielen bestehen. (Prüfbedarf; Bezug: `app/module_archive.py`, `app/module_runtime.py`, `app/data_search.py`).
+- [ ] **PV-AUD-18 [P1]** – Modul-Routing registrieren und schrittweise auslagern; funktionierende UI ohne Komplettneubau beibehalten. **Fertig erst wenn:** Module werden aus Registry geöffnet; bestehende Tastenkürzel und Fensterzustände funktionieren. (Bestand; Bezug: `app/ui.py`, `app/window_lifecycle.py`, `app/module_contracts.py`).
+- [ ] **PV-AUD-19 [P1]** – Eine aus Code/Tests abgeleitete, aktuelle Statusmatrix als einzige Quelle pflegen; Historie als Historie kennzeichnen. **Fertig erst wenn:** ffprobe, echte Übergänge und gespeicherte Warteschlange werden entsprechend HEAD beschrieben. (Bestand; Bezug: `README.md`, `TODO.md`, `docs/MODULPLAN_2026.md`).
+- [ ] **PV-AUD-20 [P1]** – Bekannte echte Befunde beheben, Fehlalarme kalibrieren und ausgewählte Regeln erst danach als harte Prüfung verwenden. **Fertig erst wenn:** Mindestens drei sauber geprüfte Läufe und reproduzierbare Schwellen vor Pflicht-Gate; echter GUI-Befund blockiert. (Bestand; Bezug: `.github/workflows/qualitaet.yml`, `scripts/ui_shadow_entry.py`).
+- [ ] **PV-AUD-21 [P1]** – Issue #92 gegen aktuelle Codeversion und gezielten Zerstörungs-Regressionsfall prüfen, erst dann schließen. **Fertig erst wenn:** Nach Fensterzerstörung und ausstehenden Timerereignissen keine Ausnahme; Zoom und Navigation unverändert. (Prüfbedarf: Issue #92; Bezug: `app/navigation_ux.py`, Issue #92).
+- [ ] **PV-AUD-22 [P1]** – Direkte Übernahme als referenzierter Medien-/Produktionsauftrag samt Quelle, Typ und Version anbieten. **Fertig erst wenn:** Vom Song aus Audio/Cover wählen, Video erzeugen und Ergebnis dem Songprojekt zuordnen. (Bestand; Bezug: `app/song_document.py`, `app/slideshow_window.py`, `app/media_queue.py`).
+- [ ] **PV-AUD-23 [P2]** – Frei belegbares 3×3-Raster mit Fokus, Fensterzustand und zurücksetzbarer Belegung nach Modulrouter planen. **Fertig erst wenn:** Kleine Auflösungen, 100–200 % Zoom, Tastaturbedienung und Persistenz getestet. (Bestand; Bezug: `app/ui.py`, `docs/MODULPLAN_2026.md`).
+- [ ] **PV-AUD-24 [P2]** – PR #124 nur nach grüner Prüfung integrieren; persistente Einstellungen und Rücksetzen anschließend konsistent prüfen. **Fertig erst wenn:** Mausverschiebung und Reset stabil, kein Regression bei Kompaktmodus/Zoom; kein Doppelpatch für #123. (Teilweise erledigt; Bezug: PR #123, PR #124, `app/ui.py`).
+- [ ] **PV-AUD-25 [P2]** – 800×600 als zusätzlichem Testprofil nur nach Layoutkonzept nachgehen; Bedienwege in Kompaktansicht priorisieren. **Fertig erst wenn:** Auf Zielgrößen kein abgeschnittener kritischer Ablauf und keine horizontale Pflichtscrollleiste. (Bestand; Bezug: `app/ui.py`, `app/presentation_policy.py`).
+- [ ] **PV-AUD-26 [P2]** – Persistenten Einstellungsdienst mit klaren Geltungsbereichen (Programm/Projekt/Modul) ergänzen. **Fertig erst wenn:** Neustart, Export, ungültiger Zustand und Rücksetzen geprüft. (Teilweise; Bezug: `app/ui.py`, `app/module_contracts.py`).
+- [ ] **PV-AUD-27 [P2]** – Signatur, Berechtigungen, Isolation, Ressourcenlimits, Lebenszyklus und Rücknahme getrennt nachweisen. **Fertig erst wenn:** Ohne Freigabe nie ausführen; Negativtests für Netzwerk, Nutzerdatenzugang und Zeit-/Speicherlimits. (Teilweise; Bezug: `app/plugin_sandbox.py`, `app/module_extension.py`).
+- [ ] **PV-AUD-28 [P2]** – Gemeinsame Baustein-Referenzfunktion prüfen; getrennte Fachoberflächen erhalten. **Fertig erst wenn:** Vorlage einmal pflegen und bewusst in mehrere Projekte übernehmen, ohne Ursprungsinhalt zu verändern. (Bestand; Bezug: `app/snippet_store.py`, `app/idea_store.py`, `app/book_store.py`).
+- [ ] **PV-AUD-29 [P2]** – Ein Projekt-Austauschformat mit Version, Beziehungsindex, Konfliktvorschau, ID-Remapping und optionalen Medien definieren. **Fertig erst wenn:** Hin-/Rückimport erhält Beziehungen, Originale und Versionsstände; Kollisionen sind transparent. (Bestand; Bezug: `app/module_archive.py`, `app/wiki_store.py`, `app/book_store.py`).
+- [ ] **PV-AUD-30 [P2]** – Vorhandene Sicherheitsgates konsolidieren; echter Schnellstart-/Rollbackpfad nur nach isolierter und nachvollziehbarer Freigabe. **Fertig erst wenn:** Fehler-Injektionen, Code-/Datentrennung, Checkpoint und Rückfall auf unveränderte Altdaten geprüft. (Teilweise; Bezug: `app/update_slots.py`, `app/runtime_roots.py`, `app/managed_launcher_switch.py`).
+
+### B. Wiederverwendung technischer Funktionen statt Doppelimplementierung
+
+| Baustein | Aktueller Bezug | Entscheidung für Folgearbeit |
+|---|---|---|
+| Atomar speichern | `app/atomic_io.py` | Bestand; auf alle relevanten Nutzerdatenwege ausdehnen |
+| Modularchive/Validierung | `app/module_archive.py`, `app/record_store.py` | Bestand; gleiche Pfad-/Fehlerverträge durchsetzen |
+| Modulverträge/-rechte | `app/module_contracts.py`, `app/module_permissions.py` | Bestand; Aktivierungsstatus und Fähigkeiten aus einer Quelle |
+| Fensterlebenszyklus | `app/window_lifecycle.py` | Bestand; Modulrouter statt weiterer direkter Dashboard-Verweise |
+| Theme/Zoom/Geometrie | `app/ui_standards.py`, `app/presentation_policy.py` | Bestand; Entflechtung ohne Funktionsverlust |
+| Charakterauswahl | `app/character_combo.py` | Bestand; im Text strukturiert referenzieren |
+| Genreprofile | `app/profile_store.py` | Bestand; gemeinsame Profil-IDs für neue Übergaben |
+| Webadressen prüfen | `app/account_store.py` | Bestand; auch Schnellstarter nutzt Validierung |
+| Medienpfade | `app/media_files.py` | Bestand; um portable Referenzen ergänzen |
+| Protokolle/Diagnose | `app/event_log.py` | Bestand; abgesicherte UTF-8-Fehlerwege fertigstellen |
+| Objektregister (neu) | noch nicht vorhanden | Stabile fachliche IDs plus Datensatzauflösung ohne Vollmigration |
+| Beziehungsdienst (neu) | noch nicht vorhanden | Typisierte, validierte Verweise mit Lösch-/Importregeln |
+| Modul-Aktionsvermittlung (neu) | aus bestehender Modulregistry ableiten | Sichere Übergabe und Öffnen von Datensätzen |
+| Fachsuche/Medienkatalog (neu) | aus Dateisuche/Medienwegen ableiten | Quelle, Objekt-ID, Filter, sichere Treffer-Navigation |
+
+**Vorgehensregel:** Gemeinsame Speicherung ≠ gemeinsame Inhalte. Unterschiedliche Fachoberflächen (Songeditor, Buchwerkstatt, Wiki) **nicht** zu einem überladenen Fenster zusammenschmelzen. Stattdessen sichere Kernfunktionen einmal anbieten und aus den fachlichen Modulen aufrufen. Abweichende Kunsttexte und historische Fassungen niemals automatisch umschreiben.
+
+### C. Fachliche Modul- und Dateninteroperabilität
+
+| Quelle | Ziel | Ist / Übergabe | Erforderlicher Sollzustand | Befunde |
+|---|---|---|---|---|
+| Charakterfibel | Allgemeiner Texteditor | IDs vorhanden | Namens-/Rollenänderung kontrolliert anzeigen, Texte unverändert lassen | 08 |
+| Charakterfibel | Songeditor | lesbarer Textmarker | stabile Figuren-ID getrennt vom Liedtext speichern | 08 |
+| Charakterfibel | Buchwerkstatt | lesbarer Textmarker | Figur mit Buch/Kapitel dauerhaft verknüpfen | 08–09 |
+| Genrearchiv | Genre-Zufall | gemeinsamer Profilbestand | bestehende zentrale Datenquelle erhalten | 12 |
+| Genre-Zufall | Songeditor | Stilausgabe nutzbar, Herkunft nicht dauerhaft gebunden | Profil und Generationslauf referenzieren | 07,12 |
+| Ideenarchiv | Songeditor | Copy-/Fragmentworkflow, kein universeller Objektbezug | Fragment als bewusst gewählte Kopie/Referenz übernehmen | 09,28 |
+| Textbuttons | Songeditor | Platzhalter auf Textwerte begrenzt | Projekt-, Profil- und Figurenwerte anbieten | 12,28 |
+| Textbuttons | Buchwerkstatt | getrennte Baustein- und Vorlagendaten | gemeinsame Bausteinquelle ohne Originalüberschreibung | 28 |
+| Wiki | Buchwerkstatt | separate Wissens-/Buchbestände | Artikel als Quelle pro Kapitel referenzieren | 09 |
+| Songbibliothek | Audioplayer | kein gemeinsames Song-/Audioobjekt | Audiodatei einem Song zuordnen | 07,22 |
+| Songbibliothek | Bildvorschau | keine gemeinsame Coverzuordnung | Bild als Covervariante referenzieren | 07,22 |
+| Audioplayer | Video/Slideshow | Pfad manuell auswählbar | Medien-ID und Projektkontext direkt übergeben | 14,22 |
+| Bildvorschau | Video/Slideshow | separate Bildliste | reihenfolgestabile Bildsammlung übernehmen | 14,22 |
+| Videogenerator | Projektbestand | Auftrags-ID, aber kein Kreativprojektbezug | Ausgabe, Quellen und Parameter registrieren | 03,22 |
+| Todo-Liste | Kalender | getrennte Ereignisse | Fälligkeit und Kalendertermin verknüpfen | 04 |
+| GitHub-Projekte | Todo-Liste | separate Aufgabenlisten | ein Aufgabenobjekt mit Projektansicht | 05–06 |
+| Entwicklungspool | GitHub-Projekte | getrennte Projektobjekte | gemeinsame Projektkennung und Statusansichten | 03,06 |
+| Dateisuche | Datenmodule | Text-/Dateitreffer | fachlich korrektes Fenster und Originaldatensatz öffnen | 10–11 |
+| Datensicherung | Medien-/Projektbereich | nur definierter Datenbestand | vollständiges, optional medienhaltiges Projektpaket | 01,14–15,29 |
+
+**Verbindliche Datenbeziehungen:** `project_id`, `object_id`, `source` (Quelle), `references` (Verweis), `contains` (Bestandteil), `variant_of` (Variante), `derived_from` (abgeleitetes Werk) und `media_id`. Nur geprüfte Beziehungen erlauben; ungültige/gelöschte Ziele werden kontrolliert behandelt. Sichtbarer Figurenname bleibt Darstellung, nicht Identität. Ein Textfragment darf **Kopie oder Referenz** sein, je nach ausdrücklicher Nutzerentscheidung.
+
+### D. Nutzerzentrierte Ende-zu-Ende-Szenarien (fachliche Abnahme)
+
+| Szenario | Bedienkette | Erfolg aus Nutzersicht | Befunde |
+|---|---|---|---|
+| Kreativprojekt von Idee bis Veröffentlichung | Projekt anlegen → Idee/Textbaustein nutzen → Song schreiben → Profil/Charakter referenzieren → Audio/Cover zuordnen → Video berechnen → Exportstatus/Aufgabe/Termin verbinden. | Jeder Schritt bewahrt Quellen-/Projektbezug; keine erneute Stammdateneingabe; keine ungefragte Veröffentlichung. | 03,07–09,12,14,22 |
+| Figur in mehreren Werken | Figur in Charakterfibel speichern → Song, Text und Buch referenzieren → Figur umbenennen → alte Fassungen erneut öffnen. | Stabile Figurenbeziehung, unveränderte künstlerische Textfassungen, verständliche Konfliktanzeige. | 08–09 |
+| Recherche zur Sachausarbeitung | Wikiartikel anlegen → Buchkapitel als Quelle verknüpfen → Quelle über Suche öffnen → Kapitel exportieren. | Herkunft/Quelle maschinenlesbar, keine verdeckte Überschreibung des Wikiartikels. | 09–11 |
+| Projektplanung ohne Dubletten | Projektaufgabe anlegen → Fälligkeit setzen → Kalender öffnen → Termin anpassen → Aufgabe abhaken. | Ein verbundenes Aufgabenobjekt, konsistenter Terminbezug, getrennte Entwicklungs- und persönliche Aufgaben. | 04–06 |
+| Portabler Umzug eines Medienprojekts | Projekt mit Song, Videoauftrag und externen Quelldateien sichern → Paket in neuem Verzeichnis wiederherstellen → betroffene Module öffnen. | Alle eingebetteten Medien geprüft, fehlende externe Quellen nachvollziehbar; bestehende Dateien nicht überschrieben. | 01,14–15,29 |
+| Update und Wiederherstellung bei Fehler | Bestandsinstallation sichern → Update isoliert prüfen → Startfehler simulieren → altes Programm mit Originaldaten nutzen. | Rückfall nachweisbar; keine ungefragte Altdatenmigration oder Datenveränderung. | 17,27,30 |
+
+**UX-Entscheidungsregel:** Der Nutzer denkt in Songs, Projekten und Veröffentlichungen statt in Dateitypen und Fenstern. Ein zentraler Projektkontext zeigt verknüpfte Texte, Vorlagen, Figuren, Audio, Bilder, Videos, Aufgaben und Termine; die Originale verbleiben in ihren spezialisierten Modulen. Standardschritte sollen ohne wiederholte Eingabe erreichbar sein, riskante Aktionen mit Bestätigung und verständlichem Rückfall.
+
+### E. Zielarchitektur und Grenzen der Umstellung
+
+1. **Objektregister:** Stabile Kennung → Typ, Projekt, aktueller Speicherort, Schema-/Versionsangabe. Beim Umbenennen bleiben IDs gleich.
+2. **Beziehungsdienst:** Typisierte Verweise zwischen registrierten Objekten, Prüfung auf fehlende Ziele, sichere Lösch-/Importfolgen.
+3. **Modulrouter / Aktionsvermittlung:** Ein `Öffne Datensatz X in Modul Y`-Vertrag für Suchtreffer, Projektansicht und Modulwechsel statt Direktverweisen aus `app/ui.py`.
+4. **Gemeinsamer Kontextdienst:** Nur ausdrücklich gewählte Projekt-, Genre-, Figuren- und Bausteininformationen als schreibgeschützte Vorlagenwerte.
+5. **Fachsuche und Medienkatalog:** Suchtreffer mit Typ/ID/Originalquelle; Medieneinträge möglichst portabel, absolute Pfade als kompatible Altwerte.
+6. **Getrennte Sicherungsarten:** Persönliche Programmdaten gegenüber **vollständiger Projektsicherung mit optional eingebetteten Medien** klar unterscheiden.
+7. **Gemeinsame Einstellungen:** Dauerhafte Projekt-, Modul- und Anzeigeeinstellungen mit belastbarer Gültigkeits-/Rückfallprüfung.
+8. **Keine riskante Big-Bang-Migration:** Erst additive, getestete Metadaten-/Beziehungsregistrierung. TXT-/JSON-Originaldateien bleiben erhalten; SQLite nur bei späterem nachgewiesenem Mehrwert und eigener Entscheidung. Keine automatische Überschreibung, kein Kopierverlust, keine stillen Änderungen am künstlerischen Original.
+
+### F. Abhängige Umsetzungsreihenfolge (keine parallelen Konfliktänderungen)
+
+| Phase | Abhängige Befunde | Arbeitsauftrag | Freigabe/Prüfkriterium |
+|---|---|---|---|
+| 0 – Sicherung/Status | 01,02,16,17,19,21,24 | Bestandsdaten sichern; offene Fix-PRs statusgenau integrieren, aktuelle Dokumentation/Wahrheitsmatrix und Negativtests; PR #123 nicht erneut bearbeiten. | Keine bekannten ungeschützten Datenwege; CI grün; offene Probleme nachvollziehbar. |
+| 1 – Identitäten | 03,07,08,13 | Kompatible IDs für Projekte/Songs; Objektregister und sichere Auflösung, bestehende Dateien nicht blind migrieren. | Roundtrip/Umbenennung/Restore erhalten IDs und Daten. |
+| 2 – Beziehungen | 09,12,22,28 | Typisierte Beziehungen, Kontextplatzhalter, bewusstes Kopieren/Referenzieren, Song→Medien. | Referenzen bleiben bei Umbenennen/Import valide; keine stillen Textänderungen. |
+| 3 – Suche & Öffnen | 10,11,18 | Einheitliche fachliche Suchresultate und Modulrouter; vorhandene Suchschutzgrenzen bewahren. | Suche führt korrekt zum Originaldatensatz, keine Dateien ausgeführt/überschrieben. |
+| 4 – Aufgaben & Termine | 04,05,06 | Persönliche Aufgaben von Entwicklerbacklog trennen; Projektaufgaben und Kalender referenziert zusammenführen. | Keine automatische Übernahme alter Entwicklungsaufgaben; Erledigungs-/Terminstatus konsistent. |
+| 5 – Medien & Projekttransport | 14,15,29 | Portabler Medienkatalog, Projektsicherung mit optionalen Medien, sichere Konflikt-/Importprüfung. | Projektkopie nach Umzug auch mit Audio, Bildern und Videobezügen lauffähig. |
+| 6 – Oberfläche/Erweiterungen | 20,23,25,26,27,30 | Registry-basiertes Raster, Fokus, Einstellungen, UI-Kalibrierung, geprüfte Modul-/Update-Laufzeit. | 100–200-%-Zoom, Tastenweg, Restore, Wayland, keine fremde Codeausführung ohne Freigabe. |
+| 7 – Abschluss | alle offenen | Durchgängige Integrations-, Sicherheits-, Medien- und Releaseprüfungen; reale Kubuntu-Gesamtabnahme ausschließlich zum Schluss. | Keine offenen releaseblockierenden Befunde; Nutzer-Endabnahme erst nach Vollständigkeit. |
+
+**Abhängigkeitskette:** `Sicherer Bestand` **BLOCKS** `Objektidentität` → **BLOCKS** `Beziehungen` → **REQUIRES** `Router und globale Suche` → **REQUIRES** `medienhaltige Projektsicherung` → **REQUIRES** `vollständige Release-Abnahme`. Einzelne unabhängige Reparaturen dürfen in eigenen PRs stattfinden; gemeinsamer Schreibscope bleibt durch `Single Writer` geschützt.
+
+**Abgrenzung zu bestehenden Aufträgen:**
+- `PV-AUD-02` **DUPLICATE/REQUIRES** PR #121: Patch nicht ein zweites Mal implementieren; stattdessen Prüf-/Mergezustand klären.
+- `PV-AUD-21` **REQUIRES** Issue #92: aktuelle `isValid`-Absicherung durch passenden Regressionstest belegen, bevor das Issue geschlossen wird.
+- `PV-AUD-24` **SUPERSEDES** die frühere Aussage, Navigation liege nur in PR #123: **PR #123 ist in `main` integriert**; PR #124 betrifft nur die darüber hinausgehende Kartenverstellung und bleibt bis zur Prüfung getrennt.
+- `PV-AUD-19` **REQUIRES** Vergleich mit PR-/main-Stand: Alte Textbehauptungen über fehlende Übergänge/Warteschlangen nicht ungeprüft als aktuelle Wahrheit behandeln.
+- `PV-AUD-18` **BLOCKS** freie dynamische Modulbelegung: erst stabile Modulansprache, dann 3×3 statt zusätzlicher fester Fensterlogik.
+- `PV-AUD-29` **REQUIRES** `03/07/09/14/15`: Projektarchiv erst, wenn IDs, Beziehungen und Medienauflösung definiert sind.
+
+### G. Risikobasierte Ende-zu-Ende- und Negativprüfungen
+
+| Test | Eingriff/Ablauf | Erwartetes nachweisbares Ergebnis | Befunde |
+|---|---|---|---|
+| UAT-01 | Song umbenennen | Verknüpfte Audio-, Cover-, Aufgaben- und Projekt-IDs bleiben gültig. | 03,07 |
+| UAT-02 | Figur umbenennen | Referenzen bleiben gültig; historische Song-/Buchtexte bleiben wortgleich. | 08 |
+| UAT-03 | Aufgabe mit Termin ändern | Kalender und Aufgabenansicht zeigen keine widersprüchlichen Einträge. | 04–06 |
+| UAT-04 | Persönliche Sicherung | Kurznotizen, Texte und Archivdaten vollständig nach Restore vorhanden. | 01 |
+| UAT-05 | Projekt medienhaltig exportieren | Unabhängige Wiederherstellung auf anderem Pfad mit Prüfsummen. | 14–15,29 |
+| UAT-06 | Videoquelle fehlt | Keine irrtümliche Erfolgsmarkierung oder Überschreibung, verständlicher Fehler. | 14,22 |
+| UAT-07 | Videoquelle während Berechnung wechselt | Fehler/Warnung, kein stillschweigend falsches Ergebnis. | 14,22 |
+| UAT-08 | Modul ausschalten | Menü, Tastenkürzel, Beschreibung und Laufzeitentscheidung stimmen überein. | 16 |
+| UAT-09 | Beschädigten Import testen | Ursprüngliche Daten und Dateien unverändert; eindeutige Fehlerkennung. | 13,17,29 |
+| UAT-10 | Dashboard mit ausstehenden Timern schließen | Kein Qt-Lebenszyklusfehler; Zoom/Navigation weiter korrekt. | 21 |
+| UAT-11 | Song/Figur/Wiki über Suche finden | Öffnet richtigen Datensatz im zuständigen Editor; kein blindes Dateiausführen. | 10–11,18 |
+| UAT-12 | Altdaten wiederherstellen | Kein stilles Überschreiben; Altformate bleiben lesbar. | 13,29–30 |
+| UAT-13 | Großer Zoom/kleiner Monitor | Kernbedienung unter 100/125/150/175/200 % erreichbar. | 20,23–25 |
+| UAT-14 | Update mit Startfehler | Automatischer Rückfall auf geprüften alten Stand, Nutzerdaten unverändert. | 30 |
+| UAT-15 | Fehlerhaftes Ereignislog | Fehler in Diagnose sichtbar; Logbytes erhalten, Folgeereignis sicher protokollierbar. | 02 |
+| UAT-16 | Kreativprojekt importieren | ID-Neuzuordnung erhält Beziehungen zwischen Werken, Quellen und Medien. | 03,09,29 |
+
+**Pflichtnachweis je Umsetzung:** Scope und ursprünglicher Commit-SHA, referenzierte Befund-ID, betroffene Funktionen/Dateien, sichere Rückfallstrategie, passende positive und negative Tests, Veränderung an Altdaten nur in isolierten Prüfordnern, GitHub-PR-Prüfung auf exakt dem geprüften HEAD, anschließend main-Prüfung nach Merge. Nicht ausführbare Prüfungen **nicht** als erfolgreich ausgeben. UI-Shadow-Befunde getrennt vom grünen Infrastruktur-Job beurteilen. Kein manuelles Nutzer- oder Kubuntu-Zwischengate während des Modulaufbaus.
+
+### H. Kontinuität und Arbeitsübergabe
+
+- **Frozen Current Plan:** Bestehenden Modulplan und laufende Implementierungen nicht durch dieses Audit ersetzen. Neue Anforderungen sind bis zur priorisierten Freigabe ausschließlich `Next Queue`.
+- **Recovery Key:** Audit `2026-10-22`, Repo `provoware/TOOL_2026_Multi`, geprüfter Ausgangs-HEAD `536902e95c188f9082462f980f022e9fc5a9965f`, einzig beabsichtigter Schreibscope dieses Dokumentationsauftrags `TODO.md`, keine Laufzeitdatei geändert, keine Tests als selbst ausgeführt behauptet. Nächster erlaubter Schritt nach Übernahme: `PV-AUD-01` auf Basis aktueller Datenpfade in eigenem Patch untersuchen und isolierte Sicherungs-/Restore-Tests definieren; PR #121 unabhängig kontrollieren.
+- **Traceability:** Jede Umsetzung verlinkt `PV-AUD-ID → konkrete Änderung → Test → GitHub-Evidenz → Abschlussstatus`. Gleiche Anforderungen aus historischen TODO-Abschnitten dürfen nicht doppelt gezählt werden.
+- **Begrenzung:** Sicherheits- und Datenbewahrungsaufgaben zuerst; keine automatische Plugin-Freigabe, keine Migration produktiver Altdaten, keine automatische Veröffentlichung, keine vorgezogene visuelle Nutzerabnahme.
+- **Dokumentationsgenauigkeit:** Die vorgenannten Befunde sind ein Entwicklungsauftrag aus Quellcodeanalyse, keine Aussage, dass alle zukünftigen Funktionen bereits erstellt oder die reale Kubuntu-Abnahme durchgeführt wurden.
+
+<!-- PROVOWARE_2026_AUDIT_2026-10-22_END -->
