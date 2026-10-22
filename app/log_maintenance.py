@@ -45,7 +45,9 @@ def quarantine_corrupt_jsonl(path: Path, quarantine_dir: Path) -> int:
         return 0
     try:
         lines = path.read_text(encoding="utf-8").splitlines()
-    except OSError:
+    except (OSError, UnicodeError):
+        # Nicht lesbare Bytes niemals durch eine vermeintliche Reparatur überschreiben.
+        # Das Original bleibt für eine spätere, bewusste Wiederherstellung erhalten.
         return 0
     valid: list[str] = []
     corrupt: list[dict[str, object]] = []

@@ -58,7 +58,8 @@ class EventLogger:
         try:
             quarantine_corrupt_jsonl(self.jsonl_path, self.quarantine_dir)
             events = [json.loads(line) for line in self.jsonl_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-        except (OSError, json.JSONDecodeError):
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            # Beschädigte Textbytes dürfen die Fehleranzeige nicht selbst abstürzen lassen.
             return []
         return events[-limit:][::-1]
 
