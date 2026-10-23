@@ -30,3 +30,10 @@ Jede Iteration dokumentiert mindestens eine erfüllte Abschlussbedingung, einen 
 
 ## Einführung
 Zunächst beobachtend mit echten Aufgaben und vorhandenen Prüfungen testen. Erst nach nachgewiesener Eignung als verpflichtende automatische Prüfung aktivieren; bestehende laufende Entwicklungszweige und Pull Requests nicht pauschal blockieren.
+
+## Verbindliche Zweistufigkeit und Freigabegrenze
+**Stufe eins – Dokumentation und Planung:** Ist-Zustand, Ziele, Risiken, Abhängigkeiten, Alternativen, betroffene Dateien und erwartete Prüfnachweise festhalten. Keine Produktcodeänderung und keine automatische Freigabe durch bloße Planung. Laufende eingefrorene Pläne nicht still ändern.
+
+**Stufe zwei – Umsetzung und Projektvalidierung:** Erst nach der nach den vorhandenen Projektregeln erforderlichen Planfreigabe und Prüfung von Ausgangsstand, Zuständigkeit, Schreibsperre und Änderungsumfang Produktcode ändern. Danach Tests, Regression, Sicherheits- und Release-Prüfungen am tatsächlichen Commit durchführen. Ein dokumentierter Plan ist niemals ein Implementierungs- oder Testnachweis.
+
+Bei fehlender Freigabe oder widersprüchlichen Voraussetzungen bei Stufe eins bleiben und eine gezielte Nutzerfrage stellen. Keine Umgehung bestehender Schutzschranken, kein zweiter Schreiber für denselben Bereich und kein automatisches Zusammenführen offener Pull Requests.
