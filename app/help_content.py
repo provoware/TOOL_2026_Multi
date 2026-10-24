@@ -162,15 +162,15 @@ HELP_TOPICS: tuple[HelpTopic, ...] = (
     HelpTopic(
         "dateisuche", "Dateien und Texte suchen",
         ("dateisuche", "textsuche", "treffer", "suchtext"),
-        "Die zentrale Suche findet Namen und Textstellen in gespeicherten Dateien unter daten/. Sie verändert keine Dateien.",
+        "Die zentrale Suche findet Dateinamen und Textstellen im ausgewählten lokalen Ordner einschließlich Unterordnern. Sie verändert keine Dateien.",
         (
             "Öffne Dateisuche oben im Dashboard oder mit Strg+Umschalt+F. Auch das Suchfeld im Kopf öffnet diese Suche.",
-            "Gib einen Suchtext ein und wähle Dateinamen, Textinhalte oder beides. Groß- und Kleinschreibung spielen keine Rolle.",
-            "Wähle Suchen. Während des Suchens kannst du jederzeit Abbrechen wählen; bisherige Treffer bleiben erhalten.",
+            "Wähle zuerst mit Ordner auswählen den lokalen Suchordner oder gib seinen absoluten Pfad ein. Gib einen Suchtext ein und wähle Dateinamen, Textinhalte oder beides.",
+            "Wähle Suchen. Bestätige den Zugriff auf einen anderen Suchordner ausdrücklich. Bei fehlenden Leserechten Zugriff im Betriebssystem freigeben lassen und die Suche erneut bestätigen. Abbrechen erhält bisherige Treffer.",
             "Markiere einen Treffer. Datei, Zeile und Textausschnitt erscheinen darunter als kopierbarer Klartext.",
             "Bei Suchgrenzen oder ausgelassenen Dateien die Meldung beachten und den Suchtext genauer eingrenzen.",
         ),
-        note="Textinhalte: UTF-8-Dateien mit Endung txt, md, json oder csv; höchstens 1 MiB je Datei, 32 MiB gelesener Inhalt, 5000 Einträge, 200 Treffer und 10 Sekunden zwischen Suchschritten. Verknüpfungen, versteckte Dateien/Ordner und ältere Versionen werden nicht durchsucht. Ungespeicherte Texte sind nicht enthalten.",
+        note="Textinhalte: unterstützte UTF-8-Klartextdateien wie txt, md, json, csv, log und Quelltexte; höchstens 1 MiB je Datei, 32 MiB gelesener Inhalt, 5000 Einträge, 200 Treffer und 10 Sekunden zwischen Suchschritten. Verknüpfungen und versteckte Dateien/Ordner einschließlich versteckter Versionen werden nicht durchsucht. PDF-/Office-Inhalte werden nicht ausgelesen. Ungespeicherte Texte sind nicht enthalten.",
     ),
 )
 

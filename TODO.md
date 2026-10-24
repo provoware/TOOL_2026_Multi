@@ -863,3 +863,8 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 **Bestehende Anforderungen bleiben führend:** Notizsicherung `PV-AUD-01`, persönliche Aufgaben `05`, Suchöffnung/-umfang `10/11/18`, Medien-/Projektpaket `14/15/29`, Inhaltsbeziehungen `03/07/08/09/12/22/28`, Dokumentationsstatus `19`, Darstellung/Einstellungen `20/23/24/25/26`. Diese Punkte sind Beziehungen vom Typ **DUPLICATE** zum bestehenden Auftrag und werden nicht nochmals als neue Aufgaben gezählt.
 
 ### Ergänzende UX-Aufträge
+
+
+## Präzisierter Suchauftrag – lokales Dateisystem (24.10.2026)
+
+- [ ] **PV-SEARCH-01 [P1]** – Datei-/Textinhaltssuche mit frei wählbarem lokalen Suchpfad, ausdrücklicher Bestätigung zusätzlicher Suchbereiche und transparenter Behandlung fehlender OS-Leserechte. **Status:** Implementierungskandidat; lokale und GitHub-Nachweise im zugehörigen PR führen. **Abnahme:** Auswahl/Eingabe externer Ordner, Ablehnung ohne Scan oder Trefferverlust, Pfadwechsel mit erneuter Zustimmung, reine Lesezugriffe, keine Linkverfolgung, erhaltene Suchgrenzen und sichtbar unvollständige Ergebnisse bei Berechtigungsfehlern. Keine automatische Root-Suche oder Rechteänderung. **SUPERSEDES:** `daten/` als ausschließliches Produktziel; **REQUIRES:** bestehende Suchschutzverträge; ergänzt `PV-AUD-11`. `PV-AUD-10/18` bleiben für fachliche Suchtrefferöffnung führend und gelten nur für dafür unterstützte Datensätze. Details: [Dateisuche](docs/DATEISUCHE.md).

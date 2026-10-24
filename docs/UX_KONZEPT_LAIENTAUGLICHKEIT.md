@@ -251,3 +251,10 @@ Am 24.10.2026 lokal ausgeführt:
 - `git diff --check`: ohne Befund nach Entfernung einer überzähligen Leerzeile.
 
 Dies sind Dokumentationsprüfungen. Vollständige Logik-/GUI-, Wayland-, Restore- und Releaseprüfungen wurden in diesem Dokumentationsschritt nicht lokal ausgeführt. Vor einem Merge bleibt die nach Repositoryregeln erforderliche vollständige GitHub-Prüfung maßgeblich. Ein PR allein bedeutet keine bestandene CI und kein Release.
+
+
+## 9. Anforderungskorrektur: lokales Dateisystem (24.10.2026)
+
+Der Nutzer präzisiert den Suchauftrag: Dateinamen- und Textinhaltssuche beziehen sich auf das lokale Dateisystem. Ein frei wählbarer Pfad und eine ausdrückliche Bestätigung zusätzlicher Zugriffe sind erforderlich. Die frühere Beschränkung auf `daten/` war eine Implementierungsgrenze und kein gewünschtes Produktziel. Die Bestandsbeobachtungen in Abschnitt 4.7 beziehen sich weiterhin auf den dort angegebenen ursprünglichen SHA; die Sollreichweite wird durch diese Präzisierung ersetzt (**SUPERSEDES** nur die bisherige Annahme eines ausschließlichen Datenordnerscopes).
+
+Der neue Implementierungskandidat ergänzt einen sichtbaren Suchordner, native Ordnerauswahl, Bestätigung vor Suche außerhalb des Standardbereichs und ausdrückliche Kennzeichnung fehlender Leserechte. Er verändert keine Linux-Dateirechte. Systemseitige Ordnerfreigaben bleiben von Provowares Umfangsbestätigung getrennt. Grenzfälle und Bedienung: [Dateisuche](DATEISUCHE.md). Führender Zusatzauftrag `PV-SEARCH-01` in TODO; bestehende `PV-AUD-10/11/18` bleiben für fachliche Treffer und Öffnen zuständig. Externe Treffer sind Dateien; sie müssen nicht zu einem Provoware-Facheditor gehören.

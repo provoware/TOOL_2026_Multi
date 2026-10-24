@@ -3,7 +3,8 @@ os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
 import tempfile
 from pathlib import Path
 import unittest
-from PySide6.QtWidgets import QApplication
+from unittest.mock import patch
+from PySide6.QtWidgets import QApplication, QMessageBox
 from app.search_window import SearchWindow
 from app.ui import Dashboard
 from app.main import configure_dashboard_presentation
@@ -73,11 +74,12 @@ class SearchGuiTests(unittest.TestCase):
         self.assertFalse(self.window.timer.isActive())
         self.assertIn('Suchtext', self.window.status.text())
         (self.root / 'linked').symlink_to(self.root / 'daten', target_is_directory=True)
-        self.window.root = self.root / 'nonexistent'
+        self.window.path_entry.setText(str(self.root / 'nonexistent'))
+        self.window.approved_path = self.root / 'nonexistent'
         self.window.query.setText('Welt')
         self.window.start()
         self.finish_search()
-        self.assertIn('kein Datenordner', self.window.status.text())
+        self.assertIn('Suchordner nicht gefunden', self.window.status.text())
 
     def test_controls_stay_separate_at_laptop_sizes_and_high_zoom(self):
         for zoom in (100, 150, 200):
@@ -113,3 +115,87 @@ class SearchGuiTests(unittest.TestCase):
                      if button.objectName() == 'tileButton' and 'Dateisuche' in button.text())
         self.assertFalse(bool(ready.property('planned')))
         self.assertTrue(ready.property('ready'))
+
+    def test_external_scope_requires_confirmation_and_denial_preserves_results(self):
+        self.window.query.setText('Welt')
+        self.window.start()
+        self.finish_search()
+        external = self.root / 'Dokumente'
+        external.mkdir()
+        (external / 'extern.txt').write_text('externer Text')
+        self.window.path_entry.setText(str(external))
+        self.window.query.setText('externer')
+        with patch('app.search_window.SearchWindow._ask_access', return_value=QMessageBox.No) as question:
+            with patch('app.data_search.os.fwalk') as walk:
+                self.window.start()
+                walk.assert_not_called()
+            question.assert_called_once()
+        self.assertEqual(self.window.table.rowCount(), 1)
+        self.assertIsNone(self.window.approved_path)
+        with patch('app.search_window.SearchWindow._ask_access', return_value=QMessageBox.Yes):
+            self.window.start()
+        self.finish_search()
+        self.assertEqual(self.window.table.item(0, 0).text(), 'extern.txt')
+        self.assertIn(str(external), self.window.status.text())
+        with patch('app.search_window.SearchWindow._ask_access') as question:
+            self.window.start()
+            self.finish_search()
+            question.assert_not_called()
+        self.window.path_entry.setText(str(self.root))
+        self.assertIsNone(self.window.approved_path)
+
+    def test_folder_picker_cancel_and_selected_path_do_not_start_search(self):
+        previous = self.window.path_entry.text()
+        with patch('app.search_window.QFileDialog.getExistingDirectory', return_value=''):
+            self.window.choose_folder()
+        self.assertEqual(self.window.path_entry.text(), previous)
+        with patch('app.search_window.QFileDialog.getExistingDirectory', return_value=str(self.root)):
+            self.window.choose_folder()
+        self.assertEqual(self.window.path_entry.text(), str(self.root))
+        self.assertFalse(self.window.timer.isActive())
+
+    def test_permission_failure_explains_partial_search(self):
+        def denied_walk(*args, **kwargs):
+            kwargs['onerror'](PermissionError('denied'))
+            return iter(())
+        self.window.query.setText('Welt')
+        with patch('app.data_search.os.fwalk', side_effect=denied_walk), \
+                patch('app.search_window.SearchWindow._ask_access', return_value=QMessageBox.No) as request:
+            self.window.start()
+            self.finish_search()
+        request.assert_called_once()
+        self.assertIsNone(self.window.approved_path)
+        self.assertIn('Leseberechtigung', self.window.status.text())
+        self.assertNotIn('Suche abgeschlossen', self.window.status.text())
+        self.assertTrue(self.window.path_entry.isEnabled())
+
+    def test_empty_or_relative_folder_is_not_scanned(self):
+        self.window.query.setText('Welt')
+        for path in ('', 'relative/path'):
+            self.window.path_entry.setText(path)
+            with patch('app.data_search.os.fwalk') as walk:
+                self.window.start()
+                walk.assert_not_called()
+            self.assertFalse(self.window.timer.isActive())
+            self.assertIn('absoluten Pfad', self.window.status.text())
+
+    def test_permission_prompt_opens_native_picker_only_after_consent(self):
+        self.window.session = __import__('app.data_search', fromlist=['DataSearch']).DataSearch(self.root, 'Welt')
+        self.window.session.record_denied(self.root / 'geschützt')
+        with patch('app.search_window.SearchWindow._ask_access', return_value=QMessageBox.No), \
+                patch('app.search_window.QFileDialog.getExistingDirectory') as picker:
+            self.window._request_folder_access()
+            picker.assert_not_called()
+        with patch('app.search_window.SearchWindow._ask_access', return_value=QMessageBox.Yes), \
+                patch('app.search_window.QFileDialog.getExistingDirectory', return_value='') as picker:
+            self.window._request_folder_access()
+            picker.assert_called_once()
+        self.assertFalse(self.window.timer.isActive())
+
+    def test_access_dialog_treats_untrusted_folder_names_as_plain_text(self):
+        from PySide6.QtCore import Qt
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.No):
+            self.window._ask_access('Ordnerzugriff', '<b>Ordner</b>')
+        dialog = self.window.findChild(QMessageBox)
+        self.assertEqual(dialog.textFormat(), Qt.PlainText)
+        self.assertEqual(dialog.defaultButton(), dialog.button(QMessageBox.No))

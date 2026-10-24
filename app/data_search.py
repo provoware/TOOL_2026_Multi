@@ -7,7 +7,8 @@ from pathlib import Path
 import stat
 from time import monotonic
 
-TEXT_TYPES = {'.txt', '.md', '.json', '.csv'}
+TEXT_TYPES = {'.txt', '.md', '.json', '.csv', '.log', '.ini', '.cfg', '.yaml', '.yml',
+              '.toml', '.xml', '.html', '.css', '.js', '.ts', '.py', '.sh', '.rst', '.tex'}
 MAX_FILE = 1024 * 1024
 MAX_BYTES = 32 * 1024 * 1024
 MAX_ENTRIES = 5000
@@ -21,19 +22,26 @@ class SearchResult:
     scanned: int = 0
     skipped: int = 0
     bytes_read: int = 0
+    denied: int = 0
+    denied_paths: list = field(default_factory=list)
     reason: str = 'running'
 
 
 class DataSearch:
-    def __init__(self, root, query, *, names=True, contents=True, cancelled=lambda: False):
+    def __init__(self, root, query, *, names=True, contents=True, cancelled=lambda: False, search_path=None):
         if not isinstance(query, str) or not query.strip() or len(query) > 200:
             raise ValueError('Bitte einen Suchtext mit 1 bis 200 Zeichen eingeben.')
         if not names and not contents:
             raise ValueError('Dateinamen oder Textinhalte auswählen.')
-        self.data = Path(root) / 'daten'
+        self.data = Path(search_path).expanduser().absolute() if search_path is not None else Path(root) / 'daten'
         self.query = query.strip().casefold()
         self.names, self.contents, self.cancelled = names, contents, cancelled
         self.result = SearchResult()
+
+    def record_denied(self, path):
+        self.result.denied += 1
+        if len(self.result.denied_paths) < 10:
+            self.result.denied_paths.append(str(path))
 
     def _stop(self, started):
         if self.cancelled():
@@ -72,6 +80,9 @@ class DataSearch:
                         hits.append({'path': relative, 'line': number, 'excerpt': line[:500]})
                     if len(hits) + len(self.result.hits) >= MAX_HITS:
                         break
+            except PermissionError:
+                self.record_denied(self.data / relative)
+                self.result.skipped += 1
             except (OSError, UnicodeError):
                 self.result.skipped += 1
         return hits
@@ -79,12 +90,22 @@ class DataSearch:
     def batches(self):
         started = monotonic()
         if self.data.is_symlink():
-            raise ValueError('Der Datenordner ist eine Verknüpfung. Es wurden keine externen Ordner durchsucht.')
-        if not self.data.exists():
+            raise ValueError('Der Suchordner ist eine Verknüpfung. Bitte den ursprünglichen Ordner auswählen.')
+        try:
+            mode = self.data.stat().st_mode
+            if not stat.S_ISDIR(mode):
+                raise ValueError('Bitte einen Ordner als Suchpfad auswählen, keine einzelne Datei.')
+        except FileNotFoundError:
             self.result.reason = 'missing'
             return
-        def inaccessible(_error):
+        except PermissionError:
+            self.record_denied(self.data)
+            self.result.reason = 'permission'
+            return
+        def inaccessible(error):
             self.result.skipped += 1
+            if isinstance(error, PermissionError):
+                self.record_denied(error.filename or self.data)
         # fwalk hält Verzeichnisdeskriptoren; openat + NOFOLLOW schützt auch bei
         # einem zwischen Prüfung und Lesen ausgetauschten Dateilink.
         for directory, dirs, files, directory_fd in os.fwalk(self.data, follow_symlinks=False, onerror=inaccessible):
@@ -107,6 +128,10 @@ class DataSearch:
                         continue
                     relative = (Path(directory) / name).relative_to(self.data).as_posix()
                     hits = self._file_hits(relative, name, directory_fd)
+                except PermissionError:
+                    self.record_denied(Path(directory) / name)
+                    self.result.skipped += 1
+                    hits = []
                 except OSError:
                     self.result.skipped += 1
                     hits = []
@@ -116,4 +141,4 @@ class DataSearch:
                 if len(self.result.hits) >= MAX_HITS or self.result.bytes_read > MAX_BYTES:
                     self.result.reason = 'limit'
                     return
-        self.result.reason = 'done'
+        self.result.reason = 'permission' if self.result.denied else 'done'
