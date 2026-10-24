@@ -690,6 +690,23 @@ class Dashboard(QWidget):
         preserve_legacy_notes(self.project_root, approved=True)
         return True
 
+    def _record_note_failure(self, error: Exception) -> None:
+        record = getattr(self.logger, 'record', None)
+        if not callable(record):
+            return
+        try:
+            record(severity='ERROR', area='PROJEKT_NOTIZ',
+                   summary=module_text('notes_failed', 'Notiz nicht gespeichert. Eingabe bleibt erhalten.'),
+                   cause=str(error),
+                   protection=module_text('notes_error_protection',
+                       'Aktuelle Eingabe und ursprüngliche Altdatei wurden nicht verworfen.'),
+                   next_step=module_text('notes_error_next',
+                       'Unter F1 die Fehlermeldung prüfen: Schreibrechte, freien Speicher, Notizgröße und mögliche Dateikonflikte kontrollieren.'),
+                   exception=error)
+        except Exception:
+            # Eine defekte Diagnoseablage darf die noch offene Eingabe nicht gefährden.
+            return
+
     def save_quick_info(self) -> None:
         if not self.quick_entry.text().strip():
             self.quick_status.setText(module_text('notes_empty', 'Bitte zuerst eine kurze Projekt-Notiz eingeben.'))
@@ -699,9 +716,10 @@ class Dashboard(QWidget):
             if legacy_included is None:
                 return
             append_developer_info(self.project_root, self.quick_entry.text())
-        except Exception:
+        except Exception as error:
             self.quick_status.setText(module_text('notes_failed',
                 'Notiz nicht gespeichert. Eingabe bleibt erhalten.'))
+            self._record_note_failure(error)
             return
         self.quick_entry.clear()
         message = module_text('notes_saved', 'Projekt-Notiz im Datenordner gespeichert.')
