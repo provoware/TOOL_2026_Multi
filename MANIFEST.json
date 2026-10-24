@@ -2045,5 +2045,16 @@
     "serial_jobs": true,
     "non_overwriting_output": true,
     "transitions_implemented": false
-  }
+  },
+  "documentation_reviews": [
+    {
+      "id": "UX-2026-10-24",
+      "document": "docs/UX_KONZEPT_LAIENTAUGLICHKEIT.md",
+      "baseline_sha": "5c143fe87a1890017829580987b3c1776f184c40",
+      "status": "ANALYSE_UND_PLANUNG",
+      "new_ux_tasks": 10,
+      "planned_ux_scenarios": 12,
+      "runtime_changed": false
+    }
+  ]
 }

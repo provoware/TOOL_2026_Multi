@@ -840,3 +840,26 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 - **Dokumentationsgenauigkeit:** Die vorgenannten Befunde sind ein Entwicklungsauftrag aus Quellcodeanalyse, keine Aussage, dass alle zukünftigen Funktionen bereits erstellt oder die reale Kubuntu-Abnahme durchgeführt wurden.
 
 <!-- PROVOWARE_2026_AUDIT_2026-10-22_END -->
+- [ ] **PV-UX-01 [P1]** – Tätigkeitsorientierten Einstieg und hilfreiche Leerzustände gestalten. **Abnahme:** Erster Inhalt lässt sich ohne Erklärung erstellen, speichern und wieder öffnen. **Bezug:** ui.py; Buch-, Text- und Song-Einstiege.
+- [ ] **PV-UX-02 [P1]** – Beschrifteten Zugang „Alle Werkzeuge“ und nachvollziehbare Gruppen anbieten. **Abnahme:** Alle fertigen Werkzeuge bleiben per Tastatur und bei Zoom erreichbar; Status stimmt mit Laufzeit überein. **Bezug:** REQUIRES PV-AUD-16/18.
+- [ ] **PV-UX-03 [P1]** – Einheitliche Speicherzustände und sichtbare Grenzen unbetitelter Entwürfe definieren. **Abnahme:** Bearbeitung, automatisches Speichern, Fehler und Schließen zeigen den tatsächlichen Zustand. **Bezug:** song_editor.py, text_editor_window.py, book_window.py.
+- [ ] **PV-UX-04 [P1]** – Ja/Nein-Rückfragen durch eindeutige aktionsbezogene Entscheidungen ersetzen. **Abnahme:** Speichern/Verwerfen/Weiterarbeiten haben bei Wechsel und Schließen die angekündigte Wirkung; Fehler verhindert Verlassen. **Bezug:** module_widgets.py, module_controls_window.py, text_editor_window.py.
+- [ ] **PV-UX-05 [P2]** – Letzte Arbeiten über unterstützte Inhaltstypen hinweg anzeigen. **Abnahme:** Typ und Öffnen-Aktion stimmen; fehlende und umbenannte Ziele werden kontrolliert behandelt. **Bezug:** REQUIRES sichere Datensatzauflösung aus PV-AUD-18.
+- [ ] **PV-UX-06 [P1]** – Grafischen Ablauf für persönliche Sicherung und isolierte Wiederherstellung anbieten. **Abnahme:** Ziel, Umfang, Ausschlüsse, Abbruch und Ergebnis verständlich; vorhandene Ziele werden nicht überschrieben. **Bezug:** REQUIRES PV-AUD-01; Medienpaket bleibt PV-AUD-15/29.
+- [ ] **PV-UX-07 [P2]** – Sichtbare Begriffe, Hilfe und barrierefreie Namen gemeinsam vereinfachen. **Abnahme:** Bezeichnungen bleiben eindeutig; Kontenübersicht erzeugt keine Passworttresor-Erwartung; zentrale Texte verwenden. **Bezug:** texte/registry.json und betroffene Direkttexte.
+- [ ] **PV-UX-08 [P1]** – Kurzen aktuellen Alltagseinstieg von Entwicklerprüfung und Systemabnahme trennen. **Abnahme:** Beschriebene Wege entsprechen aktuellem Code; zentrale Suche korrekt beschrieben; Historie erhalten. **Bezug:** REQUIRES PV-AUD-19; ergänzt dessen Statuspflege.
+- [ ] **PV-UX-09 [P1]** – Fehlermeldungen mit konkreten sicheren Folgeaktionen und wahrheitsgetreuer Schutzwirkung ausstatten. **Abnahme:** Wiederholter Autosave-Fehler erzeugt keinen falschen Erfolg und keine unkontrollierte Dialogfolge. **Bezug:** Moduloberflächen und Speicherwege.
+- [ ] **PV-UX-10 [P1]** – Aufgabenbezogene Tastatur-, Zoom- und Screenreader-Prüfung vorbereiten. **Abnahme:** Kernabläufe gemäß UX-UAT-09/10 tatsächlich geprüft; offene Nachweise sichtbar; Gesamtabnahme erst am Ende. **Bezug:** REQUIRES PV-AUD-20/25; kein neues manuelles Zwischengate.
+
+**Zählregel:** Zehn neue UX-Aufträge, alle offen; keine bestehenden PV-AUD-Aufträge doppelt zählen. Die Dokumentation des Konzepts bedeutet keine fachliche Erledigung.
+
+**Empfehlung:** Zuerst PV-AUD-01 am aktuellen HEAD mit isolierten Sicherungs-/Restore-Fällen bearbeiten; anschließend Einstieg und Werkzeugnavigation. Dies ist eine Folgeempfehlung, keine Umpriorisierung laufender freigegebener Arbeit. Zuordnung und zwölf geplante UX-Abnahmeszenarien stehen im Konzept.
+
+
+## UX-Folgeplanung – Nutzerfreundlichkeit und Laientauglichkeit (24.10.2026)
+
+**Konzept:** [UX-Analyse und Verbesserungskonzept](docs/UX_KONZEPT_LAIENTAUGLICHKEIT.md). Status: dokumentiert, Produktmaßnahmen offen. Der eingefrorene Modulplan bleibt erhalten. Ausgangsstand: `5c143fe87a1890017829580987b3c1776f184c40`.
+
+**Bestehende Anforderungen bleiben führend:** Notizsicherung `PV-AUD-01`, persönliche Aufgaben `05`, Suchöffnung/-umfang `10/11/18`, Medien-/Projektpaket `14/15/29`, Inhaltsbeziehungen `03/07/08/09/12/22/28`, Dokumentationsstatus `19`, Darstellung/Einstellungen `20/23/24/25/26`. Diese Punkte sind Beziehungen vom Typ **DUPLICATE** zum bestehenden Auftrag und werden nicht nochmals als neue Aufgaben gezählt.
+
+### Ergänzende UX-Aufträge
