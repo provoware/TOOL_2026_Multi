@@ -611,3 +611,9 @@ Im Dashboard oben **Dateisuche** wählen oder **Strg+Umschalt+F** drücken. Übe
 Das Symbol oben links öffnet ein Modulmenü. **Ideenarchiv** (Strg+Alt+I) sammelt Fragmente, Schlagworte und Herkunft. Ziehe ein gespeichertes Fragment als Kopie in die Komposition; daraus lässt sich ein neuer Text speichern, ohne die Ideen zu löschen. **Accountmanager** (Strg+Alt+A) sammelt Kontometadaten und Gruppen. Er ist kein verschlüsselter Passworttresor: keine echten Passwörter oder Tokens eingeben. [Bedienung und Datenschutz](docs/IDEEN_UND_KONTEN.md).
 
 Im Texteditor helfen **Strukturfarben** und die Gliederung bei Überschriften und Abschnitten. Sie verändern keine gespeicherten Textzeichen. [Details](docs/STARTMESSUNG_UND_STRUKTUR.md).
+
+## Den Speicherzustand erkennen
+
+Song-, Text- und Bucheditor zeigen eine eigene Zeile **Speicherzustand**. **Gespeichert** gilt für den aktuell sichtbaren Stand. Sobald du etwas änderst, erscheint **Nicht gespeichert**. Nach einem Speicherfehler bleiben die Eingaben im Fenster; prüfe freien Speicher und Dateirechte und versuche es mit `Strg+S` erneut. Ein Exporthinweis bestätigt nur die Ausgabedatei und ersetzt diese Anzeige nicht.
+
+Text- und Buchentwürfe ohne Titel werden nicht automatisch gespeichert: Gib einen Titel ein und speichere ausdrücklich. Betitelte Texte speichern zusätzlich alle fünf Minuten, Bücher jede Minute. Songs behalten ihre bisherige automatische Speicherung alle fünf Minuten, beim Verlassen eines Schreib-/Angabefeldes und beim Schließen; ohne eigenen Titel unter **Unbenannter Song**. Wähle deshalb früh einen eindeutigen eigenen Songtitel. Die automatische Speicherung ist keine zusätzliche Datensicherung.

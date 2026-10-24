@@ -917,3 +917,13 @@ Produktcode-Prüfstand `bbadafdda41516a97378ce07c281475692090faf`: [vollständig
 Der erste GitHub-Lauf #1118 meldete einen Schriftbreitenbefund (254 benötigte gegenüber 250 verfügbaren Pixeln). Die Formularaktionen heißen deshalb kurz und konsistent „Aufgabe planen“ und „Termin anlegen“. Schriftgröße und Prüfgrenzen unverändert. Zusätzlich zeigte der Lauf einen verzögerten Laptop-Layoutaufruf nach Zerstörung des Dashboards. Der Callback prüft nun die Gültigkeit des Qt-Objekts, bevor er auf das Fenster zugreift; ein gezielter Rückfalltest führt den wartenden Aufruf nach tatsächlicher Fensterzerstörung aus. Dies ergänzt den Lebenszyklus-Prüfbedarf PV-AUD-21, schließt dessen weitere Fälle aber nicht pauschal ab. Vollständiger neuer Prüflauf auf dem korrigierten HEAD erforderlich.
 
 **Abschlussnachweis PV-UX-01:** Technische Erstinhalt-Abnahme automatisiert erfüllt; reale Erstnutzerstudie bleibt Bestandteil der abschließenden Gesamtbedienprüfung. UX-Liste: 1/10 technisch erledigt, 9 offen. Audit-Liste unverändert: 3/30 erledigt, 27 offen.
+
+## Bearbeitung PV-UX-03 – Speicherzustände (25.10.2026)
+
+**Status:** Implementierungskandidat auf Basis main `6e2aea66d400da5e8eabcc9d1adc57103d4ba673`. Separate snapshotbasierte Anzeige in Song-, Text- und Bucheditor. Unbetitelte Text-/Buchentwürfe ausdrücklich ohne Autosave; bestehender Song-Standardtitel und alle Speicherformate/-intervalle unverändert. Erfolg nur nach tatsächlichem Schreiben oder nachgewiesenem Laden; Änderungen, Strukturwechsel und Schreibfehler sichtbar. Fehler-Injektionen ausschließlich in temporären Testordnern.
+
+**Beobachteter Nebenfehler im Abnahmepfad:** Nach „Neuer Text“ behielt die Dateiliste ihren aktuellen Index; derselbe zuletzt gespeicherte Text ließ sich nicht erneut wählen. Auswahlindex jetzt unter Signalsperre zurückgesetzt; realer Speichern–Neu–Wiederöffnen-Ablauf geprüft. Vollständige GitHub-Evidenz vor Abschluss erforderlich.
+
+**Autorisierte Folgequeue:** PV-UX-04 eindeutige Schließdialoge → PV-UX-02 Werkzeugzugang → PV-UX-05 letzte Arbeiten → PV-AUD-10 unterstützte Suchtreffer direkt öffnen. Pro Auftrag eigener Scope und aktuelle Modulprüfung.
+
+**Lokaler Nachweis PV-UX-03:** 56 gezielte und angrenzende Prüfungen erfolgreich; vollständige produktive UI-Matrix 60 Fälle / 180 Fenster ohne Fehler/Warnungen. Separate Zustandsanzeige zusätzlich in allen drei Editoren bei 100/125/150/175/200 % auf Sichtbarkeit und ausreichende Texthöhe geprüft. Ältere Aktionsrückmeldungen sind eindeutig als „Letzter Speichervorgang“ bezeichnet.

@@ -1859,6 +1859,11 @@
       "path": "docs/ITERATION73.md",
       "release": true,
       "purpose": "Grenzen der vorbereiteten Schnellstartmigration und Testabdeckung"
+    },
+    {
+      "path": "app/save_state.py",
+      "release": true,
+      "purpose": "Gemeinsame belegte Speicherzustände der Schreibfenster"
     }
   ],
   "creative_modules": {
@@ -2090,5 +2095,16 @@
     "visible_text_draft_preserved": true,
     "closed_discarded_text_not_reused": true,
     "text_empty_state_guidance": true
+  },
+  "save_state_contract": {
+    "editors": [
+      "song",
+      "text",
+      "book"
+    ],
+    "snapshot_based": true,
+    "separate_from_action_feedback": true,
+    "title_required_for_text_and_book_autosave": true,
+    "storage_formats_and_intervals_unchanged": true
   }
 }

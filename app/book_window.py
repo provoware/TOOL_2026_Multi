@@ -10,7 +10,8 @@ from PySide6.QtWidgets import (
     QVBoxLayout, QWidget,
 )
 from app import book_store as store
-from app.module_archive import export_target
+from app.save_state import SaveState
+from app.module_archive import export_target, state_path
 from app.atomic_io import atomic_write_text
 from app.character_combo import refresh_character_combo
 from app.character_store import character_marker
@@ -30,6 +31,12 @@ class BookWindow(ModuleWindow):
         self._build()
         self._display_book()
         self.finish()
+        self.save_state = SaveState(self.snapshot, self.title.text,
+            t("save_policy_minute", "Automatisch jede Minute oder jetzt mit Strg+S."))
+        self.outer.addWidget(self.save_state)
+        for field in (self.title, self.audience, self.notes, self.chapter_title, self.content, self.chapter_notes):
+            field.textChanged.connect(self.save_state.update_state)
+        self.chapter_status.currentTextChanged.connect(self.save_state.update_state)
         self.refresh()
         self.autosave = QTimer(self)
         self.autosave.setInterval(60_000)
@@ -232,6 +239,8 @@ class BookWindow(ModuleWindow):
         for widget in (self.chapter_title, self.content, self.chapter_notes, self.chapter_status):
             widget.setEnabled(chapter is not None)
         self._count()
+        if hasattr(self, "save_state"):
+            self.save_state.update_state()
 
     def refresh(self, *_args):
         try:
@@ -254,6 +263,7 @@ class BookWindow(ModuleWindow):
         self.book = store.new_book(self.template.currentText())
         self._display_book()
         self.remember()
+        self.save_state.mark_new()
 
     def new_book(self):
         if not self.confirm_leave():
@@ -261,6 +271,7 @@ class BookWindow(ModuleWindow):
         self.book = store.new_book(self.template.currentText())
         self._display_book()
         self.remember()
+        self.save_state.mark_new()
         self.tabs.setCurrentIndex(1)
         self.title.setFocus()
 
@@ -278,18 +289,21 @@ class BookWindow(ModuleWindow):
             return
         self._display_book()
         self.remember()
+        self.save_state.mark_saved(state_path(self.root, self.module))
         self.tabs.setCurrentIndex(1)
 
     def save(self):
         try:
             self.book = store.put(self.root, self._draft())
         except Exception as error:
+            self.save_state.mark_failed()
             self.error(t('save_failed', 'Nicht gespeichert'), error)
             return False
         self.remember()
+        self.save_state.mark_saved(state_path(self.root, self.module))
         self._tree(self.current_chapter)
         self.refresh()
-        self.status.setText(t('saved', 'Sicher gespeichert.'))
+        self.status.setText(t("save_last", "Letzter Speichervorgang: {detail}").format(detail=self.book["title"]))
         return True
 
     def _autosave(self):
@@ -323,6 +337,7 @@ class BookWindow(ModuleWindow):
         self._flush()
         store.move_chapter(self.book, self.current_chapter, direction)
         self._tree(self.current_chapter)
+        self.save_state.update_state()
 
     def outdent(self):
         self._flush()
@@ -331,6 +346,7 @@ class BookWindow(ModuleWindow):
             parent = next(c for c in self.book['chapters'] if c['id'] == chapter['parent'])
             chapter['parent'] = parent['parent']
             self._tree(self.current_chapter)
+            self.save_state.update_state()
 
     def remove_chapter(self):
         if not self.current_chapter:
@@ -361,6 +377,7 @@ class BookWindow(ModuleWindow):
         self.book['title'] += t('new_edition', ' – neue Fassung')
         self._display_book()
         self._baseline = 'unsaved-copy'
+        self.save_state.mark_new()
         self.tabs.setCurrentIndex(1)
         self.status.setText(t('copy_draft', 'Neue Fassung als Entwurf angelegt. Zum Behalten speichern.'))
 
