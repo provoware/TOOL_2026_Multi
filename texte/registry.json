@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.4",
+  "text_version": "0.2.5",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -275,7 +275,19 @@
     "modules.todo_copy_error": "Der Altbestand bleibt erhalten.\n\nGrund: {error}",
     "modules.todo_copy_saved": "Persönliche Kopie unter „Aktiv“ angelegt.",
     "modules.todo_copy_protection": "Der gespeicherte Aufgabenbestand wurde nicht verworfen.",
-    "modules.todo_copy_next": "Schreibrechte und freien Speicher prüfen. Details stehen unter F1 in der Fehlerhilfe."
+    "modules.todo_copy_next": "Schreibrechte und freien Speicher prüfen. Details stehen unter F1 in der Fehlerhilfe.",
+    "modules.start_title": "Was möchtest du tun?",
+    "modules.start_hint": "Wähle eine Tätigkeit. Ein offener Textentwurf bleibt erhalten.",
+    "modules.start_song": "Song schreiben",
+    "modules.start_song_tooltip": "Öffnet einen neuen Song. Vorhandene Songeditoren bleiben erhalten.",
+    "modules.start_text": "Text schreiben",
+    "modules.start_text_tooltip": "Beginne einen Text oder schreibe in deinem offenen Entwurf weiter.",
+    "modules.start_todo": "Aufgabe notieren",
+    "modules.start_todo_tooltip": "Öffnet die Aufgabenliste und setzt den Fokus in die Eingabe.",
+    "modules.start_calendar": "Termin eintragen",
+    "modules.start_calendar_tooltip": "Öffnet den Kalender. Eine begonnene Termineingabe bleibt erhalten.",
+    "modules.text_empty_hint": "Noch keine Texte gespeichert. Gib Titel und Text ein und wähle „Jetzt speichern“.",
+    "modules.start_ready": "Bereit · Wähle eine Tätigkeit."
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

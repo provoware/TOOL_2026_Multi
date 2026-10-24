@@ -13,10 +13,10 @@
 | Was möchtest du tun? | So geht es |
 |---|---|
 | **Programm starten** | Projektordner öffnen → Terminal öffnen → `bash schnellstart.sh`. |
-| **Song schreiben** | **Songtexte** → **＋ Neuen Song schreiben** → Titel und Text eingeben. |
-| **Normalen Text schreiben** | **Texteditor** öffnen → Titel und Text eingeben → `Strg+S`. |
-| **Aufgabe notieren** | **Todo-Liste** öffnen → Aufgabe eintragen → **Aufgabe anlegen**. |
-| **Termin eintragen** | **Kalender** öffnen → Termin und Uhrzeit auswählen → speichern. |
+| **Song schreiben** | Auf der Startkarte **Song schreiben** wählen → Titel und Text eingeben. |
+| **Normalen Text schreiben** | **Text schreiben** wählen → Titel und Text eingeben → **Jetzt speichern**. |
+| **Aufgabe notieren** | **Aufgabe notieren** wählen → Eingabe ergänzen → **Aufgabe anlegen**. |
+| **Termin eintragen** | **Termin eintragen** wählen → Titel und Uhrzeit ergänzen → Termin anlegen. |
 | **Alles größer machen** | Unten `A+` drücken; bis 200 % möglich. |
 | **Problem lösen** | `F1` drücken → **Hilfe & Fehlerhilfe**. |
 
@@ -110,13 +110,18 @@ Auf kleinen Laptop-Bildschirmen sowie bei 175/200 % Zoom kann Provoware diese op
 
 Mit **☰** kann die linke Navigation schmal oder breit geschaltet werden.
 
-### Karte „So startest du“
+### Karte „Was möchtest du tun?“
 
-Für den schnellen Einstieg gibt es drei direkte Wege:
+Vier gleichwertige Aktionen helfen dir beim Einstieg. Du kannst sie unabhängig voneinander nutzen:
 
-1. **Songtexte öffnen**
-2. **Todo-Liste öffnen**
-3. **Kalender öffnen**
+- **Song schreiben:** Öffnet einen neuen Songeditor. Bereits offene Songs bleiben erhalten.
+- **Text schreiben:** Beginnt bei geschlossenem Editor einen leeren Text. Ist der Editor bereits offen, arbeitest du im vorhandenen Entwurf weiter; er wird nicht neu geladen oder geleert.
+- **Aufgabe notieren:** Öffnet die Aufgabenliste und setzt den Fokus in das Eingabefeld. Eine begonnene Eingabe bleibt erhalten.
+- **Termin eintragen:** Öffnet den Kalender und setzt den Fokus in den Titel. Begonnene Termineingaben bleiben erhalten.
+
+Bei einer leeren Textliste erklärt ein Hinweis den ersten Schritt: Titel und Text eingeben, dann **Jetzt speichern**. Gespeicherte Texte findest du im Texteditor links unter **Gespeicherte Texte**. Für einen weiteren neuen Text im bereits geöffneten Editor **Neuer Text** wählen; dabei gilt die vorhandene Nachfrage zu ungespeicherten Änderungen.
+
+Ein beim Schließen ausdrücklich verworfener Text wird durch die Startaktion nicht wieder geöffnet. Bücher beginnst oder bearbeitest du weiterhin über **Bücher / Buchwerkstatt** und deren Vorlagenauswahl. Die Songbibliothek bleibt über **Songtexte** erreichbar.
 
 ### Projekt-Notiz
 

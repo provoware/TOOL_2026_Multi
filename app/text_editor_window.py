@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QSplitter, QTextEdit, QVBoxLayout, QWidget,
 )
 
+from app.module_widgets import t
 from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
 from app.text_editor_store import TextDocument, list_text_documents, load_text_document, save_text_document
@@ -86,6 +87,12 @@ class TextEditorWindow(QWidget):
         self.file_list.setObjectName("editor_document_list")
         self.file_list.currentItemChanged.connect(self._load_selected)
         left_layout.addWidget(self.file_list, 1)
+        self.empty_hint = QLabel(t('text_empty_hint',
+            'Noch keine Texte gespeichert. Gib Titel und Text ein und wähle „Jetzt speichern“.'))
+        self.empty_hint.setWordWrap(True)
+        self.empty_hint.setObjectName('cardHint')
+        self.empty_hint.hide()
+        left_layout.addWidget(self.empty_hint)
         refresh_button = QPushButton("Liste aktualisieren")
         refresh_button.clicked.connect(self.refresh)
         left_layout.addWidget(refresh_button)
@@ -157,8 +164,10 @@ class TextEditorWindow(QWidget):
             try:
                 paths = list_text_documents(self.project_root)
             except Exception as error:
+                self.empty_hint.hide()
                 self.status_label.setText(f"Textliste nicht lesbar · nichts verändert. Grund: {error}")
                 return
+            self.empty_hint.setVisible(not paths)
             selected_row = -1
             for row, path in enumerate(paths):
                 try:

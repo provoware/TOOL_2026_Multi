@@ -109,3 +109,13 @@ Die vollständige GitHub-Prüfung und Integration werden am zugehörigen PR gef�
 Lokaler Nachweis dieses Kandidaten: 87 gezielte und angrenzende Prüfungen erfolgreich (Aufgabenlogik/-GUI, historische Entwicklerhelfer, Modulnachbarn, Laienführung, Dashboard, Dokumentation und Datensicherung). 147 freigegebene Betriebsdateien im Release-Manifest gültig; `git diff --check` ohne Befund. Bei 1280×740 und 100/150/200 % Zoom sind die Altbestandsaktionen erreichbar; eine neue persönliche Kopie verdrängt keine Hauptaktion. Dateiänderungen der Tests ausschließlich in temporären Ordnern. Vollständige PR-/main-CI-Evidenz bleibt davon getrennt.
 
 GitHub-Nachweis des Produktcodes: [Prüfung #1115](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40123882032) auf `bbadafdda41516a97378ce07c281475692090faf` vollständig erfolgreich. Finale Statusrevision und anschließende main-Prüfung werden am PR separat nachgewiesen.
+
+
+## Nachpflege: tätigkeitsorientierter Einstieg (PV-UX-01)
+
+Implementierungskandidat vom 24.10.2026 auf Basis `cfd23ecc55e8d70a94c2f1684ca8f58b48f9ad2b`: Die Startkarte bietet vier unabhängige Aktionen in einem kompakten 2×2-Raster. Song schreiben öffnet einen neuen Editor; Text schreiben aktiviert einen sichtbaren Texteditor ohne Refresh und bewahrt dessen Entwurf. Ein zuvor geschlossenes Fenster wird über den bestehenden Manager neu geöffnet, damit bewusst verworfene Texte nicht wieder erscheinen. Aufgaben-/Terminaktionen fokussieren vorhandene Formulare, ohne sie zu leeren. Die leere Textliste erklärt den ersten Speicherschritt. Bestehende Song- und Buch-Einstiege bleiben verfügbar. Bedienung: [einfache Anleitung](../ANLEITUNG_LAIEN.md#karte-was-möchtest-du-tun).
+
+Der vorhandene Texteditor-Neu-/Schließen-Dialog bleibt maßgeblich für bewusste Dokumentwechsel; die Startkarte löst bei einem bereits sichtbaren Entwurf keinen impliziten Wechsel aus. Keine Speicherformatänderung oder Datenmigration. Reale Erstnutzertests bleiben Bestandteil der abschließenden Gesamtbedienprüfung; automatisierte Abläufe werden nicht als Nutzerstudie ausgegeben.
+
+
+Lokaler Prüfnachweis: 96 gezielte und angrenzende Tests erfolgreich. Produktive UI-Matrix über `scripts/ui_shadow_entry.py`: 60 Fälle, 180 Fenster, null Fehler und null Warnungen. Die vier vertikalen Aktionen wurden wegen nachgewiesener Überlappungen bei 200 % Zoom auf das 2×2-Raster umgestellt; Grenzwerte unverändert. Release-Manifest gültig mit 147 Betriebsdateien; diff-Prüfung ohne Befund. Die Startkarte ist als eigener Builder im bestehenden Dashboard gekapselt; eine umfassende Aufteilung der bereits großen `ui.py` bleibt dem separaten Auftrag PV-AUD-18 vorbehalten. GitHub-Prüfung, endgültiger Aufgabenabschluss und Integration folgen am zugehörigen PR.

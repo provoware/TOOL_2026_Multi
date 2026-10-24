@@ -901,3 +901,12 @@ Persönliche Übernahme als bewusste Kopie mit neuer Kennung und sicherer Bestä
 ### Abschlussnachweis PV-AUD-05
 
 Produktcode-Prüfstand `bbadafdda41516a97378ce07c281475692090faf`: [vollständige GitHub-Prüfung #1115](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40123882032) erfolgreich, einschließlich Grundprüfung, nativem Wayland-Start, UI-Evidenz, Vollprojekt-Restore und geprüften ZIP-Paketen. Lokal 87 gezielte und angrenzende Tests erfolgreich. Diese Abschlussrevision aktualisiert ausschließlich Aufgaben- und Dokumentationsstatus; Produktcode unverändert. Die erforderliche vollständige Prüfung der finalen Revision bleibt Merge-Voraussetzung. Keine manuelle Kubuntu-Endabnahme oder Veröffentlichung vorgezogen.
+
+
+## Bearbeitung PV-UX-01 – tätigkeitsorientierter Einstieg (24.10.2026)
+
+**Status:** Implementierungskandidat auf Basis `cfd23ecc55e8d70a94c2f1684ca8f58b48f9ad2b`, vollständige GitHub-Prüfung vor Abschluss und Integration erforderlich. Vier unabhängige Startaktionen ohne Nummerierung, sicherer Übergang zu offenen Entwürfen und hilfreicher Text-Leerzustand. Der erste Text lässt sich über echte Bedienelemente erstellen, speichern, schließen und wiederfinden. Begonnene Texte, Songs sowie Aufgaben-/Termineingaben bleiben beim passenden Einstieg erhalten; verworfene geschlossene Texte werden nicht reaktiviert. Buchwerkstatt und Songbibliothek behalten ihre vorhandenen Einstiege. Keine neuen Speicherformate oder produktiven Datenänderungen.
+
+**Darstellungsnachweis:** Der erste direkte Prüferaufruf ohne produktive Fensterkonfiguration war nicht repräsentativ. Über den tatsächlichen CI-Einstieg `scripts/ui_shadow_entry.py` wurden 12 echte Überlappungen im 1366×768-/200-%-Profil erkannt und durch das kompakte 2×2-Raster ursachengerecht beseitigt. Danach vollständige lokale Matrix mit 60 Fällen / 180 Fenstern: null Fehler, null Warnungen. Keine Abschwächung von Geometriegrenzen. Reale Erstnutzerstudie bleibt der späteren Gesamt-Kubuntu-Abnahme vorbehalten.
+
+**Nächste Vorschläge:** `PV-UX-03` Speicherzustände vereinheitlichen (**priorisiert empfohlen**), `PV-UX-04` eindeutige Verlassen-Dialoge, `PV-UX-02` Werkzeugzugang nach Modulstatus-Abgleich, `PV-UX-05` letzte Arbeiten über Inhaltstypen, `PV-AUD-10` unterstützte Suchtreffer direkt öffnen. Abhängigkeiten und laufenden Plan vor jeder Umsetzung erneut abgleichen.

@@ -2076,5 +2076,19 @@
     "max_file_bytes": 4194304,
     "backup_scope": "daten/",
     "documentation": "docs/DATENSICHERUNG.md"
+  },
+  "start_actions": {
+    "title": "Was möchtest du tun?",
+    "actions": [
+      "song",
+      "text",
+      "todo",
+      "calendar"
+    ],
+    "numbered_sequence": false,
+    "layout": "2x2",
+    "visible_text_draft_preserved": true,
+    "closed_discarded_text_not_reused": true,
+    "text_empty_state_guidance": true
   }
 }

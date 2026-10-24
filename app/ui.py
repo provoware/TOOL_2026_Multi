@@ -407,6 +407,56 @@ class Dashboard(QWidget):
         self.dashboard_grid.setColumnStretch(1, right)
         self.dashboard_grid.invalidate()
 
+    def _build_start_card(self) -> QFrame:
+        card, layout = self._card(module_text('start_title', 'Was möchtest du tun?'))
+        self.start_card = card
+        hint = QLabel(module_text('start_hint', 'Wähle eine Tätigkeit. Ein offener Textentwurf bleibt erhalten.'))
+        hint.setWordWrap(True)
+        hint.setObjectName('cardHint')
+        layout.addWidget(hint)
+        self.start_actions = {}
+        actions = QGridLayout()
+        actions.setSpacing(6)
+        actions.setColumnStretch(0, 1)
+        actions.setColumnStretch(1, 1)
+        for index, (key, label, command, tooltip) in enumerate((
+            ('song', 'Song schreiben', self.open_song_editor, 'Öffnet einen neuen Song. Vorhandene Songeditoren bleiben erhalten.'),
+            ('text', 'Text schreiben', self.start_writing_text, 'Beginne einen Text oder schreibe in deinem offenen Entwurf weiter.'),
+            ('todo', 'Aufgabe notieren', self.start_task, 'Öffnet die Aufgabenliste und setzt den Fokus in die Eingabe.'),
+            ('calendar', 'Termin eintragen', self.start_event, 'Öffnet den Kalender. Eine begonnene Termineingabe bleibt erhalten.'),
+        )):
+            action = QPushButton(module_text('start_' + key, label))
+            action.setObjectName('start_' + key)
+            action.setAccessibleName(module_text('start_' + key, label))
+            action.setToolTip(module_text('start_' + key + '_tooltip', tooltip))
+            action.clicked.connect(command)
+            self.start_actions[key] = action
+            actions.addWidget(action, index // 2, index % 2)
+        layout.addLayout(actions)
+        layout.addStretch(1)
+        return card
+
+    def start_writing_text(self) -> None:
+        current = self._text_editor_window
+        if current is not None and current.isVisible():
+            # Ein Refresh könnte die gespeicherte Auswahl neu laden und den Entwurf stören.
+            _activate_window(current)
+        else:
+            self.open_text_editor()
+        editor = self._text_editor_window
+        if editor.title_entry.text().strip():
+            editor.text_edit.setFocus()
+        else:
+            editor.title_entry.setFocus()
+
+    def start_task(self) -> None:
+        self.open_todo()
+        self._todo_window.title_entry.setFocus()
+
+    def start_event(self) -> None:
+        self.open_calendar()
+        self._calendar_window.title_entry.setFocus()
+
     def _build_dashboard_grid(self) -> QGridLayout:
         grid = QGridLayout()
         self.dashboard_grid = grid
@@ -417,26 +467,7 @@ class Dashboard(QWidget):
         grid.setRowStretch(0, 1)
         grid.setRowStretch(1, 1)
 
-        workflow, w = self._card("🚀  So startest du")
-        claim = QLabel("Wähle einen fertigen Bereich.\nGeplante Funktionen sind deutlich mit „In Planung“ markiert.")
-        claim.setWordWrap(True)
-        claim.setAlignment(Qt.AlignCenter)
-        w.addWidget(claim)
-        for text, command in (
-            ("①  Songtexte öffnen", self.open_song_library),
-            ("②  Todo-Liste öffnen", self.open_todo),
-            ("③  Kalender öffnen", self.open_calendar),
-        ):
-            button = QPushButton(text)
-            button.setObjectName("primaryButton" if text.startswith("①") else "")
-            button.clicked.connect(command)
-            w.addWidget(button)
-        hint = QLabel("Tipp: Für Genres, Stimmung, Stil oder Stimme rechts ein Profil wählen.")
-        hint.setObjectName("cardHint")
-        hint.setWordWrap(True)
-        w.addWidget(hint)
-        w.addStretch(1)
-        grid.addWidget(workflow, 0, 0)
+        grid.addWidget(self._build_start_card(), 0, 0)
 
         db, d = self._card("▦  Daten & Vorgaben")
         d.setSpacing(5)
@@ -530,7 +561,7 @@ class Dashboard(QWidget):
         self.status_dot = QLabel("●")
         self.status_dot.setObjectName("statusGood")
         layout.addWidget(self.status_dot)
-        self.quick_status = QLabel("Bereit · Wähle Songtexte, Todo-Liste oder Kalender.")
+        self.quick_status = QLabel(module_text("start_ready", "Bereit · Wähle eine Tätigkeit."))
         self.quick_status.setObjectName("muted")
         layout.addWidget(self.quick_status)
         layout.addStretch(1)
@@ -1169,7 +1200,7 @@ class Dashboard(QWidget):
         self._sync_optional_actions()
         self.refresh_recent_songs()
         self.refresh_db_profiles()
-        self.quick_status.setText("Bereit · Wähle Songtexte, Todo-Liste oder Kalender.")
+        self.quick_status.setText(module_text("start_ready", "Bereit · Wähle eine Tätigkeit."))
         for registration in self._managed_window_registry():
             if (registration.refresh_when_visible is not None
                     and registration.window.isVisible()):

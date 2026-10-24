@@ -134,7 +134,7 @@ class Iteration39ProductUiFixesGuiTests(unittest.TestCase):
                 _settle()
                 self.assertFalse(_card_by_title(dashboard, "▣  Funktionen").isVisibleTo(dashboard))
                 self.assertFalse(_card_by_title(dashboard, "▤  Dateien & Werkzeuge").isVisibleTo(dashboard))
-                self.assertTrue(_card_by_title(dashboard, "🚀  So startest du").isVisibleTo(dashboard))
+                self.assertTrue(_card_by_title(dashboard, "Was möchtest du tun?").isVisibleTo(dashboard))
                 self.assertTrue(_card_by_title(dashboard, "▦  Daten & Vorgaben").isVisibleTo(dashboard))
             finally:
                 dashboard._closing_after_save = True
