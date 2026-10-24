@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## Persönliche Aufgaben von Entwicklungsaltbestand trennen (PV-AUD-05, 24.10.2026)
+
+- Beim Öffnen keine Entwicklungsaufgaben mehr in den persönlichen Bestand eintragen.
+- Alte Entwicklungsaufgaben anhand ihrer festen Kennungen rein lesend separat anzeigen; eigene Aufgaben mit gleichen Titeln bleiben persönlich.
+- Persönliche Kopie nur nach Bestätigung und mit neuer Kennung; ursprüngliche offene/erledigte Aufgaben und noch nicht angelegte Formulareingaben erhalten.
+- Erledigen-Aktion auf die persönliche Aktiv-Ansicht begrenzen; Fehler bei Kopien mit geschützter Diagnose behandeln.
+- Datenformat, Sicherungsumfang und bisherige Gesamtsicht-APIs unverändert; Anleitung, Hilfe und Manifest aktualisiert.
+
 ## Projekt-Notizen und persönliche Sicherung (24.10.2026; PV-AUD-01)
 
 - Aufgabenstatus PV-AUD-02 berichtigt: PR #121 war bereits übernommen; drei vorhandene UTF-8-Log-Rückfalltests erneut erfolgreich, keine Doppelimplementierung.

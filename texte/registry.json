@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.3",
+  "text_version": "0.2.4",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -254,7 +254,28 @@
     "modules.notes_saved": "Projekt-Notiz im Datenordner gespeichert.",
     "modules.notes_legacy_excluded": "Neue Notiz gespeichert; alte Notizen sind noch nicht im Daten-ZIP.",
     "modules.notes_error_protection": "Aktuelle Eingabe und ursprüngliche Altdatei wurden nicht verworfen.",
-    "modules.notes_error_next": "Unter F1 die Fehlermeldung prüfen: Schreibrechte, freien Speicher, Notizgröße und mögliche Dateikonflikte kontrollieren."
+    "modules.notes_error_next": "Unter F1 die Fehlermeldung prüfen: Schreibrechte, freien Speicher, Notizgröße und mögliche Dateikonflikte kontrollieren.",
+    "modules.todo_legacy_hint": "Früher automatisch eingetragene Entwicklungsaufgaben. Sie bleiben unverändert erhalten und zählen nicht zu deinen persönlichen Aufgaben. Bei Bedarf eine persönliche Kopie anlegen.",
+    "modules.todo_legacy_task": "Entwicklungsaufgabe",
+    "modules.todo_legacy_status": "Stand",
+    "modules.todo_legacy_due": "Termin",
+    "modules.todo_legacy_note": "Notiz",
+    "modules.todo_legacy_accessible": "Erhaltene Entwicklungsaufgaben aus älteren Versionen",
+    "modules.todo_copy_personal": "Als persönliche Aufgabe kopieren",
+    "modules.todo_legacy_tab": "Entwicklungsplanung (Altbestand)",
+    "modules.todo_legacy_done": "Erledigt",
+    "modules.todo_legacy_active": "Offen",
+    "modules.todo_select_legacy_title": "Entwicklungsaufgabe auswählen",
+    "modules.todo_select_legacy": "Bitte zuerst eine Entwicklungsaufgabe markieren.",
+    "modules.todo_copy_title": "Persönliche Kopie anlegen?",
+    "modules.todo_copy_confirm": "Diesen Eintrag als neue persönliche Aufgabe anlegen?\n\n{title}\n\nDie Kopie erscheint unter Aktiv. Der Altbestand bleibt erhalten. Wiederholtes Kopieren erzeugt weitere Aufgaben.",
+    "modules.todo_copy_apply": "Persönliche Kopie anlegen",
+    "modules.todo_copy_cancel": "Abbrechen",
+    "modules.todo_copy_failed": "Persönliche Kopie nicht gespeichert",
+    "modules.todo_copy_error": "Der Altbestand bleibt erhalten.\n\nGrund: {error}",
+    "modules.todo_copy_saved": "Persönliche Kopie unter „Aktiv“ angelegt.",
+    "modules.todo_copy_protection": "Der gespeicherte Aufgabenbestand wurde nicht verworfen.",
+    "modules.todo_copy_next": "Schreibrechte und freien Speicher prüfen. Details stehen unter F1 in der Fehlerhilfe."
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

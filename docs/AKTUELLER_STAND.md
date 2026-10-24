@@ -96,3 +96,14 @@ Die fünf Folgeaufträge sind im lokalen 0.18.4-Kandidaten umgesetzt: statisches
 ## Nachpflege: Projekt-Notizen (PV-AUD-01, 24.10.2026)
 
 Neue Projekt-Notizen werden im Datenordner gespeichert. Alte Notizen können nach ausdrücklicher Zustimmung bytegenau dorthin kopiert werden; die ursprüngliche Datei bleibt erhalten. Bei Ablehnung sind die alten Notizen weiterhin nicht Bestandteil des persönlichen Daten-ZIPs. Details und Grenzen: [Datensicherung](DATENSICHERUNG.md). Status und aktuelle CI-Evidenz werden am zugehörigen Änderungsantrag geführt; die historische Übersicht oben bleibt auf ihren damaligen Stand bezogen.
+
+
+## Nachpflege: persönliche Aufgaben und Entwicklungsaltbestand (PV-AUD-05)
+
+Implementierungskandidat vom 24.10.2026 auf Basis `7a03a0078b241f5ba8325567925d473840ff8d9d`: Beim Öffnen der persönlichen Aufgabenliste werden keine Entwicklungsaufgaben mehr erzeugt. Bereits vorhandene Entwicklungsaufgaben bleiben erhalten und werden anhand ihrer historischen festen Kennungen getrennt angezeigt. Eine persönliche Kopie benötigt eine ausdrückliche Bestätigung und eine neue Kennung. Öffnen, Aktualisieren und Zoom schreiben den Aufgabenbestand nicht um; Sicherung und isolierter Restore verwenden unverändert dieselbe Datei und dasselbe Format. Bedienung: [einfache Anleitung](../ANLEITUNG_LAIEN.md#persönliche-aufgaben-und-ältere-entwicklungsplanung).
+
+Technischer Vertrag: `task_groups()` leitet die Ansichten aus einem einzigen gelesenen Bestand ab. Die vorhandenen APIs `active_tasks()` und `archived_tasks()` behalten ihre Gesamtsicht; nur die persönliche GUI verwendet die getrennten Gruppen. Historische Titelkataloge in `todo_store.py` sind Bestandteil der Alt-ID-Erkennung und dürfen künftig nicht für neue Planungsnamen umgeschrieben werden. Der explizite alte Entwicklerhelfer bleibt aus Kompatibilitätsgründen erhalten und wird von der GUI nicht aufgerufen. Der Formularaufbau bleibt als zusammenhängende Anordnung erhalten; Tabellen-/Altbestandsaufbau sind separat gekapselt.
+
+Die vollständige GitHub-Prüfung und Integration werden am zugehörigen PR geführt. Keine produktiven Dateien migriert oder gelöscht, keine zusätzliche manuelle Kubuntu-Zwischenabnahme, kein öffentliches Release.
+
+Lokaler Nachweis dieses Kandidaten: 87 gezielte und angrenzende Prüfungen erfolgreich (Aufgabenlogik/-GUI, historische Entwicklerhelfer, Modulnachbarn, Laienführung, Dashboard, Dokumentation und Datensicherung). 147 freigegebene Betriebsdateien im Release-Manifest gültig; `git diff --check` ohne Befund. Bei 1280×740 und 100/150/200 % Zoom sind die Altbestandsaktionen erreichbar; eine neue persönliche Kopie verdrängt keine Hauptaktion. Dateiänderungen der Tests ausschließlich in temporären Ordnern. Vollständige PR-/main-CI-Evidenz bleibt davon getrennt.

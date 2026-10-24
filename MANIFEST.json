@@ -563,7 +563,12 @@
     "schema_version": 1,
     "active_and_archive_same_transaction": true,
     "due_format": "ISO-8601 lokale Datum/Zeit ohne Zeitzone, minutengenau",
-    "atomic_write": "app.atomic_io.atomic_write_json"
+    "atomic_write": "app.atomic_io.atomic_write_json",
+    "automatic_development_seeding": false,
+    "legacy_separation": "read_only_views_by_historical_ids",
+    "legacy_personal_copy_requires_confirmation": true,
+    "legacy_originals_retained": true,
+    "view_reads_single_snapshot": true
   },
   "calendar": {
     "module": "app/calendar_store.py",

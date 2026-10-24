@@ -887,3 +887,12 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 Produktcode-Prüfstand `9f763c10a9614932d542f7430305d5daa7cdbd70`: [vollständige Grundprüfung #1112](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40121518706) erfolgreich, einschließlich nativer Wayland-Startprobe, UI-Evidenz, Vollprojekt-Restore und ZIP-Erzeugung. Lokal 80 gezielte und angrenzende Tests erfolgreich. Diese Abschlussrevision ändert ausschließlich den Aufgabenstatus; Produktcode unverändert. Vor Übernahme muss auch die finale Revision gemäß Repositoryregeln vollständig erfolgreich geprüft sein; nach Merge folgt die eigene main-Prüfung.
 
 **Audit-Zählung (nur PV-AUD-01 bis PV-AUD-30):** zwei erledigt, 28 offen. Dies ist kein Gesamtfortschritt aller historischen Repositoryaufgaben. Keine reale Kubuntu-Endabnahme und kein öffentliches Release vorgezogen.
+
+
+## Bearbeitung PV-AUD-05 – persönliche Aufgaben trennen (24.10.2026)
+
+**Status:** Implementierungskandidat auf Basis `7a03a0078b241f5ba8325567925d473840ff8d9d`; Abschluss erst nach passender vollständiger GitHub-Prüfung. Führend bleibt `PV-AUD-05`, kein zusätzlicher Auftrag. Automatischen GUI-Backlog-Aufruf entfernt; aktive/archivierte persönliche Aufgaben und Entwicklungsaltbestand als reine Ansichten aus einem Lesestand getrennt. Erkennung ausschließlich über historische Kennungen, nicht über Titel. Eigene gleichnamige Aufgaben bleiben persönlich; geänderte Alt-Titel bleiben erkennbar. Bestehende Gesamtsicht-APIs unverändert.
+
+Persönliche Übernahme als bewusste Kopie mit neuer Kennung und sicherer Bestätigung; Originale und Formularentwürfe bleiben erhalten. Wechsel zu Archiv oder Altbestand kann keine zuvor markierte persönliche Aufgabe versehentlich erledigen. Keine produktiven Daten migriert, umgeschrieben oder gelöscht. Tests ausschließlich in temporären Testordnern: frischer Bestand, wiederholtes Öffnen/Aktualisieren, Alt-ID-Erkennung, Kopie/Ablehnung/Fehler, archivierte Altaufgabe, Zoom 100/150/200 %, Sicherung und isolierter Restore. Details und Nachweise folgen im PR.
+
+**Nächste Vorschläge:** `PV-UX-01` Einstieg vereinfachen (**priorisiert empfohlen**), `PV-UX-02` Werkzeugzugang, `PV-UX-03` Speicherzustände, `PV-UX-04` eindeutige Verlassen-Dialoge, `PV-AUD-10` unterstützte Suchtreffer direkt öffnen. Jeweils getrennte kleine Folgeiteration; bestehende Abhängigkeiten und offene Audit-Schutzpunkte vor Umsetzung abgleichen.

@@ -85,6 +85,13 @@ PROJECT_MODULE_SUBTASKS: tuple[tuple[str, str], ...] = (
 
 PROJECT_MODULE_TASK_COUNT = len(PROJECT_MODULE_BACKLOG) + len(PROJECT_MODULE_SUBTASKS)
 
+# Historischer Herkunftskatalog: Titel nicht für neue Produktplanung umbenennen
+# oder entfernen, sonst wären bereits gespeicherte Alt-IDs nicht mehr erkennbar.
+LEGACY_DEVELOPMENT_IDS = frozenset(
+    uuid5(NAMESPACE_URL, f"provoware-projektmodul:{title}").hex
+    for title, _note in (*PROJECT_MODULE_BACKLOG, *PROJECT_MODULE_SUBTASKS)
+)
+
 
 def store_path(root: Path) -> Path:
     return root / "daten" / "todo" / "todo.json"
@@ -213,7 +220,7 @@ def complete_task(root: Path, task_id: str) -> dict[str, object]:
 
 
 def ensure_project_module_backlog(root: Path) -> int:
-    """Ergänzt die neun gewünschten Modulvorhaben genau einmal, ohne bestehende Todos anzutasten."""
+    """Historischer expliziter Entwicklerhelfer; niemals beim Öffnen persönlicher Aufgaben aufrufen."""
     state = load_state(root)
     active = list(state["active"])
     archive = list(state["archive"])
@@ -238,11 +245,30 @@ def ensure_project_module_backlog(root: Path) -> int:
     return added
 
 
-def active_tasks(root: Path) -> list[dict[str, object]]:
-    tasks = list(load_state(root)["active"])
+def _ordered_tasks(tasks, *, archived=False):
+    if archived:
+        return sorted(tasks, key=lambda item: str(item["completed_at"] or ""), reverse=True)
     return sorted(tasks, key=lambda item: (item["due"] is None, str(item["due"] or ""), str(item["title"]).casefold()))
 
 
+def active_tasks(root: Path) -> list[dict[str, object]]:
+    """Kompatible Gesamtsicht; persönliche GUI nutzt task_groups()."""
+    return _ordered_tasks(load_state(root)["active"])
+
+
 def archived_tasks(root: Path) -> list[dict[str, object]]:
-    tasks = list(load_state(root)["archive"])
-    return sorted(tasks, key=lambda item: str(item["completed_at"] or ""), reverse=True)
+    return _ordered_tasks(load_state(root)["archive"], archived=True)
+
+
+def task_groups(root: Path) -> dict[str, list]:
+    """Trennt reine Ansichten aus einem Lesestand, ohne Nutzerdaten umzuschreiben."""
+    state = load_state(root)
+    groups = {"active": [], "archive": [], "development": []}
+    for section in ("active", "archive"):
+        for task in state[section]:
+            target = "development" if task["id"] in LEGACY_DEVELOPMENT_IDS else section
+            groups[target].append(task)
+    groups["active"] = _ordered_tasks(groups["active"])
+    groups["archive"] = _ordered_tasks(groups["archive"], archived=True)
+    groups["development"].sort(key=lambda task: (task["completed_at"] is not None, str(task["title"]).casefold()))
+    return groups

@@ -77,5 +77,45 @@ class TodoStoreTests(unittest.TestCase):
         self.assertEqual(data["schema_version"], 1)
 
 
+    def test_personal_and_development_views_use_ids_and_preserve_source_bytes(self):
+        from app.todo_store import ensure_project_module_backlog, task_groups
+        ensure_project_module_backlog(self.root)
+        legacy = load_state(self.root)['active'][0]
+        personal = add_task(self.root, legacy['title'], 'Eigene Aufgabe mit gleichem Namen')
+        complete_task(self.root, legacy['id'])
+        before = store_path(self.root).read_bytes()
+        groups = task_groups(self.root)
+        self.assertEqual([item['id'] for item in groups['active']], [personal['id']])
+        self.assertEqual(groups['archive'], [])
+        self.assertTrue(any(item['id'] == legacy['id'] and item['completed_at'] for item in groups['development']))
+        self.assertEqual(store_path(self.root).read_bytes(), before)
+        self.assertEqual(sum(map(len, groups.values())), sum(len(v) for k, v in load_state(self.root).items() if k != 'schema_version'))
+
+    def test_modified_legacy_title_remains_recognizable_and_reads_one_snapshot(self):
+        from app.todo_store import ensure_project_module_backlog, task_groups
+        ensure_project_module_backlog(self.root)
+        state = load_state(self.root)
+        state['active'][0]['title'] = 'Von mir umbenannter Altauftrag'
+        save_state(self.root, state)
+        with patch('app.todo_store.load_state', return_value=state) as load:
+            groups = task_groups(self.root)
+        load.assert_called_once_with(self.root)
+        self.assertFalse(groups['active'])
+        self.assertTrue(any(item['title'] == 'Von mir umbenannter Altauftrag' for item in groups['development']))
+
+    def test_legacy_separation_survives_backup_and_restore(self):
+        from app.todo_store import ensure_project_module_backlog, task_groups
+        from scripts.datensicherung import create, restore
+        ensure_project_module_backlog(self.root)
+        personal = add_task(self.root, 'Meine Aufgabe')
+        complete_task(self.root, personal['id'])
+        before = store_path(self.root).read_bytes()
+        archive = create(self.root / 'daten', self.root / 'backup')
+        restored = self.root / 'wiederhergestellt'
+        restore(archive, restored)
+        self.assertEqual(store_path(restored).read_bytes(), before)
+        self.assertEqual(task_groups(restored), task_groups(self.root))
+
+
 if __name__ == "__main__":
     unittest.main()
