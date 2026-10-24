@@ -81,7 +81,7 @@ Aktuell direkt nutzbar sind vor allem:
 
 ### Oben
 
-- **Songs durchsuchen …** durchsucht nur die Songbibliothek. Das Feld ist deshalb bewusst nicht mehr als allgemeine Suche beschriftet.
+- **Suchtext eingeben …** öffnet die lokale Datei- und Textsuche. Im Suchfenster den gewünschten Ordner auswählen; die Songbibliothek hat zusätzlich ihre eigene Suche.
 - **Programm beenden** speichert zuerst offene Songtexte und beendet danach Provoware.
 
 ### Schnellkacheln
@@ -573,7 +573,7 @@ Wenn die Meldung ausdrücklich eine beschädigte `.venv` nennt: Programm schlie�
 
 ### Dateien und Textstellen wiederfinden
 
-Im Dashboard oben **Dateisuche** wählen oder **Strg+Umschalt+F** drücken. Suchtext eingeben, Dateinamen und/oder Textinhalte wählen und **Suchen** drücken. Markiere einen Treffer, um Datei, Zeile und Textausschnitt darunter zu lesen oder zu kopieren. **Abbrechen** beendet weitere Suche, bisherige Treffer bleiben sichtbar. Dateien werden nicht verändert oder automatisch geöffnet. Gesucht wird nur im gespeicherten Datenbestand; versteckte Dateien und ältere Versionen bleiben außen vor. Bei Suchgrenzen den Begriff genauer wählen. [Weitere Grenzen](docs/DATEISUCHE.md).
+Im Dashboard oben **Dateisuche** wählen oder **Strg+Umschalt+F** drücken. Über **Ordner auswählen …** den lokalen Suchordner wählen oder einen absoluten Pfad eingeben. Suchtext eingeben, Dateinamen und/oder Textinhalte wählen und **Suchen** drücken. Für einen Ordner außerhalb des Standarddatenordners wird der lesende Zugriff ausdrücklich abgefragt; Ablehnen erhält bisherige Treffer. Markiere einen Treffer, um Datei, Zeile und Textausschnitt darunter zu lesen oder zu kopieren. **Abbrechen** beendet weitere Suche, bisherige Treffer bleiben sichtbar. Dateien werden nicht verändert oder automatisch geöffnet. Gesucht wird im gewählten Ordner einschließlich Unterordnern; versteckte Einträge und Verknüpfungen bleiben außen vor. Fehlende Leserechte werden als unvollständige Suche angezeigt; auf Wunsch öffnet sich nach Bestätigung die Betriebssystem-Ordnerauswahl. Ein Bestätigen in Provoware ändert keine Linux-Dateirechte: Zugriff gegebenenfalls im Betriebssystem freigeben lassen, den Ordner erneut wählen und die Suche bestätigen. PDF- und Office-Inhalte werden nicht durchsucht; ihre Dateinamen können gefunden werden. Bei Suchgrenzen den Begriff genauer wählen. [Weitere Grenzen](docs/DATEISUCHE.md).
 
 
 ### Ideen und Kontometadaten

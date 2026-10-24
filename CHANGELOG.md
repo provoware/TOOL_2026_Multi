@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## Lokale Dateisystemsuche – Implementierungskandidat (24.10.2026)
+
+- Suchordner frei eingeben oder über die native Ordnerauswahl wählen; Unterordner werden mit durchsucht.
+- Lesenden Suchbereich außerhalb des Standarddatenordners vor dem ersten Lauf ausdrücklich bestätigen; Pfadwechsel hebt die Freigabe auf.
+- Fehlende Betriebssystem-Leserechte zählen und unvollständige Ergebnisse deutlich erklären; keine automatische Rechteänderung oder Administratorsuche.
+- Weitere UTF-8-Klartextformate berücksichtigen; vorhandene Datei-, Größen-, Zeit- und Linkschutzgrenzen erhalten.
+- Anleitung, Hilfe und UX-Suchanforderung an den vom Nutzer präzisierten lokalen Dateisystemscope angepasst.
+
 ## Dokumentation: UX-Konzept (24.10.2026; keine Produktänderung)
 
 - Vertiefte Analyse zu Datenumfang, persönlichen Aufgaben, Einstieg, Navigation, Speichern, Suche, Inhaltsbeziehungen, Sprache, Fehlerhilfe und Barrierefreiheit dokumentiert.

@@ -90,3 +90,51 @@ class DataSearchTests(unittest.TestCase):
             DataSearch(self.root, 'x', names=False, contents=False)
         self.data.rmdir()
         self.assertEqual(self.search('x').reason, 'missing')
+
+    def test_selected_local_folder_searches_only_its_tree_without_writing(self):
+        external = self.root / 'Eigene Dateien'
+        (external / 'Unterordner').mkdir(parents=True)
+        target = external / 'Unterordner/probe.py'
+        target.write_text('gesuchter Inhalt', encoding='utf-8')
+        (self.data / 'intern.txt').write_text('gesuchter Inhalt')
+        scan = DataSearch(self.root, 'gesuchter', names=False, search_path=external)
+        list(scan.batches())
+        self.assertEqual([h['path'] for h in scan.result.hits], ['Unterordner/probe.py'])
+        self.assertEqual(scan.result.reason, 'done')
+        self.assertEqual(target.read_text(), 'gesuchter Inhalt')
+        self.assertEqual(sorted(p.name for p in external.iterdir()), ['Unterordner'])
+
+    def test_denied_directory_is_reported_without_success(self):
+        def denied_walk(*args, **kwargs):
+            kwargs['onerror'](PermissionError('no access'))
+            return iter(())
+        scan = DataSearch(self.root, 'secret', search_path=self.root)
+        with patch('app.data_search.os.fwalk', side_effect=denied_walk):
+            list(scan.batches())
+        self.assertEqual(scan.result.reason, 'permission')
+        self.assertEqual(scan.result.denied, 1)
+        self.assertFalse(scan.result.hits)
+
+    def test_denied_file_preserves_other_results(self):
+        (self.data / 'blocked.txt').write_text('secret')
+        (self.data / 'readable.txt').write_text('secret')
+        scan = DataSearch(self.root, 'secret', names=False)
+        original = scan._read
+        def read(fd, name):
+            if name == 'blocked.txt':
+                raise PermissionError('no access')
+            return original(fd, name)
+        with patch.object(scan, '_read', side_effect=read):
+            list(scan.batches())
+        self.assertEqual(scan.result.denied, 1)
+        self.assertEqual(scan.result.reason, 'permission')
+        self.assertEqual([h['path'] for h in scan.result.hits], ['readable.txt'])
+
+    def test_selected_file_and_link_root_are_rejected(self):
+        target = self.root / 'file.txt'
+        target.write_text('secret')
+        for folder in (target, self.root / 'link'):
+            if folder != target:
+                folder.symlink_to(self.data, target_is_directory=True)
+            with self.assertRaises(ValueError):
+                list(DataSearch(self.root, 'secret', search_path=folder).batches())

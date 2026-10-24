@@ -1,10 +1,11 @@
 """Abbrechbare Dateinamen-/Textsuche mit rein lesender Trefferanzeige."""
+import os
 from pathlib import Path
 from PySide6.QtCore import Qt, QTimer, QSize
 from PySide6.QtGui import QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QAbstractItemView, QCheckBox, QHBoxLayout, QLabel, QLineEdit,
-    QProgressBar, QPushButton, QTableWidget, QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget,
+    QFileDialog, QMessageBox, QProgressBar, QPushButton, QTableWidget, QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget,
 )
 from app.data_search import DataSearch
 from app.module_widgets import t
@@ -21,9 +22,23 @@ class SearchWindow(QWidget):
         self.resize(960, 680)
         self.setMinimumSize(600, 430)
         box = QVBoxLayout(self)
-        hint = QLabel(t('search_hint', 'Suche in gespeicherten Dateien unter daten/. Versteckte Dateien und ältere Versionen bleiben außen vor. Dateien werden nicht verändert.'))
+        hint = QLabel(t('search_hint', 'Wähle einen lokalen Ordner. Suche einschließlich Unterordnern; versteckte Einträge und Verknüpfungen bleiben außen vor. Dateien werden nur gelesen.'))
         hint.setWordWrap(True)
         box.addWidget(hint)
+        self.default_path = (self.root / 'daten').absolute()
+        self.approved_path = None
+        path_row = QHBoxLayout()
+        path_label = QLabel(t('search_folder', 'Suchordner:'))
+        self.path_entry = QLineEdit(str(self.default_path))
+        self.path_entry.setAccessibleName(t('search_folder', 'Suchordner:'))
+        path_label.setBuddy(self.path_entry)
+        self.path_entry.textChanged.connect(self._forget_approval)
+        self.folder_button = QPushButton(t('search_choose_folder', 'Ordner auswählen …'))
+        self.folder_button.clicked.connect(self.choose_folder)
+        path_row.addWidget(path_label)
+        path_row.addWidget(self.path_entry, 1)
+        path_row.addWidget(self.folder_button)
+        box.addLayout(path_row)
         self.query = QLineEdit()
         self.query.setMaxLength(200)
         self.query.setPlaceholderText(t('search_query', 'Suchtext eingeben …'))
@@ -75,13 +90,55 @@ class SearchWindow(QWidget):
         self.start_button.setEnabled(not busy)
         self.stop_button.setEnabled(busy)
         self.progress.setVisible(busy)
-        for field in (self.query, self.names, self.contents):
+        for field in (self.query, self.names, self.contents, self.path_entry, self.folder_button):
             field.setEnabled(not busy)
+
+    def _forget_approval(self):
+        self.approved_path = None
+
+    def choose_folder(self):
+        selected = QFileDialog.getExistingDirectory(
+            self, t('search_choose_folder', 'Ordner auswählen …'), self.path_entry.text())
+        if selected:
+            self.path_entry.setText(selected)
+
+    def _ask_access(self, title, message):
+        dialog = QMessageBox(QMessageBox.Question, title, message,
+                             QMessageBox.Yes | QMessageBox.No, self)
+        dialog.setTextFormat(Qt.PlainText)
+        dialog.setDefaultButton(QMessageBox.No)
+        return dialog.exec()
+
+    def _authorize_path(self, folder):
+        if folder == self.default_path or folder == self.approved_path:
+            return True
+        message = t('search_consent',
+            'Diesen Ordner und seine Unterordner nach Dateinamen und Textinhalten durchsuchen?\n\n'
+            '{path}\n\nDateien werden nur gelesen. Die Freigabe gilt für diesen Suchordner, '
+            'solange er in diesem Fenster unverändert bleibt. Betriebssystemrechte werden dadurch nicht geändert.')
+        answer = self._ask_access(t('search_access_title', 'Ordnerzugriff bestätigen'),
+                                  message.format(path=str(folder)))
+        if answer != QMessageBox.Yes:
+            self.status.setText(t('search_consent_declined', 'Ordnerzugriff nicht bestätigt. Bisherige Treffer bleiben erhalten.'))
+            return False
+        self.approved_path = folder
+        return True
 
     def start(self):
         self.cancel()
         try:
-            self.session = DataSearch(self.root, self.query.text(), names=self.names.isChecked(), contents=self.contents.isChecked())
+            raw_path = self.path_entry.text().strip()
+            if not raw_path:
+                raise ValueError(t('search_folder_required', 'Bitte einen Suchordner auswählen oder einen absoluten Pfad eingeben.'))
+            folder = Path(raw_path).expanduser()
+            if not folder.is_absolute():
+                raise ValueError(t('search_folder_required', 'Bitte einen Suchordner auswählen oder einen absoluten Pfad eingeben.'))
+            folder = Path(os.path.abspath(folder))
+            session = DataSearch(self.root, self.query.text(), names=self.names.isChecked(),
+                                 contents=self.contents.isChecked(), search_path=folder)
+            if not self._authorize_path(folder):
+                return
+            self.session = session
         except ValueError as error:
             self.status.setText(str(error))
             return
@@ -101,6 +158,9 @@ class SearchWindow(QWidget):
                     self.table.setItem(row, column, QTableWidgetItem(str(value)))
         except StopIteration:
             self._finish(self.session.result.reason)
+        except PermissionError:
+            self.session.record_denied(self.session.data)
+            self._finish('permission')
         except (OSError, ValueError):
             self._finish('error')
 
@@ -113,9 +173,27 @@ class SearchWindow(QWidget):
         count = len(self.session.result.hits) if self.session else 0
         skipped = self.session.result.skipped if self.session else 0
         label = t('search_state_' + reason, reason)
-        self.status.setText(t('search_summary', '{state} · {count} Treffer · {skipped} Dateien/Ordner ausgelassen.').format(state=label, count=count, skipped=skipped))
+        denied = self.session.result.denied if self.session else 0
+        self.status.setText(t('search_summary', '{state} · {count} Treffer · {skipped} Dateien/Ordner ausgelassen.').format(state=label, count=count, skipped=skipped)
+            + t('search_root_summary', '\nSuchordner: {path} · Fehlende Leseberechtigungen: {denied}').format(
+                path=str(self.session.data), denied=denied))
         self.table.setColumnWidth(0, 280)
         self.table.setColumnWidth(1, 70)
+        if denied and reason != 'cancelled':
+            self._request_folder_access()
+
+    def _request_folder_access(self):
+        self.approved_path = None
+        message = t('search_permission_request',
+            'Einige Bereiche sind nicht lesbar:\n{paths}\n\n'
+            'Möchtest du die Betriebssystem-Ordnerauswahl zur Freigabe oder Auswahl eines anderen Ordners öffnen? '
+            'Linux-Dateirechte müssen gegebenenfalls von einer berechtigten Person geändert werden. '
+            'Provoware erhält durch diese Bestätigung keine Administratorrechte. '
+            'Bisherige Treffer bleiben erhalten; eine neue Suche musst du ausdrücklich starten.')
+        answer = self._ask_access(t('search_permission_title', 'Leseberechtigung erforderlich'),
+                                 message.format(paths='\n'.join(self.session.result.denied_paths)))
+        if answer == QMessageBox.Yes:
+            self.choose_folder()
 
     def cancel(self):
         if self.iterator is not None:

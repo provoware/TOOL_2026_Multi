@@ -1932,14 +1932,18 @@
     ]
   },
   "data_search": {
-    "data_root": "daten/",
+    "data_root": "user_selected_local_folder",
     "writes": false,
     "max_file_bytes": 1048576,
     "max_read_bytes": 33554432,
     "max_entries": 5000,
     "max_hits": 200,
     "max_seconds": 10,
-    "follow_symlinks": false
+    "follow_symlinks": false,
+    "default_data_root": "daten/",
+    "external_scope_confirmation": true,
+    "permission_errors_reported": true,
+    "automatic_privilege_escalation": false
   },
   "update_staging": {
     "activation_allowed": false,
