@@ -62,7 +62,7 @@ class CalendarAndSafetyTests(unittest.TestCase):
                 window.title_entry.setText("Wichtiger Entwurf")
                 window.text_edit.setPlainText("Nicht verlieren!")
                 with (
-                    patch.object(QMessageBox, "question", return_value=QMessageBox.Yes),
+                    patch.object(QMessageBox, "exec", return_value=QMessageBox.Yes),
                     patch.object(QMessageBox, "critical") as error_box,
                     patch("app.text_editor_window.save_text_document", side_effect=OSError("Datenträger voll")),
                 ):
@@ -84,7 +84,7 @@ class CalendarAndSafetyTests(unittest.TestCase):
                 window.title_entry.setText("Entwurf")
                 window.text_edit.setPlainText("Noch nicht gesichert")
                 with (
-                    patch.object(QMessageBox, "question", return_value=QMessageBox.Yes),
+                    patch.object(QMessageBox, "exec", return_value=QMessageBox.Yes),
                     patch.object(QMessageBox, "critical"),
                     patch("app.text_editor_window.save_text_document", side_effect=OSError("Schreibgeschützt")),
                 ):

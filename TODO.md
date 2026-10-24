@@ -939,3 +939,5 @@ Geprüfter Code-HEAD PV-UX-03: `345d85c3a0e946e33380c1f76704068036166f7d` (CI #1
 **Prüfgrenze PV-UX-04:** Der lokale Gesamt-GUI-Versuch wurde am Audiobackend nach festem Zeitlimit beendet (PulseAudio/Qt-Multimedia in der eingeschränkten Umgebung); kein PASS für diesen Versuch. Unmittelbar betroffene Module und Rückfallfälle separat geprüft. Vollständige GUI-/Wayland-/Restore-Prüfung bleibt vor Integration über GitHub verpflichtend.
 
 Lokaler gezielter Abschluss PV-UX-04: 57 Tests erfolgreich (echte Dialogaktionen, Text-/Buch-/Ideenwege, Modulverwaltung, Dashboard-Schließschutz, Tastatur, Zoom, Speicherzustände und Dokumentation).
+
+**CI-Diagnose PV-UX-04:** Der erste vollständige Lauf wartete auf einen realen Dialog, weil zwei ältere Kalender-/Text-Sicherheitsfälle noch die frühere statische question-Schnittstelle statt exec steuerten. Isolierter Nicht-Audio-Diagnoselauf lokalisierte den wartenden Fall. Nur die Testansteuerung aktualisiert; ursprüngliche Abnahmekriterien zu erhaltenen Eingaben und blockiertem Schließen unverändert. Neuer vollständiger exakter HEAD-Lauf erforderlich.
