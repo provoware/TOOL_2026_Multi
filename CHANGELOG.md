@@ -2,6 +2,7 @@
 
 ## Projekt-Notizen und persönliche Sicherung (24.10.2026; PV-AUD-01)
 
+- Aufgabenstatus PV-AUD-02 berichtigt: PR #121 war bereits übernommen; drei vorhandene UTF-8-Log-Rückfalltests erneut erfolgreich, keine Doppelimplementierung.
 - Neue Notizen atomar unter `daten/notizen/projekt-notizen.txt` speichern; bestehende Einträge erhalten.
 - Alte `Entwicklerinformation.txt` nur nach ausdrücklicher Zustimmung als bytegenaue Altkopie in den Datenordner übernehmen; Original nie löschen oder überschreiben.
 - Wiederholte Übernahme ohne Dubletten, geänderte Altbestände als neue Kopie, Ablehnung mit Hinweis auf Sicherungsausschluss.
