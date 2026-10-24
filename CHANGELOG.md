@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## Dokumentation: UX-Konzept (24.10.2026; keine Produktänderung)
+
+- Vertiefte Analyse zu Datenumfang, persönlichen Aufgaben, Einstieg, Navigation, Speichern, Suche, Inhaltsbeziehungen, Sprache, Fehlerhilfe und Barrierefreiheit dokumentiert.
+- Bestehende Audit-Aufträge verknüpft; zehn ergänzende UX-Aufträge und zwölf geplante Abnahmeszenarien erfasst.
+- Konzept im Dokumentationswegweiser verlinkt. Laufende Modulplanung, Laufzeitverhalten, persönliche Daten und Programmversion bleiben unverändert; keine neue GUI- oder Nutzerabnahme behauptet.
+
 ## Weitere Modulentwicklung (PR #100–#103, 19.10.2026; kein Release)
 
 - Vorbereitete Update-Slot-Installationen können nach abgeschirmter Prüfung atomar zwischen Programmversionen wechseln und bei Startfehlern zurückfallen. Bestehende Normalinstallationen bleiben unverändert.

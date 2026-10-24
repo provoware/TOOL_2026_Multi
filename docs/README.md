@@ -62,3 +62,7 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein P
 - [Versionsunterlagen 0.18.4](FREIGABE_0_18_4.md)
 
 - [Rechte Link-Schnellstarter-Leiste](SCHNELLSTARTER.md) – Bedienung, Datenschutz und Zoomgrenzen.
+
+## Nutzerfreundlichkeit und Laientauglichkeit
+
+- [UX-Analyse und Verbesserungskonzept](UX_KONZEPT_LAIENTAUGLICHKEIT.md) – Analyse vom 24.10.2026 mit belegten Befunden, Empfehlungen, Audit-Zuordnung und geplanten Abnahmeszenarien; keine Aussage über bereits umgesetzte Produktänderungen.
