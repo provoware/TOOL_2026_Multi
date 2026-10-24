@@ -13,7 +13,8 @@ from PySide6.QtWidgets import (
     QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget,
 )
 
-from app.todo_store import active_tasks, add_task, archived_tasks, complete_task, ensure_project_module_backlog
+from app.todo_store import add_task, complete_task, task_groups
+from app.module_widgets import t
 from app.ui_standards import SPACING, apply_global_style
 
 
@@ -25,19 +26,13 @@ class TodoWindow(QWidget):
         self.project_root = project_root
         self.zoom_percent = zoom_percent
         self.on_changed = on_changed
+        self.error_logger = getattr(parent, "logger", None)
         self.setWindowTitle("Aufgaben · Todo-Liste")
         self.resize(900, 650)
         self.setMinimumSize(760, 520)
         self._build()
-        try:
-            added_backlog = ensure_project_module_backlog(self.project_root)
-        except Exception as error:
-            added_backlog = 0
-            self.status_label.setText(f"Projektmodul-Plan konnte nicht ergänzt werden · vorhandene Todos bleiben erhalten. Grund: {error}")
         self.set_zoom(zoom_percent)
         self.refresh()
-        if added_backlog:
-            self.status_label.setText(f"{added_backlog} Projektmodule als detaillierte Todos ergänzt · vorhandene Aufgaben blieben erhalten.")
         self.title_entry.setFocus()
 
     def _build(self) -> None:
@@ -84,12 +79,7 @@ class TodoWindow(QWidget):
         form.addRow("", add_row)
         outer.addWidget(form_frame)
 
-        self.tabs = QTabWidget()
-        self.active_table = self._make_table(["Aufgabe", "Termin", "Notiz"])
-        self.archive_table = self._make_table(["Aufgabe", "Termin", "Erledigt", "Notiz"])
-        self.tabs.addTab(self.active_table, "Aktiv")
-        self.tabs.addTab(self.archive_table, "Archiv")
-        outer.addWidget(self.tabs, 1)
+        outer.addWidget(self._build_task_tabs(), 1)
 
         buttons = QHBoxLayout()
         self.status_label = QLabel("Bereit · Aufgabe eingeben oder eine aktive Aufgabe auswählen.")
@@ -100,11 +90,37 @@ class TodoWindow(QWidget):
         buttons.addWidget(refresh)
         done = QPushButton("Als erledigt markieren → Archiv")
         done.setToolTip("Die Aufgabe wird nicht gelöscht, sondern vollständig ins Archiv verschoben.")
+        self.done_button = done
+        self.tabs.currentChanged.connect(self._update_done_button)
         done.clicked.connect(self.complete_selected)
         buttons.addWidget(done)
         outer.addLayout(buttons)
 
         self.title_entry.returnPressed.connect(self.add_current_task)
+
+    def _build_task_tabs(self):
+        self.tabs = QTabWidget()
+        self.active_table = self._make_table(["Aufgabe", "Termin", "Notiz"])
+        self.archive_table = self._make_table(["Aufgabe", "Termin", "Erledigt", "Notiz"])
+        self.tabs.addTab(self.active_table, "Aktiv")
+        self.tabs.addTab(self.archive_table, "Archiv")
+        self.development_panel = QWidget(self.tabs)
+        self.development_panel.hide()
+        legacy_box = QVBoxLayout(self.development_panel)
+        legacy_hint = QLabel(t('todo_legacy_hint',
+            'Früher automatisch eingetragene Entwicklungsaufgaben. Sie bleiben unverändert erhalten '
+            'und zählen nicht zu deinen persönlichen Aufgaben. Bei Bedarf eine persönliche Kopie anlegen.'))
+        legacy_hint.setWordWrap(True)
+        legacy_box.addWidget(legacy_hint)
+        self.development_table = self._make_table([
+            t('todo_legacy_task', 'Entwicklungsaufgabe'), t('todo_legacy_status', 'Stand'),
+            t('todo_legacy_due', 'Termin'), t('todo_legacy_note', 'Notiz')])
+        self.development_table.setAccessibleName(t('todo_legacy_accessible', 'Erhaltene Entwicklungsaufgaben aus älteren Versionen'))
+        legacy_box.addWidget(self.development_table, 1)
+        self.copy_legacy_button = QPushButton(t('todo_copy_personal', 'Als persönliche Aufgabe kopieren'))
+        self.copy_legacy_button.clicked.connect(self.copy_legacy_task)
+        legacy_box.addWidget(self.copy_legacy_button)
+        return self.tabs
 
     @staticmethod
     def _make_table(headers: list[str]) -> QTableWidget:
@@ -156,8 +172,7 @@ class TodoWindow(QWidget):
             self.on_changed()
         self.title_entry.setFocus()
 
-    def _fill_active(self) -> None:
-        tasks = active_tasks(self.project_root)
+    def _fill_active(self, tasks) -> None:
         self.active_table.setRowCount(len(tasks))
         for row, task in enumerate(tasks):
             values = [str(task["title"]), self._format_due(task["due"]), str(task["note"])]
@@ -168,8 +183,7 @@ class TodoWindow(QWidget):
                 self.active_table.setItem(row, column, item)
         self.tabs.setTabText(0, f"Aktiv ({len(tasks)})")
 
-    def _fill_archive(self) -> None:
-        tasks = archived_tasks(self.project_root)
+    def _fill_archive(self, tasks) -> None:
         self.archive_table.setRowCount(len(tasks))
         for row, task in enumerate(tasks):
             values = [
@@ -180,10 +194,87 @@ class TodoWindow(QWidget):
                 self.archive_table.setItem(row, column, QTableWidgetItem(value))
         self.tabs.setTabText(1, f"Archiv ({len(tasks)})")
 
+    def _fill_development(self, tasks) -> None:
+        index = self.tabs.indexOf(self.development_panel)
+        if tasks and index < 0:
+            index = self.tabs.addTab(self.development_panel, '')
+        elif not tasks and index >= 0:
+            self.tabs.removeTab(index)
+        if tasks:
+            self.tabs.setTabText(index, t('todo_legacy_tab', 'Entwicklungsplanung (Altbestand)') + f' ({len(tasks)})')
+        self.development_table.setRowCount(len(tasks))
+        for row, task in enumerate(tasks):
+            status = t('todo_legacy_done', 'Erledigt') if task['completed_at'] else t('todo_legacy_active', 'Offen')
+            values = [str(task['title']), status, self._format_due(task['due']), str(task['note'])]
+            for column, value in enumerate(values):
+                item = QTableWidgetItem(value)
+                if column == 0:
+                    item.setData(Qt.UserRole, task)
+                self.development_table.setItem(row, column, item)
+        self.development_table.resizeColumnsToContents()
+        self._update_done_button()
+
+    def _update_done_button(self, _index=None) -> None:
+        self.done_button.setEnabled(self.tabs.currentWidget() is self.active_table)
+
+    def _report_copy_error(self, error):
+        record = getattr(self.error_logger, 'record', None)
+        if callable(record):
+            try:
+                record(severity='ERROR', area='AUFGABEN_KOPIE',
+                       summary=t('todo_copy_failed', 'Persönliche Kopie nicht gespeichert'),
+                       cause=str(error),
+                       protection=t('todo_copy_protection', 'Der gespeicherte Aufgabenbestand wurde nicht verworfen.'),
+                       next_step=t('todo_copy_next', 'Schreibrechte und freien Speicher prüfen. Details stehen unter F1 in der Fehlerhilfe.'),
+                       exception=error)
+            except Exception:
+                pass  # Ein Diagnosefehler darf keinen weiteren Speicherversuch auslösen.
+        QMessageBox.critical(self, t('todo_copy_failed', 'Persönliche Kopie nicht gespeichert'),
+                             t('todo_copy_error', 'Der Altbestand bleibt erhalten.\n\nGrund: {error}').format(error=error))
+
+    def copy_legacy_task(self) -> None:
+        if self.tabs.currentWidget() is not self.development_panel:
+            return
+        row = self.development_table.currentRow()
+        item = self.development_table.item(row, 0) if row >= 0 else None
+        if item is None:
+            QMessageBox.information(self, t('todo_select_legacy_title', 'Entwicklungsaufgabe auswählen'),
+                                    t('todo_select_legacy', 'Bitte zuerst eine Entwicklungsaufgabe markieren.'))
+            return
+        task = item.data(Qt.UserRole)
+        dialog = QMessageBox(self)
+        dialog.setWindowTitle(t('todo_copy_title', 'Persönliche Kopie anlegen?'))
+        dialog.setTextFormat(Qt.PlainText)
+        dialog.setText(t('todo_copy_confirm',
+            'Diesen Eintrag als neue persönliche Aufgabe anlegen?\n\n{title}\n\n'
+            'Die Kopie erscheint unter Aktiv. Der Altbestand bleibt erhalten. Wiederholtes Kopieren erzeugt weitere Aufgaben.').format(title=task['title']))
+        dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        dialog.button(QMessageBox.Yes).setText(t('todo_copy_apply', 'Persönliche Kopie anlegen'))
+        dialog.button(QMessageBox.No).setText(t('todo_copy_cancel', 'Abbrechen'))
+        dialog.setDefaultButton(QMessageBox.No)
+        if dialog.exec() != QMessageBox.Yes:
+            return
+        try:
+            copied = add_task(self.project_root, task['title'], task['note'], task['due'])
+        except Exception as error:
+            self._report_copy_error(error)
+            return
+        self.refresh()
+        self.tabs.setCurrentWidget(self.active_table)
+        for row in range(self.active_table.rowCount()):
+            if self.active_table.item(row, 0).data(Qt.UserRole) == copied['id']:
+                self.active_table.selectRow(row)
+                break
+        self.status_label.setText(t('todo_copy_saved', 'Persönliche Kopie unter „Aktiv“ angelegt.'))
+        if self.on_changed:
+            self.on_changed()
+
     def refresh(self) -> None:
         try:
-            self._fill_active()
-            self._fill_archive()
+            groups = task_groups(self.project_root)
+            self._fill_active(groups["active"])
+            self._fill_archive(groups["archive"])
+            self._fill_development(groups["development"])
         except Exception as error:
             QMessageBox.critical(
                 self, "Aufgaben nicht lesbar",
@@ -194,6 +285,8 @@ class TodoWindow(QWidget):
         self.archive_table.resizeColumnsToContents()
 
     def complete_selected(self) -> None:
+        if self.tabs.currentWidget() is not self.active_table:
+            return
         row = self.active_table.currentRow()
         if row < 0:
             QMessageBox.information(self, "Keine Aufgabe ausgewählt", "Bitte zuerst unter „Aktiv“ eine Aufgabe markieren.")

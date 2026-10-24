@@ -79,11 +79,12 @@ HELP_TOPICS: tuple[HelpTopic, ...] = (
     HelpTopic(
         "vorgaben-planung",
         "Vorgaben, Todo und Kalender",
-        ("genre", "stimmung", "stil", "stimme", "todo", "aufgabe", "kalender", "termin", "erinnerung"),
+        ("genre", "stimmung", "stil", "stimme", "todo", "aufgabe", "kalender", "termin", "erinnerung", "altbestand", "entwicklungsplanung", "persönlich"),
         "Vorgaben helfen beim Wiederverwenden kreativer Einstellungen; Todo und Kalender halten Aufgaben und Termine getrennt von den Schreibinhalten.",
         (
             "Pflege wiederkehrende Genres, Stimmungen, Stile, Stimmen und Besonderheiten unter Vorgaben.",
-            "Lege Aufgaben in der Todo-Liste an und hake sie erst nach Erledigung ab.",
+            "Lege eigene Aufgaben in der Todo-Liste an. Neue Bestände sind leer; Öffnen erzeugt keine Entwicklungsaufgaben. Hake eigene Aufgaben erst nach Erledigung ab.",
+            "Frühere Entwicklungsaufgaben findest du getrennt unter Entwicklungsplanung (Altbestand). Eine persönliche Kopie entsteht nur nach deiner Bestätigung; das Original bleibt erhalten.",
             "Lege Termine im Kalender an; Erinnerungen funktionieren, solange das Hauptprogramm läuft.",
             "Prüfe nach Änderungen die Statusmeldung des jeweiligen Fensters.",
         ),

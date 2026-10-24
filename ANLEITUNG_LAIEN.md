@@ -289,6 +289,23 @@ daten/profile/db_profile.json
 
 **Direkt nutzbar → Todo-Liste**
 
+## Persönliche Aufgaben und ältere Entwicklungsplanung
+
+Ein neuer Bestand beginnt mit einer leeren persönlichen Aufgabenliste. Öffnen, Aktualisieren und Vergrößern erzeugen keine Aufgaben und schreiben die Aufgabendatei nicht um.
+
+Falls eine ältere Programmversion automatisch Entwicklungsaufgaben eingetragen hat, erscheinen diese unter **Entwicklungsplanung (Altbestand)**. Der Reiter wird nur angezeigt, wenn solche Einträge vorhanden sind. Offene und erledigte Altaufgaben bleiben dort vollständig erhalten. Unter **Aktiv** und **Archiv** stehen deine persönlichen Aufgaben. Gleiche Titel führen nicht dazu, dass eigene Aufgaben als Entwicklungsaufgaben behandelt werden.
+
+Wenn du eine alte Entwicklungsaufgabe persönlich weiterverfolgen möchtest:
+
+1. **Entwicklungsplanung (Altbestand)** öffnen und einen Eintrag markieren.
+2. **Als persönliche Aufgabe kopieren** wählen.
+3. Den Hinweis prüfen und **Persönliche Kopie anlegen** bestätigen. **Abbrechen** verändert nichts.
+4. Die neue Aufgabe erscheint markiert unter **Aktiv**. Der ursprüngliche Eintrag bleibt im Altbestand; dies gilt auch für zuvor erledigte Altaufgaben.
+
+Jede bestätigte Wiederholung erzeugt eine weitere eigenständige persönliche Aufgabe. Eine noch nicht angelegte Eingabe im Formular bleibt beim Kopieren erhalten. **Als erledigt markieren → Archiv** ist ausschließlich im Reiter **Aktiv** verfügbar.
+
+Alle Einträge liegen weiterhin gemeinsam in `daten/todo/todo.json` und sind Bestandteil der persönlichen Datensicherung. Die Trennung betrifft die Anzeige; vorhandene Aufgaben werden beim Öffnen weder verschoben noch gelöscht.
+
 ## Aufgabe anlegen
 
 1. Aufgabe eingeben.
