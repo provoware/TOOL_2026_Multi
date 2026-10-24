@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.2",
+  "text_version": "0.2.3",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -246,7 +246,13 @@
     "modules.search_root_summary": "\nSuchordner: {path} · Fehlende Leseberechtigungen: {denied}",
     "modules.search_state_permission": "Suche unvollständig: Leseberechtigung fehlt. Zugriff gegebenenfalls über die Betriebssystem-Ordnerauswahl erlauben oder Linux-Dateirechte durch eine berechtigte Person freigeben lassen. Danach Suchen erneut bestätigen. Provoware ändert keine Dateirechte.",
     "modules.search_permission_title": "Leseberechtigung erforderlich",
-    "modules.search_permission_request": "Einige Bereiche sind nicht lesbar:\n{paths}\n\nMöchtest du die Betriebssystem-Ordnerauswahl zur Freigabe oder Auswahl eines anderen Ordners öffnen? Linux-Dateirechte müssen gegebenenfalls von einer berechtigten Person geändert werden. Provoware erhält durch diese Bestätigung keine Administratorrechte. Bisherige Treffer bleiben erhalten; eine neue Suche musst du ausdrücklich starten."
+    "modules.search_permission_request": "Einige Bereiche sind nicht lesbar:\n{paths}\n\nMöchtest du die Betriebssystem-Ordnerauswahl zur Freigabe oder Auswahl eines anderen Ordners öffnen? Linux-Dateirechte müssen gegebenenfalls von einer berechtigten Person geändert werden. Provoware erhält durch diese Bestätigung keine Administratorrechte. Bisherige Treffer bleiben erhalten; eine neue Suche musst du ausdrücklich starten.",
+    "modules.notes_legacy_title": "Alte Projekt-Notizen übernehmen?",
+    "modules.notes_legacy_question": "Alte Notizen liegen noch außerhalb der persönlichen Datensicherung. Eine unveränderte Kopie in den Datenordner übernehmen? Die ursprüngliche Datei bleibt erhalten. Bei Nein werden nur neue Notizen dort gespeichert; alte Notizen sind dann weiterhin nicht im persönlichen Daten-ZIP enthalten.",
+    "modules.notes_empty": "Bitte zuerst eine kurze Projekt-Notiz eingeben.",
+    "modules.notes_failed": "Notiz nicht gespeichert. Eingabe bleibt erhalten.",
+    "modules.notes_saved": "Projekt-Notiz im Datenordner gespeichert.",
+    "modules.notes_legacy_excluded": "Neue Notiz gespeichert; alte Notizen sind noch nicht im Daten-ZIP."
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

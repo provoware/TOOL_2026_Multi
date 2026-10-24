@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Projekt-Notizen und persönliche Sicherung (24.10.2026; PV-AUD-01)
+
+- Neue Notizen atomar unter `daten/notizen/projekt-notizen.txt` speichern; bestehende Einträge erhalten.
+- Alte `Entwicklerinformation.txt` nur nach ausdrücklicher Zustimmung als bytegenaue Altkopie in den Datenordner übernehmen; Original nie löschen oder überschreiben.
+- Wiederholte Übernahme ohne Dubletten, geänderte Altbestände als neue Kopie, Ablehnung mit Hinweis auf Sicherungsausschluss.
+- Kollisions-, Link-, Größen- und Schreibfehler schützen vorhandene Dateien und aktuelle Eingaben; Daten-ZIP-Roundtrip mit Alt- und Neunotizen geprüft.
+
 ## Lokale Dateisystemsuche – Implementierungskandidat (24.10.2026)
 
 - Suchordner frei eingeben oder über die native Ordnerauswahl wählen; Unterordner werden mit durchsucht.

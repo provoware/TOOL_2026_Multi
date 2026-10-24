@@ -868,3 +868,10 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 ## Präzisierter Suchauftrag – lokales Dateisystem (24.10.2026)
 
 - [ ] **PV-SEARCH-01 [P1]** – Datei-/Textinhaltssuche mit frei wählbarem lokalen Suchpfad, ausdrücklicher Bestätigung zusätzlicher Suchbereiche und transparenter Behandlung fehlender OS-Leserechte. **Status:** Implementierungskandidat; lokale und GitHub-Nachweise im zugehörigen PR führen. **Abnahme:** Auswahl/Eingabe externer Ordner, Ablehnung ohne Scan oder Trefferverlust, Pfadwechsel mit erneuter Zustimmung, reine Lesezugriffe, keine Linkverfolgung, erhaltene Suchgrenzen und sichtbar unvollständige Ergebnisse bei Berechtigungsfehlern. Keine automatische Root-Suche oder Rechteänderung. **SUPERSEDES:** `daten/` als ausschließliches Produktziel; **REQUIRES:** bestehende Suchschutzverträge; ergänzt `PV-AUD-11`. `PV-AUD-10/18` bleiben für fachliche Suchtrefferöffnung führend und gelten nur für dafür unterstützte Datensätze. Details: [Dateisuche](docs/DATEISUCHE.md).
+
+
+## Bearbeitung PV-AUD-01 – Projekt-Notizen (24.10.2026)
+
+**Status:** Implementierungskandidat auf Basis `c166a508d80010b7c79c0abd0a1e77a842ada30c`; GitHub-Evidenz und Abschluss folgen am zugehörigen PR. Neue Notizen unter `daten/notizen/projekt-notizen.txt`; alte Notizen nur mit Zustimmung als bytegenaue, inhaltsadressierte Kopie. Original bleibt erhalten. Ablehnung erklärt den Sicherungsausschluss; Abbrechen/Fehler erhält aktuelle Eingabe. Bestehender Auftrag `PV-AUD-01` bleibt führend; kein zusätzlicher Auftrag und keine Doppelzählung. Daten-ZIP-/Restore-Roundtrip, Kollisions-, Link-, Größen- und Fehlerfälle gezielt prüfen.
+
+**Nächster unabhängiger Punkt:** `PV-AUD-05`, persönliche Aufgaben von automatisch eingetragenen Entwicklungsaufgaben trennen. Keine automatische Löschung bestehender Aufgaben. `PV-AUD-02` bleibt separat gegen den tatsächlichen PR-Stand zu prüfen.
