@@ -15,8 +15,8 @@
 | **Programm starten** | Projektordner öffnen → Terminal öffnen → `bash schnellstart.sh`. |
 | **Song schreiben** | Auf der Startkarte **Song schreiben** wählen → Titel und Text eingeben. |
 | **Normalen Text schreiben** | **Text schreiben** wählen → Titel und Text eingeben → **Jetzt speichern**. |
-| **Aufgabe notieren** | **Aufgabe notieren** wählen → Eingabe ergänzen → **Aufgabe anlegen**. |
-| **Termin eintragen** | **Termin eintragen** wählen → Titel und Uhrzeit ergänzen → Termin anlegen. |
+| **Aufgabe notieren** | **Aufgabe planen** wählen → Eingabe ergänzen → **Aufgabe anlegen**. |
+| **Termin eintragen** | **Termin anlegen** wählen → Titel und Uhrzeit ergänzen → Termin anlegen. |
 | **Alles größer machen** | Unten `A+` drücken; bis 200 % möglich. |
 | **Problem lösen** | `F1` drücken → **Hilfe & Fehlerhilfe**. |
 
@@ -116,8 +116,8 @@ Vier gleichwertige Aktionen helfen dir beim Einstieg. Du kannst sie unabhängig 
 
 - **Song schreiben:** Öffnet einen neuen Songeditor. Bereits offene Songs bleiben erhalten.
 - **Text schreiben:** Beginnt bei geschlossenem Editor einen leeren Text. Ist der Editor bereits offen, arbeitest du im vorhandenen Entwurf weiter; er wird nicht neu geladen oder geleert.
-- **Aufgabe notieren:** Öffnet die Aufgabenliste und setzt den Fokus in das Eingabefeld. Eine begonnene Eingabe bleibt erhalten.
-- **Termin eintragen:** Öffnet den Kalender und setzt den Fokus in den Titel. Begonnene Termineingaben bleiben erhalten.
+- **Aufgabe planen:** Öffnet die Aufgabenliste und setzt den Fokus in das Eingabefeld. Eine begonnene Eingabe bleibt erhalten.
+- **Termin anlegen:** Öffnet den Kalender und setzt den Fokus in den Titel. Begonnene Termineingaben bleiben erhalten.
 
 Bei einer leeren Textliste erklärt ein Hinweis den ersten Schritt: Titel und Text eingeben, dann **Jetzt speichern**. Gespeicherte Texte findest du im Texteditor links unter **Gespeicherte Texte**. Für einen weiteren neuen Text im bereits geöffneten Editor **Neuer Text** wählen; dabei gilt die vorhandene Nachfrage zu ungespeicherten Änderungen.
 

@@ -42,7 +42,7 @@ HELP_TOPICS: tuple[HelpTopic, ...] = (
         ("start", "anfang", "dashboard", "übersicht", "oeffnen", "module"),
         "Die Startkarte „Was möchtest du tun?“ bietet unabhängige Aktionen zum Schreiben, Notieren und Eintragen. Bereits offene Textentwürfe bleiben erhalten.",
         (
-            "Wähle Song schreiben, Text schreiben, Aufgabe notieren oder Termin eintragen. Die Aktionen haben keine vorgeschriebene Reihenfolge.",
+            "Wähle Song schreiben, Text schreiben, Aufgabe planen oder Termin anlegen. Die Aktionen haben keine vorgeschriebene Reihenfolge.",
             "Beim ersten Text Titel und Inhalt eingeben und Jetzt speichern wählen. Danach findest du ihn links unter Gespeicherte Texte.",
             "Text schreiben führt zu einem bereits offenen Entwurf zurück. Für einen weiteren neuen Text im Editor Neuer Text wählen und die Speicherfrage beachten.",
             "Achte unten beziehungsweise im Modul auf die Statusmeldung nach dem Speichern.",

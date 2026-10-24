@@ -910,3 +910,8 @@ Produktcode-Prüfstand `bbadafdda41516a97378ce07c281475692090faf`: [vollständig
 **Darstellungsnachweis:** Der erste direkte Prüferaufruf ohne produktive Fensterkonfiguration war nicht repräsentativ. Über den tatsächlichen CI-Einstieg `scripts/ui_shadow_entry.py` wurden 12 echte Überlappungen im 1366×768-/200-%-Profil erkannt und durch das kompakte 2×2-Raster ursachengerecht beseitigt. Danach vollständige lokale Matrix mit 60 Fällen / 180 Fenstern: null Fehler, null Warnungen. Keine Abschwächung von Geometriegrenzen. Reale Erstnutzerstudie bleibt der späteren Gesamt-Kubuntu-Abnahme vorbehalten.
 
 **Nächste Vorschläge:** `PV-UX-03` Speicherzustände vereinheitlichen (**priorisiert empfohlen**), `PV-UX-04` eindeutige Verlassen-Dialoge, `PV-UX-02` Werkzeugzugang nach Modulstatus-Abgleich, `PV-UX-05` letzte Arbeiten über Inhaltstypen, `PV-AUD-10` unterstützte Suchtreffer direkt öffnen. Abhängigkeiten und laufenden Plan vor jeder Umsetzung erneut abgleichen.
+
+
+### CI-Nachpflege innerhalb PV-UX-01
+
+Der erste GitHub-Lauf #1118 meldete einen Schriftbreitenbefund (254 benötigte gegenüber 250 verfügbaren Pixeln). Die Formularaktionen heißen deshalb kurz und konsistent „Aufgabe planen“ und „Termin anlegen“. Schriftgröße und Prüfgrenzen unverändert. Zusätzlich zeigte der Lauf einen verzögerten Laptop-Layoutaufruf nach Zerstörung des Dashboards. Der Callback prüft nun die Gültigkeit des Qt-Objekts, bevor er auf das Fenster zugreift; ein gezielter Rückfalltest führt den wartenden Aufruf nach tatsächlicher Fensterzerstörung aus. Dies ergänzt den Lebenszyklus-Prüfbedarf PV-AUD-21, schließt dessen weitere Fälle aber nicht pauschal ab. Vollständiger neuer Prüflauf auf dem korrigierten HEAD erforderlich.

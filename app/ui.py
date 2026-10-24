@@ -410,10 +410,6 @@ class Dashboard(QWidget):
     def _build_start_card(self) -> QFrame:
         card, layout = self._card(module_text('start_title', 'Was möchtest du tun?'))
         self.start_card = card
-        hint = QLabel(module_text('start_hint', 'Wähle eine Tätigkeit. Ein offener Textentwurf bleibt erhalten.'))
-        hint.setWordWrap(True)
-        hint.setObjectName('cardHint')
-        layout.addWidget(hint)
         self.start_actions = {}
         actions = QGridLayout()
         actions.setSpacing(6)
@@ -422,8 +418,8 @@ class Dashboard(QWidget):
         for index, (key, label, command, tooltip) in enumerate((
             ('song', 'Song schreiben', self.open_song_editor, 'Öffnet einen neuen Song. Vorhandene Songeditoren bleiben erhalten.'),
             ('text', 'Text schreiben', self.start_writing_text, 'Beginne einen Text oder schreibe in deinem offenen Entwurf weiter.'),
-            ('todo', 'Aufgabe notieren', self.start_task, 'Öffnet die Aufgabenliste und setzt den Fokus in die Eingabe.'),
-            ('calendar', 'Termin eintragen', self.start_event, 'Öffnet den Kalender. Eine begonnene Termineingabe bleibt erhalten.'),
+            ('todo', 'Aufgabe planen', self.start_task, 'Öffnet die Aufgabenliste und setzt den Fokus in die Eingabe.'),
+            ('calendar', 'Termin anlegen', self.start_event, 'Öffnet den Kalender. Eine begonnene Termineingabe bleibt erhalten.'),
         )):
             action = QPushButton(module_text('start_' + key, label))
             action.setObjectName('start_' + key)

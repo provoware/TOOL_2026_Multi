@@ -52,7 +52,7 @@ class StartActionsTests(unittest.TestCase):
         self.app.processEvents()
 
     def test_four_unordered_actions_are_visible_and_accessible_at_high_zoom(self):
-        labels = ['Song schreiben', 'Text schreiben', 'Aufgabe notieren', 'Termin eintragen']
+        labels = ['Song schreiben', 'Text schreiben', 'Aufgabe planen', 'Termin anlegen']
         self.assertEqual([b.text() for b in self.dashboard.start_actions.values()], labels)
         for zoom in (100, 125, 150, 175, 200):
             self.dashboard.set_zoom(zoom)
@@ -69,7 +69,7 @@ class StartActionsTests(unittest.TestCase):
                 bottom = button.mapTo(self.dashboard, button.rect().bottomRight())
                 self.assertTrue(self.dashboard.rect().contains(bottom), (zoom, button.text()))
                 self.assertFalse(button.text().startswith(('①', '②', '③', '④')))
-                self.assertLessEqual(button.fontMetrics().horizontalAdvance(button.text()) + 20, button.width())
+                self.assertLessEqual(button.fontMetrics().horizontalAdvance(button.text()) + 20, button.width(), (zoom, button.text()))
             for index, first in enumerate(buttons):
                 for second in buttons[index + 1:]:
                     self.assertFalse(first.geometry().intersects(second.geometry()), (zoom, first.text(), second.text()))
@@ -162,3 +162,18 @@ class StartActionsTests(unittest.TestCase):
         self.assertFalse(editor.empty_hint.isVisible())
         self.assertIn('nicht lesbar', editor.status_label.text())
         self.assertEqual(editor.text_edit.toPlainText(), 'Entwurf bleibt')
+
+    def test_queued_layout_callback_ignores_destroyed_window(self):
+        from app.laptop_layout import _LaptopLayoutFilter
+        from PySide6.QtWidgets import QWidget
+        from shiboken6 import delete
+        root = QWidget()
+        controller = _LaptopLayoutFilter(root)
+        callbacks = []
+        with patch('app.laptop_layout.QTimer.singleShot', side_effect=lambda _ms, callback: callbacks.append(callback)):
+            controller._schedule()
+        self.assertEqual(len(callbacks), 1)
+        delete(root)
+        with patch('app.laptop_layout.apply_laptop_layout') as apply:
+            callbacks[0]()
+        apply.assert_not_called()
