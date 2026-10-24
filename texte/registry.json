@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.5",
+  "text_version": "0.2.6",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -286,7 +286,16 @@
     "modules.start_calendar": "Termin anlegen",
     "modules.start_calendar_tooltip": "Öffnet den Kalender. Eine begonnene Termineingabe bleibt erhalten.",
     "modules.text_empty_hint": "Noch keine Texte gespeichert. Gib Titel und Text ein und wähle „Jetzt speichern“.",
-    "modules.start_ready": "Bereit · Wähle eine Tätigkeit."
+    "modules.start_ready": "Bereit · Wähle eine Tätigkeit.",
+    "modules.save_state_name": "Speicherzustand",
+    "modules.save_state_failed": "Nicht gespeichert · Eingaben bleiben im Fenster. Bitte erneut speichern.",
+    "modules.save_state_saved": "Gespeichert · aktueller Stand auf dem Datenträger.",
+    "modules.save_state_untitled": "Nicht gespeichert · zuerst Titel eingeben. Ohne Titel keine automatische Speicherung.",
+    "modules.save_state_changed": "Nicht gespeichert · Änderungen nur im Fenster. {policy}",
+    "modules.save_policy_five": "Automatisch alle 5 Minuten oder jetzt mit Strg+S.",
+    "modules.save_policy_minute": "Automatisch jede Minute oder jetzt mit Strg+S.",
+    "modules.save_policy_song": "Automatisch alle 5 Minuten, beim Verlassen eines Feldes und beim Schließen. Ohne eigenen Titel als „Unbenannter Song“.",
+    "modules.save_last": "Letzter Speichervorgang: {detail}"
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

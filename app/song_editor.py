@@ -13,10 +13,12 @@ from PySide6.QtWidgets import (
     QTextEdit, QToolButton, QVBoxLayout, QWidget,
 )
 
+from app.save_state import SaveState
+from app.module_widgets import t
 from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
 from app.genre_random_window import GenreRandomWindow
-from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song
+from app.song_document import SECTION_TYPES, SONG_STATUSES, SongDocument, SongSection, export_song, normalize_section_name, save_song, song_path, load_song
 from app.ui_standards import SPACING, apply_global_style
 from app.window_state import ensure_window_visible, restore_window_state, save_window_state
 
@@ -52,6 +54,17 @@ class SongEditor(QWidget):
         self.refresh_characters()
         self._load_section(0)
         self._update_preview()
+        self.save_state = SaveState(self._save_snapshot, self.title_entry.text,
+            t("save_policy_song", "Automatisch alle 5 Minuten, beim Verlassen eines Feldes und beim Schließen."),
+            title_required=False)
+        self.layout().addWidget(self.save_state)
+        if document is not None:
+            try:
+                path = song_path(self.project_root, self.document.title)
+                if load_song(path) == self.document:
+                    self.save_state.mark_saved(path)
+            except (OSError, ValueError):
+                pass
         apply_global_style(self, zoom_percent)
         restore_window_state(
             self, self.project_root, "song_editor",
@@ -432,6 +445,8 @@ class SongEditor(QWidget):
             return
         self._sync_document()
         self.preview.setPlainText(self.document.render())
+        if hasattr(self, "save_state"):
+            self.save_state.update_state()
 
     def open_genre_random(self) -> None:
         """Öffnet denselben Profilgenerator wie das Dashboard, ohne zweite Datenhaltung."""
@@ -444,6 +459,14 @@ class SongEditor(QWidget):
         self._genre_random_window.raise_()
         self._genre_random_window.activateWindow()
 
+    def _save_snapshot(self):
+        self._sync_document()
+        fields = (self.title_entry, self.genre_entry, self.mood_entry, self.style_entry,
+                  self.voice_entry, self.special_entry, self.tags_entry)
+        return (tuple(field.text() for field in fields), self.status_song.currentText(),
+                self.favorite_check.isChecked(), self.other_text.toPlainText(),
+                tuple((section.kind, section.text) for section in self.document.sections))
+
     def _save_from_focus(self) -> None:
         self.save(reason="Änderung gespeichert")
 
@@ -453,11 +476,13 @@ class SongEditor(QWidget):
         try:
             self._sync_document()
             target = save_song(self.project_root, self.document)
-            self.status_label.setText(f"● {reason}: {target.name}")
+            self.save_state.mark_saved(target)
+            self.status_label.setText(t("save_last", "Letzter Speichervorgang: {detail}").format(detail=f"{reason}: {target.name}"))
             if self.on_saved is not None:
                 self.on_saved(target)
             return target
         except Exception as error:
+            self.save_state.mark_failed()
             self.status_label.setText("Speichern fehlgeschlagen · der bisherige Stand bleibt geschützt.")
             QMessageBox.critical(
                 self,

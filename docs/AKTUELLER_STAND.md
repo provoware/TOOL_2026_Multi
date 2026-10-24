@@ -123,3 +123,11 @@ Lokaler Prüfnachweis: 97 gezielte und angrenzende Tests erfolgreich. Produktive
 CI-Nachpflege: Kurze Formularaktionen „Aufgabe planen“ und „Termin anlegen“ erhalten zusätzliche Breitenreserve bei abweichenden Systemfonts. Ein verzögerter Laptop-Layoutaufruf ignoriert zerstörte Qt-Fenster; der neue Rückfalltest reproduziert diesen Zustand mit einem tatsächlich zerstörten Fenster. Nach den Korrekturen erneut 97 lokale Tests und 60 UI-Matrixfälle / 180 Fenster erfolgreich, null Fehler und null Warnungen. Die weitergehende Lebenszyklusprüfung PV-AUD-21 bleibt offen.
 
 GitHub-Codeprüfung PV-UX-01: Commit `5510614a235bad932ede47e60c7a817e14242f10` in [PR #132](https://github.com/provoware/TOOL_2026_Multi/pull/132) bestand [Lauf #1119](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40127732786): 365 Logiktests, 205 GUI-Tests, nativer Wayland-Start, UI-Matrix 8 Fälle / 24 Fenster ohne Fehler/Warnungen, vollständiger Restore und Paketbau. Technischer UX-Auftrag abgeschlossen; diese abschließende Dokumentationsrevision sowie der spätere main-Stand werden separat vollständig geprüft. Reale Erstnutzerstudie weiterhin ausstehend.
+
+## Nachpflege: Speicherzustände (PV-UX-03, 25.10.2026)
+
+Lokaler Kandidat: Song-, Text- und Bucheditor besitzen eine separate gemeinsame Speicheranzeige. Sie vergleicht den sichtbaren Entwurf mit dem tatsächlich gespeicherten/geladenen Stand; Erfolgshinweise anderer Aktionen ersetzen sie nicht. Unbetitelte Text-/Buchentwürfe werden ausdrücklich als ungespeichert ohne Autosave angezeigt. Die bestehende Song-Automatik mit Standardtitel bleibt erhalten und wird erklärt. Speicherformate, Datenpfade und Intervalle unverändert. Schreibfehler mit unverändertem Bestandsinhalt und erhaltenem Entwurf sowie Neu-/Ladewege sind in isolierten GUI-Tests geprüft. GitHub-/main-Nachweise folgen separat; keine reale Nutzerstudie behauptet.
+
+Technischer Abschluss PV-UX-03 in PR #133: [vollständiger Code-Prüflauf #1122](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40142517313) erfolgreich einschließlich Logik/GUI, Wayland, UI, Restore und Paketen. Die finale Dokumentationsrevision und spätere Integration in main werden separat vollständig geprüft. Kein öffentlicher Release und keine reale Erstnutzerprüfung behauptet.
+
+Geprüfter Code-HEAD PV-UX-03: `345d85c3a0e946e33380c1f76704068036166f7d` (CI #1122).

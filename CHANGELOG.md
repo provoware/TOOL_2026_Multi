@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## Einheitliche Speicherzustände (PV-UX-03, 25.10.2026)
+
+- Eigene gemeinsame Speicheranzeige für Songs, Texte und Bücher; Erfolg an tatsächlichen sichtbaren Snapshot gebunden und bei Änderungen sofort ungültig.
+- Titelgrenze ungespeicherter Text-/Buchentwürfe und bestehende Song-Automatik ausdrücklich erklärt. Schreibfehler erhalten Eingaben und bisherigen Datenbestand.
+- Textauswahl beim Neuanfang vollständig zurücksetzen, damit der zuvor gewählte Text erneut geöffnet werden kann. Speicherformate und Intervalle unverändert.
+
 ## Tätigkeitsorientierter Einstieg (PV-UX-01, 24.10.2026)
 
 - Startkarte „Was möchtest du tun?“ mit vier gleichwertigen Aktionen ohne nummerierte Reihenfolge: Song schreiben, Text schreiben, Aufgabe planen, Termin anlegen.

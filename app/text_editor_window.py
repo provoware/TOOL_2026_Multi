@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 )
 
 from app.module_widgets import t
+from app.save_state import SaveState
 from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
 from app.text_editor_store import TextDocument, list_text_documents, load_text_document, save_text_document
@@ -39,6 +40,11 @@ class TextEditorWindow(QWidget):
         apply_global_style(self, zoom_percent)
         self.refresh()
         self.new_document()
+        self.save_state = SaveState(self._snapshot, self.title_entry.text,
+            t("save_policy_five", "Automatisch alle 5 Minuten oder jetzt mit Strg+S."))
+        self.layout().addWidget(self.save_state)
+        for field in (self.title_entry, self.text_edit, self.notes_edit):
+            field.textChanged.connect(self.save_state.update_state)
         QShortcut(QKeySequence("Ctrl+S"), self, activated=self.save)
         QShortcut(QKeySequence("Escape"), self, activated=self.close)
         self.autosave_timer = QTimer(self)
@@ -211,13 +217,17 @@ class TextEditorWindow(QWidget):
             return
         self.current_path = None
         self.document = TextDocument()
-        self.file_list.clearSelection()
+        with QSignalBlocker(self.file_list):
+            self.file_list.clearSelection()
+            self.file_list.setCurrentRow(-1)
         self.title_entry.setText("")
         self.text_edit.clear()
         self.notes_edit.clear()
         self.status_label.setText("Neuer Text · der Titel wird beim Speichern zum Dateinamen.")
         self.title_entry.setFocus()
         self._saved_snapshot = self._snapshot()
+        if hasattr(self, "save_state"):
+            self.save_state.mark_new()
 
     def _load_selected(self, current: QListWidgetItem | None, _previous: QListWidgetItem | None) -> None:
         if current is None:
@@ -249,6 +259,7 @@ class TextEditorWindow(QWidget):
         self.notes_edit.setPlainText(document.notes)
         self.status_label.setText(f"„{document.title}“ geladen.")
         self._saved_snapshot = self._snapshot()
+        self.save_state.mark_saved(path)
 
     def insert_character_reference(self) -> None:
         character_id = str(self.character_combo.currentData() or "")
@@ -280,12 +291,14 @@ class TextEditorWindow(QWidget):
         try:
             target = save_text_document(self.project_root, self.document, self.current_path)
         except Exception as error:
+            self.save_state.mark_failed()
             QMessageBox.critical(self, "Text nicht gespeichert", f"Der bisherige gespeicherte Stand bleibt erhalten.\n\nGrund: {error}")
             return None
         self.current_path = target
         self._saved_snapshot = self._snapshot()
+        self.save_state.mark_saved(target)
         self.refresh()
-        self.status_label.setText(f"● Gespeichert: {target.name}")
+        self.status_label.setText(t("save_last", "Letzter Speichervorgang: {detail}").format(detail=target.name))
         return target
 
     def closeEvent(self, event) -> None:
