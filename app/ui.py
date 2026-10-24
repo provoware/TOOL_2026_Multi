@@ -37,7 +37,7 @@ from app.profile_editor import ProfileEditor
 from app.genre_random_window import GenreRandomWindow
 from app.github_projects_window import GitHubProjectsWindow
 from app.profile_store import CATEGORIES, load_profiles
-from app.quick_note import append_developer_info
+from app.quick_note import append_developer_info, legacy_notes_pending, preserve_legacy_notes
 from app.recovery_center import RecoveryCenter
 from app.recovery_ui import ZOOM_LEVELS
 from app.song_document import list_songs, load_song
@@ -666,17 +666,66 @@ class Dashboard(QWidget):
             self._search_window.query.setText(self.search_entry.text().strip())
             self._search_window.start()
 
-    def save_quick_info(self) -> None:
-        try:
-            append_developer_info(self.project_root, self.quick_entry.text())
-        except ValueError:
-            self.quick_status.setText("Bitte zuerst eine kurze Projekt-Notiz eingeben.")
+    def _offer_legacy_notes(self) -> bool | None:
+        if getattr(self, '_legacy_notes_declined', False):
+            return False
+        if not legacy_notes_pending(self.project_root):
+            return True
+        dialog = QMessageBox(self)
+        dialog.setWindowTitle(module_text('notes_legacy_title', 'Alte Projekt-Notizen übernehmen?'))
+        dialog.setTextFormat(Qt.PlainText)
+        dialog.setText(module_text('notes_legacy_question',
+            'Alte Notizen liegen noch außerhalb der persönlichen Datensicherung. '
+            'Eine unveränderte Kopie in den Datenordner übernehmen? '
+            'Die ursprüngliche Datei bleibt erhalten. Bei Nein werden nur neue Notizen dort gespeichert; '
+            'alte Notizen sind dann weiterhin nicht im persönlichen Daten-ZIP enthalten.'))
+        dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        dialog.setDefaultButton(QMessageBox.Cancel)
+        answer = dialog.exec()
+        if answer == QMessageBox.Cancel:
+            return None
+        if answer == QMessageBox.No:
+            self._legacy_notes_declined = True
+            return False
+        preserve_legacy_notes(self.project_root, approved=True)
+        return True
+
+    def _record_note_failure(self, error: Exception) -> None:
+        record = getattr(self.logger, 'record', None)
+        if not callable(record):
             return
+        try:
+            record(severity='ERROR', area='PROJEKT_NOTIZ',
+                   summary=module_text('notes_failed', 'Notiz nicht gespeichert. Eingabe bleibt erhalten.'),
+                   cause=str(error),
+                   protection=module_text('notes_error_protection',
+                       'Aktuelle Eingabe und ursprüngliche Altdatei wurden nicht verworfen.'),
+                   next_step=module_text('notes_error_next',
+                       'Unter F1 die Fehlermeldung prüfen: Schreibrechte, freien Speicher, Notizgröße und mögliche Dateikonflikte kontrollieren.'),
+                   exception=error)
         except Exception:
-            self.quick_status.setText("Projekt-Notiz konnte nicht gespeichert werden. Öffne bei Bedarf Hilfe & Fehlerhilfe.")
+            # Eine defekte Diagnoseablage darf die noch offene Eingabe nicht gefährden.
+            return
+
+    def save_quick_info(self) -> None:
+        if not self.quick_entry.text().strip():
+            self.quick_status.setText(module_text('notes_empty', 'Bitte zuerst eine kurze Projekt-Notiz eingeben.'))
+            return
+        try:
+            legacy_included = self._offer_legacy_notes()
+            if legacy_included is None:
+                return
+            append_developer_info(self.project_root, self.quick_entry.text())
+        except Exception as error:
+            self.quick_status.setText(module_text('notes_failed',
+                'Notiz nicht gespeichert. Eingabe bleibt erhalten.'))
+            self._record_note_failure(error)
             return
         self.quick_entry.clear()
-        self.quick_status.setText("Projekt-Notiz gespeichert. Vorhandene Notizen bleiben erhalten.")
+        message = module_text('notes_saved', 'Projekt-Notiz im Datenordner gespeichert.')
+        if not legacy_included:
+            message = module_text('notes_legacy_excluded', 'Neue Notiz gespeichert; alte Notizen sind noch nicht im Daten-ZIP.')
+        self.quick_status.setText(message)
         self.quick_entry.setFocus()
 
     def refresh_recent_songs(self) -> None:

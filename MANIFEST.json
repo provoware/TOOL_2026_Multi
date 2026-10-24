@@ -42,7 +42,8 @@
     "book_data": "daten/buecher/bestand.json",
     "idea_data": "daten/ideen/bestand.json",
     "account_data": "daten/konten/bestand.json",
-    "quicklinks_data": "daten/schnellstarter/bestand.json"
+    "quicklinks_data": "daten/schnellstarter/bestand.json",
+    "project_notes": "daten/notizen/"
   },
   "validation": {
     "command": "bash scripts/pruefen.sh --full",
@@ -807,7 +808,7 @@
     {
       "path": "app/quick_note.py",
       "release": true,
-      "purpose": "Kompatibler Append-only-Speicherweg für Projekt-Notizen"
+      "purpose": "Atomare persönliche Projekt-Notizen und bestätigte bytegenaue Altkopien"
     },
     {
       "path": "app/profile_store.py",
@@ -2060,5 +2061,15 @@
       "planned_ux_scenarios": 12,
       "runtime_changed": false
     }
-  ]
+  ],
+  "project_notes": {
+    "file": "daten/notizen/projekt-notizen.txt",
+    "legacy_file": "Entwicklerinformation.txt",
+    "legacy_copy_requires_confirmation": true,
+    "legacy_original_unchanged": true,
+    "legacy_copy_naming": "altbestand-<sha256>.txt",
+    "max_file_bytes": 4194304,
+    "backup_scope": "daten/",
+    "documentation": "docs/DATENSICHERUNG.md"
+  }
 }

@@ -126,7 +126,15 @@ Oben im Arbeitsbereich befindet sich **Projekt-Notiz**.
 - `Enter` drücken oder **Notiz speichern** anklicken.
 - Vorhandene Notizen bleiben erhalten.
 
-Die zugrunde liegende Datei heißt weiterhin `Entwicklerinformation.txt`, damit bestehende Daten kompatibel bleiben.
+Neue Notizen liegen unter `daten/notizen/projekt-notizen.txt` und werden mit dem persönlichen Datenordner gesichert. Bereits gespeicherte Notizen werden beim Ergänzen erhalten.
+
+Gibt es noch die alte Datei `Entwicklerinformation.txt` im Projektstamm, fragt Provoware beim Speichern nach:
+
+- **Ja:** Eine unveränderte Kopie alter Notizen kommt in den Datenordner und damit in künftige persönliche Sicherungen. Das Original bleibt unverändert.
+- **Nein:** Nur die neue Notiz wird gespeichert. Die alten Notizen sind weiterhin nicht im persönlichen Daten-ZIP enthalten; ein Hinweis erinnert daran. In dieser Sitzung wird nicht erneut gefragt. Zum späteren Übernehmen das Programm neu starten und erneut eine Notiz speichern.
+- **Abbrechen:** Die Eingabe bleibt geöffnet; es wird keine neue Notiz gespeichert.
+
+Identische Altkopien werden nicht doppelt angelegt. Wurde die alte Datei nachträglich verändert, kann beim nächsten Programmstart eine weitere Kopie übernommen werden. Alte und neue Notizen werden nicht automatisch zu einem Text vermischt. Bei Fehlern bleibt deine aktuelle Eingabe erhalten. Notizdateien sind auf jeweils 4 MiB begrenzt; größere Altdateien separat auf einem zweiten Datenträger sichern und über die Fehlerhilfe prüfen lassen.
 
 ---
 

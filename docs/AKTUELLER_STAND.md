@@ -91,3 +91,8 @@ Die zentrale Text-/Dateisuche ist im lokalen Kandidaten umgesetzt; Grenzen stehe
 Neu im 0.18.4-Kandidaten: [statisches Update-Staging](UPDATE_STAGING.md), ohne Codeausführung oder Aktivierung.
 
 Die fünf Folgeaufträge sind im lokalen 0.18.4-Kandidaten umgesetzt: statisches Update-Staging (keine Ausführung/Aktivierung), Ideenarchiv, Kontometadaten ohne Passworttresor, Prozessstartmessung und flüchtige Text-Strukturhilfen. Das Modulmenü liegt am Symbol oben links. Echte dynamische Update-Sandbox, Checkpoint/Aktivierung/Rollback und Zielrechner-Abnahmen bleiben offen.
+
+
+## Nachpflege: Projekt-Notizen (PV-AUD-01, 24.10.2026)
+
+Neue Projekt-Notizen werden im Datenordner gespeichert. Alte Notizen können nach ausdrücklicher Zustimmung bytegenau dorthin kopiert werden; die ursprüngliche Datei bleibt erhalten. Bei Ablehnung sind die alten Notizen weiterhin nicht Bestandteil des persönlichen Daten-ZIPs. Details und Grenzen: [Datensicherung](DATENSICHERUNG.md). Status und aktuelle CI-Evidenz werden am zugehörigen Änderungsantrag geführt; die historische Übersicht oben bleibt auf ihren damaligen Stand bezogen.

@@ -8,6 +8,8 @@ Diese Übersicht erklärt, welche Dateien zum Programm gehören und welche Ordne
 |---|---|---|
 | `app/` | Hier steht der eigentliche Programmcode. | Nicht ändern, wenn du nur das Programm benutzen möchtest. |
 | `daten/` | Hier speichert das Programm Texte, Songtexte, Profile, Aufgaben und Termine. | **Regelmäßig separat sichern.** |
+| `daten/notizen/` | Neue Projekt-Notizen und ausdrücklich bestätigte Altkopien. | Mit dem gesamten Datenordner sichern. |
+| `Entwicklerinformation.txt` | Möglicher alter Notizbestand im Projektstamm. | Erst bestätigte Kopien unter `daten/notizen/` sind im Daten-ZIP; Original erhalten. |
 | `texte/` | Allgemeine sichtbare Texte des Programms. | Für normalen Betrieb unverändert lassen. |
 | `vorlagen/` | Vorgefertigte Beispiele, zum Beispiel für Songtexte. | Nach Bedarf als Vorlage verwenden. |
 | `scripts/` | Werkzeuge für Prüfung, Diagnose und Veröffentlichung. | Nur bei Bedarf benutzen. |
