@@ -842,7 +842,7 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 <!-- PROVOWARE_2026_AUDIT_2026-10-22_END -->
 - [x] **PV-UX-01 [P1]** – Tätigkeitsorientierten Einstieg und hilfreiche Leerzustände gestalten. **Abnahme:** Erster Inhalt lässt sich ohne Erklärung erstellen, speichern und wieder öffnen. **Bezug:** ui.py; Buch-, Text- und Song-Einstiege.
 - [ ] **PV-UX-02 [P1]** – Beschrifteten Zugang „Alle Werkzeuge“ und nachvollziehbare Gruppen anbieten. **Abnahme:** Alle fertigen Werkzeuge bleiben per Tastatur und bei Zoom erreichbar; Status stimmt mit Laufzeit überein. **Bezug:** REQUIRES PV-AUD-16/18.
-- [ ] **PV-UX-03 [P1]** – Einheitliche Speicherzustände und sichtbare Grenzen unbetitelter Entwürfe definieren. **Abnahme:** Bearbeitung, automatisches Speichern, Fehler und Schließen zeigen den tatsächlichen Zustand. **Bezug:** song_editor.py, text_editor_window.py, book_window.py.
+- [x] **PV-UX-03 [P1]** – Einheitliche Speicherzustände und sichtbare Grenzen unbetitelter Entwürfe definieren. **Abnahme:** Bearbeitung, automatisches Speichern, Fehler und Schließen zeigen den tatsächlichen Zustand. **Bezug:** song_editor.py, text_editor_window.py, book_window.py.
 - [ ] **PV-UX-04 [P1]** – Ja/Nein-Rückfragen durch eindeutige aktionsbezogene Entscheidungen ersetzen. **Abnahme:** Speichern/Verwerfen/Weiterarbeiten haben bei Wechsel und Schließen die angekündigte Wirkung; Fehler verhindert Verlassen. **Bezug:** module_widgets.py, module_controls_window.py, text_editor_window.py.
 - [ ] **PV-UX-05 [P2]** – Letzte Arbeiten über unterstützte Inhaltstypen hinweg anzeigen. **Abnahme:** Typ und Öffnen-Aktion stimmen; fehlende und umbenannte Ziele werden kontrolliert behandelt. **Bezug:** REQUIRES sichere Datensatzauflösung aus PV-AUD-18.
 - [ ] **PV-UX-06 [P1]** – Grafischen Ablauf für persönliche Sicherung und isolierte Wiederherstellung anbieten. **Abnahme:** Ziel, Umfang, Ausschlüsse, Abbruch und Ergebnis verständlich; vorhandene Ziele werden nicht überschrieben. **Bezug:** REQUIRES PV-AUD-01; Medienpaket bleibt PV-AUD-15/29.
@@ -851,7 +851,7 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 - [ ] **PV-UX-09 [P1]** – Fehlermeldungen mit konkreten sicheren Folgeaktionen und wahrheitsgetreuer Schutzwirkung ausstatten. **Abnahme:** Wiederholter Autosave-Fehler erzeugt keinen falschen Erfolg und keine unkontrollierte Dialogfolge. **Bezug:** Moduloberflächen und Speicherwege.
 - [ ] **PV-UX-10 [P1]** – Aufgabenbezogene Tastatur-, Zoom- und Screenreader-Prüfung vorbereiten. **Abnahme:** Kernabläufe gemäß UX-UAT-09/10 tatsächlich geprüft; offene Nachweise sichtbar; Gesamtabnahme erst am Ende. **Bezug:** REQUIRES PV-AUD-20/25; kein neues manuelles Zwischengate.
 
-**Zählregel:** Zehn UX-Aufträge: einer technisch abgeschlossen, neun offen; keine bestehenden PV-AUD-Aufträge doppelt zählen. Die Dokumentation des Konzepts bedeutet keine fachliche Erledigung.
+**Zählregel:** Zehn UX-Aufträge: zwei technisch abgeschlossen, acht offen; keine bestehenden PV-AUD-Aufträge doppelt zählen. Die Dokumentation des Konzepts bedeutet keine fachliche Erledigung.
 
 **Empfehlung:** Zuerst PV-AUD-01 am aktuellen HEAD mit isolierten Sicherungs-/Restore-Fällen bearbeiten; anschließend Einstieg und Werkzeugnavigation. Dies ist eine Folgeempfehlung, keine Umpriorisierung laufender freigegebener Arbeit. Zuordnung und zwölf geplante UX-Abnahmeszenarien stehen im Konzept.
 
@@ -927,3 +927,7 @@ Der erste GitHub-Lauf #1118 meldete einen Schriftbreitenbefund (254 benötigte g
 **Autorisierte Folgequeue:** PV-UX-04 eindeutige Schließdialoge → PV-UX-02 Werkzeugzugang → PV-UX-05 letzte Arbeiten → PV-AUD-10 unterstützte Suchtreffer direkt öffnen. Pro Auftrag eigener Scope und aktuelle Modulprüfung.
 
 **Lokaler Nachweis PV-UX-03:** 56 gezielte und angrenzende Prüfungen erfolgreich; vollständige produktive UI-Matrix 60 Fälle / 180 Fenster ohne Fehler/Warnungen. Separate Zustandsanzeige zusätzlich in allen drei Editoren bei 100/125/150/175/200 % auf Sichtbarkeit und ausreichende Texthöhe geprüft. Ältere Aktionsrückmeldungen sind eindeutig als „Letzter Speichervorgang“ bezeichnet.
+
+**Technischer Abschluss PV-UX-03:** PR #133; korrigierter Code vollständig geprüft durch [CI #1122](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40142517313). Logik-/GUI-Prüfung, nativer Wayland-Start, UI-Matrix ohne Fehler/Warnungen, Restore und ZIP erfolgreich. Abschließende Dokumentationsrevision vor Integration erneut vollständig prüfen; danach eigener main-Lauf. UX: 2/10 technisch erledigt, 8 offen; Audit unverändert 3/30 erledigt, 27 offen.
+
+Geprüfter Code-HEAD PV-UX-03: `345d85c3a0e946e33380c1f76704068036166f7d` (CI #1122).
