@@ -74,7 +74,8 @@ class LaymanUxGuiTests(unittest.TestCase):
         self.assertEqual(self.dashboard.quit_button.text(), "Programm beenden")
         self.assertEqual(self.dashboard.quick_info_label.text(), "Projekt-Notiz:")
         buttons = self.dashboard.findChildren(QPushButton)
-        self.assertTrue(any(button.text().startswith("①  Songtexte öffnen") for button in buttons))
+        self.assertEqual(self.dashboard.start_actions["song"].text(), "Song schreiben")
+        self.assertEqual(len(self.dashboard.start_actions), 4)
         self.assertFalse(any(button.text() == "Logout" for button in buttons))
 
     def test_all_tiles_are_ready_including_data_search(self):

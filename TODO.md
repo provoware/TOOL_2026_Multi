@@ -840,7 +840,7 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 - **Dokumentationsgenauigkeit:** Die vorgenannten Befunde sind ein Entwicklungsauftrag aus Quellcodeanalyse, keine Aussage, dass alle zukünftigen Funktionen bereits erstellt oder die reale Kubuntu-Abnahme durchgeführt wurden.
 
 <!-- PROVOWARE_2026_AUDIT_2026-10-22_END -->
-- [ ] **PV-UX-01 [P1]** – Tätigkeitsorientierten Einstieg und hilfreiche Leerzustände gestalten. **Abnahme:** Erster Inhalt lässt sich ohne Erklärung erstellen, speichern und wieder öffnen. **Bezug:** ui.py; Buch-, Text- und Song-Einstiege.
+- [x] **PV-UX-01 [P1]** – Tätigkeitsorientierten Einstieg und hilfreiche Leerzustände gestalten. **Abnahme:** Erster Inhalt lässt sich ohne Erklärung erstellen, speichern und wieder öffnen. **Bezug:** ui.py; Buch-, Text- und Song-Einstiege.
 - [ ] **PV-UX-02 [P1]** – Beschrifteten Zugang „Alle Werkzeuge“ und nachvollziehbare Gruppen anbieten. **Abnahme:** Alle fertigen Werkzeuge bleiben per Tastatur und bei Zoom erreichbar; Status stimmt mit Laufzeit überein. **Bezug:** REQUIRES PV-AUD-16/18.
 - [ ] **PV-UX-03 [P1]** – Einheitliche Speicherzustände und sichtbare Grenzen unbetitelter Entwürfe definieren. **Abnahme:** Bearbeitung, automatisches Speichern, Fehler und Schließen zeigen den tatsächlichen Zustand. **Bezug:** song_editor.py, text_editor_window.py, book_window.py.
 - [ ] **PV-UX-04 [P1]** – Ja/Nein-Rückfragen durch eindeutige aktionsbezogene Entscheidungen ersetzen. **Abnahme:** Speichern/Verwerfen/Weiterarbeiten haben bei Wechsel und Schließen die angekündigte Wirkung; Fehler verhindert Verlassen. **Bezug:** module_widgets.py, module_controls_window.py, text_editor_window.py.
@@ -851,7 +851,7 @@ Validierungsfolgen: Formularbezeichnungen umbrechen; Verwerfen einer Komposition
 - [ ] **PV-UX-09 [P1]** – Fehlermeldungen mit konkreten sicheren Folgeaktionen und wahrheitsgetreuer Schutzwirkung ausstatten. **Abnahme:** Wiederholter Autosave-Fehler erzeugt keinen falschen Erfolg und keine unkontrollierte Dialogfolge. **Bezug:** Moduloberflächen und Speicherwege.
 - [ ] **PV-UX-10 [P1]** – Aufgabenbezogene Tastatur-, Zoom- und Screenreader-Prüfung vorbereiten. **Abnahme:** Kernabläufe gemäß UX-UAT-09/10 tatsächlich geprüft; offene Nachweise sichtbar; Gesamtabnahme erst am Ende. **Bezug:** REQUIRES PV-AUD-20/25; kein neues manuelles Zwischengate.
 
-**Zählregel:** Zehn neue UX-Aufträge, alle offen; keine bestehenden PV-AUD-Aufträge doppelt zählen. Die Dokumentation des Konzepts bedeutet keine fachliche Erledigung.
+**Zählregel:** Zehn UX-Aufträge: einer technisch abgeschlossen, neun offen; keine bestehenden PV-AUD-Aufträge doppelt zählen. Die Dokumentation des Konzepts bedeutet keine fachliche Erledigung.
 
 **Empfehlung:** Zuerst PV-AUD-01 am aktuellen HEAD mit isolierten Sicherungs-/Restore-Fällen bearbeiten; anschließend Einstieg und Werkzeugnavigation. Dies ist eine Folgeempfehlung, keine Umpriorisierung laufender freigegebener Arbeit. Zuordnung und zwölf geplante UX-Abnahmeszenarien stehen im Konzept.
 
@@ -901,3 +901,19 @@ Persönliche Übernahme als bewusste Kopie mit neuer Kennung und sicherer Bestä
 ### Abschlussnachweis PV-AUD-05
 
 Produktcode-Prüfstand `bbadafdda41516a97378ce07c281475692090faf`: [vollständige GitHub-Prüfung #1115](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40123882032) erfolgreich, einschließlich Grundprüfung, nativem Wayland-Start, UI-Evidenz, Vollprojekt-Restore und geprüften ZIP-Paketen. Lokal 87 gezielte und angrenzende Tests erfolgreich. Diese Abschlussrevision aktualisiert ausschließlich Aufgaben- und Dokumentationsstatus; Produktcode unverändert. Die erforderliche vollständige Prüfung der finalen Revision bleibt Merge-Voraussetzung. Keine manuelle Kubuntu-Endabnahme oder Veröffentlichung vorgezogen.
+
+
+## Bearbeitung PV-UX-01 – tätigkeitsorientierter Einstieg (24.10.2026)
+
+**Status:** Technisch abgeschlossen in PR #132 auf Basis `cfd23ecc55e8d70a94c2f1684ca8f58b48f9ad2b`. Der korrigierte Code `5510614a235bad932ede47e60c7a817e14242f10` bestand [CI #1119](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40127732786): 365 Logik- und 205 GUI-Tests, Wayland, UI-Matrix (8 Fälle / 24 Fenster, null Fehler/Warnungen), vollständiger Restore und ZIP-Erzeugung. Diese abschließende reine Dokumentationsrevision erhält vor Integration ihren eigenen vollständigen Prüflauf; danach folgt der main-Lauf. Vier unabhängige Startaktionen ohne Nummerierung, sicherer Übergang zu offenen Entwürfen und hilfreicher Text-Leerzustand. Der erste Text lässt sich über echte Bedienelemente erstellen, speichern, schließen und wiederfinden. Begonnene Texte, Songs sowie Aufgaben-/Termineingaben bleiben beim passenden Einstieg erhalten; verworfene geschlossene Texte werden nicht reaktiviert. Buchwerkstatt und Songbibliothek behalten ihre vorhandenen Einstiege. Keine neuen Speicherformate oder produktiven Datenänderungen.
+
+**Darstellungsnachweis:** Der erste direkte Prüferaufruf ohne produktive Fensterkonfiguration war nicht repräsentativ. Über den tatsächlichen CI-Einstieg `scripts/ui_shadow_entry.py` wurden 12 echte Überlappungen im 1366×768-/200-%-Profil erkannt und durch das kompakte 2×2-Raster ursachengerecht beseitigt. Danach vollständige lokale Matrix mit 60 Fällen / 180 Fenstern: null Fehler, null Warnungen. Keine Abschwächung von Geometriegrenzen. Reale Erstnutzerstudie bleibt der späteren Gesamt-Kubuntu-Abnahme vorbehalten.
+
+**Nächste Vorschläge:** `PV-UX-03` Speicherzustände vereinheitlichen (**priorisiert empfohlen**), `PV-UX-04` eindeutige Verlassen-Dialoge, `PV-UX-02` Werkzeugzugang nach Modulstatus-Abgleich, `PV-UX-05` letzte Arbeiten über Inhaltstypen, `PV-AUD-10` unterstützte Suchtreffer direkt öffnen. Abhängigkeiten und laufenden Plan vor jeder Umsetzung erneut abgleichen.
+
+
+### CI-Nachpflege innerhalb PV-UX-01
+
+Der erste GitHub-Lauf #1118 meldete einen Schriftbreitenbefund (254 benötigte gegenüber 250 verfügbaren Pixeln). Die Formularaktionen heißen deshalb kurz und konsistent „Aufgabe planen“ und „Termin anlegen“. Schriftgröße und Prüfgrenzen unverändert. Zusätzlich zeigte der Lauf einen verzögerten Laptop-Layoutaufruf nach Zerstörung des Dashboards. Der Callback prüft nun die Gültigkeit des Qt-Objekts, bevor er auf das Fenster zugreift; ein gezielter Rückfalltest führt den wartenden Aufruf nach tatsächlicher Fensterzerstörung aus. Dies ergänzt den Lebenszyklus-Prüfbedarf PV-AUD-21, schließt dessen weitere Fälle aber nicht pauschal ab. Vollständiger neuer Prüflauf auf dem korrigierten HEAD erforderlich.
+
+**Abschlussnachweis PV-UX-01:** Technische Erstinhalt-Abnahme automatisiert erfüllt; reale Erstnutzerstudie bleibt Bestandteil der abschließenden Gesamtbedienprüfung. UX-Liste: 1/10 technisch erledigt, 9 offen. Audit-Liste unverändert: 3/30 erledigt, 27 offen.

@@ -6,6 +6,7 @@ und 125/150 % Zoom aktiv und blendet ausschließlich redundante Planungsinfos au
 
 from __future__ import annotations
 
+from shiboken6 import isValid
 from PySide6.QtCore import QEvent, QObject, QTimer
 from PySide6.QtWidgets import QComboBox, QFrame, QLabel, QPushButton, QWidget
 
@@ -138,6 +139,8 @@ class _LaptopLayoutFilter(QObject):
 
         def run() -> None:
             self._queued = False
+            if not isValid(self.root):
+                return
             apply_laptop_layout(self.root)
 
         QTimer.singleShot(0, run)

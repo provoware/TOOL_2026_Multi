@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+## Tätigkeitsorientierter Einstieg (PV-UX-01, 24.10.2026)
+
+- Startkarte „Was möchtest du tun?“ mit vier gleichwertigen Aktionen ohne nummerierte Reihenfolge: Song schreiben, Text schreiben, Aufgabe planen, Termin anlegen.
+- Neue Songs direkt beginnen; sichtbaren Texteditor ohne Neuladen aktivieren und offene Entwürfe erhalten. Geschlossene verworfene Texte werden nicht wiederbelebt.
+- Leere Textliste erklärt Titel, Inhalt und Speichern. Aufgaben-/Termineingaben bleiben beim erneuten Öffnen erhalten.
+- Verzögerten Laptop-Layoutaufruf auf bereits zerstörte Fenster kontrolliert beenden; gezielter Rückfalltest.
+- Kompaktes 2×2-Aktionsraster schützt Lesbarkeit und getrennte Bedienung bei starkem Zoom; bestehende UI-Grenzen unverändert.
+- Zentrale Texte, Hilfe, Anleitung, Manifest und Aufgabenplanung aktualisiert.
+
 ## Persönliche Aufgaben von Entwicklungsaltbestand trennen (PV-AUD-05, 24.10.2026)
 
 - Beim Öffnen keine Entwicklungsaufgaben mehr in den persönlichen Bestand eintragen.
