@@ -131,3 +131,7 @@ Lokaler Kandidat: Song-, Text- und Bucheditor besitzen eine separate gemeinsame 
 Technischer Abschluss PV-UX-03 in PR #133: [vollständiger Code-Prüflauf #1122](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40142517313) erfolgreich einschließlich Logik/GUI, Wayland, UI, Restore und Paketen. Die finale Dokumentationsrevision und spätere Integration in main werden separat vollständig geprüft. Kein öffentlicher Release und keine reale Erstnutzerprüfung behauptet.
 
 Geprüfter Code-HEAD PV-UX-03: `345d85c3a0e946e33380c1f76704068036166f7d` (CI #1122).
+
+## Nachpflege: eindeutige Entscheidungen (PV-UX-04, 25.10.2026)
+
+Lokaler Kandidat nach PV-UX-03: Gemeinsame aktionsbezogene Verlassen-Rückfrage. Speichern und schließen/wechseln, Verwerfen und schließen/wechseln sowie Weiterarbeiten; letzteres ist Vorauswahl und sichere Reaktion auf Escape/Fensterkreuz. Fehlgeschlagenes Speichern stoppt das Verlassen und erhält Eingaben. Texteditor, gemeinsame Module einschließlich Ideenkomposition und Modulverwaltung sowie Dashboard-Schließkontext berücksichtigt. Keine Änderung an Song-Automatik oder separaten Import-/Löschbestätigungen. Vollständige Repo-Prüfungen folgen vor Integration.

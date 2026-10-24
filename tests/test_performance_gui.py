@@ -29,7 +29,7 @@ class PerformanceGuiTests(unittest.TestCase):
         self.tracker = perf.activate(self.root)
 
     def tearDown(self):
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.No):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.No):
             for window in list(self.app.topLevelWidgets()):
                 window.close()
                 window.deleteLater()

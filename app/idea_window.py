@@ -2,7 +2,7 @@
 from PySide6.QtWidgets import QHBoxLayout, QLineEdit, QMessageBox, QTextEdit
 from app import idea_store as store
 from app.record_window import RecordWindow
-from app.module_widgets import t, button
+from app.module_widgets import ask_unsaved, t, button
 from app.text_editor_store import TextDocument, save_text_document
 
 
@@ -55,14 +55,12 @@ class IdeaWindow(RecordWindow):
             self.error(t('idea_compose_error', 'Komposition nicht gespeichert'), error)
             return False
 
-    def confirm_leave(self):
-        if not super().confirm_leave():
+    def confirm_leave(self, *, closing=False):
+        if not super().confirm_leave(closing=closing):
             return False
         if (self.composition_title.text(), self.composition.toPlainText()) == self._composition_saved:
             return True
-        answer = QMessageBox.question(self, t('unsaved', 'Ungespeicherte Änderungen'),
-                                      t('idea_compose_leave', 'Komposition speichern? Ja = speichern, Nein = verwerfen, Abbrechen = bleiben.'),
-                                      QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Cancel)
+        answer = ask_unsaved(self, closing=closing)
         if answer == QMessageBox.No:
             self.composition.clear()
             self.composition_title.clear()

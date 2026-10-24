@@ -54,7 +54,7 @@ class KeyboardWorkflowTests(unittest.TestCase):
                               if b.text() == "Neuer Text")
                 button.setFocus()
                 self.app.processEvents()
-                with patch.object(QMessageBox, "question", return_value=QMessageBox.Cancel):
+                with patch.object(QMessageBox, "exec", return_value=QMessageBox.Cancel):
                     QTest.keyClick(button, Qt.Key_Space)
                     self.app.processEvents()
                 self.assertEqual(window.title_entry.text(), "Wichtiger Titel")

@@ -4,7 +4,7 @@
 
 **Deine Texte gehören dir.** Sichere den Ordner `daten/` regelmäßig auf einem zweiten Datenträger. Bei Problemen mit Daten oder bei einer Wiederherstellung zuerst eine Kopie des aktuellen `daten/`-Ordners anlegen. Die automatische GitHub-Prüfung kann keine Sicherung deiner persönlichen Dateien ersetzen.
 
-**Neue Sicherheitsfragen im Texteditor:** Wenn du einen veränderten Text verlässt, einen neuen Text beginnst oder das Fenster schließt, fragt das Programm, ob gespeichert, verworfen oder abgebrochen werden soll. **Abbrechen** bringt dich zum bisherigen Text zurück. Haben verschiedene Titel nach Bereinigung denselben Dateinamen, verweigert das Programm ein unbeabsichtigtes Überschreiben.
+**Neue Sicherheitsfragen im Texteditor:** Wenn du einen veränderten Text verlässt, einen neuen Text beginnst oder das Fenster schließt, fragt das Programm, ob gespeichert, verworfen oder abgebrochen werden soll. **Weiterarbeiten** bringt dich zum bisherigen Text zurück. Haben verschiedene Titel nach Bereinigung denselben Dateinamen, verweigert das Programm ein unbeabsichtigtes Überschreiben.
 
 **Bei stark vergrößerter Schrift:** Die Navigation verwendet kürzere gut lesbare Beschriftungen. Über die eingeblendeten Hinweise und die barrierefreien Namen bleiben die vollständigen Funktionen erkennbar.
 
@@ -22,7 +22,7 @@
 
 **Deine wichtigsten Dateien liegen unter `daten/`.** Sichere diesen Ordner regelmäßig auf einem getrennten Datenträger.
 
-**Achtung bei Textänderungen:** Beim Schließen oder Wechseln eines bearbeiteten Textes kannst du **Speichern**, **Verwerfen** oder **Abbrechen** wählen. Mit **Abbrechen** bleibt deine Arbeit offen. Wird ein Dateiname bereits von einer anderen Datei verwendet, verhindert das Programm ein ungewolltes Überschreiben.
+**Achtung bei Textänderungen:** Beim Schließen oder Wechseln eines bearbeiteten Textes kannst du **Speichern und schließen/wechseln**, **Verwerfen und schließen/wechseln** oder **Weiterarbeiten** wählen. Mit **Weiterarbeiten** bleibt deine Arbeit offen. Wird ein Dateiname bereits von einer anderen Datei verwendet, verhindert das Programm ein ungewolltes Überschreiben.
 
 **Was ist noch nicht fertig?** Mit **In Planung** gekennzeichnete Funktionen sind keine einsatzbereiten Werkzeuge.
 
@@ -617,3 +617,7 @@ Im Texteditor helfen **Strukturfarben** und die Gliederung bei Überschriften un
 Song-, Text- und Bucheditor zeigen eine eigene Zeile **Speicherzustand**. **Gespeichert** gilt für den aktuell sichtbaren Stand. Sobald du etwas änderst, erscheint **Nicht gespeichert**. Nach einem Speicherfehler bleiben die Eingaben im Fenster; prüfe freien Speicher und Dateirechte und versuche es mit `Strg+S` erneut. Ein Exporthinweis bestätigt nur die Ausgabedatei und ersetzt diese Anzeige nicht.
 
 Text- und Buchentwürfe ohne Titel werden nicht automatisch gespeichert: Gib einen Titel ein und speichere ausdrücklich. Betitelte Texte speichern zusätzlich alle fünf Minuten, Bücher jede Minute. Songs behalten ihre bisherige automatische Speicherung alle fünf Minuten, beim Verlassen eines Schreib-/Angabefeldes und beim Schließen; ohne eigenen Titel unter **Unbenannter Song**. Wähle deshalb früh einen eindeutigen eigenen Songtitel. Die automatische Speicherung ist keine zusätzliche Datensicherung.
+
+## Änderungen bewusst verlassen
+
+Wenn du einen veränderten Text oder einen bearbeiteten Modulinhalt verlässt, benennen die Schaltflächen die Folgen: **Speichern und schließen** beziehungsweise **Speichern und wechseln** behält deine Änderungen. **Verwerfen und schließen/wechseln** gibt sie auf; ein bereits gespeicherter Stand bleibt erhalten. **Weiterarbeiten** lässt den Entwurf offen. Auch Escape oder das Schließen der Rückfrage führt zu **Weiterarbeiten**. Schlägt das Speichern fehl, bleibt deine Arbeit offen. Die Modulverwaltung setzt beim Verwerfen ihre Schalter auf den vorherigen Stand zurück. Songs behalten ihren bisherigen automatischen Speicherweg beim Schließen.

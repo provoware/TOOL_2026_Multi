@@ -23,6 +23,25 @@ def t(key, fallback):
     return _REGISTRY.get('modules.' + key, fallback)
 
 
+
+def ask_unsaved(parent, *, closing=False):
+    """Aktionswörter und sichere Vorauswahl statt mehrdeutiger Ja/Nein-Antworten."""
+    dialog = QMessageBox(parent)
+    dialog.setIcon(QMessageBox.Question)
+    dialog.setWindowTitle(t('unsaved', 'Ungespeicherte Änderungen'))
+    dialog.setText(t('leave_explicit', 'Deine Änderungen sind noch nicht gespeichert. Was möchtest du tun?'))
+    dialog.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+    dialog.button(QMessageBox.Yes).setText(t('leave_save_close' if closing else 'leave_save_switch',
+        'Speichern und schließen' if closing else 'Speichern und wechseln'))
+    dialog.button(QMessageBox.No).setText(t('leave_discard_close' if closing else 'leave_discard_switch',
+        'Verwerfen und schließen' if closing else 'Verwerfen und wechseln'))
+    dialog.button(QMessageBox.Cancel).setText(t('leave_keep', 'Weiterarbeiten'))
+    dialog.setDefaultButton(QMessageBox.Cancel)
+    dialog.setEscapeButton(QMessageBox.Cancel)
+    dialog.setTextFormat(Qt.PlainText)
+    return dialog.exec()
+
+
 def button(layout, label, action):
     widget = QPushButton(label)
     widget.setAccessibleName(label)
@@ -94,17 +113,14 @@ class ModuleWindow(QWidget):
     def remember(self):
         self._baseline = self.snapshot()
 
-    def confirm_leave(self):
+    def confirm_leave(self, *, closing=False):
         if self._baseline is None or self.snapshot() == self._baseline:
             return True
-        answer = QMessageBox.question(
-            self, t('unsaved', 'Ungespeicherte Änderungen'),
-            t('leave', 'Änderungen vor dem Wechsel speichern?\nJa = speichern · Nein = verwerfen · Abbrechen = bleiben.'),
-            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Cancel)
+        answer = ask_unsaved(self, closing=closing)
         return answer == QMessageBox.No or answer == QMessageBox.Yes and bool(self.save())
 
     def closeEvent(self, event):
-        if self.confirm_leave():
+        if self.confirm_leave(closing=True):
             if self.snapshot() != self._baseline:
                 self.discard_draft()
             event.accept()

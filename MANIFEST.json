@@ -2106,5 +2106,16 @@
     "separate_from_action_feedback": true,
     "title_required_for_text_and_book_autosave": true,
     "storage_formats_and_intervals_unchanged": true
+  },
+  "leave_dialog_contract": {
+    "explicit_actions": true,
+    "safe_default_and_escape": "continue_editing",
+    "failed_save_blocks_leave": true,
+    "contexts": [
+      "document_switch",
+      "window_close",
+      "dashboard_close"
+    ],
+    "song_existing_automatic_close_unchanged": true
   }
 }

@@ -45,9 +45,9 @@ class IdeaGuiTests(unittest.TestCase):
         self.assertTrue(self.window.save())
         self.assertEqual(idea_store.load(self.root)['ideas'][0]['tags'],['Wetter','Nacht'])
         self.window.composition.setPlainText('Ungesichert')
-        with patch('app.idea_window.QMessageBox.question',return_value=QMessageBox.Cancel):
+        with patch('app.idea_window.QMessageBox.exec',return_value=QMessageBox.Cancel):
             self.assertFalse(self.window.confirm_leave())
-        with patch('app.idea_window.QMessageBox.question',return_value=QMessageBox.No):
+        with patch('app.idea_window.QMessageBox.exec',return_value=QMessageBox.No):
             self.assertTrue(self.window.confirm_leave())
         self.assertEqual(self.window.composition.toPlainText(),'')
         for zoom in (100,150,200):self.window.set_zoom(zoom)
