@@ -931,3 +931,13 @@ Der erste GitHub-Lauf #1118 meldete einen Schriftbreitenbefund (254 benötigte g
 **Technischer Abschluss PV-UX-03:** PR #133; korrigierter Code vollständig geprüft durch [CI #1122](https://github.com/provoware/TOOL_2026_Multi/actions/runs/40142517313). Logik-/GUI-Prüfung, nativer Wayland-Start, UI-Matrix ohne Fehler/Warnungen, Restore und ZIP erfolgreich. Abschließende Dokumentationsrevision vor Integration erneut vollständig prüfen; danach eigener main-Lauf. UX: 2/10 technisch erledigt, 8 offen; Audit unverändert 3/30 erledigt, 27 offen.
 
 Geprüfter Code-HEAD PV-UX-03: `345d85c3a0e946e33380c1f76704068036166f7d` (CI #1122).
+
+## Bearbeitung PV-UX-04 – eindeutige Verlassen-Dialoge (25.10.2026)
+
+**Status:** Lokaler Kandidat, abhängig von der vollständigen Integration PV-UX-03/PR #133. Gemeinsamer Dialog mit sichtbaren Aktionswörtern für Speichern/Verwerfen und Schließen/Wechseln; Weiterarbeiten als sichere Standard-, Escape- und Fensterkreuz-Aktion. Texteditor, gemeinsame Modulfenster, Ideenkomposition, Modulverwaltung und Dashboard-Kontext angepasst. Speichern muss erfolgreich sein, bevor das Verlassen zulässig ist. Reale Schaltflächen, Abbruchwege, Schreibfehler, verworfene Buchentwürfe und zurückgesetzte Moduleinstellungen isoliert geprüft. Unabhängige Import-/Löschfragen bleiben erhalten. Vollständige GitHub-Evidenz vor Abschluss erforderlich.
+
+**Prüfgrenze PV-UX-04:** Der lokale Gesamt-GUI-Versuch wurde am Audiobackend nach festem Zeitlimit beendet (PulseAudio/Qt-Multimedia in der eingeschränkten Umgebung); kein PASS für diesen Versuch. Unmittelbar betroffene Module und Rückfallfälle separat geprüft. Vollständige GUI-/Wayland-/Restore-Prüfung bleibt vor Integration über GitHub verpflichtend.
+
+Lokaler gezielter Abschluss PV-UX-04: 57 Tests erfolgreich (echte Dialogaktionen, Text-/Buch-/Ideenwege, Modulverwaltung, Dashboard-Schließschutz, Tastatur, Zoom, Speicherzustände und Dokumentation).
+
+**CI-Diagnose PV-UX-04:** Der erste vollständige Lauf wartete auf einen realen Dialog, weil zwei ältere Kalender-/Text-Sicherheitsfälle noch die frühere statische question-Schnittstelle statt exec steuerten. Isolierter Nicht-Audio-Diagnoselauf lokalisierte den wartenden Fall. Nur die Testansteuerung aktualisiert; ursprüngliche Abnahmekriterien zu erhaltenen Eingaben und blockiertem Schließen unverändert. Neuer vollständiger exakter HEAD-Lauf erforderlich.

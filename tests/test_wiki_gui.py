@@ -36,7 +36,7 @@ class WikiGuiTests(unittest.TestCase):
                 for zoom in (100, 150, 200):
                     window.set_zoom(zoom)
                 window.title_field.setText("Ungespeichert")
-                with patch("app.module_widgets.QMessageBox.question", return_value=QMessageBox.Cancel):
+                with patch("app.module_widgets.QMessageBox.exec", return_value=QMessageBox.Cancel):
                     self.assertFalse(window.confirm_leave())
             finally:
                 window.discard_draft()

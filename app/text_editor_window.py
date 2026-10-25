@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QSplitter, QTextEdit, QVBoxLayout, QWidget,
 )
 
-from app.module_widgets import t
+from app.module_widgets import t, ask_unsaved
 from app.save_state import SaveState
 from app.character_store import character_marker
 from app.character_combo import refresh_character_combo
@@ -196,21 +196,13 @@ class TextEditorWindow(QWidget):
             self.notes_edit.toPlainText(), tuple(self.document.character_ids),
         )
 
-    def _confirm_leave_document(self) -> bool:
+    def _confirm_leave_document(self, *, closing=False) -> bool:
         if self._saved_snapshot is None or self._snapshot() == self._saved_snapshot:
             return True
-        answer = QMessageBox.question(
-            self, "Ungespeicherte Änderungen",
-            "Der aktuelle Text wurde geändert. Möchtest du ihn vor dem Wechsel speichern?\\n"
-            "Ja = speichern · Nein = Änderungen verwerfen · Abbrechen = hier bleiben.",
-            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
-            QMessageBox.Cancel,
-        )
-        if answer == QMessageBox.Cancel:
-            return False
+        answer = ask_unsaved(self, closing=closing)
         if answer == QMessageBox.Yes:
             return self.save() is not None
-        return True
+        return answer == QMessageBox.No
 
     def new_document(self) -> None:
         if not self._confirm_leave_document():
@@ -302,7 +294,7 @@ class TextEditorWindow(QWidget):
         return target
 
     def closeEvent(self, event) -> None:
-        if self._confirm_leave_document():
+        if self._confirm_leave_document(closing=True):
             self.autosave_timer.stop()
             event.accept()
         else:

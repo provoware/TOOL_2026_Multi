@@ -79,7 +79,7 @@ class AccessibilityQualityTests(unittest.TestCase):
             try:
                 window.title_entry.setText("Entwurf")
                 window.text_edit.setPlainText("Unersetzlicher Inhalt")
-                with patch.object(QMessageBox, "question", return_value=QMessageBox.Cancel):
+                with patch.object(QMessageBox, "exec", return_value=QMessageBox.Cancel):
                     window.new_document()
                 self.assertEqual(window.title_entry.text(), "Entwurf")
                 self.assertEqual(window.text_edit.toPlainText(), "Unersetzlicher Inhalt")

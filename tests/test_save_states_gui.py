@@ -24,7 +24,7 @@ class SaveStatesGuiTests(unittest.TestCase):
         self.windows = []
 
     def tearDown(self):
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.No):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.No):
             for w in self.windows:
                 if isinstance(w, SongEditor):
                     w._closing_after_save = True

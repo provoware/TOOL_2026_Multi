@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## Eindeutige Verlassen-Dialoge (PV-UX-04, 25.10.2026)
+
+- Aktionsbezogene Schaltflächen statt sichtbarer Ja/Nein-Rückfragen bei Text-/Modulwechsel und Fenster-/Dashboard-Schließen.
+- Weiterarbeiten als Vorauswahl, Escape- und Fensterschließen-Aktion; fehlgeschlagenes Speichern verhindert das Verlassen.
+- Gemeinsamer Dialog auch für Ideenkomposition und Modulverwaltung; sonstige Import-/Löschbestätigungen und Song-Automatik unverändert.
+
 ## Einheitliche Speicherzustände (PV-UX-03, 25.10.2026)
 
 - Eigene gemeinsame Speicheranzeige für Songs, Texte und Bücher; Erfolg an tatsächlichen sichtbaren Snapshot gebunden und bei Änderungen sofort ungültig.

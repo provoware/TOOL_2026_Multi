@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QCheckBox, QLabel, QMessageBox, QPushButton, QVBoxLayout, QWidget,
 )
 from app import module_contracts
+from app.module_widgets import ask_unsaved
 from app.ui_standards import apply_global_style
 
 
@@ -89,14 +90,10 @@ class ModuleControlsWindow(QWidget):
         self.status.setText("Moduleinstellungen gespeichert. Bestehende Daten bleiben erhalten.")
         return True
 
-    def confirm_leave(self):
+    def confirm_leave(self, *, closing=False):
         if self.snapshot() == self._baseline:
             return True
-        answer = QMessageBox.question(
-            self, "Ungespeicherte Einstellungen",
-            "Änderungen speichern? Ja = speichern, Nein = verwerfen, Abbrechen = bleiben.",
-            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Cancel,
-        )
+        answer = ask_unsaved(self, closing=closing)
         if answer == QMessageBox.No:
             self.discard_draft()
             return True
@@ -107,7 +104,7 @@ class ModuleControlsWindow(QWidget):
             self.checks[key].setChecked(enabled)
 
     def closeEvent(self, event):
-        if self.confirm_leave():
+        if self.confirm_leave(closing=True):
             event.accept()
         else:
             event.ignore()

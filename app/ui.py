@@ -1019,7 +1019,7 @@ class Dashboard(QWidget):
         )
 
     def _confirm_creative_modules(self) -> bool:
-        return all(window.confirm_leave() for window in
+        return all(window.confirm_leave(closing=True) for window in
                    (self._book_window, self._snippet_window, self._idea_window,
                     self._account_window, self._quicklinks_window, self._wiki_window,
                     self._module_controls_window, self._blueprint_window,

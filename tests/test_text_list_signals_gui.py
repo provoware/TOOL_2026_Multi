@@ -39,7 +39,7 @@ class TextListSignalsGuiTests(unittest.TestCase):
                 item.setData(256, str(Path(tmp) / "fremd.json"))
                 window.file_list.addItem(item)
                 window.file_list.blockSignals(True)
-                with patch.object(QMessageBox, "question", return_value=QMessageBox.Cancel):
+                with patch.object(QMessageBox, "exec", return_value=QMessageBox.Cancel):
                     window._load_selected(item, None)
                 self.assertTrue(window.file_list.signalsBlocked())
                 self.assertEqual(window.text_edit.toPlainText(), "Dieser Text bleibt.")

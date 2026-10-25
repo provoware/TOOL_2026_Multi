@@ -29,7 +29,7 @@ class CreativeModulesGuiTests(unittest.TestCase):
         self.root = Path(self.temp.name)
 
     def tearDown(self):
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.No):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.No):
             for window in list(self.app.topLevelWidgets()):
                 window.close()
                 window.deleteLater()
@@ -63,7 +63,7 @@ class CreativeModulesGuiTests(unittest.TestCase):
         w = SnippetWindow(self.root)
         w.title.setText('Ungespeichert')
         w.refresh()
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.Cancel):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.Cancel):
             self.assertFalse(w.confirm_leave())
         self.assertEqual('Ungespeichert', w.title.text())
 
@@ -114,7 +114,7 @@ class CreativeModulesGuiTests(unittest.TestCase):
         w = BookWindow(self.root)
         w.title.setText('Noch nicht gespeichert')
         key = w.book['id']
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.Cancel):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.Cancel):
             w.new_book()
             self.assertEqual(key, w.book['id'])
             self.assertFalse(w.close())
@@ -151,7 +151,7 @@ class CreativeModulesGuiTests(unittest.TestCase):
     def test_discarded_closed_book_is_not_saved_by_timer(self):
         w = BookWindow(self.root)
         w.title.setText('Verworfener Entwurf')
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.No):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.No):
             self.assertTrue(w.close())
         w._autosave()
         self.assertEqual([], book_store.load(self.root)['books'])
@@ -201,7 +201,7 @@ class CreativeModulesGuiTests(unittest.TestCase):
         self.assertIn(dashboard._book_window, windows)
         self.assertIn(dashboard._snippet_window, windows)
         dashboard._snippet_window.title.setText('Entwurf')
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.Cancel):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.Cancel):
             self.assertFalse(dashboard.close())
         self.assertFalse(dashboard._closing_after_save)
         dashboard.set_zoom(150)

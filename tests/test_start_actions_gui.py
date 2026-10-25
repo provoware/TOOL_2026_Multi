@@ -35,7 +35,7 @@ class StartActionsTests(unittest.TestCase):
         self.app.processEvents()
 
     def tearDown(self):
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.No):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.No):
             for editor in list(self.dashboard._song_editors):
                 editor._closing_after_save = True
                 editor.close()
@@ -104,7 +104,7 @@ class StartActionsTests(unittest.TestCase):
         before = path.read_bytes()
         editor.text_edit.setPlainText('Ungespeicherte Weiterarbeit')
         with patch.object(editor, 'refresh') as refresh, \
-                patch.object(QMessageBox, 'question') as question:
+                patch.object(QMessageBox, 'exec') as question:
             self.click('text')
         refresh.assert_not_called()
         question.assert_not_called()
@@ -116,7 +116,7 @@ class StartActionsTests(unittest.TestCase):
         self.click('text')
         previous = self.dashboard._text_editor_window
         previous.text_edit.setPlainText('Bewusst verworfen')
-        with patch.object(QMessageBox, 'question', return_value=QMessageBox.No):
+        with patch.object(QMessageBox, 'exec', return_value=QMessageBox.No):
             previous.close()
         self.click('text')
         editor = self.dashboard._text_editor_window
