@@ -55,10 +55,12 @@ def validate_playlist(value):
 
 def load_playlist(root):
     target = _playlist_path(root)
+    if target.is_symlink():
+        raise ValueError("Playlistdatei ist eine Verknüpfung.")
     if not target.exists():
         return {"schema_version": 1, "paths": []}
-    if target.is_symlink() or target.stat().st_size > 250_000:
-        raise ValueError("Playlistdatei ist eine Verknüpfung oder zu groß.")
+    if target.stat().st_size > 250_000:
+        raise ValueError("Playlistdatei ist zu groß.")
     return validate_playlist(json.loads(target.read_text(encoding="utf-8")))
 
 
