@@ -272,6 +272,13 @@ def _set_width(widget: QWidget, value: int) -> None:
     widget.setMaximumWidth(value)
 
 
+def combo_text_width(combo: QComboBox) -> int:
+    """Mindestbreite für den längsten angebotenen Wert samt Pfeil und Innenraum."""
+    labels = [combo.currentText(), *(combo.itemText(i) for i in range(combo.count()))]
+    text_width = max((combo.fontMetrics().horizontalAdvance(label) for label in labels), default=0)
+    return text_width + max(36, combo.fontMetrics().height() + 10)
+
+
 def _zoom_width_factor(window: QWidget) -> float:
     zoom = _zoom_percent(window)
     return 1.0 + ((zoom - 100) / 100.0) * 0.10
@@ -475,7 +482,8 @@ def _apply_responsive_layout(window: QWidget) -> None:
 
         theme_combo = getattr(window, "theme_combo", None)
         if isinstance(theme_combo, QComboBox):
-            _set_width(theme_combo, round((90 if high_zoom else 132) * width_factor))
+            preferred = round((90 if high_zoom else 132) * width_factor)
+            _set_width(theme_combo, max(preferred, combo_text_width(theme_combo)))
 
         # Gleiche natürliche Höhe wie die übrigen Auswahlfelder: Der
         # Bearbeiten-Button darf in 1600×900 nicht in die erste Zeile ragen.
@@ -486,22 +494,19 @@ def _apply_responsive_layout(window: QWidget) -> None:
                     break
 
         profile_combo = getattr(window, "db_profile_combo", None)
-        if isinstance(profile_combo, QWidget):
+        if isinstance(profile_combo, QComboBox):
             minimum = round((90 if high_zoom else (110 if compact else 135)) * width_factor)
             maximum = round((112 if high_zoom else (190 if wide else 160)) * width_factor)
+            minimum = max(minimum, combo_text_width(profile_combo))
+            maximum = max(maximum, minimum)
             profile_combo.setMinimumWidth(minimum)
             profile_combo.setMaximumWidth(maximum)
 
         for label in window.findChildren(QLabel):
             if label.text() in {"Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"}:
-                if high_zoom:
-                    # Keine starre Mini-Breite bei doppelter Schriftgröße: die
-                    # längste Beschriftung muss vollständig lesbar bleiben.
-                    base = max(128, label.fontMetrics().horizontalAdvance(label.text()) + 18)
-                    _set_width(label, base)
-                else:
-                    base = 94 if compact else (128 if wide else 108)
-                    _set_width(label, round(base * width_factor))
+                base = 128 if high_zoom else (94 if compact else (128 if wide else 108))
+                measured = label.fontMetrics().horizontalAdvance(label.text()) + 18
+                _set_width(label, max(round(base * width_factor), measured))
 
         for button in window.findChildren(QPushButton):
             if button.text() in {"Profile & Werte bearbeiten", "Profile bearbeiten", "Profile"}:
