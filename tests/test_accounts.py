@@ -44,6 +44,17 @@ class AccountStoreTests(unittest.TestCase):
                     'https://example.org/?token=abc','https://example.org/#access_token=abc','https://example.org/\n','https://example.org:bad'):
             with self.subTest(url=url),self.assertRaises(ValueError):store.validate_url(url)
 
+    def test_del_control_character_is_rejected_by_both_url_consumers(self):
+        from app import quicklinks_store
+        for url in ('https://example.org/a\x7fb', 'https://exa\x7fmple.org'):
+            with self.subTest(url=repr(url)):
+                with self.assertRaises(ValueError):
+                    store.validate_url(url)
+                link = {'id': 'link_del', 'name': 'Test', 'url': url, 'group': '', 'icon': ''}
+                with self.assertRaises(ValueError):
+                    quicklinks_store.validate_record(link)
+        self.assertEqual(store.validate_url('https://example.org/a-b'), 'https://example.org/a-b')
+
     def test_invalid_import_does_not_change_existing_data(self):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);store.put(root,record());before=store.load(root)
