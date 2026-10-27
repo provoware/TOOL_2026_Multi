@@ -10,7 +10,7 @@ from app.genre_favorites import (
     favorite_values, set_favorite, monthly_statistics, monthly_report_text,
     export_monthly_report, load_favorites,
 )
-from app.genre_random import generate, history_load
+from app.genre_random import generate, history_load, history_path
 from app.github_projects import (
     catalog_path, delete_project, export_projects, import_projects,
     load_projects, upsert_project,
@@ -71,6 +71,30 @@ class FavoritesAndMonthlyTests(unittest.TestCase):
             with self.assertRaises(json.JSONDecodeError):
                 set_favorite(root, "HardTechno", "Genres", "Acid Techno", True)
             self.assertEqual(path.read_text(encoding="utf-8"), "{kaputt")
+
+
+    def test_malformed_monthly_history_categories_fail_without_changing_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = history_path(root)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            entry = {
+                "timestamp": "2026-10-27T12:00:00+01:00",
+                "profile": "HardTechno", "output": "Schranz",
+                "amounts": {cat: int(cat == "Genres") for cat in CATEGORIES},
+            }
+            for invalid in (None, "ungueltig", {"Genres": [{"falsch": "Wert"}]},
+                            {"Genres": [None]}):
+                with self.subTest(categories=repr(invalid)):
+                    path.write_text(json.dumps([{**entry, "categories": invalid}]), encoding="utf-8")
+                    original = path.read_bytes()
+                    with self.assertRaisesRegex(ValueError, "Verlaufs-Kategorienfeld"):
+                        monthly_statistics(root, date(2026, 10, 27))
+                    self.assertEqual(path.read_bytes(), original)
+            path.write_text(json.dumps([{**entry, "categories": {"Genres": ["Schranz"]}}]),
+                            encoding="utf-8")
+            self.assertEqual(monthly_statistics(root, date(2026, 10, 27))["most_common"],
+                             [("Schranz", 1)])
 
 
 class GithubProjectStoreTests(unittest.TestCase):
