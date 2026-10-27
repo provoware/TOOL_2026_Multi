@@ -36,7 +36,11 @@ def read_json(path):
 def state_path(root, module):
     if module not in MODULES:
         raise ValueError('Unbekanntes Modul.')
-    return Path(root) / 'daten' / module / 'bestand.json'
+    root = Path(root)
+    target = root / 'daten' / module / 'bestand.json'
+    if any(path.is_symlink() for path in (root / 'daten', target.parent, target)):
+        raise ValueError('Verknüpfte Modulpfade sind nicht zulässig.')
+    return target
 
 
 def load(root, module, validate, empty):
