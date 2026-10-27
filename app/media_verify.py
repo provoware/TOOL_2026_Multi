@@ -27,7 +27,9 @@ def verify_video(path, *, require_audio=False, timeout=20):
         duration=float(result["format"]["duration"])
         if not 0 < duration <= 24*3600:
             raise ValueError("Ungültige Videodauer.")
-        if not isinstance(streams,list) or not any(
+        if not isinstance(streams,list) or not all(isinstance(s,dict) for s in streams):
+            raise ValueError("Ungültige Spurdaten.")
+        if not any(
             s.get("codec_type")=="video" and
             isinstance(s.get("width"),int) and s["width"]>0 and
             isinstance(s.get("height"),int) and s["height"]>0

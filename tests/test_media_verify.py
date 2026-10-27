@@ -30,3 +30,14 @@ class VerifyTests(unittest.TestCase):
         with patch("app.media_verify.shutil.which",return_value=None):
             with self.assertRaises(ValueError):
                 media_verify.verify_video(self.path)
+
+    def test_reject_non_object_stream_entries(self):
+        valid_video={"codec_type":"video","width":1280,"height":720}
+        for streams in ([None], [valid_video, None], ["bad", valid_video]):
+            with self.subTest(streams=streams):
+                payload={"format":{"duration":"3.2"},"streams":streams}
+                with patch("app.media_verify.shutil.which",return_value="/usr/bin/ffprobe"),patch(
+                    "app.media_verify.subprocess.run",return_value=SimpleNamespace(
+                        returncode=0,stdout=json.dumps(payload).encode(),stderr=b"")):
+                    with self.assertRaisesRegex(ValueError,"Ungültige FFprobe-Ausgabe"):
+                        media_verify.verify_video(self.path)
