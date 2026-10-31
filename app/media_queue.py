@@ -53,10 +53,12 @@ def validate(data):
 
 def load(root, *, recover_running=True):
     path=_location(root)
+    if path.is_symlink():
+        raise ValueError("Warteschlange ist verknüpft.")
     if not path.exists():
         return {"schema_version":1,"jobs":[]}
-    if path.is_symlink() or path.stat().st_size>300_000:
-        raise ValueError("Warteschlange ist verknüpft oder zu groß.")
+    if path.stat().st_size>300_000:
+        raise ValueError("Warteschlange ist zu groß.")
     data=validate(json.loads(path.read_text(encoding="utf-8")))
     changed=False
     for job in data["jobs"]:
