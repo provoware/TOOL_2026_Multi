@@ -16,7 +16,7 @@ def validate_record(raw):
     validate_url(raw['url'])
     archive.text(raw['group'], 'Gruppe', limit=60)
     archive.text(raw['icon'], 'Symboltext', limit=3)
-    if any(ord(ch) < 32 for ch in raw['name'] + raw['group'] + raw['icon']):
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in raw['name'] + raw['group'] + raw['icon']):
         raise ValueError('Steuerzeichen sind in Bezeichnungen nicht erlaubt.')
     return deepcopy(raw)
 

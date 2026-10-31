@@ -44,3 +44,17 @@ class QuicklinksStoreTests(unittest.TestCase):
             with self.assertRaises(OSError):
                 store.put(self.root, {**item(), 'name': 'Geändert'})
         self.assertEqual(before, store.load(self.root))
+
+    def test_labels_reject_del_without_changing_saved_links(self):
+        store.put(self.root, item())
+        before = store.load(self.root)
+        for field in ('name', 'group', 'icon'):
+            with self.subTest(field=field):
+                bad = {**item(), 'id': 'invalid_' + field,
+                       field: item()[field] + '\x7f'}
+                with self.assertRaisesRegex(ValueError, 'Steuerzeichen'):
+                    store.put(self.root, bad)
+                self.assertEqual(store.load(self.root), before)
+        store.put(self.root, {**item('Andere Seite', 'https://example.org'),
+                                   'id': 'link2'})
+        self.assertEqual(len(store.load(self.root)['links']), 2)

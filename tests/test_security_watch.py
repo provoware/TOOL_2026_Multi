@@ -18,6 +18,32 @@ class SecurityAndWatcherTests(unittest.TestCase):
         self.assertNotIn("/home/anna", cleaned)
         self.assertIn("<GEHEIM>", cleaned)
 
+    def test_basic_authorization_headers_are_hidden_in_logs(self):
+        headers = (
+            "Authorization: Basic dXNlcjpwYXNz",
+            "Proxy-Authorization: Basic Zm9vOmJhcg==",
+        )
+        for header in headers:
+            with self.subTest(header=header):
+                self.assertNotIn(header.split()[-1], redact(header))
+                self.assertIn("<GEHEIM>", redact(header))
+        self.assertEqual(
+            redact("Authorization: Bearer abcdefghijklmno"),
+            "Authorization: Bearer <GEHEIM>",
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            logger = EventLogger(root, "0.18.5")
+            logger.record(
+                severity="FEHLER", area="NETZ", summary=headers[0],
+                cause=headers[1], protection="Keine Änderung",
+                next_step="Zugangsdaten prüfen",
+            )
+            stored = (root / "logs/ereignisse.jsonl").read_text(encoding="utf-8")
+            report = next((root / "berichte").glob("*.txt")).read_text(encoding="utf-8")
+            for secret in ("dXNlcjpwYXNz", "Zm9vOmJhcg=="):
+                self.assertNotIn(secret, stored + report)
+
     def test_event_logger_redacts_before_persisting_and_learning(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

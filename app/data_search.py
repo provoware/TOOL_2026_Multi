@@ -89,8 +89,12 @@ class DataSearch:
 
     def batches(self):
         started = monotonic()
-        if self.data.is_symlink():
-            raise ValueError('Der Suchordner ist eine Verknüpfung. Bitte den ursprünglichen Ordner auswählen.')
+        # Elternverknüpfungen nicht durch os.fwalk betreten.
+        if any(path.is_symlink() for path in (self.data, *self.data.parents)):
+            raise ValueError(
+                'Der Suchordner oder ein übergeordneter Ordner ist eine Verknüpfung. '
+                'Bitte den ursprünglichen Ordner auswählen.'
+            )
         try:
             mode = self.data.stat().st_mode
             if not stat.S_ISDIR(mode):

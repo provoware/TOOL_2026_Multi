@@ -55,6 +55,23 @@ class WikiStoreTests(unittest.TestCase):
         self.assertEqual(imported["links"], [next(a["id"] for a in state["articles"] if "Kopie" in a["title"])])
         self.assertEqual(next(a for a in state["articles"] if a["id"] == first["id"])["content"], "Hallo")
 
+    def test_unhashable_links_raise_value_error_without_changing_data(self):
+        existing = wiki.put(self.root, article())
+        path = archive.state_path(self.root, "wiki")
+        before = path.read_bytes()
+        for malformed in ([{"id": existing["id"]}], [[existing["id"]]]):
+            with self.subTest(links=malformed):
+                with self.assertRaisesRegex(ValueError, "Kennung"):
+                    wiki.put(self.root, article("Beschädigt", links=malformed))
+                damaged = wiki.load(self.root)
+                damaged["articles"][0]["links"] = malformed
+                with self.assertRaisesRegex(ValueError, "Kennung"):
+                    wiki.validate(damaged)
+                self.assertEqual(path.read_bytes(), before)
+        with self.assertRaisesRegex(ValueError, "Artikelverknüpfungen"):
+            wiki.put(self.root, article("Doppelt", links=[existing["id"], existing["id"]]))
+        self.assertEqual(path.read_bytes(), before)
+
     def test_invalid_damaged_input_and_write_failure(self):
         original = wiki.put(self.root, article())
         path = archive.state_path(self.root, "wiki")
