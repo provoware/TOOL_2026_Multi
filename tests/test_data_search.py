@@ -56,6 +56,21 @@ class DataSearchTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.search('secret')
 
+    def test_selected_root_with_symlink_ancestor_is_rejected(self):
+        actual = self.root / 'extern' / 'unterordner'
+        actual.mkdir(parents=True)
+        (actual / 'privat.txt').write_text('geheim', encoding='utf-8')
+        alias = self.root / 'alias'
+        alias.symlink_to(actual.parent, target_is_directory=True)
+        selected = alias / 'unterordner'
+        self.assertFalse(selected.is_symlink())
+        with self.assertRaisesRegex(ValueError, 'Verknüpfung'):
+            self.search('geheim', search_path=selected)
+        # Der echte, ausdrücklich gewählte Ordner bleibt durchsuchbar.
+        result = self.search('geheim', search_path=actual)
+        self.assertEqual([hit['path'] for hit in result.hits], ['privat.txt'])
+        self.assertEqual(result.reason, 'done')
+
     def test_hit_limit_reported_even_for_last_file(self):
         (self.data / 'probe.txt').write_text('match\n' * 300)
         result = self.search('match', names=False)
