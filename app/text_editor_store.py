@@ -118,9 +118,7 @@ def save_text_document(root: Path, document: TextDocument, previous_path: Path |
     })
     target = text_path(root, str(payload["title"]))
 
-    # Nur eine zuvor im eigenen Textordner geöffnete Datei darf bei einer
-    # Umbenennung in die Versionen verschoben werden. Vor jedem Schreibzugriff
-    # prüfen, damit weder fremde Dateien noch Verknüpfungsziele betroffen sind.
+    # Nur zuvor im eigenen Textordner geöffnete Dateien dürfen verschoben werden.
     if previous_path is not None:
         previous_path = Path(previous_path)
         text_folder = root / "daten" / "texte"

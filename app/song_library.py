@@ -211,6 +211,7 @@ class SongLibrary(QWidget):
         actions.addStretch(1)
         self.status_label = QLabel("")
         self.status_label.setObjectName("muted")
+        self.status_label.setWordWrap(True)
         actions.addWidget(self.status_label)
         outer.addLayout(actions)
 
