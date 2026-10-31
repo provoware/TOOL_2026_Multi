@@ -179,6 +179,12 @@ Ist nichts markiert, erscheint jetzt ein verständlicher Hinweis statt einer Akt
 
 ## Songtext schreiben
 
+Bei **175 % oder 200 % Zoom** bekommt der Songtext besonders viel Platz:
+Die Schrittanleitung wird ausgeblendet, und **Charaktere** sowie **Notizen**
+lassen sich rechts beziehungsweise bei den Songangaben über eigene Schalter
+aufklappen. Bereits eingetragene Notizen und Charakterverweise bleiben erhalten.
+Beim Zurückzoomen erscheinen die gewohnten Bereiche wieder.
+
 Der Editor zeigt oben eine einfache Schrittfolge:
 
 1. Titel eintragen.

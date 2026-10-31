@@ -1136,6 +1136,11 @@
       "purpose": "Meta- und Regressionstests für UI-Verträge und Shadow-Gate-Kernlogik"
     },
     {
+      "path": "tests/test_ui_text_fit_gui.py",
+      "release": false,
+      "purpose": "GUI-Regression für Dashboard-Textbreiten, Shadow-Negativproben und nutzbare Songeditor-Fläche bei 200 %"
+    },
+    {
       "path": "docs/ITERATION39_UI_QUALITY_SHADOW.md",
       "release": false,
       "purpose": "Architektur, Schutzgrenzen und Kalibrierungsplan des UI-Shadow-Gates"
