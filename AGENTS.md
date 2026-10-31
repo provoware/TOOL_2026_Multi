@@ -221,3 +221,5 @@ Die GitHub-PR-Bestandsaufnahme gehört **vor die Planung neuer optionaler Arbeit
 - **Ausnahmen:** P0-Sicherheits- und Datenintegritätsprobleme, zwingende Release-Gates und ein bereits freigegebener eingefrorener Plan haben Vorrang. Diese Regel **hebt keinen Freeze und keine Release-/Merge-Freigabe** auf. Bestehende kanonische/generierte To-do-Ansichten nicht manuell umschreiben; vorhandenen Generator bzw. Aufgaben-Workflow verwenden.
 
 Zugehörige priorisierte GitHub-Aufgabe: https://github.com/provoware/TOOL_2026_Multi/issues/157.
+
+- **CI-Abhängigkeit:** Die Grundprüfung benötigt `libpulse0` für QtMultimedia (Korrektur aus PR #149 auf `main`). Eine Freigabe verlangt einen neuen vollständigen Prüflauf auf dem aktualisierten Integrationsstand; ein alter roter Lauf wird nicht übergangen.
