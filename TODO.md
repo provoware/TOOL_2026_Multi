@@ -8,6 +8,7 @@ Stand: 2026-10-19
 
 Die **[Modulübersicht](docs/MODULPLAN_2026.md)** ist der verbindliche Gesamtplan. Die vielen weiter unten stehenden Kontrollkästchen sind historische Arbeitsprotokolle und dürfen nicht als aktuelle, voneinander unabhängige To-dos addiert werden.
 
+- [ ] **PV-UI-01/02 und Songeditor 200 %:** Lokaler Umsetzungskandidat vom 26.10.2026 mit gemessenen Label-/Auswahlbreiten, einblendbaren Nebenbereichen und erweitertem UI-Shadow-Gate. 70 Offscreen-Fälle ohne Textüberlauf, 59 gezielte GUI-Tests erfolgreich; vollständige GitHub-CI und Integration noch nicht erfolgt. Keine Datenmigration.
 - [x] PR #83 als durch #87 überholte Layoutalternative schließen.
 - [x] PR #88 (0.18.3) mit automatischer PR- und Hauptzweigprüfung übernehmen.
 - [x] PR #89 (0.18.4) nach Bereinigung des gestapelten Zweigs und grüner PR-Prüfung übernehmen.
