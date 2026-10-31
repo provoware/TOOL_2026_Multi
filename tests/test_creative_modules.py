@@ -161,7 +161,7 @@ class CreativeModuleTests(unittest.TestCase):
         book = books.put(self.root, self.book())
         target = archive.state_path(self.root, books.MODULE)
         before = target.read_bytes()
-        for parent in (book['chapters'][0]['id'], 'missing'):
+        for parent in (book['chapters'][0]['id'], 'missing', [], {'id': 'missing'}):
             corrupt = deepcopy(book)
             corrupt['chapters'][0]['parent'] = parent
             with self.assertRaises(ValueError):

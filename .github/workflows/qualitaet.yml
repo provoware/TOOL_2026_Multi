@@ -29,9 +29,11 @@ jobs:
       - name: Systempakete für Wayland bereitstellen
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libegl1 weston
+          sudo apt-get install -y -qq libegl1 libpulse0 weston
       - name: Python-Pakete bereitstellen
         run: python3 -m pip install --disable-pip-version-check -r requirements.txt
+      - name: Qt-Multimedia-Laufzeit vor Grundprüfung kontrollieren
+        run: python3 -c 'from PySide6.QtMultimedia import QAudioOutput, QMediaPlayer'
       - name: Vollständige Grundprüfung ausführen
         run: bash scripts/pruefen.sh --full
       - name: Nativen Qt-Wayland-Start prüfen

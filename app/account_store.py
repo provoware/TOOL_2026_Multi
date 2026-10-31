@@ -22,7 +22,7 @@ def validate_url(raw):
     parsed = urlsplit(raw)
     if (parsed.scheme not in ('https', 'http') or not parsed.hostname
             or parsed.username is not None or parsed.password is not None
-            or any(ord(c) < 33 for c in raw)
+            or any(ord(c) < 33 or ord(c) == 127 for c in raw)
             or any(secret_name(key) for key, _value in (parse_qsl(parsed.query) + parse_qsl(parsed.fragment)))):
         raise ValueError('Bitte eine http(s)-Webadresse ohne Zugangsdaten oder Geheimnisparameter verwenden.')
     try:
