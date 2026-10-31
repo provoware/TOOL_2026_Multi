@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## README: farbiger Projektstatus und Schnellnavigation (31.10.2026)
+
+- Farbig beschriftete Statuskennzeichen für Entwicklungsstand, Version und Zielsystem ergänzt; der Hauptzweig-Prüfstatus wird direkt aus GitHub Actions angezeigt.
+- Schnellzugriffe auf Start, Bedienung, Datensicherung, Modulplan und offene Aufgaben ergänzt. Statusfarben werden zusätzlich ausgeschrieben und bleiben ohne Farberkennung verständlich.
+- Dokumentationsstand aktualisiert und die veraltete Angabe zu den zuletzt verbesserten Funktionen durch einen neutralen Verweis auf Sicherheitskorrekturen und den Änderungsverlauf ersetzt. **Keine Code-, Nutzerdaten- oder Versionsänderung.**
+
 ## Lesbare Eingabefelder und Song-Arbeitsfläche bei 200 % (PV-UI-01/02, 26.10.2026; Umsetzungskandidat)
 
 - Dashboard-Beschriftungen, Profil- und Theme-Auswahl erhalten gemessene Mindestbreiten statt abgeschnittener Texte; der Laptop-Kompaktmodus verwendet einen kurzen, vollständig benannten Titel.
