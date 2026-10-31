@@ -11,6 +11,7 @@ from PySide6.QtCore import QEvent, QObject, QTimer
 from PySide6.QtWidgets import QComboBox, QFrame, QLabel, QPushButton, QWidget
 
 from app.presentation_policy import presentation_state
+from app.ui_standards import combo_text_width
 
 
 def _zoom_percent(window: QWidget) -> int:
@@ -52,6 +53,12 @@ def apply_laptop_layout(window: QWidget) -> None:
     was_compact = bool(window.property("provowareLaptopCompact"))
     _sync_profile_action_text(window, state)
 
+    title = getattr(window, "app_title_label", None)
+    if isinstance(title, QLabel) and compact:
+        title.setText("Provoware Dashboard 2026")
+        title.setAccessibleName("Provoware-Datenbank-Dashboard 2026")
+        title.setToolTip("Provoware-Datenbank-Dashboard 2026")
+
     # Ist der Laptop-Modus weder aktiv noch zu restaurieren, darf diese Schicht
     # nichts anfassen. So bleiben normale Großansicht und 175/200-%-Hochzoom
     # vollständig unter Kontrolle der bereits geprüften zentralen UI-Standards.
@@ -91,7 +98,7 @@ def apply_laptop_layout(window: QWidget) -> None:
             )
         elif text in {"Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten"}:
             if compact:
-                label.setFixedWidth(88)
+                label.setFixedWidth(max(88, label.fontMetrics().horizontalAdvance(text) + 18))
             else:
                 label.setMinimumWidth(0)
                 label.setMaximumWidth(16777215)
@@ -99,8 +106,9 @@ def apply_laptop_layout(window: QWidget) -> None:
     profile_combo = getattr(window, "db_profile_combo", None)
     if isinstance(profile_combo, QComboBox):
         if compact:
-            profile_combo.setMinimumWidth(92)
-            profile_combo.setMaximumWidth(120)
+            required = combo_text_width(profile_combo)
+            profile_combo.setMinimumWidth(max(92, required))
+            profile_combo.setMaximumWidth(max(120, required))
         else:
             profile_combo.setMinimumWidth(0)
             profile_combo.setMaximumWidth(16777215)

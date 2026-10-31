@@ -89,8 +89,7 @@ class DataSearch:
 
     def batches(self):
         started = monotonic()
-        # Auch eine Verknüpfung in einem Elternordner würde os.fwalk
-        # trotz follow_symlinks=False bis zur Suchwurzel durchlaufen.
+        # Elternverknüpfungen nicht durch os.fwalk betreten.
         if any(path.is_symlink() for path in (self.data, *self.data.parents)):
             raise ValueError(
                 'Der Suchordner oder ein übergeordneter Ordner ist eine Verknüpfung. '
