@@ -15,7 +15,14 @@ REMINDER_OPTIONS = (None, 0, 5, 15, 30, 60, 1440)
 
 
 def store_path(root: Path) -> Path:
-    return root / "daten" / "kalender" / "termine.json"
+    root = Path(root)
+    data = root / "daten"
+    folder = data / "kalender"
+    target = folder / "termine.json"
+    # Auch defekte Links vor der Existenzprüfung abweisen, um Fremddaten zu schützen.
+    if any(path.is_symlink() for path in (data, folder, target)):
+        raise ValueError("Kalenderdaten dürfen keine symbolischen Verknüpfungen enthalten.")
+    return target
 
 
 def empty_state() -> dict[str, object]:
