@@ -30,3 +30,12 @@ class MediaFilesTests(unittest.TestCase):
         linked.symlink_to(self.audio)
         with self.assertRaises(ValueError):
             media.media_path(linked, media.AUDIO)
+
+    def test_dangling_playlist_symlink_is_rejected_without_modification(self):
+        self.assertEqual(media.load_playlist(self.root), {"schema_version": 1, "paths": []})
+        target = self.root / "daten/medien/playlist.json"
+        target.parent.mkdir(parents=True)
+        target.symlink_to(self.root / "nicht-vorhanden.json")
+        with self.assertRaisesRegex(ValueError, "Verknüpfung"):
+            media.load_playlist(self.root)
+        self.assertTrue(target.is_symlink())
