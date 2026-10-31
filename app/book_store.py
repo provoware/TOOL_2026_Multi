@@ -81,7 +81,8 @@ def validate_book(book):
     for chapter in chapters:
         parent, seen = chapter.get('parent'), {chapter['id']}
         while parent is not None:
-            if parent not in by_id or parent in seen or len(seen) >= 8:
+            if (not isinstance(parent, str) or parent not in by_id
+                    or parent in seen or len(seen) >= 8):
                 raise ValueError('Kapitelstruktur enthält fehlende Eltern, einen Kreis oder mehr als acht Ebenen.')
             seen.add(parent)
             parent = by_id[parent].get('parent')
