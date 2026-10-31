@@ -28,6 +28,7 @@ from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
     QComboBox,
+    QLabel,
     QLineEdit,
     QListWidget,
     QPlainTextEdit,
@@ -113,6 +114,39 @@ def _visible_controls(window: QWidget) -> list[QWidget]:
                 continue
             controls.append(control)
     return list(dict.fromkeys(controls))
+
+
+def _text_fit_findings(window: QWidget, case: str) -> list[dict[str, object]]:
+    """Findet unsichtbare Textenden innerhalb ansonsten sichtbarer Widgets."""
+    findings: list[dict[str, object]] = []
+    for label in window.findChildren(QLabel):
+        value = label.text().replace("&&", "&")
+        if (not label.isVisibleTo(window) or label.wordWrap() or not value
+                or "\n" in value or "<" in value):
+            continue
+        required = label.fontMetrics().horizontalAdvance(value)
+        available = label.contentsRect().width()
+        if required > available + 4:
+            finding = _finding("warning", "UI-LABEL-TEXT-CLIPPED",
+                               "Beschriftung benötigt mehr Breite als ihr Feld.",
+                               window=window.__class__.__name__, case=case,
+                               rect=_rect_of(label, window), control=label)
+            finding.update(text=value, required_px=required, available_px=available)
+            findings.append(finding)
+    for combo in window.findChildren(QComboBox):
+        if not combo.isVisibleTo(window) or not combo.currentText():
+            continue
+        text = combo.currentText()
+        required = (combo.fontMetrics().horizontalAdvance(text)
+                    + max(36, combo.fontMetrics().height() + 10))
+        if required > combo.width() + 4:
+            finding = _finding("warning", "UI-COMBO-TEXT-CLIPPED",
+                               "Aktueller Auswahlwert benötigt mehr Breite als das Feld.",
+                               window=window.__class__.__name__, case=case,
+                               rect=_rect_of(combo, window), control=combo)
+            finding.update(text=text, required_px=required, available_px=combo.width())
+            findings.append(finding)
+    return findings
 
 
 def _finding(severity: str, code: str, message: str, *, window: str, case: str, rect: QRect | None = None, control: QWidget | None = None) -> dict[str, object]:
@@ -226,6 +260,8 @@ def _scan_window(window: QWidget, spec: ViewportSpec) -> tuple[list[dict[str, ob
             f"Nur {compliance:.0%} der gemessenen Geometriewerte liegen auf dem {FINE_GRID_PX}px-Feinraster (±1px).",
             window=name, case=case,
         ))
+
+    findings.extend(_text_fit_findings(window, case))
 
     metrics = {
         "window": name,

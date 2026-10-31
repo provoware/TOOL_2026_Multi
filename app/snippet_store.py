@@ -47,7 +47,10 @@ def validate(raw):
         groups.add((group, version))
         for field, limit in (('title', 200), ('category', 100), ('content', 200_000)):
             archive.text(item.get(field), field, required=True, limit=limit)
-        if item.get('workflow') not in flows or item.get('color') not in COLORS or item.get('size') not in SIZES:
+        color = item.get('color')
+        if (item.get('workflow') not in flows
+                or not isinstance(color, str) or color not in COLORS
+                or item.get('size') not in SIZES):
             raise ValueError('Workflow, Farbe oder Größe ist ungültig.')
         monthly = item.get('monthly')
         if not isinstance(monthly, dict):

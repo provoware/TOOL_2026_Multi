@@ -84,6 +84,7 @@ class TodoWindow(QWidget):
         buttons = QHBoxLayout()
         self.status_label = QLabel("Bereit · Aufgabe eingeben oder eine aktive Aufgabe auswählen.")
         self.status_label.setObjectName("muted")
+        self.status_label.setWordWrap(True)
         buttons.addWidget(self.status_label, 1)
         refresh = QPushButton("Liste aktualisieren")
         refresh.clicked.connect(self.refresh)
