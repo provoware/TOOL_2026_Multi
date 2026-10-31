@@ -1,8 +1,29 @@
 # Provoware-Datenbank-Dashboard 2026
 
-> **Version:** 0.18.5 (Entwicklungskandidat) · **Dokumentationsstand:** 19.10.2026 · **Status:** nutzbarer Desktop-Kern; Modulergänzungen werden automatisch geprüft. Abschließende Kubuntu-Abnahme erst nach Fertigstellung aller Module.
+> **Version:** 0.18.5 (Entwicklungskandidat) · **Dokumentationsstand:** 31.10.2026 · **Status:** nutzbarer Desktop-Kern; kein fertiges Release. Abschließende Kubuntu-Abnahme erst nach Fertigstellung aller Module.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
+
+
+[![Version: 0.18.5](https://img.shields.io/badge/Version-0.18.5-175a98?style=flat-square)](MANIFEST.json)
+[![Status: Entwicklungskandidat](https://img.shields.io/badge/Status-Entwicklungskandidat-a84b00?style=flat-square)](docs/MODULPLAN_2026.md)
+[![System: Kubuntu 26.04 LTS](https://img.shields.io/badge/System-Kubuntu_26.04_LTS-40569b?style=flat-square)](#zielsystem-und-schnellstart)
+[![Grundprüfung auf main](https://github.com/provoware/TOOL_2026_Multi/actions/workflows/qualitaet.yml/badge.svg?branch=main)](https://github.com/provoware/TOOL_2026_Multi/actions/workflows/qualitaet.yml)
+
+> **Statusfarben:** 🟢 **Direkt nutzbar** · 🟡 **In Entwicklung / noch nicht freigegeben** · 🔴 **Gesperrt oder fehlgeschlagen**. Die Kennzeichnung steht immer auch als Text dabei; Farbe allein ist keine Information. Die Prüfplakette zeigt den **jeweiligen aktuellen GitHub-Prüfstatus** und ersetzt keine abschließende Prüfung am eigenen Kubuntu-Rechner.
+
+## 🧭 Schnellnavigation
+
+| Ich möchte … | Hier geht es weiter |
+|---|---|
+| 🟢 **Das Programm starten** | [Schnellstart](#zielsystem-und-schnellstart) · [Anleitung für Einsteiger](ANLEITUNG_LAIEN.md) |
+| 🟢 **Songtexte, Bücher oder Aufgaben bearbeiten** | [Direkt nutzbare Bereiche](#direkt-nutzbar) |
+| 🟢 **Meine Dateien schützen** | [Datensicherung](docs/DATENSICHERUNG.md) · [Datensicherheit](#datensicherheit) |
+| 🟡 **Geplante und noch fehlende Funktionen ansehen** | [Verbindlicher Modulplan](docs/MODULPLAN_2026.md) · [Aufgaben](TODO.md) |
+| 🟡 **Entwicklung und Fehler verfolgen** | [Offene Aufgaben](https://github.com/provoware/TOOL_2026_Multi/issues) · [Änderungsanträge](https://github.com/provoware/TOOL_2026_Multi/pulls) · [Prüfläufe](https://github.com/provoware/TOOL_2026_Multi/actions) |
+
+**Wichtig:** 🟡 *Entwicklungskandidat* bedeutet nicht, dass alle Module fertig sind. Automatische Prüfungen sichern Zwischenstände ab; die einmalige praktische Kubuntu-Gesamtabnahme folgt nach Abschluss der vereinbarten Module.
+
 
 ## Das Wichtigste auf einen Blick
 
@@ -14,7 +35,7 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 | **Was fehlt noch?** | Reimfinder, vollständige automatische Update-Aktivierung samt Rollback, Drittplugin-Laden und weitere geplante Module; die statische und isolierte Updateprüfung ist bereits verfügbar. |
 | **Wie sichere ich meine Arbeit?** | Programm schließen und die [eigenständige Datensicherung](docs/DATENSICHERUNG.md) nutzen. |
 | **Wo finde ich Hilfe?** | [Schritt-für-Schritt-Anleitung](ANLEITUNG_LAIEN.md) oder im Programm die Taste `F1`. |
-| **Was wurde zuletzt verbessert?** | Neue Update-Slot-Basis, Formular-Modulbaukasten, Entwicklungspool sowie Audio-, Bild- und Video-Basismodule (PR #100 bis #103). |
+| **Was wurde zuletzt verbessert?** | Zusätzliche Schutzmaßnahmen für Dateien, gespeicherte Daten und Diagnoseprotokolle; frühere Modulergänzungen sind im [Änderungsverlauf](CHANGELOG.md) dokumentiert. |
 | **Was ist technisch noch offen?** | Spätere einmalige Kubuntu-Gesamtabnahme, Weiterentwicklung noch fehlender Module und endgültige Veröffentlichung. |
 
 **Vollständiger Entwicklungsumfang:** [Verbindlicher Modulplan](docs/MODULPLAN_2026.md). [Medienmodule](docs/MEDIENMODULE.md) · [Entwicklungspool](docs/ENTWICKLUNGSPOOL.md) · [Modulentwürfe](docs/MODULENTWURF.md) · [Update-Slots](docs/UPDATE_SLOTS.md). Nachweis PR #97/#98 (CI #1031/#1033/#1035): [Wikimodul](docs/WIKI.md), [Update-Checkpoint](docs/UPDATE_CHECKPOINT.md), [Modulbaukasten](docs/MODULBAUKASTEN.md). Neu in 0.18.5: [rechte Link-Schnellstarter-Leiste](docs/SCHNELLSTARTER.md) mit lokal gespeicherten Webadressen, Gruppen und bewusstem Browserstart.
