@@ -7,18 +7,24 @@ from app import record_store
 MODULE, COLLECTION = 'ideen', 'ideas'
 
 
+def _metadata_text(value, label, *, required=False, limit=200_000):
+    archive.text(value, label, required=required, limit=limit)
+    if any(ord(char) < 32 or ord(char) == 127 for char in value):
+        raise ValueError(f'{label} darf keine Steuerzeichen enthalten.')
+
+
 def validate_record(raw):
     if not isinstance(raw, dict) or set(raw) != {'id', 'title', 'content', 'tags', 'origin'}:
         raise ValueError('Ungültige Idee.')
     archive.identifier(raw['id'])
-    archive.text(raw['title'], 'Titel', required=True, limit=200)
+    _metadata_text(raw['title'], 'Titel', required=True, limit=200)
     archive.text(raw['content'], 'Textfragment', required=True)
-    archive.text(raw['origin'], 'Herkunft', limit=2000)
+    _metadata_text(raw['origin'], 'Herkunft', limit=2000)
     tags = raw['tags']
     if not isinstance(tags, list) or len(tags) > 100:
         raise ValueError('Höchstens 100 Schlagworte.')
     for tag in tags:
-        archive.text(tag, 'Schlagwort', required=True, limit=80)
+        _metadata_text(tag, 'Schlagwort', required=True, limit=80)
     return deepcopy(raw)
 
 
