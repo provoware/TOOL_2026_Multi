@@ -90,6 +90,8 @@ def append_developer_info(root: Path, text: str) -> Path:
     clean = ' '.join(str(text).splitlines()).strip()
     if not clean:
         raise ValueError('Die Schnelleingabe ist leer.')
+    if any(ord(char) < 32 or ord(char) == 127 for char in clean):
+        raise ValueError('Steuerzeichen sind in Projekt-Notizen nicht erlaubt.')
     target = _checked_path(root, NOTE_FILE)
     try:
         previous = _read_regular(target)

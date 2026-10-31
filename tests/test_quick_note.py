@@ -24,6 +24,17 @@ class QuickNoteTests(unittest.TestCase):
         self.assertEqual(self.legacy.read_bytes(), raw)
         self.assertTrue(notes.legacy_notes_pending(self.root))
 
+    def test_control_characters_are_rejected_without_changing_saved_notes(self):
+        target = notes.append_developer_info(self.root, 'Erste Notiz')
+        before = target.read_bytes()
+        for value in ('Null\x00Byte', 'Tab\tText', 'DEL\x7fText'):
+            with self.subTest(value=repr(value)):
+                with self.assertRaisesRegex(ValueError, 'Steuerzeichen'):
+                    notes.append_developer_info(self.root, value)
+                self.assertEqual(target.read_bytes(), before)
+        notes.append_developer_info(self.root, 'Mehrzeilig\nTest')
+        self.assertIn('Mehrzeilig Test', target.read_text(encoding='utf-8'))
+
     def test_legacy_consent_required_before_any_copy(self):
         self.legacy.write_bytes(b'Original')
         with self.assertRaises(PermissionError):
