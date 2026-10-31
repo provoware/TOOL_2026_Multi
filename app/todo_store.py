@@ -94,7 +94,14 @@ LEGACY_DEVELOPMENT_IDS = frozenset(
 
 
 def store_path(root: Path) -> Path:
-    return root / "daten" / "todo" / "todo.json"
+    root = Path(root)
+    data = root / "daten"
+    folder = data / "todo"
+    target = folder / "todo.json"
+    # Auch defekte Verknüpfungen vor exists() abweisen: fremde Daten schützen.
+    if any(path.is_symlink() for path in (data, folder, target)):
+        raise ValueError("Todo-Daten dürfen keine symbolischen Verknüpfungen enthalten.")
+    return target
 
 
 def empty_state() -> dict[str, object]:
