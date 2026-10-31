@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## Lesbare Eingabefelder und Song-Arbeitsfläche bei 200 % (PV-UI-01/02, 26.10.2026; Umsetzungskandidat)
+
+- Dashboard-Beschriftungen, Profil- und Theme-Auswahl erhalten gemessene Mindestbreiten statt abgeschnittener Texte; der Laptop-Kompaktmodus verwendet einen kurzen, vollständig benannten Titel.
+- UI-Shadow-Gate prüft zusätzlich einfache sichtbare Beschriftungen und aktuelle Auswahlwerte auf Textüberlauf; entsprechende Negativproben und eine sieben Fälle umfassende Referenzmatrix ergänzt.
+- Songeditor hält bei 175/200 % die Schreibfläche und Gesamtvorschau frei. Charakterauswahl und optionale Notizen sind bei Bedarf über erreichbare Schalter einblendbar; vorhandene Werte bleiben unverändert.
+- Lange Statusmeldungen in Songbibliothek und Aufgabenliste können umbrechen. Datenformate, Speicherintervalle, Modulzugänge und Version bleiben unverändert.
+- Lokale Qt-Offscreen-Messung: 70 Fälle ohne Textbreitenbefund; PR-Shadow: acht Matrixfälle, 0 Fehler/0 Warnungen. Vollständige GitHub-Prüfung und finale reale Kubuntu-Abnahme bleiben getrennt.
+
 ## Eindeutige Verlassen-Dialoge (PV-UX-04, 25.10.2026)
 
 - Aktionsbezogene Schaltflächen statt sichtbarer Ja/Nein-Rückfragen bei Text-/Modulwechsel und Fenster-/Dashboard-Schließen.

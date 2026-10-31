@@ -68,7 +68,9 @@ def _validate(data: object) -> dict[str, dict[str, list[str]]]:
     result: dict[str, dict[str, list[str]]] = {}
     seen_profiles: set[str] = set()
     for raw_name, raw_categories in data.items():
-        name = _clean_profile_name(str(raw_name))
+        if not isinstance(raw_name, str):
+            raise ValueError("Profilname muss Text sein.")
+        name = _clean_profile_name(raw_name)
         profile_key = name.casefold()
         if profile_key in seen_profiles:
             raise ValueError("Profildatei enthält doppelte Profilnamen.")
@@ -83,7 +85,9 @@ def _validate(data: object) -> dict[str, dict[str, list[str]]]:
             clean_values: list[str] = []
             seen: set[str] = set()
             for raw_value in values:
-                value = _normalize_value(str(raw_value))
+                if not isinstance(raw_value, str):
+                    raise ValueError(f"Kategorie {category} in Profil {name} enthält einen Wert, der kein Text ist.")
+                value = _normalize_value(raw_value)
                 key = value.casefold()
                 if key in seen:
                     raise ValueError(f"Kategorie {category} in Profil {name} enthält doppelte Werte.")

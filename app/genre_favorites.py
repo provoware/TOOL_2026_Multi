@@ -80,9 +80,11 @@ def monthly_statistics(root: Path, cutoff: date) -> dict:
     all_favorites = load_favorites(root)
     for entry in entries:
         record = entry.get("categories", {})
+        if not isinstance(record, dict):
+            raise ValueError("Ein Verlaufs-Kategorienfeld ist beschädigt.")
         for cat in CATEGORIES:
             names = record.get(cat, [])
-            if not isinstance(names, list):
+            if not isinstance(names, list) or any(not isinstance(name, str) for name in names):
                 raise ValueError("Ein Verlaufs-Kategorienfeld ist beschädigt.")
             categories[cat] += len(names)
             values.update(names)

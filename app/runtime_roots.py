@@ -33,7 +33,10 @@ def runtime_root(code_root, environment=None):
     marker = data / MARKER
     if marker.is_symlink() or not marker.is_file() or marker.stat().st_size > 4096:
         raise ValueError("Für den externen Datenordner fehlt der Prüfmarker.")
-    content = json.loads(marker.read_text(encoding="utf-8"))
+    try:
+        content = json.loads(marker.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise ValueError("Prüfmarker des externen Datenordners ist nicht lesbar oder beschädigt.") from error
     if (not isinstance(content, dict) or set(content) !=
             {"schema_version", "purpose", "activation_allowed"}
             or content["schema_version"] != 1
