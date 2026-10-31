@@ -434,7 +434,8 @@
       "profile_controls",
       "song_section_list",
       "song_editor_splitter",
-      "song_library_columns"
+      "song_library_columns",
+      "dashboard_card_grid_handles"
     ],
     "song_library_stretch_columns": [
       "title",
@@ -500,7 +501,10 @@
       "recovery",
       "todo",
       "calendar"
-    ]
+    ],
+    "dashboard_card_resize_mouse_and_keyboard": true,
+    "dashboard_card_resize_saves_user_data": false,
+    "dashboard_card_resize_preserves_grid": true
   },
   "process_consistency": {
     "atomic_writer": "app/atomic_io.py",

@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Issue #126 – Dashboard-Karten im bestehenden Raster verstellen (31.10.2026; Prüfkandidat)
+
+- Statt der fehlerhaften verschachtelten QSplitter aus PR #124 bleiben die vier Karten im nativen Qt-Raster. Zwei senkrechte und ein waagerechter Griff verändern die Spalten-/Zeilenanteile per Maus oder Pfeiltasten.
+- Die bisherigen Mindestbreiten bleiben unverändert. Bei knapper Fensterhöhe bleiben die beiden Planungskarten und zugehörige Griffe verborgen; die gewählte Zeilenverteilung wird beim Rückwechsel wiederhergestellt.
+- Keine Nutzerdatenänderung und keine zusätzliche Bibliothek. Automatisierte Layout-, Zoom- und Tastaturtests sind vorgesehen; vollständige GitHub-Prüfung bleibt Pflicht.
+
+
 ## README: farbiger Projektstatus und Schnellnavigation (31.10.2026)
 
 - Farbig beschriftete Statuskennzeichen für Entwicklungsstand, Version und Zielsystem ergänzt; der Hauptzweig-Prüfstatus wird direkt aus GitHub Actions angezeigt.

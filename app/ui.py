@@ -53,6 +53,74 @@ from app.window_lifecycle import (
 )
 
 
+class _DashboardCardDivider(QFrame):
+    """Schmale, per Maus und Pfeiltasten bedienbare Raster-Trennlinie."""
+
+    def __init__(self, dashboard: "Dashboard", axis: str, name: str) -> None:
+        super().__init__()
+        self.dashboard = dashboard
+        self.axis = axis
+        self._dragging = False
+        self.setObjectName(name)
+        self.setAccessibleName(
+            "Dashboard-Karten links und rechts verstellen"
+            if axis == "column" else "Dashboard-Karten oben und unten verstellen"
+        )
+        self.setToolTip("Mit der Maus ziehen oder mit den Pfeiltasten verstellen.")
+        self.setFocusPolicy(Qt.StrongFocus)
+        if axis == "column":
+            self.setFixedWidth(10)
+            self.setCursor(Qt.SplitHCursor)
+        else:
+            self.setFixedHeight(10)
+            self.setCursor(Qt.SplitVCursor)
+
+    def _move_at(self, global_position) -> None:
+        parent = self.parentWidget()
+        if parent is not None:
+            point = parent.mapFromGlobal(global_position)
+            self.dashboard._adjust_dashboard_card_divider(
+                self.axis, point.x() if self.axis == "column" else point.y()
+            )
+
+    def mousePressEvent(self, event) -> None:
+        if event.button() == Qt.LeftButton:
+            self._dragging = True
+            self.setFocus()
+            self._move_at(event.globalPosition().toPoint())
+            event.accept()
+        else:
+            super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event) -> None:
+        if self._dragging and event.buttons() & Qt.LeftButton:
+            self._move_at(event.globalPosition().toPoint())
+            event.accept()
+        else:
+            super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event) -> None:
+        if event.button() == Qt.LeftButton and self._dragging:
+            self._dragging = False
+            event.accept()
+        else:
+            super().mouseReleaseEvent(event)
+
+    def keyPressEvent(self, event) -> None:
+        directions = (
+            (Qt.Key_Left, Qt.Key_Right) if self.axis == "column"
+            else (Qt.Key_Up, Qt.Key_Down)
+        )
+        if event.key() in directions:
+            first = self.dashboard.dashboard_grid.cellRect(0, 0)
+            position = first.right() if self.axis == "column" else first.bottom()
+            offset = -30 if event.key() == directions[0] else 30
+            self.dashboard._adjust_dashboard_card_divider(self.axis, position + offset)
+            event.accept()
+        else:
+            super().keyPressEvent(event)
+
+
 class Dashboard(QWidget):
     """Hauptfenster mit klarer Trennung zwischen fertigen und geplanten Bereichen."""
 
@@ -404,8 +472,29 @@ class Dashboard(QWidget):
         if (left, right) not in {(1, 1), (3, 2), (2, 3)}:
             return
         self.dashboard_grid.setColumnStretch(0, left)
-        self.dashboard_grid.setColumnStretch(1, right)
+        self.dashboard_grid.setColumnStretch(2, right)
         self.dashboard_grid.invalidate()
+
+    def _adjust_dashboard_card_divider(self, axis: str, position: int) -> None:
+        """Verstellt Rasteranteile, ohne bestehende Karten oder Inhalte zu ersetzen."""
+        grid = self.dashboard_grid
+        first = grid.cellRect(0, 0)
+        if axis == "column":
+            second = grid.cellRect(0, 2)
+            total = first.width() + second.width()
+            minimum = min(310, max(1, (total - 1) // 2))
+            left = max(minimum, min(total - minimum, position - first.left()))
+            grid.setColumnStretch(0, max(1, left))
+            grid.setColumnStretch(2, max(1, total - left))
+        elif axis == "row" and self.dashboard_row_handle.isVisible():
+            second = grid.cellRect(2, 0)
+            total = first.height() + second.height()
+            minimum = min(185, max(1, (total - 1) // 2))
+            top = max(minimum, min(total - minimum, position - first.top()))
+            self._dashboard_card_row_weights = (max(1, top), max(1, total - top))
+            grid.setRowStretch(0, self._dashboard_card_row_weights[0])
+            grid.setRowStretch(2, self._dashboard_card_row_weights[1])
+        grid.invalidate()
 
     def _build_start_card(self) -> QFrame:
         card, layout = self._card(module_text('start_title', 'Was möchtest du tun?'))
@@ -456,14 +545,28 @@ class Dashboard(QWidget):
     def _build_dashboard_grid(self) -> QGridLayout:
         grid = QGridLayout()
         self.dashboard_grid = grid
-        grid.setHorizontalSpacing(SPACING["s"])
-        grid.setVerticalSpacing(SPACING["s"])
+        # Original-Raster bewahren: keine Qt-Splitter-Mindestgrößenkaskade.
+        grid.setHorizontalSpacing(0)
+        grid.setVerticalSpacing(0)
         grid.setColumnStretch(0, 1)
-        grid.setColumnStretch(1, 1)
+        grid.setColumnStretch(2, 1)
         grid.setRowStretch(0, 1)
-        grid.setRowStretch(1, 1)
+        grid.setRowStretch(2, 1)
+        self._dashboard_card_row_weights = (1, 1)
 
         grid.addWidget(self._build_start_card(), 0, 0)
+        self.dashboard_column_handle_top = _DashboardCardDivider(
+            self, "column", "dashboardCardColumnTop"
+        )
+        self.dashboard_column_handle_bottom = _DashboardCardDivider(
+            self, "column", "dashboardCardColumnBottom"
+        )
+        self.dashboard_row_handle = _DashboardCardDivider(
+            self, "row", "dashboardCardRow"
+        )
+        grid.addWidget(self.dashboard_column_handle_top, 0, 1)
+        grid.addWidget(self.dashboard_column_handle_bottom, 2, 1)
+        grid.addWidget(self.dashboard_row_handle, 1, 0, 1, 3)
 
         db, d = self._card("▦  Daten & Vorgaben")
         d.setSpacing(5)
@@ -510,7 +613,7 @@ class Dashboard(QWidget):
         project_open.clicked.connect(self.open_github_projects)
         d.addWidget(project_open)
         d.addStretch(1)
-        grid.addWidget(db, 0, 1)
+        grid.addWidget(db, 0, 2)
 
         functions, f = self._card("▣  Funktionen · In Planung")
         function_row = QHBoxLayout()
@@ -527,7 +630,7 @@ class Dashboard(QWidget):
                 button.clicked.connect(lambda _checked=False, selected=name: self._planned(selected))
             function_row.addWidget(button)
         f.addLayout(function_row)
-        grid.addWidget(functions, 1, 0)
+        grid.addWidget(functions, 2, 0)
 
         system, s = self._card(module_text("search_tools", "▤  Dateien & Werkzeuge"))
         for title, subtitle in (
@@ -546,7 +649,7 @@ class Dashboard(QWidget):
                 button.clicked.connect(self.open_search)
             s.addWidget(button)
         s.addStretch(1)
-        grid.addWidget(system, 1, 1)
+        grid.addWidget(system, 2, 2)
         return grid
 
     def _build_statusbar(self) -> QFrame:

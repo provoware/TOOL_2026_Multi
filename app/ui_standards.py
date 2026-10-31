@@ -252,6 +252,14 @@ def app_stylesheet(zoom_percent: int = 100, theme_name: str = DEFAULT_THEME) -> 
     QCheckBox {{ spacing:{geometry_scaled(6, zoom_percent)}px; }}
     QSplitter::handle {{ background:{colors['border_soft']}; width:{geometry_scaled(5, zoom_percent)}px; }}
     QSplitter::handle:hover {{ background:{colors['accent']}; }}
+    QFrame#dashboardCardColumnTop, QFrame#dashboardCardColumnBottom, QFrame#dashboardCardRow {{
+        background:{colors['border_soft']}; border:1px solid {colors['border']}; border-radius:3px;
+    }}
+    QFrame#dashboardCardColumnTop:hover, QFrame#dashboardCardColumnBottom:hover,
+    QFrame#dashboardCardRow:hover, QFrame#dashboardCardColumnTop:focus,
+    QFrame#dashboardCardColumnBottom:focus, QFrame#dashboardCardRow:focus {{
+        background:{colors['accent']};
+    }}
     QMenu {{ background:{colors['surface']}; color:{colors['text']}; border:1px solid {colors['border']}; }}
     QMenu::item {{ padding:{geometry_scaled(6, zoom_percent)}px {geometry_scaled(12, zoom_percent)}px; }}
     QMenu::item:selected {{ background:{colors['accent_soft']}; }}
@@ -407,9 +415,17 @@ def _apply_responsive_layout(window: QWidget) -> None:
         if window.__class__.__name__ == "Dashboard":
             # Auch bei 100 % passen nicht immer beide Kartenzeilen. Versteckte
             # Planungskarten dürfen keinen Höhenanteil im Raster reservieren.
-            planning_stretch = 0 if dashboard_dense else 1
-            if window.dashboard_grid.rowStretch(1) != planning_stretch:
-                window.dashboard_grid.setRowStretch(1, planning_stretch)
+            weights = getattr(window, "_dashboard_card_row_weights", (1, 1))
+            planning_stretch = 0 if dashboard_dense else weights[1]
+            if window.dashboard_grid.rowStretch(0) != weights[0]:
+                window.dashboard_grid.setRowStretch(0, weights[0])
+            if window.dashboard_grid.rowStretch(2) != planning_stretch:
+                window.dashboard_grid.setRowStretch(2, planning_stretch)
+            # Planungskarten und zugehörige Griffe bei knapper Höhe ausblenden.
+            for name in ("dashboard_column_handle_bottom", "dashboard_row_handle"):
+                divider = getattr(window, name, None)
+                if isinstance(divider, QFrame):
+                    divider.setVisible(not dashboard_dense)
             # Auf knapper Höhe bekommen fertige Arbeitswege Vorrang vor reinen
             # Planungskarten. Dieselben geplanten Funktionen bleiben über die
             # bedarfsgesteuerte Sidebar vollständig erreichbar.
