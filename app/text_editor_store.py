@@ -118,6 +118,15 @@ def save_text_document(root: Path, document: TextDocument, previous_path: Path |
     })
     target = text_path(root, str(payload["title"]))
 
+    # Nur zuvor im eigenen Textordner geöffnete Dateien dürfen verschoben werden.
+    if previous_path is not None:
+        previous_path = Path(previous_path)
+        text_folder = root / "daten" / "texte"
+        if (previous_path.suffix != ".json" or previous_path.is_symlink()
+                or text_folder.is_symlink() or text_folder.parent.is_symlink()
+                or previous_path.parent.resolve() != text_folder.resolve()):
+            raise ValueError("Der bisherige Text liegt nicht sicher im Textordner. Es wurde nichts gespeichert.")
+
     unchanged = False
     if target.is_file():
         existing = _validate_payload(json.loads(target.read_text(encoding="utf-8")))
