@@ -25,6 +25,25 @@ class IdeaStoreTests(unittest.TestCase):
             self.assertNotEqual(records[0]['id'],records[1]['id'])
             self.assertEqual(records[0]['content'],records[1]['content'])
 
+    def test_metadata_control_characters_are_rejected_without_data_loss(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            store.put(root, record())
+            before = store.load(root)
+            invalid = (
+                ('title', 'Titel\x1b[31m'),
+                ('title', 'Titel\nZeile'),
+                ('origin', 'Quelle\x7f'),
+                ('tags', ['Wetter\nFalsch']),
+                ('tags', ['Wetter\x01']),
+            )
+            for field, value in invalid:
+                with self.subTest(field=field, value=repr(value)):
+                    with self.assertRaisesRegex(ValueError, 'Steuerzeichen'):
+                        store.put(root, {**record(), field: value})
+                    self.assertEqual(store.load(root), before)
+            self.assertEqual(store.validate_record(record())['content'], record()['content'])
+
     def test_invalid_import_and_failed_write_preserve_original(self):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);store.put(root,record())

@@ -30,7 +30,14 @@ class CharacterOption:
 
 
 def store_path(root: Path) -> Path:
-    return root / "daten" / "charaktere" / "charaktere.json"
+    root = Path(root)
+    data = root / "daten"
+    folder = data / "charaktere"
+    target = folder / "charaktere.json"
+    # Auch defekte Verknüpfungen vor exists() abweisen: fremde Daten schützen.
+    if any(path.is_symlink() for path in (data, folder, target)):
+        raise ValueError("Charakterdaten dürfen keine symbolischen Verknüpfungen enthalten.")
+    return target
 
 
 def empty_state() -> dict[str, object]:
