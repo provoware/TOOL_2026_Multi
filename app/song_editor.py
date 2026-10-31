@@ -114,6 +114,7 @@ class SongEditor(QWidget):
         guide = QLabel("1. Titel eintragen  →  2. Bereich wählen oder hinzufügen  →  3. Text schreiben. Charaktere können optional direkt aus der Charakterfibel eingefügt werden.")
         guide.setObjectName("muted")
         guide.setWordWrap(True)
+        self.guide_label = guide
         outer.addWidget(guide)
 
         meta_frame = QFrame()
@@ -153,6 +154,13 @@ class SongEditor(QWidget):
         self.favorite_check.toggled.connect(lambda _value: self.save(reason="Favorit gespeichert"))
         status_row.addWidget(self.favorite_check)
         status_row.addStretch(1)
+        self.character_toggle = QToolButton()
+        self.character_toggle.setCheckable(True)
+        self.character_toggle.setText("▸ Charaktere")
+        self.character_toggle.setAccessibleName("Charakterfibel ein- oder ausblenden")
+        self.character_toggle.setToolTip("Öffnet die Charakterauswahl für den Song; vorhandene Verweise bleiben erhalten.")
+        self.character_toggle.toggled.connect(self._toggle_character_panel)
+        status_row.addWidget(self.character_toggle)
         self.details_toggle = QToolButton()
         self.details_toggle.setCheckable(True)
         self.details_toggle.setChecked(True)
@@ -181,6 +189,7 @@ class SongEditor(QWidget):
 
         character_frame = QFrame()
         character_frame.setObjectName("innerCard")
+        self.character_frame = character_frame
         character_layout = QHBoxLayout(character_frame)
         character_layout.setContentsMargins(10, 6, 10, 6)
         character_layout.addWidget(QLabel("Charakterfibel:"))
@@ -239,14 +248,24 @@ class SongEditor(QWidget):
         right = QWidget()
         right_layout = QVBoxLayout(right)
         right_layout.setContentsMargins(0, 0, 0, 0)
+        preview_header = QHBoxLayout()
         preview_title = QLabel("Gesamtvorschau")
         preview_title.setObjectName("sectionTitle")
-        right_layout.addWidget(preview_title)
+        preview_header.addWidget(preview_title)
+        preview_header.addStretch(1)
+        self.notes_toggle = QToolButton()
+        self.notes_toggle.setCheckable(True)
+        self.notes_toggle.setText("▸ Notizen")
+        self.notes_toggle.setAccessibleName("Optionale Songnotizen ein- oder ausblenden")
+        self.notes_toggle.toggled.connect(self._toggle_notes_panel)
+        preview_header.addWidget(self.notes_toggle)
+        right_layout.addLayout(preview_header)
         self.preview = QTextEdit()
         self.preview.setAccessibleName("Gesamtvorschau")
         self.preview.setReadOnly(True)
         right_layout.addWidget(self.preview, 1)
-        right_layout.addWidget(QLabel("Zusätzliche Notizen zum Song (optional):"))
+        self.notes_label = QLabel("Zusätzliche Notizen zum Song (optional):")
+        right_layout.addWidget(self.notes_label)
         self.other_text = QTextEdit()
         self.other_text.setMaximumHeight(120)
         self.other_text.setPlaceholderText("Ideen, Hinweise oder offene Punkte …")
@@ -270,6 +289,24 @@ class SongEditor(QWidget):
         if hasattr(self, "details_toggle"):
             self.details_toggle.setText("▾ Weitere Angaben" if checked else "▸ Weitere Angaben")
 
+    def _toggle_character_panel(self, checked: bool) -> None:
+        self.character_toggle.setText("▾ Charaktere" if checked else "▸ Charaktere")
+        self.character_frame.setVisible(self.zoom_percent < 175 or checked)
+
+    def _toggle_notes_panel(self, checked: bool) -> None:
+        self.notes_toggle.setText("▾ Notizen" if checked else "▸ Notizen")
+        visible = self.zoom_percent < 175 or checked
+        self.notes_label.setVisible(visible)
+        self.other_text.setVisible(visible)
+
+    def _sync_high_zoom_panels(self) -> None:
+        high_zoom = self.zoom_percent >= 175
+        self.guide_label.setVisible(not high_zoom)
+        self.character_toggle.setVisible(high_zoom)
+        self.notes_toggle.setVisible(high_zoom)
+        self._toggle_character_panel(self.character_toggle.isChecked())
+        self._toggle_notes_panel(self.notes_toggle.isChecked())
+
     def _sync_section_action_labels(self) -> None:
         """Hält Aktionsnamen vollständig, verkürzt aber die sichtbaren Hochzoomtexte."""
         high_zoom = self.zoom_percent >= 175
@@ -280,6 +317,7 @@ class SongEditor(QWidget):
         """Verdichtet optionale Metadaten nur beim Wechsel in/aus dem Kompaktmodus."""
         compact = bool(compact)
         self._sync_section_action_labels()
+        self._sync_high_zoom_panels()
         if self._compact_mode == compact:
             return
         self._compact_mode = compact

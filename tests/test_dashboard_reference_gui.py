@@ -14,7 +14,7 @@ from app.ui import Dashboard, _open_managed_window
 from app.laptop_layout import install_laptop_layout
 from app.ui_standards import (
     COLORS, DEFAULT_THEME, THEMES, THEME_NAMES, geometry_scaled, scaled,
-    set_application_theme,
+    set_application_theme, combo_text_width,
 )
 
 
@@ -360,7 +360,11 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         ]
         self.assertEqual(len(profile_buttons), 1)
         self.assertEqual(profile_buttons[0].text(), "Profile")
-        self.assertLessEqual(self.dashboard.db_profile_combo.maximumWidth(), 120)
+        # Die alte 120-px-Grenze schnitt Profilnamen bei Schriftzoom ab.
+        self.assertGreaterEqual(
+            self.dashboard.db_profile_combo.maximumWidth(),
+            combo_text_width(self.dashboard.db_profile_combo),
+        )
 
         profile_label = next(label for label in self.dashboard.findChildren(QLabel) if label.text() == "Profil:")
         self.assertFalse(profile_label.isVisible())

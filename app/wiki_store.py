@@ -32,11 +32,12 @@ def validate_record(raw):
     archive.text(raw["content"], "Artikelinhalt")
     _tags(raw["tags"])
     links = raw["links"]
-    if (not isinstance(links, list) or len(links) > 100
-            or len(set(links)) != len(links)):
+    if not isinstance(links, list) or len(links) > 100:
         raise ValueError("Ungültige Artikelverknüpfungen.")
     for ident in links:
         archive.identifier(ident)
+    if len(set(links)) != len(links):
+        raise ValueError("Ungültige Artikelverknüpfungen.")
     revisions = raw["revisions"]
     if not isinstance(revisions, list) or len(revisions) > 20:
         raise ValueError("Höchstens 20 frühere Fassungen.")
