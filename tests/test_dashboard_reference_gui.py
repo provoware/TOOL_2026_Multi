@@ -8,6 +8,7 @@ from pathlib import Path
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QFrame, QLabel, QPushButton, QWidget
+from PySide6.QtTest import QTest
 
 from app.song_document import SongDocument, save_song
 from app.ui import Dashboard, _open_managed_window
@@ -266,15 +267,56 @@ class DashboardReferenceGuiTests(unittest.TestCase):
         grid = self.dashboard.dashboard_grid
         actions = self.dashboard.area_size_menu.actions()
         self.assertEqual(len(actions), 3)
-        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (1, 1))
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(2)), (1, 1))
         actions[1].trigger()
         self.app.processEvents()
-        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (3, 2))
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(2)), (3, 2))
         actions[2].trigger()
-        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (2, 3))
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(2)), (2, 3))
         actions[0].trigger()
-        self.assertEqual((grid.columnStretch(0), grid.columnStretch(1)), (1, 1))
+        self.assertEqual((grid.columnStretch(0), grid.columnStretch(2)), (1, 1))
         self.assertEqual(len([f for f in self.dashboard.findChildren(QFrame) if f.objectName() == "card"]), 4)
+
+    def test_grid_handles_resize_without_shrinking_visible_cards(self):
+        for width, height in ((1280, 790), (1366, 768), (1600, 950)):
+            self.dashboard.resize(width, height)
+            self.app.processEvents()
+            grid = self.dashboard.dashboard_grid
+            cards = [
+                c for c in self.dashboard.findChildren(QFrame)
+                if c.objectName() == "card" and c.isVisibleTo(self.dashboard)
+            ]
+            self.assertGreater(min(card.width() for card in cards), 300)
+            if height < 860:
+                self.assertEqual(len(cards), 2)
+                self.assertFalse(self.dashboard.dashboard_row_handle.isVisible())
+                self.assertFalse(self.dashboard.dashboard_column_handle_bottom.isVisible())
+            else:
+                self.assertEqual(len(cards), 4)
+                self.assertTrue(self.dashboard.dashboard_row_handle.isVisible())
+                before = (grid.columnStretch(0), grid.columnStretch(2))
+                handle = self.dashboard.dashboard_column_handle_top
+                handle.setFocus()
+                QTest.keyClick(handle, Qt.Key_Left)
+                self.app.processEvents()
+                after = (grid.columnStretch(0), grid.columnStretch(2))
+                self.assertNotEqual(before, after)
+                self.assertGreater(min(card.width() for card in cards), 300)
+                self.assertEqual(handle.focusPolicy(), Qt.StrongFocus)
+                before_rows = self.dashboard._dashboard_card_row_weights
+                QTest.keyClick(self.dashboard.dashboard_row_handle, Qt.Key_Down)
+                self.app.processEvents()
+                self.assertNotEqual(before_rows, self.dashboard._dashboard_card_row_weights)
+                self.assertGreater(min(card.height() for card in cards), 150)
+
+        self.dashboard.resize(1366, 768)
+        self.dashboard.set_zoom(125)
+        self.app.processEvents()
+        self.assertEqual(len([
+            c for c in self.dashboard.findChildren(QFrame)
+            if c.objectName() == "card" and c.isVisible()
+        ]), 2)
+        self.assertFalse(self.dashboard.dashboard_row_handle.isVisible())
 
     def test_mouse_splitter_preserves_sidebar_width_and_can_reset(self):
         self.dashboard.resize(1500, 880)
