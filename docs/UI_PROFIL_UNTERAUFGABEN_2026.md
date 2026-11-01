@@ -230,3 +230,9 @@ Frozen Plan: ausschließlich Zerlegung und Repository-Dokumentation. Risiken: do
 ## Nachweis Paket A · 01.11.2026
 
 [Bestandsabgleich UI-05 und UI-13](PROFIL_BESTANDSABGLEICH_2026_11_01.md): alle 27 zugehörigen IDs gegen Source, 51 bestehende Prüfungen und isolierte Fehlerproben untersucht. Die Zeilen mit OFFEN oben beschreiben den ursprünglichen Planungsstand; maßgeblich für den untersuchten Teilumfang ist die verlinkte Befundmatrix. Funktionen bleiben bis zur jeweiligen vollständigen Abnahme offen. Übrige Bereiche von Paket A noch nicht abgeschlossen.
+
+## Folgeplanung Paket B · 01.11.2026
+
+[Fachstruktur, gelesene Quellen und Qualitätsregeln](PROFIL_FACHSTRUKTUR_2026.md) konkretisieren UI-13.01–13.05. Die [vollständige Zielmatrix](PROFIL_ZIELMATRIX_2026.json) enthält zwölf Profile × fünf unveränderte Kategorien = 60 Kombinationen. Diese Struktur ersetzt das frühere reine Rechenbeispiel 12 × 8; das 100er-Ziel je gültiger Kombination bleibt bestehen. 6.000 Zielplätze, 78 beobachtete Altwerte, noch keine einzeln freigegebenen erweiterten Katalogeinträge. Keine produktiven Daten verändert oder neue Profile aktiviert. UI-13.06–13.11 bleiben offen; aktuelle PR-/main-Nachweise vor Gesamtabschluss prüfen.
+
+UI-05.08–05.11 im technischen Eingabeumfang sind seit PR #165 integriert (main-CI #41313008102). UI-05.12 ist seit PR #166 auf main `c0b982772a51d660f4dd7ba51a5bb47ad57f9e12` mit eigener erfolgreicher CI #41317682933 umgesetzt; Vorschau und Speicherzahlen im bestehenden Editor. Das schließt die direkte Dashboard-Schnelleingabe nicht ein. Frühere OFFEN-/Teilweise-Zeilen beschreiben den damaligen Stand und werden nicht als neue Implementierungsaufträge dupliziert.

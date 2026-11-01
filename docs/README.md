@@ -72,3 +72,5 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein P
 - [Profil-/Datenbank-Bestandsabgleich](PROFIL_BESTANDSABGLEICH_2026_11_01.md) – Source, Prüfungen, Unicode-/Quotierungsgrenzen und tatsächliche Startmengen.
 
 - [Profilwerte: Eingabe und Eindeutigkeit](PROFIL_EINGABEREGELN.md) – zitierte Kommas, Unicode, Importschutz und unveränderte Altbestände.
+
+- [Fachliche Profilstruktur und Quellen](PROFIL_FACHSTRUKTUR_2026.md) – Paket B: zwölf Zielprofile, fünf feste Kategorien, Qualitäts- und Herkunftsregeln; [vollständige Planungsmatrix](PROFIL_ZIELMATRIX_2026.json), keine Aktivierung neuer Profildaten.

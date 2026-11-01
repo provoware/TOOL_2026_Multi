@@ -1907,6 +1907,16 @@
       "path": "tests/test_profile_preview_gui.py",
       "release": false,
       "purpose": "Schreibfreie Profileingabe-Vorschau und wahrheitsgetreue Speicherzahlen"
+    },
+    {
+      "path": "docs/PROFIL_FACHSTRUKTUR_2026.md",
+      "release": false,
+      "purpose": "Fachliche Profilstruktur, gelesene Quellen und Qualitätsvertrag für Paket B"
+    },
+    {
+      "path": "docs/PROFIL_ZIELMATRIX_2026.json",
+      "release": false,
+      "purpose": "Planungsmatrix mit 60 Kombinationen und offener geprüfter Katalogabdeckung"
     }
   ],
   "creative_modules": {
