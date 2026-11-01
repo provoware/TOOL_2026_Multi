@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.11",
+  "text_version": "0.2.12",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -336,7 +336,12 @@
     "profile.input.quick.store_changed": "Bestand geändert. Vorschau erneuert; bitte erneut Speichern wählen.",
     "profile.input.quick.target": "Profil: {profile}",
     "profile.input.quick.invalid": "Nicht gespeichert. Eingabe erhalten. Grund: {error}",
-    "profile.input.quick.open": "Werte ergänzen"
+    "profile.input.quick.open": "Werte ergänzen",
+    "profile.input.quick.log_summary": "Profilwerte konnten nicht gelesen oder gespeichert werden.",
+    "profile.input.quick.log_protection": "Eingabe erhalten; diese Aktion hat den Profilbestand nicht verändert.",
+    "profile.input.quick.log_next": "Öffne Hilfe & Fehlerhilfe mit der Ereigniskennung. Prüfe Speicherrechte oder eine geprüfte Sicherung.",
+    "profile.input.quick.log_failed": "Auch das Fehlerprotokoll konnte nicht vollständig geschrieben werden. Keine vollständige Ereignisaufzeichnung bestätigt. Prüfe Speicherort und Schreibrechte.",
+    "profile.input.quick.event_ref": "Letzter Fehler: {event_id}. Details in Hilfe & Fehlerhilfe."
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

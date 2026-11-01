@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
-from PySide6.QtCore import QEvent, Qt, Signal
+from PySide6.QtCore import QEvent, Qt, QTimer, Signal
 from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
@@ -631,7 +631,7 @@ class Dashboard(QWidget):
         self.db_selection_scroll.setWidgetResizable(True)
         self.db_selection_scroll.setWidget(self.db_selection_page)
         self.db_pages.addWidget(self.db_selection_scroll)
-        self.profile_quick_entry = ProfileQuickEntry(self.project_root)
+        self.profile_quick_entry = ProfileQuickEntry(self.project_root, logger=self.logger)
         self.db_quick_scroll = QScrollArea()
         self.db_quick_scroll.setWidgetResizable(True)
         self.db_quick_scroll.setWidget(self.profile_quick_entry)
@@ -982,7 +982,14 @@ class Dashboard(QWidget):
 
     def _reveal_profile_control(self, control) -> None:
         self.profile_quick_entry.layout().activate()
-        self.db_quick_scroll.verticalScrollBar().setValue(control.y())
+        # Bei mehrzeiligen Meldungen werden die Scrollgrenzen erst nach dem
+        # Layout-Ereignis aktualisiert. Der Kontext stoppt den Callback beim
+        # Zerstören des Dashboards; ein gelöschtes Ziel wird nicht verwendet.
+        def reveal():
+            from shiboken6 import isValid
+            if isValid(control):
+                self.db_quick_scroll.verticalScrollBar().setValue(control.y())
+        QTimer.singleShot(0, self, reveal)
 
     def _profile_values_added(self, profile, category, added) -> None:
         self.refresh_db_profiles()

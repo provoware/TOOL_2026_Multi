@@ -278,7 +278,7 @@ Ein einzelner Begriff darf selbst ein Komma enthalten: `"warm, dunkel", ruhig` s
 
 Groß-/Kleinschreibung und technisch gleichwertige Umlautschreibweisen erzeugen keine neuen Dubletten. Bei unvollständigen Anführungszeichen wird nichts gespeichert; korrigiere die erhaltene Eingabe. Bereits vorhandene Dateien werden beim Öffnen nicht automatisch bereinigt.
 
-Direkt im Dashboard geht es über **Vorgaben → Werte ergänzen**: Profil und Bereich wählen, Werte eingeben, **Prüfen**, dann bewusst **Speichern**. Die Vorschau zeigt neue, vorhandene und wiederholte Werte. **Zurück zur Auswahl** erhält den Text; Enter prüft, Escape geht zurück. Nach Änderungen am Ziel oder Text erneut prüfen. Bei Schreibfehlern bleibt die Eingabe erhalten.
+Direkt im Dashboard geht es über **Vorgaben → Werte ergänzen**: Profil und Bereich wählen, Werte eingeben, **Prüfen**, dann bewusst **Speichern**. Die Vorschau zeigt neue, vorhandene und wiederholte Werte. **Zurück zur Auswahl** erhält den Text; Enter prüft, Escape geht zurück. Nach Änderungen am Ziel oder Text erneut prüfen. Bei Schreibfehlern bleibt die Eingabe erhalten. Bei unerwarteten Speicherfehlern zeigt die Eingabe eine Fehlerkennung; Details stehen unter **Hilfe & Fehlerhilfe**. Wenn auch das Fehlerprotokoll nicht geschrieben werden konnte, wird das ausdrücklich angezeigt.
 
 Beim Entfernen eines Wertes wird vorher nachgefragt.
 

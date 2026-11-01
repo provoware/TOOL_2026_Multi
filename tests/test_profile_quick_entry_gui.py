@@ -12,6 +12,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from app.profile_store import add_values, read_profile, save_profiles, store_path
 from app.profile_editor import ProfileEditor
 from app.profile_quick_entry import ProfileQuickEntry
+from app.event_log import EventLogger
 from app.genre_random_window import GenreRandomWindow
 from app.ui import Dashboard
 from app.main import configure_dashboard_presentation
@@ -22,14 +23,6 @@ from app.ui_standards import DEFAULT_THEME, THEMES, apply_global_style
 class FakeTexts:
     def get(self, _key, default=''):
         return default
-
-
-class FakeLogger:
-    def recent(self, _limit=100):
-        return []
-
-    def human_report(self, event):
-        return str(event)
 
 
 class ProfileQuickEntryGuiTests(unittest.TestCase):
@@ -44,7 +37,8 @@ class ProfileQuickEntryGuiTests(unittest.TestCase):
         self.path = save_profiles(self.root, {'Test': {'Genres': ['düster']},
                                               'Anderes': {'Genres': ['Fremdwert']}})
         self.before = self.path.read_bytes()
-        self.dashboard = Dashboard(FakeTexts(), FakeLogger(), self.root)
+        self.logger = EventLogger(self.root, 'test')
+        self.dashboard = Dashboard(FakeTexts(), self.logger, self.root)
         install_laptop_layout(self.dashboard)
         self.dashboard.show()
         self.dashboard.db_profile_combo.setCurrentText('Test')
@@ -279,3 +273,55 @@ class ProfileQuickEntryGuiTests(unittest.TestCase):
         with patch('app.profile_quick_entry.ask_unsaved', return_value=QMessageBox.No):
             self.assertTrue(self.dashboard.close())
         self.assertEqual(self.path.read_bytes(), self.before)
+
+    def test_read_failure_records_event_report_and_keeps_reference_after_edit(self):
+        self.path.write_bytes(b'{kaputt')
+        self.widget.value_entry.setText('PrivaterEntwurf')
+        self.assertFalse(self.widget.check_values())
+        event = self.logger.recent()[0]
+        self.assertEqual(event['exception_type'], 'JSONDecodeError')
+        self.assertEqual(event['program_version'], 'test')
+        self.assertEqual(event['severity'], 'FEHLER')
+        self.assertIn(event['event_id'], self.widget.status_label.text())
+        self.assertTrue((self.root / 'berichte' / (event['event_id'] + '.txt')).is_file())
+        self.assertNotIn('PrivaterEntwurf', self.logger.jsonl_path.read_text())
+        self.widget.value_entry.setText('Weiterarbeiten')
+        self.assertIn(event['event_id'], self.widget.status_label.text())
+        self.assertEqual(self.path.read_bytes(), b'{kaputt')
+
+    def test_storage_failure_uses_real_logger_without_losing_draft(self):
+        self.widget.value_entry.setText('PrivaterEntwurf')
+        self.widget.check_values()
+        original_replace = os.replace
+        def replace(source, destination):
+            if Path(destination) == self.path:
+                raise OSError('Gezielte Schreibprobe')
+            return original_replace(source, destination)
+        with patch('app.atomic_io.os.replace', side_effect=replace):
+            self.assertFalse(self.widget.save_values())
+        event = self.logger.recent()[0]
+        self.assertEqual(event['exception_type'], 'OSError')
+        self.assertIn(event['event_id'], self.widget.status_label.text())
+        self.assertTrue((self.root / 'berichte' / (event['event_id'] + '.txt')).is_file())
+        self.assertEqual(self.path.read_bytes(), self.before)
+        self.assertEqual(self.widget.value_entry.text(), 'PrivaterEntwurf')
+        self.assertNotIn('PrivaterEntwurf', self.logger.jsonl_path.read_text())
+
+    def test_expected_validation_is_not_recorded_as_storage_failure(self):
+        self.widget.value_entry.setText('neu, "offen')
+        self.assertFalse(self.widget.check_values())
+        self.assertEqual(self.logger.recent(), [])
+        self.assertFalse(self.logger.jsonl_path.exists())
+
+    def test_log_failure_preserves_primary_error_and_draft(self):
+        self.widget.value_entry.setText('Neu')
+        self.widget.check_values()
+        self.widget.last_event_id = 'ALTE-KENNUNG'
+        with patch('app.profile_quick_entry.add_values', side_effect=OSError('Datenfehler')), patch.object(
+                self.logger, 'record', side_effect=OSError('Logfehler')):
+            self.assertFalse(self.widget.save_values())
+        self.assertIn('Datenfehler', self.widget.status_label.text())
+        self.assertIn('Keine vollständige Ereignisaufzeichnung', self.widget.status_label.text())
+        self.assertEqual(self.widget.value_entry.text(), 'Neu')
+        self.assertEqual(self.path.read_bytes(), self.before)
+        self.assertIsNone(self.widget.last_event_id)

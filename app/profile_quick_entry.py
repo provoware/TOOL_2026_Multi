@@ -9,7 +9,8 @@ from PySide6.QtWidgets import (
 )
 
 from app.module_widgets import ask_unsaved
-from app.profile_store import CATEGORIES, add_values, input_text, preview_values
+from app.event_log import EventLogger
+from app.profile_store import CATEGORIES, add_values, input_text, preview_values, split_input_values
 
 
 def t(key, fallback):
@@ -22,9 +23,11 @@ class ProfileQuickEntry(QWidget):
     editing_requested = Signal()
     reveal_requested = Signal(QWidget)
 
-    def __init__(self, root: Path, parent=None):
+    def __init__(self, root: Path, parent=None, *, logger=None):
         super().__init__(parent)
         self.root = root
+        self.logger = logger if logger is not None else EventLogger(root, 'unbekannt')
+        self.last_event_id = None
         self.profile = ''
         self._signature = None
         self._preview = None
@@ -102,13 +105,23 @@ class ProfileQuickEntry(QWidget):
         self.preview_text.clear()
         self.save_button.setEnabled(False)
         self.status_label.setText(t('changed', 'Vor dem Speichern erneut prüfen.'))
+        if self.last_event_id:
+            self.status_label.setText(self.status_label.text() + ' ' + t(
+                'event_ref', 'Letzter Fehler: {event_id}. Details in Hilfe & Fehlerhilfe.').format(event_id=self.last_event_id))
 
     def check_values(self):
         self._invalidate()
+        # Erwartete Eingabefehler getrennt vom unerwarteten Datei-Lesefehler
+        # behandeln; beide Prüfungen nutzen denselben vorhandenen Parser.
+        try:
+            split_input_values(self.value_entry.text())
+        except ValueError as error:
+            self._feedback(t('invalid', 'Nicht gespeichert. Eingabe erhalten. Grund: {error}').format(error=error))
+            return False
         try:
             preview = preview_values(self.root, *self._current())
         except Exception as error:
-            self._feedback(t('invalid', 'Nicht gespeichert. Eingabe erhalten. Grund: {error}').format(error=error))
+            self._operation_failed(error)
             return False
         self._show_preview(preview)
         self.status_label.setText(t('checked', 'Geprüft. Speichern übernimmt die neuen Werte.'))
@@ -118,6 +131,28 @@ class ProfileQuickEntry(QWidget):
     def _feedback(self, text):
         self.status_label.setText(text)
         self.reveal_requested.emit(self.status_label)
+
+    def _operation_failed(self, error):
+        self.last_event_id = None
+        self._invalidate()
+        message = t('invalid', 'Nicht gespeichert. Eingabe erhalten. Grund: {error}').format(error=error)
+        try:
+            event = self.logger.record(
+                severity='FEHLER', area='PROFIL_EINGABE',
+                summary=t('log_summary', 'Profilwerte konnten nicht gelesen oder gespeichert werden.'),
+                cause=str(error),
+                protection=t('log_protection', 'Eingabe erhalten; diese Aktion hat den Profilbestand nicht verändert.'),
+                next_step=t('log_next', 'Öffne Hilfe & Fehlerhilfe mit der Ereigniskennung. Prüfe Speicherrechte oder eine geprüfte Sicherung.'),
+                exception=error,
+            )
+            self.last_event_id = event['event_id']
+            message += ' ' + t('event_ref', 'Letzter Fehler: {event_id}. Details in Hilfe & Fehlerhilfe.').format(
+                event_id=self.last_event_id)
+        except Exception:
+            # Ein zusätzlich unbeschreibbares Log darf den Eingabeentwurf
+            # oder die ursprüngliche Fehlererklärung nicht verdecken.
+            message += ' ' + t('log_failed', 'Auch das Fehlerprotokoll konnte nicht vollständig geschrieben werden. Keine vollständige Ereignisaufzeichnung bestätigt. Prüfe Speicherort und Schreibrechte.')
+        self._feedback(message)
 
     def _show_preview(self, preview):
         self._signature, self._preview = self._current(), preview
@@ -141,10 +176,10 @@ class ProfileQuickEntry(QWidget):
                 return False
             added = add_values(self.root, profile, category, text)
         except Exception as error:
-            self._invalidate()
-            self._feedback(t('invalid', 'Nicht gespeichert. Eingabe erhalten. Grund: {error}').format(error=error))
+            self._operation_failed(error)
             return False
         skipped = sum(len(values) for values in current.values()) - len(added)
+        self.last_event_id = None
         self.value_entry.clear()
         self._invalidate()
         self._feedback(input_text('saved_counts', '{saved} gespeichert · {skipped} übersprungen · 0 fehlerhaft').format(
