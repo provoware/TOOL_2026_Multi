@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.9",
+  "text_version": "0.2.10",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -315,7 +315,11 @@
     "profile.input.preview_invalid": "Nicht speicherbar: {error}",
     "profile.input.preview_counts": "Vorschau: {new} neu · {present} bereits vorhanden · {repeated} wiederholt · 0 fehlerhaft",
     "profile.input.save_failed": "0 gespeichert · Eingabe erhalten · Vorgang fehlgeschlagen",
-    "profile.input.saved_counts": "{saved} gespeichert · {skipped} übersprungen · 0 fehlerhaft"
+    "profile.input.saved_counts": "{saved} gespeichert · {skipped} übersprungen · 0 fehlerhaft",
+    "profile.input.read_profile": "Bitte einen Profilnamen als Text angeben.",
+    "profile.input.read_category": "Bitte eine vorhandene Kategorie auswählen.",
+    "profile.input.read_query": "Suchtext muss Text ohne Zeilenumbrüche oder Steuerzeichen sein.",
+    "profile.input.read_missing": "Das ausgewählte Profil wurde nicht gefunden."
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

@@ -18,7 +18,7 @@ from app.genre_random import (
 from app.genre_favorites import (
     favorite_values, set_favorite, monthly_report_text, export_monthly_report,
 )
-from app.profile_store import CATEGORIES, add_profile, add_values, input_text, load_profiles, remove_value
+from app.profile_store import CATEGORIES, add_profile, add_values, input_text, profile_names, read_profile, remove_value
 from app.ui_standards import SPACING, apply_global_style
 
 
@@ -202,14 +202,14 @@ class GenreRandomWindow(QWidget):
     def refresh(self) -> None:
         current = self.profile_combo.currentText()
         try:
-            profiles = load_profiles(self.root)
+            profiles = profile_names(self.root)
         except Exception as error:
             self._message("Profile nicht lesbar", error)
             return
         from PySide6.QtCore import QSignalBlocker
         with QSignalBlocker(self.profile_combo):
             self.profile_combo.clear()
-            self.profile_combo.addItems(sorted(profiles, key=str.casefold))
+            self.profile_combo.addItems(profiles)
             if current in profiles:
                 self.profile_combo.setCurrentText(current)
         self._refresh_archive()
@@ -222,18 +222,18 @@ class GenreRandomWindow(QWidget):
             self.count_label.setText("0 Einträge")
             return
         try:
-            entries = load_profiles(self.root)[profile][category]
+            entries = read_profile(self.root, profile, category=category,
+                                   query=self.filter_entry.text())[category]
         except Exception as error:
             self._message("Archiv nicht lesbar", error)
             return
         self.count_label.setText(f"{len(entries)} Einträge")
-        text = self.filter_entry.text().casefold()
         try:
             stars = {v.casefold() for v in favorite_values(self.root, profile, category)}
         except Exception as error:
             self._message("Favoriten nicht lesbar", error)
             return
-        for entry in sorted((entry for entry in entries if text in entry.casefold()), key=str.casefold):
+        for entry in sorted(entries, key=str.casefold):
             from PySide6.QtWidgets import QListWidgetItem
             item = QListWidgetItem(("★ " if entry.casefold() in stars else "☆ ") + entry)
             item.setData(Qt.UserRole, entry)

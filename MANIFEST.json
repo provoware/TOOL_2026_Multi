@@ -1917,6 +1917,21 @@
       "path": "docs/PROFIL_ZIELMATRIX_2026.json",
       "release": false,
       "purpose": "Planungsmatrix mit 60 Kombinationen und offener geprüfter Katalogabdeckung"
+    },
+    {
+      "path": "tests/test_profile_read_api.py",
+      "release": false,
+      "purpose": "Qt-freier Profil-Lesevertrag, Filter und unveränderte Altbestände"
+    },
+    {
+      "path": "tests/test_profile_read_api_gui.py",
+      "release": false,
+      "purpose": "Gemeinsamer Store in Dashboard, Editor und gefiltertem Generatorarchiv"
+    },
+    {
+      "path": "docs/PROFIL_MODUL_API.md",
+      "release": false,
+      "purpose": "Gemeinsamer rein lesender Profil-/Kategorie-/Suchvertrag für Module"
     }
   ],
   "creative_modules": {
