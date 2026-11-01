@@ -70,3 +70,5 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein P
 - [UI und Profildaten: 13 Hauptaufgaben, Unteraufgaben und Abnahmekriterien](UI_PROFIL_UNTERAUFGABEN_2026.md) – getrennte Datenbank-, Schnelleingabe-, Dubletten- und Modulabnahme.
 
 - [Profil-/Datenbank-Bestandsabgleich](PROFIL_BESTANDSABGLEICH_2026_11_01.md) – Source, Prüfungen, Unicode-/Quotierungsgrenzen und tatsächliche Startmengen.
+
+- [Profilwerte: Eingabe und Eindeutigkeit](PROFIL_EINGABEREGELN.md) – zitierte Kommas, Unicode, Importschutz und unveränderte Altbestände.

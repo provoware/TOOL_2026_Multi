@@ -12,7 +12,8 @@ from pathlib import Path
 
 from app.atomic_io import atomic_write_json
 from app.profile_store import (
-    CATEGORIES, load_profiles, save_profiles, split_input_values, store_path,
+    CATEGORIES, comparison_key, load_profiles, save_profiles, split_input_values, store_path,
+    validate_profile_import, input_text,
 )
 
 QUICK_AMOUNTS = (3, 6, 9, 12, 15)
@@ -162,22 +163,24 @@ def archive_import(root: Path, source: Path) -> dict[str, int]:
     # Die Prüfung erfolgt in einem isolierten In-Memory-Zwischenschritt.
     incoming = raw["profiles"]
     current = load_profiles(root)
-    from app.profile_store import _validate
-    validated = _validate(incoming)
+    validated = validate_profile_import(incoming)
     combined = {key: {cat: list(vals) for cat, vals in record.items()} for key, record in current.items()}
     counts = {"profiles": 0, "values": 0}
     for name, record in validated.items():
-        actual = next((p for p in combined if p.casefold() == name.casefold()), None)
+        matches = [p for p in combined if comparison_key(p) == comparison_key(name)]
+        if len(matches) > 1:
+            raise ValueError(input_text("import_target", "Zielbestand enthält gleichwertige Unicode-Profilnamen; Import abgebrochen."))
+        actual = matches[0] if matches else None
         if actual is None:
             actual = name
             combined[actual] = {cat: [] for cat in CATEGORIES}
             counts["profiles"] += 1
         for cat in CATEGORIES:
-            seen = {value.casefold() for value in combined[actual][cat]}
+            seen = {comparison_key(value) for value in combined[actual][cat]}
             for item in record[cat]:
-                if item.casefold() not in seen:
+                if comparison_key(item) not in seen:
                     combined[actual][cat].append(item)
-                    seen.add(item.casefold())
+                    seen.add(comparison_key(item))
                     counts["values"] += 1
     if counts["profiles"] or counts["values"]:
         save_profiles(root, combined)
@@ -199,7 +202,7 @@ def rename_value(root: Path, profile: str, category: str, old: str, new: str) ->
         index = values.index(old)
     except ValueError as exc:
         raise ValueError("Der ursprüngliche Begriff wurde nicht gefunden.") from exc
-    if any(item.casefold() == candidate[0].casefold() for i, item in enumerate(values) if i != index):
+    if any(comparison_key(item) == comparison_key(candidate[0]) for i, item in enumerate(values) if i != index):
         raise ValueError("Dieser Begriff existiert bereits.")
     values[index] = candidate[0]
     save_profiles(root, profiles)

@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Sichere Profil-Wertelisten (01.11.2026; Umsetzungskandidat)
+
+- Zitierte Kommas und verdoppelte Anführungszeichen in bestehenden Profileingaben unterstützt; fehlerhafte Listen vollständig vor dem Schreiben abgewiesen.
+- Neue Werte und Profilnamen mit kanonischem Unicode-Vergleich und Casefold vor Dubletten geschützt; Import und Umbenennen verwenden denselben Vergleich. Mehrdeutige Importe werden ohne Teiländerung abgebrochen.
+- Bestehende Unicode-Schreibweisen und bereits vorhandene kanonische Dubletten bleiben im Ladeweg unverändert; keine automatische Migration.
+- Zentrale Hilfetexte, Eingabevertrag, README und einfache Anleitung ergänzt; neue Logik-/GUI-Regressionen einschließlich Schreibfehler und Altbestandserhaltung. Vollständige GitHub-/main-Abnahme separat erforderlich.
+
 ## Profil-/Datenbank-Bestandsabgleich (01.11.2026)
 
 - Vorhandenen Planungs-PR #164 nach vollständiger CI übernommen; keine neuen PRs oder Drafts angelegt.

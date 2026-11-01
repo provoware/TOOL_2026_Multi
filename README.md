@@ -319,7 +319,7 @@ Ein Profil bündelt zusammenpassende Werte, beispielsweise für **HardTechno**, 
 daten/profile/db_profile.json
 ```
 
-Mehrere Werte können mit Komma eingegeben werden. Jeder bereinigte Begriff wird einzeln gespeichert; vorhandene Dubletten werden nicht erneut angelegt.
+Mehrere Werte können mit Komma eingegeben werden. Ein Begriff mit eigenem Komma steht in doppelten Anführungszeichen: `"warm, dunkel", ruhig` ergibt zwei Einträge. Vorhandene Dubletten werden auch bei unterschiedlicher Groß-/Kleinschreibung oder gleichwertiger Umlautschreibweise übersprungen. Fehlerhafte Listen werden vollständig abgewiesen; die Eingabe bleibt im Editor erhalten.
 
 Die eingebauten Startprofile werden beim bloßen Start nicht unnötig als Nutzerdatendatei geschrieben.
 
@@ -499,4 +499,4 @@ Neu im 0.18.4-Prüfkandidaten: [Ideenarchiv und Kontometadaten](docs/IDEEN_UND_K
 
 Aktuelle vorbereitete Versionsunterlagen: [0.18.4](docs/FREIGABE_0_18_4.md).
 
-Profil-/Datenbank-Ausbau: [belegter Bestand und offene Lücken](docs/PROFIL_BESTANDSABGLEICH_2026_11_01.md). Der vorhandene Startbestand enthält 78 Kategorieeinträge; zitierte Kommas und kanonische Unicode-Dubletten benötigen noch Ergänzungen.
+Profil-/Datenbank-Ausbau: [belegter Bestand und offene Lücken](docs/PROFIL_BESTANDSABGLEICH_2026_11_01.md). Der vorhandene Startbestand enthält 78 Kategorieeinträge. Neue Profilwerte unterstützen [zitierte Kommas und gleichwertige Umlautschreibweisen](docs/PROFIL_EINGABEREGELN.md); bestehende Dateien werden beim Laden nicht umgeschrieben.

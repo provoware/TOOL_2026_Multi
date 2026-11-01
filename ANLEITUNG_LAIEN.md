@@ -274,6 +274,10 @@ Ablauf:
 3. Vorhandene Werte ansehen.
 4. Einen oder mehrere Werte eingeben und **Wert hinzufügen** anklicken. Mehrere Werte mit Komma trennen, zum Beispiel `düster, treibend, melodisch`. Jeder Begriff wird einzeln gespeichert; Dubletten werden übersprungen.
 
+Ein einzelner Begriff darf selbst ein Komma enthalten: `"warm, dunkel", ruhig` speichert **warm, dunkel** und **ruhig** als zwei Einträge. Für Anführungszeichen im Begriff diese verdoppeln: `"Stimme ""nah"", weich"`.
+
+Groß-/Kleinschreibung und technisch gleichwertige Umlautschreibweisen erzeugen keine neuen Dubletten. Bei unvollständigen Anführungszeichen wird nichts gespeichert; korrigiere die erhaltene Eingabe. Bereits vorhandene Dateien werden beim Öffnen nicht automatisch bereinigt.
+
 Beim Entfernen eines Wertes wird vorher nachgefragt.
 
 Eigene Profildaten werden gespeichert unter:
