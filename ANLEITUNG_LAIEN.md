@@ -633,3 +633,7 @@ Text- und Buchentwürfe ohne Titel werden nicht automatisch gespeichert: Gib ein
 ## Änderungen bewusst verlassen
 
 Wenn du einen veränderten Text oder einen bearbeiteten Modulinhalt verlässt, benennen die Schaltflächen die Folgen: **Speichern und schließen** beziehungsweise **Speichern und wechseln** behält deine Änderungen. **Verwerfen und schließen/wechseln** gibt sie auf; ein bereits gespeicherter Stand bleibt erhalten. **Weiterarbeiten** lässt den Entwurf offen. Auch Escape oder das Schließen der Rückfrage führt zu **Weiterarbeiten**. Schlägt das Speichern fehl, bleibt deine Arbeit offen. Die Modulverwaltung setzt beim Verwerfen ihre Schalter auf den vorherigen Stand zurück. Songs behalten ihren bisherigen automatischen Speicherweg beim Schließen.
+
+## Profilnamen ändern
+
+Unter **Profile & Vorgaben verwalten** das Profil auswählen, **Umbenennen** öffnen, Namen eingeben und **Prüfen** wählen. Erst **Umbenennen** speichert. Favoriten oder Verlaufseinträge zum alten oder neuen Namen sperren die Änderung zum Schutz vorhandener Verknüpfungen. Abbrechen oder Escape ändert nichts. Details: [Profil sicher umbenennen](docs/PROFIL_UMBENENNEN.md).

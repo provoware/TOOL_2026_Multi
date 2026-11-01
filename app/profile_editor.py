@@ -15,6 +15,9 @@ from app.profile_store import (
     CATEGORIES, add_profile, add_values, input_text, profile_names, read_profile, preview_values, remove_value,
 )
 from app.ui_standards import apply_global_style
+from app.event_log import EventLogger
+from app.profile_rename_dialog import ProfileRenameDialog
+from app.profile_management import t as rename_text
 
 
 class ProfileEditor(QDialog):
@@ -23,11 +26,14 @@ class ProfileEditor(QDialog):
     def __init__(self, project_root: Path, zoom_percent: int = 100,
                  initial_category: str | None = None,
                  on_changed: Callable[[], None] | None = None,
-                 parent: QWidget | None = None) -> None:
+                 parent: QWidget | None = None,
+                 logger=None, on_renamed=None) -> None:
         super().__init__(parent)
         self.project_root = project_root
         self.zoom_percent = zoom_percent
         self.on_changed = on_changed
+        self.logger = logger if logger is not None else EventLogger(project_root, 'unbekannt')
+        self.on_renamed = on_renamed
         self.setWindowTitle("Profile & Vorgaben verwalten")
         self.resize(760, 560)
         self.setMinimumSize(620, 460)
@@ -53,9 +59,16 @@ class ProfileEditor(QDialog):
 
         form = QFormLayout()
         self.profile_combo = QComboBox()
+        self.profile_combo.setAccessibleName(rename_text("profile_select", "Profil wählen"))
         self.profile_combo.setToolTip("Wähle zuerst das Profil, dessen Werte du ansehen oder ändern möchtest.")
         self.profile_combo.currentTextChanged.connect(self._refresh_values)
-        form.addRow("1. Profil wählen:", self.profile_combo)
+        profile_row = QHBoxLayout()
+        profile_row.addWidget(self.profile_combo, 1)
+        self.rename_button = QPushButton(rename_text('action', 'Umbenennen'))
+        self.rename_button.setAutoDefault(False)
+        self.rename_button.clicked.connect(self.open_rename)
+        profile_row.addWidget(self.rename_button)
+        form.addRow("1. Profil wählen:", profile_row)
         self.category_combo = QComboBox()
         self.category_combo.addItems(CATEGORIES)
         self.category_combo.currentTextChanged.connect(self._refresh_values)
@@ -102,6 +115,7 @@ class ProfileEditor(QDialog):
         self.category_combo.currentTextChanged.connect(self._refresh_preview)
 
         self.status_label = QLabel("Bereit · Profil und Bereich wählen oder einen neuen Wert eingeben.")
+        self.status_label.setTextFormat(Qt.PlainText)
         self.status_label.setObjectName("muted")
         layout.addWidget(self.status_label)
 
@@ -178,6 +192,25 @@ class ProfileEditor(QDialog):
         self._changed()
         self.profile_combo.setCurrentText(name)
         self.status_label.setText(f"Profil „{name}“ angelegt · jetzt einen Bereich wählen und Werte hinzufügen.")
+
+    def open_rename(self):
+        old_name = self.profile_combo.currentText()
+        if not old_name:
+            return
+        dialog = ProfileRenameDialog(self.project_root, old_name, logger=self.logger,
+                                     zoom_percent=self.zoom_percent, parent=self)
+        try:
+            if dialog.exec() != QDialog.Accepted or dialog.renamed_to is None:
+                return
+            self.refresh()
+            self.profile_combo.setCurrentText(dialog.renamed_to)
+            if self.on_renamed is not None:
+                self.on_renamed(old_name, dialog.renamed_to)
+            elif self.on_changed is not None:
+                self.on_changed()
+            self.status_label.setText(rename_text('done', 'Profil umbenannt: {name}').format(name=dialog.renamed_to))
+        finally:
+            dialog.deleteLater()
 
     def create_value(self) -> None:
         profile = self.profile_combo.currentText()
