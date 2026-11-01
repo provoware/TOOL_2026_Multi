@@ -176,7 +176,12 @@ def _csv_boundary_spaces(value: str) -> str:
             quoted, closed = False, True
         elif not quoted:
             if closed and char == " ":
-                index += 1
+                end = index
+                while end < len(value) and value[end] == " ":
+                    end += 1
+                if end < len(value) and value[end] != ",":
+                    raise ValueError(input_text("quotes", "Anführungszeichen sind unvollständig oder falsch gesetzt."))
+                index = end
                 continue
             if char == ",":
                 field_start, closed = True, False

@@ -41,7 +41,8 @@ class ProfileInputRulesTests(unittest.TestCase):
 
     def test_bad_input_never_writes_or_partially_saves(self):
         for text in ['neu, "offen', 'neu, "fertig"x', 'neu\nzweite Zeile',
-                     'neu\r', 'neu\0', 'neu\x7f', '', ', ,', '""', None, 123]:
+                     'neu\r', 'neu\0', 'neu\x7f', '', ', ,', '""', None, 123,
+                     '"warm" "dunkel", ruhig', 'neu, "warm" \t"dunkel"']:
             with self.subTest(text=text), patch('app.profile_store.save_profiles') as save:
                 with self.assertRaises(ValueError):
                     add_values(self.root, 'Test', 'Genres', text)
