@@ -1932,6 +1932,21 @@
       "path": "docs/PROFIL_MODUL_API.md",
       "release": false,
       "purpose": "Gemeinsamer rein lesender Profil-/Kategorie-/Suchvertrag für Module"
+    },
+    {
+      "path": "app/profile_quick_entry.py",
+      "release": true,
+      "purpose": "Wiederverwendbare Profileingabe mit bewusster Vorschau, atomarem Speichern und Entwurfsschutz"
+    },
+    {
+      "path": "tests/test_profile_quick_entry_gui.py",
+      "release": false,
+      "purpose": "Dashboard-Schnelleingabe, Daten-/Fehler-/Tastatur-/Zoom-Regressionen"
+    },
+    {
+      "path": "docs/PROFIL_SCHNELLEINGABE.md",
+      "release": false,
+      "purpose": "Bedienung und Prüfvertrag der direkten Dashboard-Profileingabe"
     }
   ],
   "creative_modules": {

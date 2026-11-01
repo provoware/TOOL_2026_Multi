@@ -240,3 +240,7 @@ UI-05.08–05.11 im technischen Eingabeumfang sind seit PR #165 integriert (main
 ## Umsetzung UI-05.14 · 01.11.2026
 
 [Gemeinsame Modul-API](PROFIL_MODUL_API.md) ergänzt im vorhandenen Profil-Store sortierte Namen und einen rein lesenden Profil-/Kategorie-/Teiltextzugriff. Dashboard, Profileditor, Generator und Archiv sowie lesende Favoritenauswahl sind angebunden. Zehn neue Logik-/GUI-Regressionen; aktueller PR und eigener main-Lauf vor technischem Abschluss. Keine neue Datenbank, Taxonomie, Standardbefüllung oder Migration. Paket B seit PR #167/main `fffb1ad10672953e785e93437f2f880fe362b6b0` mit eigener CI #41319089428 erfolgreich integriert; ältere Kandidatenangaben sind historisch.
+
+## Direkte Dashboard-Eingabe · 01.11.2026
+
+[Bedienung und Prüfvertrag](PROFIL_SCHNELLEINGABE.md): UI-05.06 und der direkte Eingabeumfang von PV-UX26-05 verwenden bestehende Vorschau/Parser/Atomarspeicherung. Explizite Prüfung vor Speichern, Ziel-/Eingabeänderung entwertet Vorschau, offener Entwurf bei Zurückgehen/Fehlern erhalten, sicheres Schließen und unmittelbare Aktualisierung derselben Quelle. UI-05.14 seit PR #168/main `98933c627708a80b6bf39862b93312f16e39d8b2` mit eigener CI #41322461736 abgeschlossen. Finale PR-/main-Nachweise dieser neuen Oberfläche separat; keine Freigabe zusätzlicher Profile, Kategorien oder Kataloge.
