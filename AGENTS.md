@@ -223,3 +223,7 @@ Die GitHub-PR-Bestandsaufnahme gehört **vor die Planung neuer optionaler Arbeit
 Zugehörige priorisierte GitHub-Aufgabe: https://github.com/provoware/TOOL_2026_Multi/issues/157.
 
 - **CI-Abhängigkeit:** Die Grundprüfung benötigt `libpulse0` für QtMultimedia (Korrektur aus PR #149 auf `main`). Eine Freigabe verlangt einen neuen vollständigen Prüflauf auf dem aktualisierten Integrationsstand; ein alter roter Lauf wird nicht übergangen.
+
+## Dauerhafte Projektfreigabe (01.11.2026)
+
+Der Nutzer hat im Projektchat ausdrücklich die vollständige Berechtigung für dieses Projekt erteilt, nachdem der vorbereitete Quellcode-Upload nach `provoware/TOOL_2026_Multi` zur Zustimmung vorgelegt wurde. Diese Freigabe gilt für die weitere vereinbarte Projektarbeit einschließlich Quellcodeübertragung an dieses Repository, Commits, Prüf-PRs, CI und Integration nach den bestehenden Qualitätsregeln. Nicht bei jedem Fortsetzen erneut um dieselbe Zustimmung bitten. Die bestehenden Schutzregeln für Nutzerdaten, externe Nachrichten, Kosten und die zurückgestellte öffentliche Veröffentlichung bleiben maßgeblich. Eine automatische Sicherheitsprüfung wird dadurch nicht umgangen; eine tatsächliche erneute Ablehnung muss mit ihrem konkreten Grund berichtet werden.

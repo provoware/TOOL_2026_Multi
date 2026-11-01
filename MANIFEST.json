@@ -1902,6 +1902,11 @@
       "path": "tests/test_profile_input_rules_gui.py",
       "release": false,
       "purpose": "Editoraktionen mit Zitat-/Unicode-Eingaben und Fehlererhaltung"
+    },
+    {
+      "path": "tests/test_profile_preview_gui.py",
+      "release": false,
+      "purpose": "Schreibfreie Profileingabe-Vorschau und wahrheitsgetreue Speicherzahlen"
     }
   ],
   "creative_modules": {

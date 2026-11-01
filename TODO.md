@@ -1003,3 +1003,22 @@ Frozen Scope: bestätigte Parser-/Vergleichsfehler UI-05.08–05.11, bestehende 
 - [x] UI-05.09–05.11 im technischen Eingabeumfang: neue Werte NFC-normalisiert vergleichen, Casefold und Profil-/Kategoriegrenzen erhalten; Altbestände nicht automatisch migriert. 77 gezielte Prüfungen mit isolierten Regressionen und echten Editoraktionen lokal erfolgreich. Kein pauschaler Abschluss semantischer Dubletten oder Katalogimporte.
 - [ ] Vollständige GitHub-Prüfung des endgültigen Kandidaten und eigener main-Lauf vor technischem Integrationsabschluss nachweisen. Nur ein kurzlebiger Prüf-PR, kein Draft-Vorrat; danach wieder 0 offene PRs.
 - [ ] Weiterhin offen: Fachrecherche/Taxonomie aus Paket B; Vorschau und getrennte Speicherzahlen UI-05.12, direkte Dashboard-Eingabe und belegter Standardkatalog. REQUIRES fachliche Definitionen vor neuen Kataloginhalten.
+
+
+## UI-05.12 – Vorschau und Speicherzahlen · 01.11.2026
+
+Frozen Scope: bestehender Profileditor und zentrale Eingabezerlegung; keine Dashboard-Schnelleingabe, Taxonomie, Katalogänderung oder Migration. REQUIRES technische Eingaberegeln aus PR #165. Ausgangs-main `4ff33995383d8eecc527d678557d083ac1c6473b`; offene PRs/Drafts 0/0. Direkter Git-Zugriff ohne erreichbaren Proxy; exakten Quellbaum isoliert über GitHub-Connector rekonstruiert, ursprüngliche Arbeitskopie unverändert.
+
+1. Schreibfreie Vorschau mit neuen, vorhandenen und eingabeintern wiederholten Werten.
+2. Nach tatsächlicher Speicheraktion gespeicherte/übersprungene Zahlen anzeigen; Fehler erhält Eingabe und meldet keinen Erfolg.
+3. Isolierte Regressionen, Release-/Restore-/Wayland-/CI-Gates nachweisen.
+
+Lokaler Kandidat: sieben neue Regressionen und 50 bestehende Nachbarprüfungen erfolgreich. Fehlerhafte Zitatlisten werden insgesamt abgewiesen; ihre Anzahl fehlerhafter Einzelwerte ist nicht zuverlässig bestimmbar und wird nicht erfunden. Leere Teilwerte bleiben gemäß bestehendem Vertrag ignoriert. Vorschau schreibt nichts, erneutes Speichern liest den aktuellen Store. Keine Sperre zwischen konkurrierenden Prozessen neu eingeführt. UI-05.12 bleibt bis erfolgreicher PR- und eigener main-CI offen; PV-UX26-05 ist damit nicht insgesamt erledigt.
+
+Nächste Kandidaten: fachliche Profilstruktur (**priorisiert empfohlen**), Dashboard-Schnelleingabe, gefilterte Modul-API, Navigations-/Farb-Bestandsabgleich, optionaler Katalogimport. Kachelumbau erst nach Abgleich der im aktuellen Unteraufgabenplan genannten Abhängigkeiten.
+
+Lokale Evidenz dieser Fortsetzung: 62 gezielte Prüfungen erfolgreich; vollständige UI-Matrix 60 Fälle/180 Fenster, 0 Fehler/0 Warnungen; Headless-Start erfolgreich. Release-Manifest und ZIP-Erzeugung erfolgreich. ZIP isoliert entpackt, 62 gezielte Prüfungen erfolgreich (1 Git-Prüfung ohne .git erwartungsgemäß übersprungen). Vollprüfung nicht bestanden: Bubblewrap-Fehler auch auf unverändertem Ausgangsbaum reproduziert, Gesamt-GUI am Audio-Backend durch 180-s-Limit begrenzt. Vollständiger Restore-Gate ohne korrektes PYTHON_BIN wegen fehlendem PySide6 abgebrochen; gezielter Restore mit vorhandener venv separat erfolgreich. Native Wayland-Probe lokal mangels Weston nicht ausgeführt.
+
+Übertragung BLOCKIERT: automatische Freigabeprüfung lehnt GitHub-Blob-Upload als nicht ausdrücklich autorisierten Quellcodetransfer ab. Kein Remote-Branch/PR erstellt, PRs/Drafts weiterhin 0/0. Nächster erlaubter Schritt: ausdrückliche Nutzerfreigabe für Upload nach provoware/TOOL_2026_Multi, dann vollständige PR-CI auf exaktem HEAD und nach zulässiger Integration eigener main-Lauf. UI-05.12 bleibt offen bis Integrationsnachweis.
+
+**Fortsetzung nach ausdrücklicher Projektfreigabe:** Nutzer hat am 01.11.2026 den Upload und die weitere Arbeit für dieses Projekt vollständig genehmigt. Die zuvor fehlende ausdrückliche Transferfreigabe ist damit erteilt; dauerhafte Regel in AGENTS.md. Ausgangs-main erneut unverändert `4ff3399`, offene PRs/Drafts 0/0; Upload und CI werden jetzt fortgesetzt. Frühere Blockerangabe beschreibt den abgeschlossenen ersten Versuch.

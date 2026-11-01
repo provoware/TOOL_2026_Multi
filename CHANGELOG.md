@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## Profileingabe: Vorschau und Speicherzahlen (01.11.2026; Prüfkandidat)
+
+- Bestehender Profileditor zeigt neue Werte, Bestandsdubletten und Wiederholungen vor dem Speichern, ohne Dateien zu verändern.
+- Tatsächlich gespeicherte und übersprungene Werte getrennt gezählt; ungültige Eingabe und Schreibfehler erhalten den Entwurf und zeigen keinen Erfolg.
+- Gemeinsamer Parser, Unicode-/Zitatregeln und atomarer Speicherweg weiterverwendet; sieben isolierte Rückfalltests. Vollständige PR-/main-Abnahme separat.
+
 ## Sichere Profil-Wertelisten (01.11.2026; Umsetzungskandidat)
 
 - Zitierte Kommas und verdoppelte Anführungszeichen in bestehenden Profileingaben unterstützt; fehlerhafte Listen vollständig vor dem Schreiben abgewiesen.

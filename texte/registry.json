@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.8",
+  "text_version": "0.2.9",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -310,7 +310,12 @@
     "modules.leave_save_switch": "Speichern und wechseln",
     "modules.leave_discard_close": "Verwerfen und schließen",
     "modules.leave_discard_switch": "Verwerfen und wechseln",
-    "modules.leave_keep": "Weiterarbeiten"
+    "modules.leave_keep": "Weiterarbeiten",
+    "profile.input.preview_name": "Vorschau der Profileingabe",
+    "profile.input.preview_invalid": "Nicht speicherbar: {error}",
+    "profile.input.preview_counts": "Vorschau: {new} neu · {present} bereits vorhanden · {repeated} wiederholt · 0 fehlerhaft",
+    "profile.input.save_failed": "0 gespeichert · Eingabe erhalten · Vorgang fehlgeschlagen",
+    "profile.input.saved_counts": "{saved} gespeichert · {skipped} übersprungen · 0 fehlerhaft"
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",
