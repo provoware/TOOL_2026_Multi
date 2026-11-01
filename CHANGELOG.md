@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Fachliche Profilstruktur – Paket B (01.11.2026; Prüfkandidat)
+
+- Gelesene Fachquellen, Daten-/Feldlizenzen und die Abgrenzung von Genres, Stimmungen, Gestaltung, Stimme und Effekten dokumentiert.
+- Zwölf Zielprofile und vollständige 60er-Planungsmatrix festgelegt; 6.000 Zielplätze und tatsächliche Altbestands-/Prüfdefizite getrennt beziffert.
+- Herkunfts-, Sprach-, Alias- und Qualitätsregeln für spätere Katalogeinträge konkretisiert; keine Laufzeit-/Nutzerdatenänderung oder automatische Katalogbefüllung.
+- Erfolgreiche Integration der Parserkorrektur und Profilvorschau im Todo nachgeführt. Aktuelle Paket-B-CI separat erforderlich.
+
 ## Profileingabe: Vorschau und Speicherzahlen (01.11.2026; Prüfkandidat)
 
 - Bestehender Profileditor zeigt neue Werte, Bestandsdubletten und Wiederholungen vor dem Speichern, ohne Dateien zu verändern.
