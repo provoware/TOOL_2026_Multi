@@ -11,7 +11,9 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QVBoxLayout, QWidget,
 )
 
-from app.profile_store import CATEGORIES, add_profile, add_values, input_text, load_profiles, remove_value
+from app.profile_store import (
+    CATEGORIES, add_profile, add_values, input_text, load_profiles, preview_values, remove_value,
+)
 from app.ui_standards import apply_global_style
 
 
@@ -91,6 +93,14 @@ class ProfileEditor(QDialog):
         value_row.addWidget(remove_button)
         layout.addLayout(value_row)
 
+        self.preview_label = QLabel()
+        self.preview_label.setWordWrap(True)
+        self.preview_label.setAccessibleName(input_text("preview_name", "Vorschau der Profileingabe"))
+        layout.addWidget(self.preview_label)
+        self.value_entry.textChanged.connect(self._refresh_preview)
+        self.profile_combo.currentTextChanged.connect(self._refresh_preview)
+        self.category_combo.currentTextChanged.connect(self._refresh_preview)
+
         self.status_label = QLabel("Bereit · Profil und Bereich wählen oder einen neuen Wert eingeben.")
         self.status_label.setObjectName("muted")
         layout.addWidget(self.status_label)
@@ -137,6 +147,21 @@ class ProfileEditor(QDialog):
             return
         self.values_list.addItems(values)
         self.status_label.setText(f"{len(values)} Wert(e) · Profil „{profile}“ · Bereich „{category}“")
+        self._refresh_preview()
+
+    def _refresh_preview(self, *_args: object) -> None:
+        if not self.value_entry.text().strip():
+            self.preview_label.clear()
+            return
+        try:
+            preview = preview_values(self.project_root, self.profile_combo.currentText(),
+                                     self.category_combo.currentText(), self.value_entry.text())
+        except Exception as error:
+            self.preview_label.setText(input_text("preview_invalid", "Nicht speicherbar: {error}").format(error=error))
+            return
+        self.preview_label.setText(input_text(
+            "preview_counts", "Vorschau: {new} neu · {present} bereits vorhanden · {repeated} wiederholt · 0 fehlerhaft"
+        ).format(**{key: len(value) for key, value in preview.items()}))
 
     def _changed(self) -> None:
         self.refresh()
@@ -158,8 +183,10 @@ class ProfileEditor(QDialog):
         profile = self.profile_combo.currentText()
         category = self.category_combo.currentText()
         try:
+            preview = preview_values(self.project_root, profile, category, self.value_entry.text())
             values = add_values(self.project_root, profile, category, self.value_entry.text())
         except Exception as error:
+            self.status_label.setText(input_text("save_failed", "0 gespeichert · Eingabe erhalten · Vorgang fehlgeschlagen"))
             QMessageBox.warning(self, "Wert nicht gespeichert", f"Es wurde kein Wert hinzugefügt.\n\nGrund: {error}")
             return
         self.value_entry.clear()
@@ -168,6 +195,10 @@ class ProfileEditor(QDialog):
             self.status_label.setText(f"{len(values)} Wert(e) einzeln gespeichert: {', '.join(values)}")
         else:
             self.status_label.setText("Alle eingegebenen Werte waren bereits vorhanden · keine Dubletten angelegt.")
+        skipped = sum(len(preview[key]) for key in ("new", "present", "repeated")) - len(values)
+        self.status_label.setText(self.status_label.text() + " · " + input_text(
+            "saved_counts", "{saved} gespeichert · {skipped} übersprungen · 0 fehlerhaft"
+        ).format(saved=len(values), skipped=skipped))
         self.value_entry.setFocus()
 
     def delete_selected_value(self) -> None:

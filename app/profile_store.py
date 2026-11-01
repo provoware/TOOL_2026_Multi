@@ -193,7 +193,7 @@ def _csv_boundary_spaces(value: str) -> str:
     return "".join(output)
 
 
-def split_input_values(value: str) -> list[str]:
+def split_input_values(value: str, *, keep_duplicates: bool = False) -> list[str]:
     """Zerlegt eine Komma-Eingabe in bereinigte, innerhalb der Eingabe eindeutige Werte."""
     if not isinstance(value, str):
         raise ValueError(input_text('list_type', "Bitte eine Textliste eingeben."))
@@ -212,13 +212,36 @@ def split_input_values(value: str) -> list[str]:
             continue
         cleaned = normalize_new_value(raw)
         key = comparison_key(cleaned)
-        if key in seen:
+        if key in seen and not keep_duplicates:
             continue
         seen.add(key)
         result.append(cleaned)
     if not result:
         raise ValueError("Bitte mindestens einen Wert eingeben.")
     return result
+
+
+def preview_values(root: Path, profile: str, category: str, value_text: str) -> dict:
+    """Prüft ohne Schreiben; zählt Wiederholungen und Bestandsdubletten getrennt."""
+    if category not in CATEGORIES:
+        raise ValueError("Unbekannte Kategorie.")
+    candidates = split_input_values(value_text, keep_duplicates=True)
+    profiles = load_profiles(root)
+    if profile not in profiles:
+        raise ValueError("Profil wurde nicht gefunden.")
+    existing = {comparison_key(value) for value in profiles[profile][category]}
+    seen: set[str] = set()
+    added, present, repeated = [], [], []
+    for value in candidates:
+        key = comparison_key(value)
+        if key in seen:
+            repeated.append(value)
+        elif key in existing:
+            present.append(value)
+        else:
+            added.append(value)
+        seen.add(key)
+    return {"new": added, "present": present, "repeated": repeated}
 
 
 def add_values(root: Path, profile: str, category: str, value_text: str) -> list[str]:
