@@ -5,6 +5,23 @@
 - 13 Nutzeranforderungen in unabhängig prüfbare Unteraufgaben mit Abnahmekriterien und Paketabhängigkeiten zerlegt.
 - Datenbank, Parser/Dublettenprüfung, Schnelleingabe, Modulzugriff und Standardbestand separat abnehmbar; alle Funktionsstatus bleiben bis zum Bestandsabgleich offen.
 - Verweise im Modulplan und Dokumentationswegweiser ergänzt; keine Laufzeit- oder Nutzerdatenänderung.
+<!-- PV_UX26_INPUT_CONTRAST_20261101 -->
+## Eingabefelder in drei Themes klarer begrenzen (01.11.2026; Prüfzweig)
+
+- Reproduzierbarer Farb-Befund: Eingabefeldrand gegen Eingabehintergrund Amber 2,86:1, Türkis 2,22:1, Lila 2,39:1.
+- Farbwerte gezielt auf Amber `#7291A7`, Türkis `#6FA5AB` und Lila `#AA89BA` erhöht. Erwartete Kontrastverhältnisse mindestens 3,42:1, 3,52:1 und 3,60:1.
+- Neue automatische Prüfung kontrolliert alle Farbthemes auf Eingaberand-Kontrast, Platzhalter-/Textlesbarkeit und die zentrale Styleverwendung.
+- Keine Änderungen an Profilen, Daten, Farben der Nutzereingabe, Fensterlogik oder Bedienfunktionen; **vollständiger Theme-Umbau bleibt eine offene gesonderte Aufgabe PV-UX26-06**.
+- Erste Dashboard-Navigationskorrektur PR #162 wurde nach grüner PR-Prüfung integriert; eigenständiger main-Prüflauf #41305861757 ist ebenfalls erfolgreich.
+
+<!-- PV_UX26_NAV_SCROLL_20261101 -->
+## Navigation bei kleinen Fensterhöhen scrollbar (01.11.2026; Prüfzweig, noch keine Freigabe)
+
+- Screenshot-Befund #161: Menüeinträge am unteren Rand waren nicht zuverlässig zugänglich, weil die Navigation keinen vertikal scrollenden Inhaltsbereich hatte.
+- Gezielter PySide6-Patch: Menükopf bleibt fest; vorhandene Einträge einschließlich erweiterter Planungsgruppen liegen in einer `QScrollArea`; beim Einklappen verschwindet die Liste vollständig.
+- Bestehende Aktionsverknüpfungen, zentraler Profilbestand und Navigationsbreiten bleiben unverändert. Keine Datenmigration.
+- **Prüfstatus:** Automatisierter GUI-Rückfalltest im Prüfzweig ergänzt; PR-CI und main-CI vor einem Haken in TODO abwarten. Die allgemeine Dashboard-Neugestaltung bleibt als Folgeauftrag in #161.
+
 
 ## Issue #126 – Dashboard-Karten im bestehenden Raster verstellen (31.10.2026; Prüfkandidat)
 

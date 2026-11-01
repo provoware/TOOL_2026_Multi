@@ -1,5 +1,31 @@
 # TODO – TOOL_2026_Multi
 
+<!-- PV_UX26_SCREENSHOT_AUDIT_20261101 -->
+## Screenshot-Anforderungen 01.11.2026 – verbindliche nächste Umsetzungspakete
+
+**Quelle und Akzeptanz:** [Issue #161](https://github.com/provoware/TOOL_2026_Multi/issues/161) · [ausführlicher ausführbarer Auftrag](docs/PROVOWARE_UI_AUFTRAG_2026_11_01.md). **Noch nicht abgenommen:** Ein Entwicklungszweig und vorbereitete Tests zählen nicht als erfolgreiche Integration.
+
+- [x] 2026-11-01 | P0 Navigation PV-UX26-01 | Untere Links vollständig scrollbar machen, festen Kopf erhalten | prüfen: Regression in tests/test_navigation_scroll_gui.py, alle Zoom- und Kompaktzustände, PR- und main-CI | fertig wenn: kein Menüpunkt bei kleiner Fensterhöhe abgeschnitten und Test auf freigegebenem main erfolgreich.
+- [ ] 2026-11-01 | P1 Kacheln PV-UX26-02 | Hohe sieben Kacheln kompakter und dynamisch umbrechend auslegen | prüfen: Textbreite und Klickflächen bei 100–200 % | fertig wenn: alle Einstiege ohne Überlagerung erreichbar.
+- [ ] 2026-11-01 | P1 Kopf/Notiz PV-UX26-03 | Projektnotiz aus eigener Hauptzeile in gegliederten Header verlegen | prüfen: sichere Speicherung, lange Notiz, 200 %, Navigation per Tab | fertig wenn: Notizen ohne Datenverlust und übergroße Mindestbreite bearbeitbar.
+- [ ] 2026-11-01 | P1 Bereichsgrößen PV-UX26-04 | Horizontale und vertikale Griffe, Reset und dynamische Mindestgrößen ergänzen | prüfen: 800×600, 1366×768, 1600×900, Tastatur und Zoom | fertig wenn: alle Pflichtfunktionen erreichbar bleiben.
+- [ ] 2026-11-01 | P1 Daten-Schnelleingabe PV-UX26-05 | Profil → Kategorie → kommagetrennte Werte → Dubletten-Vorschau → atomar speichern | prüfen: vorhandene Namen, Unicode, ungültige Eingabe, unveränderte Altprofile, gemeinsame Zufallsquelle | fertig wenn: jeder neue Wert in bestehenden Modulen sichtbar und vor Dopplungen geschützt.
+- [ ] 2026-11-01 | P1 Themes PV-UX26-06 | Unterschiedliche Flächenfarben, Text/Input/Placeholder/Aktion/Fokus getrennt gestalten | prüfen: WCAG-2.2-Kontraste automatisch pro Theme und Zustand | fertig wenn: Texte, Grenzen und Status auch ohne Farbe erkennbar sind.
+- [ ] 2026-11-01 | P1 Einstellungen PV-UX26-07 | Menüleiste und eigenen, verständlichen Oberflächeneinstellungen-Dialog anlegen | prüfen: Speicherweg separat von Nutzerdaten, Zurücksetzen, Zoom, Tastatur | fertig wenn: alle UI-Optionen zentral und laienverständlich erreichbar.
+- [ ] 2026-11-01 | P1 rechte Leiste PV-UX26-08 | Schnellaktionen oben und Favoriten darunter ein-/ausklappbar anzeigen | prüfen: kompakte Ansicht, Tastatur, optional automatische Buttongröße | fertig wenn: Bedienung in jeder Größe ohne verdeckten Hauptbereich möglich.
+- [ ] 2026-11-01 | P1 Textbuttons PV-UX26-09 | Karten kompakt farblich gruppieren und Sterne/Favoriten ohne Datenverlust ergänzen | prüfen: Altbestand, Kopieren, Variante, Import/Export, Farbkontraste | fertig wenn: Favoriten aus derselben Datenquelle in rechter Leiste erscheinen.
+- [ ] 2026-11-01 | P1 Tastatur PV-UX26-10 | Tab-Folge, sichtbaren Fokus, eindeutige Nutzereingabe/Platzhalter sichern | prüfen: nur Tastatur, 150/200 %, Escape/Enter und Screenreader-Labels | fertig wenn: alle Kernwege ohne Maus funktionieren.
+- [ ] 2026-11-01 | P1 Ereignisse PV-UX26-11 | Mindestens fünf letzte Ereignisse mit Uhrzeit und Schweregrad anzeigen | prüfen: nur bestehendes EventLogger-API, Datenschutz, leere und sehr lange Meldungen | fertig wenn: letzte fünf Einträge ohne Abdeckung lesbar.
+- [ ] 2026-11-01 | P2 Katalog PV-UX26-12 | Breite fachlich geprüfte Profilstruktur und Ziel 100 eindeutige Werte je Kategorie/Profil | prüfen: Quellen, Taxonomie, Duplikate, Import-Freigabe, atomare Sicherung | fertig wenn: Zielzahl mit echten geprüften Begriffen erfüllt, andernfalls belegter Fehlbestand.
+- [ ] 2026-11-01 | P1 Gesamtqualität PV-UX26-13 | Messbare UI-/Daten-/Recovery-/CI-Nachweise für jede Teilfreigabe sammeln | prüfen: aktueller SHA, PR und main getrennt, CI, Changelog/Manifest | fertig wenn: keine offenen Sicherheits- oder Bedientests vor Freigabe.
+
+**Nachweise 01.11.2026:** PV-UX26-01 via PR #162 auf main `4748363403bbc4f459fb3eca74dc82abbc9e42d1`; PR-CI #41305351643 und separate main-CI #41305861757 erfolgreich, vier neue GUI-Tests; die praktische Kubuntu-Endabnahme bleibt später. PV-UX26-06: Eingabefeldrand-Kontrastkorrektur als eigener Prüfzweig vorbereitet, noch **nicht** als Gesamt-Theme-Überarbeitung erledigt; übrige Farbzustände und Themes folgen.
+
+**Abhängigkeit:** vorhandene PV-UI-01/02, übriger Modulplan und Freeze unverändert gültig; Aufgaben werden pro Iteration priorisiert, nicht in einem unprüfbaren Gesamtpatch zusammengeführt.
+
+---
+
+
 Stand: 2026-10-19 · Ergänzung 2026-11-01
 
 <!-- README_AUDIT_20261101 -->
