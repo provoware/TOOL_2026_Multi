@@ -66,3 +66,5 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein P
 ## Nutzerfreundlichkeit und Laientauglichkeit
 
 - [UX-Analyse und Verbesserungskonzept](UX_KONZEPT_LAIENTAUGLICHKEIT.md) – Analyse vom 24.10.2026 mit belegten Befunden, Empfehlungen, Audit-Zuordnung und geplanten Abnahmeszenarien; keine Aussage über bereits umgesetzte Produktänderungen.
+
+- [UI und Profildaten: 13 Hauptaufgaben, Unteraufgaben und Abnahmekriterien](UI_PROFIL_UNTERAUFGABEN_2026.md) – getrennte Datenbank-, Schnelleingabe-, Dubletten- und Modulabnahme.

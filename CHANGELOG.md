@@ -1,5 +1,10 @@
 # Änderungsverlauf
 
+## UI-/Profildatenplanung (01.11.2026)
+
+- 13 Nutzeranforderungen in unabhängig prüfbare Unteraufgaben mit Abnahmekriterien und Paketabhängigkeiten zerlegt.
+- Datenbank, Parser/Dublettenprüfung, Schnelleingabe, Modulzugriff und Standardbestand separat abnehmbar; alle Funktionsstatus bleiben bis zum Bestandsabgleich offen.
+- Verweise im Modulplan und Dokumentationswegweiser ergänzt; keine Laufzeit- oder Nutzerdatenänderung.
 <!-- PV_UX26_INPUT_CONTRAST_20261101 -->
 ## Eingabefelder in drei Themes klarer begrenzen (01.11.2026; Prüfzweig)
 
