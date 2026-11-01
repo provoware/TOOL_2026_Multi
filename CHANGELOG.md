@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## UI-/Profildatenplanung (01.11.2026)
+
+- 13 Nutzeranforderungen in unabhängig prüfbare Unteraufgaben mit Abnahmekriterien und Paketabhängigkeiten zerlegt.
+- Datenbank, Parser/Dublettenprüfung, Schnelleingabe, Modulzugriff und Standardbestand separat abnehmbar; alle Funktionsstatus bleiben bis zum Bestandsabgleich offen.
+- Verweise im Modulplan und Dokumentationswegweiser ergänzt; keine Laufzeit- oder Nutzerdatenänderung.
+
 ## Issue #126 – Dashboard-Karten im bestehenden Raster verstellen (31.10.2026; Prüfkandidat)
 
 - Statt der fehlerhaften verschachtelten QSplitter aus PR #124 bleiben die vier Karten im nativen Qt-Raster. Zwei senkrechte und ein waagerechter Griff verändern die Spalten-/Zeilenanteile per Maus oder Pfeiltasten.

@@ -208,3 +208,8 @@ Ein speziell vorbereiteter Launcher-Zeiger `start → legacy_start.sh` kann nach
 ## Iteration 73 – unabhängige Altstart-Sicherung und Fehlerproben
 
 Reguläre vorhandene Schnellstarts können nach ausdrücklicher Sicherungsfreigabe in einen getrennten Ordner kopiert werden. Ein Hashvergleich prüft Original und Kopie, Änderungen lassen die Sicherungsprüfung scheitern. **Der bisherige Schnellstart wird nicht überschrieben oder ersetzt**; eine produktive Umstellung erfordert einen gesondert geprüften Wrapper-Wechsel, dessen Rückkehrpfad bei Stromunterbrechungen lückenlos belegt ist. Weitere Tests verhindern einen stillen Retry unlesbarer Videoquellen und prüfen harte Abbruchreaktionen bei Plugin-Zeitüberschreitung. GitHub-Vollprüfung vor Integration; Kubuntu-Praxistest erst zum Entwicklungsende.
+
+
+## Next Queue: UI- und Profildatenanforderungen vom 01.11.2026
+
+Die [13 Hauptaufgaben mit einzeln prüfbaren Unteraufgaben](UI_PROFIL_UNTERAUFGABEN_2026.md) präzisieren die Nutzeranforderungen. REQUIRES: Bestandsabgleich mit Source, Tests und offenen PRs. Der laufende Plan bleibt eingefroren; vorhandene Funktionen werden wiederverwendet. Status: Planung dokumentiert, Implementierungsabnahme offen.

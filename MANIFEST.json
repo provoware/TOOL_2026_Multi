@@ -1873,6 +1873,10 @@
       "path": "app/save_state.py",
       "release": true,
       "purpose": "Gemeinsame belegte Speicherzustände der Schreibfenster"
+    },
+    {
+      "path": "docs/UI_PROFIL_UNTERAUFGABEN_2026.md",
+      "release": false
     }
   ],
   "creative_modules": {
