@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Sichere Umbenennung unverknüpfter Profile (01.11.2026; Prüfkandidat)
+
+- Explizite Vorschau mit Favoriten-/Verlaufsbezügen zum alten und neuen Namen; Umbenennung bei Bezügen oder verändertem Lesestand sperren.
+- Nur den exakten Profilnamen atomar ersetzen, Rohdaten/Zusatzfelder erhalten; keine Mehrdateienmigration.
+- Scrollbarer Dialog mit bewusster Aktion und Ereignisprotokoll, Auswahl in Dashboard/Editor/Generator nachführen und Entwürfe erhalten.
+- Neun Logik- und acht GUI-Regressionen einschließlich 40 Dialogkombinationen; Gesamtprofilverwaltung bleibt teilweise offen.
+
 ## Direkte Dashboard-Profileingabe (01.11.2026; Prüfkandidat)
 
 - In der Vorgaben-Karte zwischen Auswahl und scrollbar erreichbarer Schnelleingabe wechseln; Profil/Kategorie, bewusste Vorschau und atomare Speicherung aus demselben Store.

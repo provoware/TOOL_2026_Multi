@@ -1947,6 +1947,31 @@
       "path": "docs/PROFIL_SCHNELLEINGABE.md",
       "release": false,
       "purpose": "Bedienung und Prüfvertrag der direkten Dashboard-Profileingabe"
+    },
+    {
+      "path": "app/profile_management.py",
+      "release": true,
+      "purpose": "Schreibfreie Umbenennungsvorschau und atomarer Schutz unverknüpfter Profile"
+    },
+    {
+      "path": "app/profile_rename_dialog.py",
+      "release": true,
+      "purpose": "Bewusste Profilumbenennung mit Bezugsvorschau und Ereignisprotokoll"
+    },
+    {
+      "path": "tests/test_profile_management.py",
+      "release": false,
+      "purpose": "Rohdatenerhalt, Bezüge, unsichere Lesestände und atomare Fehler"
+    },
+    {
+      "path": "tests/test_profile_rename_gui.py",
+      "release": false,
+      "purpose": "Umbenennungsdialog, Ereignisse, Entwürfe und Zoom-Erreichbarkeit"
+    },
+    {
+      "path": "docs/PROFIL_UMBENENNEN.md",
+      "release": false,
+      "purpose": "Bedienung, Datenvertrag und Recovery der sicheren Profilumbenennung"
     }
   ],
   "creative_modules": {

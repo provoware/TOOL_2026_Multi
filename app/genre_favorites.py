@@ -17,6 +17,11 @@ def favorites_path(root: Path) -> Path:
 def load_favorites(root: Path) -> dict[str, dict[str, list[str]]]:
     path = favorites_path(root)
     raw = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"schema": 1, "favorites": {}}
+    return validate_favorites(raw)
+
+
+def validate_favorites(raw: object) -> dict[str, dict[str, list[str]]]:
+    """Prüft auch einen bereits begrenzt eingelesenen Lesestand ohne Schreiben."""
     if not isinstance(raw, dict) or raw.get("schema") != 1 or not isinstance(raw.get("favorites"), dict):
         raise ValueError("Favoritendatei ist beschädigt.")
     result = {}
