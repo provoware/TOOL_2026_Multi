@@ -248,3 +248,7 @@ UI-05.08–05.11 im technischen Eingabeumfang sind seit PR #165 integriert (main
 ### Teilfortschritt UI-05.03 · 01.11.2026
 
 Unverknüpfte Umbenennung mit Bezugsvorschau und erneutem Lesestandvergleich als Prüfkandidat umgesetzt; [Vertrag](PROFIL_UMBENENNEN.md). UI-05.03 insgesamt offen: verknüpfte Umbenennung und abhängigkeitssicheres Löschen fehlen. Technischer Abschluss dieses Teilumfangs erst nach aktueller PR-/main-CI.
+
+### Bezugserweiterung UI-05.03 · 01.11.2026
+
+Exakte alte Favoriten-/Verlaufsbezüge mit ausdrücklicher Freigabe und Wiederherstellungsjournal als Prüfkandidat umgesetzt; Ziel-/Aliasbezüge bleiben gesperrt. [Aktueller Vertrag](PROFIL_UMBENENNEN.md). SUPERSEDES die fehlende verknüpfte Umbenennung nach vollständiger aktueller PR-/main-CI. Geschütztes Löschen weiterhin offen; UI-05.03 insgesamt nicht abgeschlossen.

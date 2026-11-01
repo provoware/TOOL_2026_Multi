@@ -1972,6 +1972,26 @@
       "path": "docs/PROFIL_UMBENENNEN.md",
       "release": false,
       "purpose": "Bedienung, Datenvertrag und Recovery der sicheren Profilumbenennung"
+    },
+    {
+      "path": "app/profile_file_io.py",
+      "release": true,
+      "purpose": "Gemeinsamer begrenzter Profil-Lesepfad ohne Verknüpfungen"
+    },
+    {
+      "path": "app/profile_transaction.py",
+      "release": true,
+      "purpose": "Rücknehmbare Profil-/Bezugstransaktion mit exklusivem Lock und Startwiederherstellung"
+    },
+    {
+      "path": "tests/test_profile_transaction.py",
+      "release": false,
+      "purpose": "Abbruch-, Sperr-, Konflikt- und echte Prozess-Recovery-Nachweise"
+    },
+    {
+      "path": "tests/test_profile_linked_gui.py",
+      "release": false,
+      "purpose": "Bewusste Bezugübertragung, ehrliche Fehler und Wiederherstellung vor Dashboardstart"
     }
   ],
   "creative_modules": {

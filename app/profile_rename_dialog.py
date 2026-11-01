@@ -1,10 +1,11 @@
-"""Prüfbarer Umbenennungsdialog ohne verdeckte Übertragung von Verknüpfungen."""
+"""Prüfbarer Umbenennungsdialog mit ausdrücklicher Freigabe für Namensbezüge."""
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QDialog, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QPushButton,
+    QCheckBox, QDialog, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QPushButton,
     QScrollArea, QVBoxLayout, QWidget,
 )
 from app.event_log import EventLogger
+from app.profile_transaction import ProfileRecoveryError
 from app.profile_management import RenameError, preview_profile_rename, rename_profile, t
 from app.ui_standards import apply_global_style
 
@@ -38,6 +39,11 @@ class ProfileRenameDialog(QDialog):
         label.setBuddy(self.name_entry)
         layout.addWidget(label)
         layout.addWidget(self.name_entry)
+        self.transfer_links = QCheckBox(t('transfer_label', 'Bezüge übertragen'))
+        self.transfer_links.setAccessibleName(t('transfer_accessible', 'Favoriten und Verlauf mit umbenennen'))
+        self.transfer_links.setToolTip(t('transfer_help', 'Nach der Prüfung die Bezüge zum alten Namen gemeinsam übertragen. Abweichende Namen und belegte Zielnamen bleiben gesperrt.'))
+        self.transfer_links.toggled.connect(self._invalidate)
+        layout.addWidget(self.transfer_links)
         self.preview = QPlainTextEdit()
         self.preview.setReadOnly(True)
         self.preview.setMinimumHeight(120)
@@ -76,7 +82,7 @@ class ProfileRenameDialog(QDialog):
     def check(self):
         self._invalidate()
         try:
-            plan = preview_profile_rename(self.root, self.old_name, self.name_entry.text())
+            plan = preview_profile_rename(self.root, self.old_name, self.name_entry.text(), transfer_links=self.transfer_links.isChecked())
         except RenameError as error:
             self.preview.setPlainText(str(error))
             return False
@@ -87,7 +93,12 @@ class ProfileRenameDialog(QDialog):
         message = t('summary', '{old} → {new}\nBekannte Werte: {values}\nFavoritenzuordnungen: {favorites}\nVerlaufseinträge: {history}').format(
             old=plan.old_name, new=plan.new_name, values=plan.value_count,
             favorites=plan.favorite_links, history=plan.history_links)
-        message += '\n\n' + (t('ready', 'Keine Namensbezüge gefunden. Nur der Profilname wird geändert; vorhandene Datenfelder bleiben erhalten.')
+        if plan.transfer_links and plan.allowed and (plan.favorite_links or plan.history_links):
+            message += '\n\n' + t('transfer_ready', 'Die angezeigten Bezüge zum alten Namen werden gemeinsam mit dem Profilnamen übertragen. Favoritenwerte und bisherige Ergebnisse bleiben erhalten.')
+        elif plan.unsafe_links:
+            message += '\n\n' + t('unsafe_links', 'Bezüge zu einer abweichenden Schreibweise oder zum Zielnamen sind mehrdeutig. Die Umbenennung bleibt gesperrt; es wird nichts zusammengeführt.')
+        else:
+            message += '\n\n' + (t('ready', 'Keine Namensbezüge gefunden. Nur der Profilname wird geändert; vorhandene Datenfelder bleiben erhalten.')
                                 if plan.allowed else t('blocked', 'Favoriten oder Verlauf verwenden den alten oder neuen Namen. Die Umbenennung ist zum Schutz dieser Verknüpfungen gesperrt.'))
         self.preview.setPlainText(message)
         self.rename_button.setEnabled(plan.allowed)
@@ -113,12 +124,12 @@ class ProfileRenameDialog(QDialog):
     def _failure(self, error):
         self.last_event_id = None
         self._invalidate()
-        message = t('failure', 'Nicht umbenannt. Name und Bestand bleiben erhalten. Grund: {error}').format(error=error)
+        message = (t('pending_failure', 'Die Profiländerung ist unvollständig. Weitere Profilzugriffe sind gesperrt. Bitte neu starten; Wiederherstellungsjournal erhalten. Grund: {error}') if isinstance(error, ProfileRecoveryError) else t('failure', 'Nicht umbenannt. Name und Bestand bleiben erhalten. Grund: {error}')).format(error=error)
         try:
             event = self.logger.record(
                 severity='FEHLER', area='PROFIL_UMBENENNEN',
                 summary=t('log_summary', 'Ein Profil konnte nicht sicher umbenannt werden.'),
-                cause=str(error), protection=t('protected', 'Kein Profilname geändert; Vorschlag und ursprünglicher Bestand bleiben erhalten.'),
+                cause=str(error), protection=(t('pending_protection', 'Profilzugriffe bis zur Wiederherstellung gesperrt; Journal erhalten.') if isinstance(error, ProfileRecoveryError) else t('protected', 'Kein Profilname geändert; Vorschlag und ursprünglicher Bestand bleiben erhalten.')),
                 next_step=t('next', 'Öffne Hilfe & Fehlerhilfe mit der Ereigniskennung und prüfe Dateien oder Schreibrechte.'),
                 exception=error,
             )

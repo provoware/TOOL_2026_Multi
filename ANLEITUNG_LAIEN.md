@@ -637,3 +637,5 @@ Wenn du einen veränderten Text oder einen bearbeiteten Modulinhalt verlässt, b
 ## Profilnamen ändern
 
 Unter **Profile & Vorgaben verwalten** das Profil auswählen, **Umbenennen** öffnen, Namen eingeben und **Prüfen** wählen. Erst **Umbenennen** speichert. Favoriten oder Verlaufseinträge zum alten oder neuen Namen sperren die Änderung zum Schutz vorhandener Verknüpfungen. Abbrechen oder Escape ändert nichts. Details: [Profil sicher umbenennen](docs/PROFIL_UMBENENNEN.md).
+
+Bei Favoriten oder Verlaufseinträgen kann **Bezüge übertragen** ausdrücklich freigegeben werden. Danach erneut **Prüfen** wählen und erst dann umbenennen. Bezüge zu abweichenden Schreibweisen oder zum Zielnamen bleiben geschützt. Nach einem Abbruch stellt der nächste Programmstart den gesicherten alten Gesamtstand wieder her. Bei einer Wiederherstellungsmeldung das Journal nicht löschen; Details unter [Profil sicher umbenennen](docs/PROFIL_UMBENENNEN.md).

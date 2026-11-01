@@ -78,6 +78,8 @@ def _history_validate(raw: object) -> list[dict]:
 
 
 def history_load(root: Path) -> list[dict]:
+    from app.profile_transaction import ensure_ready
+    ensure_ready(root)
     path = history_path(root)
     return _history_validate(json.loads(path.read_text(encoding="utf-8"))) if path.exists() else []
 

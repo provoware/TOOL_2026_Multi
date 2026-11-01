@@ -141,12 +141,12 @@ class ProfileRenameGuiTests(unittest.TestCase):
                         rect = QRect(button.mapTo(d, QPoint()), button.size())
                         self.assertTrue(d.rect().contains(rect))
                         self.assertFalse(button.autoDefault())
-                    control = d.name_entry
-                    center = control.mapTo(d.scroll.widget(), control.rect().center())
-                    d.scroll.ensureVisible(center.x(), center.y(), control.width() // 2 + 1, control.height() // 2 + 1)
-                    self.events()
-                    rect = QRect(control.mapTo(d.scroll.viewport(), QPoint()), control.size())
-                    self.assertTrue(d.scroll.viewport().rect().contains(rect))
+                    for control in (d.name_entry, d.transfer_links):
+                        center = control.mapTo(d.scroll.widget(), control.rect().center())
+                        d.scroll.ensureVisible(center.x(), center.y(), control.width() // 2 + 1, control.height() // 2 + 1)
+                        self.events()
+                        rect = QRect(control.mapTo(d.scroll.viewport(), QPoint()), control.size())
+                        self.assertTrue(d.scroll.viewport().rect().contains(rect))
 
     def test_editor_dashboard_generator_keep_selection_and_drafts(self):
         dash = Dashboard(FakeTexts(), self.logger, self.root)
