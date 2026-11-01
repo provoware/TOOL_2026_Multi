@@ -1,6 +1,19 @@
 # TODO – TOOL_2026_Multi
 
-Stand: 2026-10-19
+Stand: 2026-10-19 · Ergänzung 2026-11-01
+
+<!-- README_AUDIT_20261101 -->
+## 📌 Aktueller Dokumentations- und Integrationsstand · 01.11.2026
+
+**Verbindlicher Modulplan bleibt unverändert.** Die folgenden Punkte dokumentieren die Repository-Prüfung; sie eröffnen **keine** neuen Funktionsaufträge.
+
+- [x] 2026-11-01 | Dokumentation | README um dreistufigen Linux-Kurzstart mit echten Kopierbefehlen und Fehlerhilfe ergänzt | prüfen: `README.md`, Commit `79f690ef52a8` | fertig wenn: vollständiger alter README-Inhalt erhalten und neue Anleitung am Anfang sichtbar.
+- [ ] 2026-11-01 | Qualität | Hauptzweig nach reiner Dokumentationsänderung prüfen | prüfen: GitHub-Qualitätslauf für den endgültigen main-Commit; bestehende dokumentationsbezogene Prüfungen | fertig wenn: Prüfläufe auf genau diesem Stand erfolgreich.
+- [ ] 2026-11-01 | Bestehender Plan | Noch offene Funktionen nach `docs/MODULPLAN_2026.md` und realem Teststand priorisieren | prüfen: Source, CI, bisherige Nachweise | fertig wenn: jedes noch offene Modul nachvollziehbar als offen, geprüft oder blockiert ausgewiesen ist.
+- [ ] 2026-11-01 | Abschluss | Die einmalige vollständige Kubuntu-Sichtabnahme ausschließlich am finalen, unveränderten Kandidaten durchführen | prüfen: native Wayland-Oberfläche, 800×600, 200 %, Datenrückkehr | fertig wenn: echte Endabnahme protokolliert; keine vorgezogene Release-Freigabe.
+
+---
+
 
 > **Neu (22.10.2026):** [Priorisierter Architektur-, Sicherheits- und Interoperabilitätsaudit mit 30 Befunden, Wiederverwendung, Nutzerabläufen, Tests und Next Queue](#neuer-prüf--und-entwicklungsbedarf--nutzerinteroperabilität-audit-vom-22102026). Der bestehende Plan bleibt eingefroren; neue Punkte stehen **am Ende** dieser Datei und sind noch nicht umgesetzt.
 
