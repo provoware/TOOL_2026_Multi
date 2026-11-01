@@ -6,7 +6,7 @@ from pathlib import Path
 
 from app.atomic_io import atomic_write_json, atomic_write_text
 from app.genre_random import history_load
-from app.profile_store import CATEGORIES, load_profiles
+from app.profile_store import CATEGORIES, load_profiles, read_profile
 import json
 
 
@@ -34,12 +34,12 @@ def load_favorites(root: Path) -> dict[str, dict[str, list[str]]]:
 
 
 def favorite_values(root: Path, profile: str, category: str) -> list[str]:
-    profiles = load_profiles(root)
-    if profile not in profiles or category not in CATEGORIES:
+    if category not in CATEGORIES:
         raise ValueError("Profil oder Kategorie unbekannt.")
+    values = read_profile(root, profile, category=category)[category]
     favorites = load_favorites(root).get(profile, {}).get(category, [])
     stored = {v.casefold() for v in favorites}
-    return [v for v in profiles[profile][category] if v.casefold() in stored]
+    return [v for v in values if v.casefold() in stored]
 
 
 def set_favorite(root: Path, profile: str, category: str, value: str, enabled: bool) -> bool:

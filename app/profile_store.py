@@ -132,6 +132,35 @@ def load_profiles(root: Path) -> dict[str, dict[str, list[str]]]:
     return _validate(data)
 
 
+def profile_names(root: Path) -> list[str]:
+    """Liest aktuelle Profilnamen sortiert, ohne einen Bestand anzulegen."""
+    return sorted(load_profiles(root), key=str.casefold)
+
+
+def read_profile(root: Path, profile: str, *, category: str | None = None,
+                 query: str = "") -> dict[str, list[str]]:
+    """Liefert einen frischen, unabhängig veränderbaren Profil-Lesestand.
+
+    Profil/Kategorie sind exakte Schlüssel; nur der Teiltextfilter verwendet
+    den gemeinsamen Unicode-Vergleich. Originalwerte und Reihenfolge bleiben
+    erhalten. Fehler werden durchgereicht, niemals durch Fremdprofile ersetzt.
+    """
+    if not isinstance(profile, str) or not profile:
+        raise ValueError(input_text("read_profile", "Bitte einen Profilnamen als Text angeben."))
+    if category is not None and (not isinstance(category, str) or category not in CATEGORIES):
+        raise ValueError(input_text("read_category", "Bitte eine vorhandene Kategorie auswählen."))
+    if not isinstance(query, str) or any(
+            (ord(char) < 32 and char != "\t") or ord(char) == 127 for char in query):
+        raise ValueError(input_text("read_query", "Suchtext muss Text ohne Zeilenumbrüche oder Steuerzeichen sein."))
+    record = load_profiles(root).get(profile)
+    if record is None:
+        raise ValueError(input_text("read_missing", "Das ausgewählte Profil wurde nicht gefunden."))
+    needle = comparison_key(query) if query.strip() else ""
+    categories = CATEGORIES if category is None else (category,)
+    return {cat: [value for value in record[cat]
+                  if not needle or needle in comparison_key(value)] for cat in categories}
+
+
 def save_profiles(root: Path, profiles: dict[str, dict[str, list[str]]]) -> Path:
     clean = _validate(profiles)
     return atomic_write_json(store_path(root), clean)

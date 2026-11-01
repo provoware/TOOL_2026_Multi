@@ -1,5 +1,11 @@
 # Änderungsverlauf
 
+## Gemeinsame Profil-Modul-API (01.11.2026; Prüfkandidat)
+
+- Sortierte Profilnamen und rein lesender Profil-/Kategorie-/Unicode-Teiltextzugriff im bestehenden Store ergänzt; unbekannte Ziele und beschädigte Daten werden nicht durch andere Profile ersetzt.
+- Dashboard, Editor, Generator/Archiv und lesende Favoritenauswahl angebunden; Archivzähler zeigt sichtbare Treffer. Keine neue Datenbank, Migration oder Änderung der Speicher-/Zufallsformate.
+- Zehn neue isolierte Logik-/GUI-Regressionen für Profilgrenzen, Altbestand, Fehler, frische Werte und Qt-Unabhängigkeit. Paket-B-Integration im Todo nachgeführt; finale PR-/main-Nachweise separat.
+
 ## Fachliche Profilstruktur – Paket B (01.11.2026; Prüfkandidat)
 
 - Gelesene Fachquellen, Daten-/Feldlizenzen und die Abgrenzung von Genres, Stimmungen, Gestaltung, Stimme und Effekten dokumentiert.

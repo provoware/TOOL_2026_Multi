@@ -74,3 +74,5 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein P
 - [Profilwerte: Eingabe und Eindeutigkeit](PROFIL_EINGABEREGELN.md) – zitierte Kommas, Unicode, Importschutz und unveränderte Altbestände.
 
 - [Fachliche Profilstruktur und Quellen](PROFIL_FACHSTRUKTUR_2026.md) – Paket B: zwölf Zielprofile, fünf feste Kategorien, Qualitäts- und Herkunftsregeln; [vollständige Planungsmatrix](PROFIL_ZIELMATRIX_2026.json), keine Aktivierung neuer Profildaten.
+
+- [Gemeinsame Profil-Modul-API](PROFIL_MODUL_API.md) – rein lesender Profil-/Kategorie-/Suchvertrag, Unicodefilter und Datenbewahrung.

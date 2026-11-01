@@ -36,7 +36,7 @@ from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
 from app.genre_random_window import GenreRandomWindow
 from app.github_projects_window import GitHubProjectsWindow
-from app.profile_store import CATEGORIES, load_profiles
+from app.profile_store import CATEGORIES, profile_names, read_profile
 from app.quick_note import append_developer_info, legacy_notes_pending, preserve_legacy_notes
 from app.recovery_center import RecoveryCenter
 from app.recovery_ui import ZOOM_LEVELS
@@ -910,13 +910,13 @@ class Dashboard(QWidget):
     def refresh_db_profiles(self) -> None:
         current = self.db_profile_combo.currentText()
         try:
-            profiles = load_profiles(self.project_root)
+            profiles = profile_names(self.project_root)
         except Exception:
             self.quick_status.setText("Profile konnten nicht geladen werden. Öffne Hilfe & Fehlerhilfe, wenn das Problem bleibt.")
             return
         self.db_profile_combo.blockSignals(True)
         self.db_profile_combo.clear()
-        self.db_profile_combo.addItems(sorted(profiles, key=str.casefold))
+        self.db_profile_combo.addItems(profiles)
         if current in profiles:
             self.db_profile_combo.setCurrentText(current)
         elif "HardTechno" in profiles:
@@ -929,7 +929,7 @@ class Dashboard(QWidget):
         if not profile:
             return
         try:
-            data = load_profiles(self.project_root).get(profile, {})
+            data = read_profile(self.project_root, profile)
         except Exception:
             self.quick_status.setText("Profilwerte konnten nicht geladen werden. Öffne bei Bedarf Hilfe & Fehlerhilfe.")
             return

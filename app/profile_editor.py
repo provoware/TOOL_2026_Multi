@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
 )
 
 from app.profile_store import (
-    CATEGORIES, add_profile, add_values, input_text, load_profiles, preview_values, remove_value,
+    CATEGORIES, add_profile, add_values, input_text, profile_names, read_profile, preview_values, remove_value,
 )
 from app.ui_standards import apply_global_style
 
@@ -116,7 +116,7 @@ class ProfileEditor(QDialog):
     def refresh(self) -> None:
         selected = self.profile_combo.currentText()
         try:
-            profiles = load_profiles(self.project_root)
+            profiles = profile_names(self.project_root)
         except Exception as error:
             QMessageBox.critical(
                 self,
@@ -126,7 +126,7 @@ class ProfileEditor(QDialog):
             return
         self.profile_combo.blockSignals(True)
         self.profile_combo.clear()
-        self.profile_combo.addItems(sorted(profiles, key=str.casefold))
+        self.profile_combo.addItems(profiles)
         if selected in profiles:
             self.profile_combo.setCurrentText(selected)
         elif self.profile_combo.count():
@@ -141,7 +141,7 @@ class ProfileEditor(QDialog):
         if not profile or category not in CATEGORIES:
             return
         try:
-            values = load_profiles(self.project_root).get(profile, {}).get(category, [])
+            values = read_profile(self.project_root, profile, category=category)[category]
         except Exception:
             self.status_label.setText("Werte konnten nicht gelesen werden · es wurde nichts verändert.")
             return

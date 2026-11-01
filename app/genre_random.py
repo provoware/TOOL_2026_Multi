@@ -13,7 +13,7 @@ from pathlib import Path
 from app.atomic_io import atomic_write_json
 from app.profile_store import (
     CATEGORIES, comparison_key, load_profiles, save_profiles, split_input_values, store_path,
-    validate_profile_import, input_text,
+    validate_profile_import, input_text, read_profile,
 )
 
 QUICK_AMOUNTS = (3, 6, 9, 12, 15)
@@ -107,10 +107,7 @@ def generate(root: Path, profile: str, amounts: dict[str, int],
              *, rng: random.Random | None = None, favorites_only: bool = False) -> dict:
     """Prüft *alle* Mengen vor einer einzigen dauerhaft protokollierten Ziehung."""
     checked = _amounts(amounts)
-    profiles = load_profiles(root)
-    if profile not in profiles:
-        raise ValueError("Bitte ein vorhandenes Profil auswählen.")
-    data = profiles[profile]
+    data = read_profile(root, profile)
     if favorites_only:
         from app.genre_favorites import favorite_values
         data = {cat: favorite_values(root, profile, cat) for cat in CATEGORIES}
