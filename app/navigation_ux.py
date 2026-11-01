@@ -11,7 +11,10 @@ from collections.abc import Iterable
 from shiboken6 import isValid
 
 from PySide6.QtCore import QEvent, QObject, Qt, QTimer
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QFrame, QHBoxLayout, QLabel, QPushButton, QScrollArea, QSizePolicy,
+    QVBoxLayout, QWidget,
+)
 
 from app.presentation_policy import presentation_state
 from app.module_widgets import t as module_text
@@ -244,18 +247,36 @@ class NavigationUxController(QObject):
                 planned_layout.addWidget(planned_by_name[name])
         self.planned_container.hide()
 
+        # Der Menükopf bleibt sichtbar. Nur die Einträge scrollen, sobald
+        # Fensterhöhe oder Schriftvergrößerung den Platz überschreiten.
+        self.navigation_scroll = QScrollArea(self.sidebar)
+        self.navigation_scroll.setObjectName("dashboardNavigationScroll")
+        self.navigation_scroll.setAccessibleName("Scrollbare Menüeinträge")
+        self.navigation_scroll.setFrameShape(QFrame.NoFrame)
+        self.navigation_scroll.setWidgetResizable(True)
+        self.navigation_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.navigation_scroll.setFocusPolicy(Qt.NoFocus)
+        self.navigation_scroll.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        content = QWidget()
+        content.setObjectName("dashboardNavigationContent")
+        self.navigation_list = QVBoxLayout(content)
+        self.navigation_list.setContentsMargins(0, 0, 0, 0)
+        self.navigation_list.setSpacing(2)
+        self.navigation_scroll.setWidget(content)
+
         self.layout.addLayout(top_layout)
-        self.layout.addWidget(overview)
-        self.layout.addWidget(self.ready_heading)
+        self.layout.addWidget(self.navigation_scroll, 1)
+        self.navigation_list.addWidget(overview)
+        self.navigation_list.addWidget(self.ready_heading)
         for button in self.ready_buttons:
-            self.layout.addWidget(button)
+            self.navigation_list.addWidget(button)
         for button in self.feature_buttons:
-            self.layout.addWidget(button)
-        self.layout.addWidget(self.planned_heading)
-        self.layout.addWidget(self.planned_hint)
-        self.layout.addWidget(self.planned_toggle)
-        self.layout.addWidget(self.planned_container)
-        self.layout.addStretch(1)
+            self.navigation_list.addWidget(button)
+        self.navigation_list.addWidget(self.planned_heading)
+        self.navigation_list.addWidget(self.planned_hint)
+        self.navigation_list.addWidget(self.planned_toggle)
+        self.navigation_list.addWidget(self.planned_container)
+        self.navigation_list.addStretch(1)
 
         self.core_entries: list[QWidget] = [
             overview, self.ready_heading, *self.ready_buttons,
@@ -332,6 +353,7 @@ class NavigationUxController(QObject):
         self.layout.setSpacing(4 if state.high_zoom else 2)
 
         self.menu_title.setVisible(sidebar_open)
+        self.navigation_scroll.setVisible(sidebar_open)
         for button in self.ready_buttons:
             button.setVisible(sidebar_open)
         for button in self.feature_buttons:
