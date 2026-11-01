@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Profil-/Datenbank-Bestandsabgleich (01.11.2026)
+
+- Vorhandenen Planungs-PR #164 nach vollständiger CI übernommen; keine neuen PRs oder Drafts angelegt.
+- 27 Unteraufgaben mit vorhandenen Stores, GUI, Generator und Import/Export abgeglichen; 51 gezielte Tests erfolgreich.
+- Zitierte Kommas und Unicode-Dubletten als offene, reproduzierte Lücken dokumentiert. 78 Standard-Kategorieeinträge statt ungeprüfter Zielmengen gezählt; persönliche Bestände unverändert.
+- README-Widersprüche und Integrationsblocker berichtigt; Produktcode und Version unverändert.
+
 ## UI-/Profildatenplanung (01.11.2026)
 
 - 13 Nutzeranforderungen in unabhängig prüfbare Unteraufgaben mit Abnahmekriterien und Paketabhängigkeiten zerlegt.
@@ -22,6 +29,11 @@
 - Bestehende Aktionsverknüpfungen, zentraler Profilbestand und Navigationsbreiten bleiben unverändert. Keine Datenmigration.
 - **Prüfstatus:** Automatisierter GUI-Rückfalltest im Prüfzweig ergänzt; PR-CI und main-CI vor einem Haken in TODO abwarten. Die allgemeine Dashboard-Neugestaltung bleibt als Folgeauftrag in #161.
 
+## Dokumentationsabgleich (01.11.2026)
+
+- README: Genre-Zufall und zentrale Dateisuche nicht länger als fehlend aufgeführt; lokale GitHub-Projektliste von automatischer Verwaltung unterschieden.
+- Reihenfolge berichtigt: bestehende Module fertigstellen, anschließend einmalige Kubuntu-Gesamtabnahme und Veröffentlichung.
+- Direkter CLI-Zugriff gestört; Zugriff über verbundenes GitHub-Plugin erfolgreich verifiziert: 0 offene Draft-PRs, #157 abgeschlossen. Aktuelle CI separat nachzuweisen. Keine Produktcode-, Datenformat- oder Versionsänderung.
 
 ## Issue #126 – Dashboard-Karten im bestehenden Raster verstellen (31.10.2026; Prüfkandidat)
 

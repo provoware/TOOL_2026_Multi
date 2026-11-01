@@ -1877,6 +1877,16 @@
     {
       "path": "docs/UI_PROFIL_UNTERAUFGABEN_2026.md",
       "release": false
+    },
+    {
+      "path": "docs/PROFIL_BESTANDSABGLEICH_2026_11_01.md",
+      "release": false,
+      "purpose": "Belegter Profil-/Datenbank-Bestandsabgleich ohne Nutzerdaten"
+    },
+    {
+      "path": "docs/PROFIL_BESTAND_2026_11_01.json",
+      "release": false,
+      "purpose": "Belegter Profil-/Datenbank-Bestandsabgleich ohne Nutzerdaten"
     }
   ],
   "creative_modules": {
@@ -2075,6 +2085,15 @@
     "transitions_implemented": false
   },
   "documentation_reviews": [
+    {
+      "id": "DOC-2026-11-01",
+      "document": "README.md",
+      "baseline_sha": "fb45df8a37cf759592a957c5c3a3b759fa64b457",
+      "status": "LOKAL_GEPRUEFT_MAIN_CI_FOLGT",
+      "runtime_changed": false,
+      "github_access": "PLUGIN_VERIFIED_CLI_FAILED",
+      "draft_count": 0
+    },
     {
       "id": "UX-2026-10-24",
       "document": "docs/UX_KONZEPT_LAIENTAUGLICHKEIT.md",

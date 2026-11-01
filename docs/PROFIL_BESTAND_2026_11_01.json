@@ -1,0 +1,154 @@
+{
+  "baseline": "fb45df8a37cf759592a957c5c3a3b759fa64b457",
+  "matrix": [
+    {
+      "profile": "HardTechno",
+      "category": "Genres",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "HardTechno",
+      "category": "Stimmungen",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "HardTechno",
+      "category": "Stil",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "HardTechno",
+      "category": "Stimme",
+      "count": 3,
+      "missing_to_100": 97
+    },
+    {
+      "profile": "HardTechno",
+      "category": "Besonderheiten",
+      "count": 3,
+      "missing_to_100": 97
+    },
+    {
+      "profile": "Chill",
+      "category": "Genres",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "Chill",
+      "category": "Stimmungen",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "Chill",
+      "category": "Stil",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "Chill",
+      "category": "Stimme",
+      "count": 3,
+      "missing_to_100": 97
+    },
+    {
+      "profile": "Chill",
+      "category": "Besonderheiten",
+      "count": 3,
+      "missing_to_100": 97
+    },
+    {
+      "profile": "HipHop/Rap",
+      "category": "Genres",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "HipHop/Rap",
+      "category": "Stimmungen",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "HipHop/Rap",
+      "category": "Stil",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "HipHop/Rap",
+      "category": "Stimme",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "HipHop/Rap",
+      "category": "Besonderheiten",
+      "count": 3,
+      "missing_to_100": 97
+    },
+    {
+      "profile": "Hörspiele",
+      "category": "Genres",
+      "count": 6,
+      "missing_to_100": 94
+    },
+    {
+      "profile": "Hörspiele",
+      "category": "Stimmungen",
+      "count": 5,
+      "missing_to_100": 95
+    },
+    {
+      "profile": "Hörspiele",
+      "category": "Stil",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "Hörspiele",
+      "category": "Stimme",
+      "count": 4,
+      "missing_to_100": 96
+    },
+    {
+      "profile": "Hörspiele",
+      "category": "Besonderheiten",
+      "count": 4,
+      "missing_to_100": 96
+    }
+  ],
+  "total_values": 78,
+  "target_values": 2000,
+  "quoted_comma_actual": [
+    "\"warm",
+    "dunkel\"",
+    "ruhig"
+  ],
+  "unicode_actual": [
+    "düster",
+    "düster"
+  ],
+  "duplicates_casefold": [
+    "warm",
+    "ruhig"
+  ],
+  "reimport_counts": {
+    "profiles": 0,
+    "values": 0
+  },
+  "reimport_bytes_unchanged": true,
+  "same_text_different_profiles": [
+    [
+      "Eigener Begriff"
+    ],
+    [
+      "Eigener Begriff"
+    ]
+  ],
+  "unicode_normalization_missing": true
+}

@@ -40,7 +40,7 @@
 ---
 
 
-> **Version:** 0.18.5 (Entwicklungskandidat) · **Dokumentationsstand:** 31.10.2026 · **Status:** nutzbarer Desktop-Kern; kein fertiges Release. Abschließende Kubuntu-Abnahme erst nach Fertigstellung aller Module.
+> **Version:** 0.18.5 (Entwicklungskandidat) · **Dokumentationsstand:** 01.11.2026 · **Status:** nutzbarer Desktop-Kern; kein fertiges Release. Abschließende Kubuntu-Abnahme erst nach Fertigstellung aller Module.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
 
@@ -166,7 +166,7 @@ Die Kernfarben jedes Themes werden automatisch mit mindestens **4,5:1** Kontrast
 
 **Fertig:** Songtexte schreiben und verwalten, Charakterfibel, allgemeiner Texteditor, Genre-/Stimmungs-/Stilprofile, Aufgabenliste, Kalender, Erinnerungen während das Hauptprogramm läuft sowie Hilfe & Fehlerhilfe.
 
-**Noch nicht fertig:** Reimfinder, Suche über alle Dateien, Duplikatprüfung, automatische GitHub-Verwaltung, eigenständige Blog-/Podcast-/Hörspielproduktion und automatisches Update. Genre-Zufall und lokale GitHub-Projektliste sind bereits nutzbar. Ein sichtbarer Planungsbereich bedeutet **nicht**, dass die Funktion bereits arbeitet.
+**Noch nicht fertig:** Reimfinder, Duplikatprüfung, automatische GitHub-Verwaltung, eigenständige Blog-/Podcast-/Hörspielproduktion und automatisches Update. Genre-Zufall, zentrale Dateisuche mit Textinhalt-Suche und Trefferliste sowie die lokale GitHub-Projektliste sind bereits nutzbar. Ein sichtbarer Planungsbereich bedeutet **nicht**, dass die Funktion bereits arbeitet.
 
 **Die wichtigsten drei Schritte zum Start:**
 1. Projektordner öffnen.
@@ -254,13 +254,9 @@ Dazu gehören derzeit unter anderem:
 - Hörspiele
 - Blogartikel
 - Prompts
-- Genre-Zufall
 - Reimfinder
-- Dateisuche
-- Textinhalt-Suche
-- Trefferliste
 - Duplikatprüfer
-- GitHub-Repositories als eigenes Dashboardmodul
+- Automatische GitHub-Verwaltung über die vorhandene lokale Projektliste hinaus
 
 ## Bedienprinzip
 
@@ -476,8 +472,11 @@ backups/    lokale Sicherungen, nicht versioniert
 
 ## Noch offen
 
-1. Reale sichtbare Kubuntu-26.04-/KDE-Plasma-Wayland-Abnahme auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und Theme `Kontrast`.
-2. Anschließend nur einzeln priorisierte Produktfunktionen aus den sichtbar als `In Planung` markierten Bereichen freigeben.
+1. Bestehende Aufgaben und Integrationen nach [Kurzliste](TODO.md) und [Modulplan](docs/MODULPLAN_2026.md) fertigstellen; automatisierte Prüfungen begleiten jede Änderung.
+2. Erst nach Abschluss aller vereinbarten Module die einmalige vollständige Kubuntu-26.04-/KDE-Plasma-Wayland-Abnahme auf dem Zielrechner durchführen, besonders 1366×768 bei 125/150 %, zusätzlich 175/200 % und Theme `Kontrast`.
+3. Veröffentlichung erst nach den abschließenden Abnahmen.
+
+Stand 01.11.2026: Der GitHub-Zugriff ist über das verbundene GitHub-Plugin möglich. Die Live-Abfrage ergab 0 offene Draft-PRs; Aufgabe #157 ist abgeschlossen. Der direkte CLI-Zugriff aus der Cloud-Umgebung schlug fehl. Die Aufgabenplanung aus PR #164 ist nach vollständiger PR-Prüfung in main integriert; die separate [main-Prüfung #41310384010](https://github.com/provoware/TOOL_2026_Multi/actions/runs/41310384010) ist ebenfalls erfolgreich.
 
 Die detaillierte Versionshistorie steht bewusst **nicht mehrfach in der README**, sondern im `CHANGELOG.md` und den Iterationsdokumenten.
 
@@ -499,3 +498,5 @@ Update-Pakete getrennt statisch prüfen: [Update-Staging](docs/UPDATE_STAGING.md
 Neu im 0.18.4-Prüfkandidaten: [Ideenarchiv und Kontometadaten](docs/IDEEN_UND_KONTEN.md), [Prozessstartmessung und Strukturhilfen](docs/STARTMESSUNG_UND_STRUKTUR.md). Weitere Module über das Symbol oben links öffnen.
 
 Aktuelle vorbereitete Versionsunterlagen: [0.18.4](docs/FREIGABE_0_18_4.md).
+
+Profil-/Datenbank-Ausbau: [belegter Bestand und offene Lücken](docs/PROFIL_BESTANDSABGLEICH_2026_11_01.md). Der vorhandene Startbestand enthält 78 Kategorieeinträge; zitierte Kommas und kanonische Unicode-Dubletten benötigen noch Ergänzungen.

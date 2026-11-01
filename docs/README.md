@@ -68,3 +68,5 @@ Maßgeblich ist die Versionskennung im Manifest. Der neue Stand 0.18.4 ist ein P
 - [UX-Analyse und Verbesserungskonzept](UX_KONZEPT_LAIENTAUGLICHKEIT.md) – Analyse vom 24.10.2026 mit belegten Befunden, Empfehlungen, Audit-Zuordnung und geplanten Abnahmeszenarien; keine Aussage über bereits umgesetzte Produktänderungen.
 
 - [UI und Profildaten: 13 Hauptaufgaben, Unteraufgaben und Abnahmekriterien](UI_PROFIL_UNTERAUFGABEN_2026.md) – getrennte Datenbank-, Schnelleingabe-, Dubletten- und Modulabnahme.
+
+- [Profil-/Datenbank-Bestandsabgleich](PROFIL_BESTANDSABGLEICH_2026_11_01.md) – Source, Prüfungen, Unicode-/Quotierungsgrenzen und tatsächliche Startmengen.

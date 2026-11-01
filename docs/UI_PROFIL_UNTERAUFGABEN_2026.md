@@ -225,3 +225,8 @@ B BLOCKS H. C BLOCKS D/E/F/G. UI-09 REQUIRES UI-08.05. Farbarbeiten in UI-03 und
 ## Recovery und Prüfung dieser Planungsiteration
 
 Frozen Plan: ausschließlich Zerlegung und Repository-Dokumentation. Risiken: doppelte Aufgabenregister, unbelegte Fertigmeldungen und Überschreiben bestehender Planung; Gegenmaßnahmen: stabiler Verweis im Modulplan, explizit offene Status, append-only Ergänzung. Keine ausführbaren Änderungen, daher keine GUI-/Wayland-/Restore-Abnahme für diese Dokumentation behauptet. Manifest/JSON, IDs, Kapitelzahl, Verweise und `git diff --check` sind vor Commit zu prüfen. Remote-Übertragung und CI separat anhand des tatsächlichen Repository-Stands berichten.
+
+
+## Nachweis Paket A · 01.11.2026
+
+[Bestandsabgleich UI-05 und UI-13](PROFIL_BESTANDSABGLEICH_2026_11_01.md): alle 27 zugehörigen IDs gegen Source, 51 bestehende Prüfungen und isolierte Fehlerproben untersucht. Die Zeilen mit OFFEN oben beschreiben den ursprünglichen Planungsstand; maßgeblich für den untersuchten Teilumfang ist die verlinkte Befundmatrix. Funktionen bleiben bis zur jeweiligen vollständigen Abnahme offen. Übrige Bereiche von Paket A noch nicht abgeschlossen.

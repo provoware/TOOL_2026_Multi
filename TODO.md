@@ -981,3 +981,14 @@ Geprüfter Code-HEAD PV-UX-03: `345d85c3a0e946e33380c1f76704068036166f7d` (CI #1
 Lokaler gezielter Abschluss PV-UX-04: 57 Tests erfolgreich (echte Dialogaktionen, Text-/Buch-/Ideenwege, Modulverwaltung, Dashboard-Schließschutz, Tastatur, Zoom, Speicherzustände und Dokumentation).
 
 **CI-Diagnose PV-UX-04:** Der erste vollständige Lauf wartete auf einen realen Dialog, weil zwei ältere Kalender-/Text-Sicherheitsfälle noch die frühere statische question-Schnittstelle statt exec steuerten. Isolierter Nicht-Audio-Diagnoselauf lokalisierte den wartenden Fall. Nur die Testansteuerung aktualisiert; ursprüngliche Abnahmekriterien zu erhaltenen Eingaben und blockiertem Schließen unverändert. Neuer vollständiger exakter HEAD-Lauf erforderlich.
+
+
+## Fortsetzung ohne PR-Vorrat · 01.11.2026
+
+- [x] Bestehenden PR #164 nach vollständiger grüner CI #41308733154 und Prüfung auf offene Reviews integrieren; main `fb45df8a37cf759592a957c5c3a3b759fa64b457`. Separate main-CI #41310384010 ebenfalls vollständig erfolgreich. PR-Bestand 1 → 0, Drafts 0 → 0. SUPERSEDES frühere unbekannte/überholte Bestandsangaben.
+- [x] README-Widersprüche zu Dateisuche, Genre-Zufall und Reihenfolge der Kubuntu-Endabnahme bereinigen; bestehende 9 Dokumentationsprüfungen erfolgreich.
+- [x] Paket A für UI-05/UI-13: 27/27 IDs gegen Source, 51 Tests und isolierte Proben abgleichen; [Befundmatrix](docs/PROFIL_BESTANDSABGLEICH_2026_11_01.md). Keine 27 pauschalen Funktionsfreigaben. Übriger Paket-A-Umfang bleibt offen.
+- [ ] P1: Paket B mit fachlicher Profil-/Kategoriestruktur und Unicode-/Eindeutigkeitsvertrag bearbeiten, bevor Katalog oder Parser verändert werden; REQUIRES Bestandsmatrix, BLOCKS belastbare Standardinhalte.
+- [ ] Eigenen main-Lauf zur gebündelten Dokumentationsnachpflege kontrollieren; kein neuer Draft erforderlich.
+
+Nutzerentscheidung: zusammengehörige Änderungen bündeln und nach bestandenen Gates möglichst sauber in main übernehmen; keine PRs oder Entwürfe auf Vorrat. Reale Kubuntu-Endabnahme und Veröffentlichung bleiben zurückgestellt.
