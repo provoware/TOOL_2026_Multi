@@ -144,7 +144,7 @@ def write_profile_transaction(root, updates, fingerprints):
         ensure_ready(root)
         before = {name: read_bytes(root, name) for name in FILES}
         if tuple(_hash(before[name]) for name in FILES) != fingerprints:
-            raise ValueError(_text('changed', 'Profilbestand geändert. Bitte die Umbenennung erneut prüfen.'))
+            raise ValueError(_text('changed', 'Profilbestand geändert. Bitte die Änderung erneut prüfen.'))
         after = {name: updates.get(name, before[name]) for name in FILES}
         for raw in after.values():
             if raw is not None:

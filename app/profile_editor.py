@@ -8,7 +8,7 @@ from typing import Callable
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QComboBox, QDialog, QFormLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget,
-    QMessageBox, QPushButton, QVBoxLayout, QWidget,
+    QMessageBox, QPushButton, QScrollArea, QVBoxLayout, QWidget,
 )
 
 from app.profile_store import (
@@ -17,6 +17,8 @@ from app.profile_store import (
 from app.ui_standards import apply_global_style
 from app.event_log import EventLogger
 from app.profile_rename_dialog import ProfileRenameDialog
+from app.profile_delete_dialog import ProfileDeleteDialog
+from app.profile_deletion import t as delete_text
 from app.profile_management import t as rename_text
 
 
@@ -27,13 +29,14 @@ class ProfileEditor(QDialog):
                  initial_category: str | None = None,
                  on_changed: Callable[[], None] | None = None,
                  parent: QWidget | None = None,
-                 logger=None, on_renamed=None) -> None:
+                 logger=None, on_renamed=None, on_deleted=None) -> None:
         super().__init__(parent)
         self.project_root = project_root
         self.zoom_percent = zoom_percent
         self.on_changed = on_changed
         self.logger = logger if logger is not None else EventLogger(project_root, 'unbekannt')
         self.on_renamed = on_renamed
+        self.on_deleted = on_deleted
         self.setWindowTitle("Profile & Vorgaben verwalten")
         self.resize(760, 560)
         self.setMinimumSize(620, 460)
@@ -45,7 +48,13 @@ class ProfileEditor(QDialog):
         self._refresh_values()
 
     def _build(self) -> None:
-        layout = QVBoxLayout(self)
+        outer = QVBoxLayout(self)
+        self.form_scroll = QScrollArea()
+        self.form_scroll.setWidgetResizable(True)
+        body = QWidget()
+        layout = QVBoxLayout(body)
+        self.form_scroll.setWidget(body)
+        outer.addWidget(self.form_scroll, 1)
         title = QLabel("Profile & Vorgaben verwalten")
         title.setObjectName("sectionTitle")
         layout.addWidget(title)
@@ -121,7 +130,17 @@ class ProfileEditor(QDialog):
 
         close_button = QPushButton("Schließen")
         close_button.clicked.connect(self.accept)
-        layout.addWidget(close_button, 0, Qt.AlignRight)
+        bottom = QHBoxLayout()
+        self.delete_button = QPushButton(delete_text('open', 'Profil löschen…'))
+        self.delete_button.setObjectName('dangerButton')
+        self.delete_button.setAutoDefault(False)
+        self.delete_button.setAccessibleName(self.delete_button.text())
+        self.delete_button.setToolTip(delete_text('open_help', 'Abhängigkeiten des ausgewählten Profils zuerst prüfen. Es wird noch nichts gelöscht.'))
+        self.delete_button.clicked.connect(self.open_delete)
+        bottom.addWidget(self.delete_button)
+        bottom.addStretch(1)
+        bottom.addWidget(close_button)
+        outer.addLayout(bottom)
 
     def set_zoom(self, percent: int) -> None:
         self.zoom_percent = percent
@@ -209,6 +228,24 @@ class ProfileEditor(QDialog):
             elif self.on_changed is not None:
                 self.on_changed()
             self.status_label.setText(rename_text('done', 'Profil umbenannt: {name}').format(name=dialog.renamed_to))
+        finally:
+            dialog.deleteLater()
+
+    def open_delete(self):
+        name = self.profile_combo.currentText()
+        if not name:
+            return
+        dialog = ProfileDeleteDialog(self.project_root, name, logger=self.logger,
+                                     zoom_percent=self.zoom_percent, parent=self)
+        try:
+            if dialog.exec() != QDialog.Accepted or dialog.deleted_name is None:
+                return
+            self.refresh()
+            if self.on_deleted is not None:
+                self.on_deleted(dialog.deleted_name)
+            elif self.on_changed is not None:
+                self.on_changed()
+            self.status_label.setText(delete_text('done', 'Profil gelöscht: {name}').format(name=dialog.deleted_name))
         finally:
             dialog.deleteLater()
 

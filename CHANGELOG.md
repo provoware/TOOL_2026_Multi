@@ -1,5 +1,13 @@
 # Änderungsverlauf
 
+## Abhängigkeitssicheres Löschen von Profilen (01.11.2026; Prüfkandidat)
+
+- Schreibfreie Vorschau mit bekannten Werten, Zusatzfeldern, Bezügen und verbleibenden Profilen; alle Favoriten-/Verlaufsbezüge sowie das letzte Profil schützen.
+- Bewusste Bestätigung nach Prüfung vor ausdrücklicher Löschaktion; geänderte Lesestände, Fehler oder erneute Prüfung heben die Bestätigung auf.
+- Bestehende Profiltransaktion für Abbruch-/Wiederherstellungsschutz nutzen, andere Profile und Rohdaten erhalten, Metadaten bytegleich belassen.
+- Editorformular scrollbar, untere Lösch-/Schließaktionen dauerhaft erreichbar; sichtbare Module aktualisieren und Entwürfe erhalten. Gemeinsame Recovery-Texte für beide Profiländerungen verallgemeinert.
+- Zehn Logik- und acht GUI-Regressionen einschließlich40 Dialogkombinationen; restliche Such-/Katalog-/Layoutaufgaben bleiben getrennt.
+
 ## Verknüpfte Profilumbenennung mit Wiederherstellung (01.11.2026; Prüfkandidat)
 
 - Exakte Favoriten-/Verlaufsbezüge nach ausdrücklicher Freigabe und erneuter Vorschau gemeinsam übertragen; Alias-/Zielbezüge weiterhin sperren.

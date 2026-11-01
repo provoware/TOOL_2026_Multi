@@ -639,3 +639,7 @@ Wenn du einen veränderten Text oder einen bearbeiteten Modulinhalt verlässt, b
 Unter **Profile & Vorgaben verwalten** das Profil auswählen, **Umbenennen** öffnen, Namen eingeben und **Prüfen** wählen. Erst **Umbenennen** speichert. Favoriten oder Verlaufseinträge zum alten oder neuen Namen sperren die Änderung zum Schutz vorhandener Verknüpfungen. Abbrechen oder Escape ändert nichts. Details: [Profil sicher umbenennen](docs/PROFIL_UMBENENNEN.md).
 
 Bei Favoriten oder Verlaufseinträgen kann **Bezüge übertragen** ausdrücklich freigegeben werden. Danach erneut **Prüfen** wählen und erst dann umbenennen. Bezüge zu abweichenden Schreibweisen oder zum Zielnamen bleiben geschützt. Nach einem Abbruch stellt der nächste Programmstart den gesicherten alten Gesamtstand wieder her. Bei einer Wiederherstellungsmeldung das Journal nicht löschen; Details unter [Profil sicher umbenennen](docs/PROFIL_UMBENENNEN.md).
+
+## Ein Profil geschützt löschen
+
+Im Profileditor das Profil wählen und **Profil löschen…** öffnen. **Prüfen** zeigt Inhalt und Abhängigkeiten. Favoriten, Verlauf oder das letzte Profil sperren den Vorgang. Ohne solche Sperren erst **Löschen bestätigen** setzen und danach **Profil löschen** wählen. Im Programm gibt es nach Erfolg keine Rückgängig-Funktion. Abbrechen/Escape ändern nichts; bei geändertem Bestand erneut prüfen und bestätigen. Details: [Profil mit Abhängigkeitsschutz löschen](docs/PROFIL_LOESCHEN.md).
