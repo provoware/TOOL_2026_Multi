@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.13",
+  "text_version": "0.2.14",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -373,7 +373,23 @@
     "profile.input.rename.log_failed": "Auch das Fehlerprotokoll konnte nicht vollständig geschrieben werden. Prüfe Speicherort und Schreibrechte.",
     "profile.input.rename.event": "Letzter Fehler: {event_id}. Details in Hilfe & Fehlerhilfe.",
     "profile.input.rename.profile_select": "Profil wählen",
-    "profile.input.rename.done": "Profil umbenannt: {name}"
+    "profile.input.rename.done": "Profil umbenannt: {name}",
+    "profile.input.transaction.pending": "Eine Profiländerung ist unvollständig. Profile bleiben geschützt. Bitte das Programm neu starten; bei erneutem Fehler Hilfe & Fehlerhilfe öffnen.",
+    "profile.input.transaction.recovery_failed": "Die Profilwiederherstellung konnte nicht abgeschlossen werden. Profile bleiben gesperrt; Journal und vorhandene Dateien wurden zum Prüfen erhalten.",
+    "profile.input.transaction.changed": "Profilbestand geändert. Bitte die Umbenennung erneut prüfen.",
+    "profile.input.transaction.writer": "Eine andere Profiländerung läuft. Es wurde nichts überschrieben.",
+    "profile.input.transaction.rollback_failed": "Die Profiländerung wurde unterbrochen und konnte noch nicht vollständig zurückgenommen werden. Profile bleiben gesperrt. Bitte neu starten; Journal nicht löschen.",
+    "profile.input.rename.transfer_label": "Bezüge übertragen",
+    "profile.input.rename.transfer_accessible": "Favoriten und Verlauf mit umbenennen",
+    "profile.input.rename.transfer_help": "Nach der Prüfung die Bezüge zum alten Namen gemeinsam übertragen. Abweichende Namen und belegte Zielnamen bleiben gesperrt.",
+    "profile.input.rename.transfer_ready": "Die angezeigten Bezüge zum alten Namen werden gemeinsam mit dem Profilnamen übertragen. Favoritenwerte und bisherige Ergebnisse bleiben erhalten.",
+    "profile.input.rename.unsafe_links": "Bezüge zu einer abweichenden Schreibweise oder zum Zielnamen sind mehrdeutig. Die Umbenennung bleibt gesperrt; es wird nichts zusammengeführt.",
+    "profile.input.rename.pending_failure": "Die Profiländerung ist unvollständig. Weitere Profilzugriffe sind gesperrt. Bitte neu starten; Wiederherstellungsjournal erhalten. Grund: {error}",
+    "profile.input.rename.pending_protection": "Profilzugriffe bis zur Wiederherstellung gesperrt; Journal erhalten.",
+    "profile.input.transaction.recovered": "Eine unterbrochene Profilumbenennung wurde zurückgenommen.",
+    "profile.input.transaction.recovery_cause": "Offenes Profiljournal beim Start",
+    "profile.input.transaction.recovery_protection": "Profilbestand, Favoriten und Verlauf auf den gesicherten Vorzustand zurückgesetzt.",
+    "profile.input.transaction.recovery_next": "Prüfe den Profilnamen. Die Umbenennung kann erneut bewusst gestartet werden."
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

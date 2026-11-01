@@ -15,6 +15,8 @@ def favorites_path(root: Path) -> Path:
 
 
 def load_favorites(root: Path) -> dict[str, dict[str, list[str]]]:
+    from app.profile_transaction import ensure_ready
+    ensure_ready(root)
     path = favorites_path(root)
     raw = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"schema": 1, "favorites": {}}
     return validate_favorites(raw)

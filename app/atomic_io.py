@@ -68,6 +68,8 @@ def _write_text(target: Path, content: str, *, encoding: str = "utf-8") -> Path:
 def atomic_write_text(target: Path, content: str, *, encoding: str = "utf-8") -> Path:
     """Misst optional genau einen logischen Schreibversuch, ohne Inhalte abzulegen."""
     from app.performance import observe
+    from app.profile_transaction import check_write
+    check_write(Path(target))
     with observe('file.write', target=target, content=content, encoding=encoding):
         return _write_text(target, content, encoding=encoding)
 

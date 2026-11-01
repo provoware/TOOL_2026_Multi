@@ -80,6 +80,16 @@ def main() -> int:
         tracker = activate(data_root, version)
         dashboard_started = perf_counter()
         logger = EventLogger(data_root, version)
+        from app.profile_transaction import recover_profile_transaction
+        if recover_profile_transaction(data_root):
+            from app.profile_store import input_text
+            logger.record(
+                severity='WARNUNG', area='PROFIL_WIEDERHERSTELLUNG',
+                summary=input_text('transaction.recovered', 'Eine unterbrochene Profilumbenennung wurde zurückgenommen.'),
+                cause=input_text('transaction.recovery_cause', 'Offenes Profiljournal beim Start'),
+                protection=input_text('transaction.recovery_protection', 'Profilbestand, Favoriten und Verlauf auf den gesicherten Vorzustand zurückgesetzt.'),
+                next_step=input_text('transaction.recovery_next', 'Prüfe den Profilnamen. Die Umbenennung kann erneut bewusst gestartet werden.'),
+            )
         dashboard = Dashboard(TextRegistry(ROOT / "texte" / "registry.json"), logger, data_root)
         configure_dashboard_presentation(dashboard)
         install_exception_handler(app, logger, dashboard.refresh, dashboard)

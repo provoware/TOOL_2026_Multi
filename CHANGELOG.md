@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Verknüpfte Profilumbenennung mit Wiederherstellung (01.11.2026; Prüfkandidat)
+
+- Exakte Favoriten-/Verlaufsbezüge nach ausdrücklicher Freigabe und erneuter Vorschau gemeinsam übertragen; Alias-/Zielbezüge weiterhin sperren.
+- Privates Vor-/Nachherjournal, exklusiver Dateilock und Rücknahme bei Schreibfehlern oder Prozessabbruch; gemeinsame Zugriffe bei offener Wiederherstellung sperren.
+- Wiederherstellung unter Einzelinstanzschutz vor dem Dashboardstart; Konflikte ohne Überschreiben fremder Daten ablehnen. Unvollständige Rücknahme ehrlich protokollieren.
+- Zwölf Transaktions- und vier GUI-/Startregressionen einschließlich echter Prozessbeendigung; vorhandene40 Dialogkombinationen um die Freigabe ergänzt.
+
 ## Sichere Umbenennung unverknüpfter Profile (01.11.2026; Prüfkandidat)
 
 - Explizite Vorschau mit Favoriten-/Verlaufsbezügen zum alten und neuen Namen; Umbenennung bei Bezügen oder verändertem Lesestand sperren.

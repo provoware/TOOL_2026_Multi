@@ -25,3 +25,7 @@ release/
 /ChatGPT Image *.png
 /Screenshot*.png
 /Bildschirmfoto*.png
+
+# Private Wiederherstellung einer laufenden Profilumbenennung
+/daten/profile/.profile-rename-journal.json
+/daten/profile/.profile-rename.lock

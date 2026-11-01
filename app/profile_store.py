@@ -125,6 +125,8 @@ def _validate(data: object) -> dict[str, dict[str, list[str]]]:
 
 
 def load_profiles(root: Path) -> dict[str, dict[str, list[str]]]:
+    from app.profile_transaction import ensure_ready
+    ensure_ready(root)
     target = store_path(root)
     if not target.exists():
         return copy.deepcopy(DEFAULT_PROFILES)
