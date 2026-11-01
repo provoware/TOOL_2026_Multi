@@ -1,5 +1,12 @@
 # Änderungsverlauf
 
+## Direkte Dashboard-Profileingabe (01.11.2026; Prüfkandidat)
+
+- In der Vorgaben-Karte zwischen Auswahl und scrollbar erreichbarer Schnelleingabe wechseln; Profil/Kategorie, bewusste Vorschau und atomare Speicherung aus demselben Store.
+- Neue/vorhandene/wiederholte Werte anzeigen, Vorschau bei Änderungen entwerten und einen geänderten Bestand vor dem Schreiben erneut zur bewussten Speicherung vorlegen.
+- Entwürfe beim Zurückgehen und bei Fehlern erhalten, Schließen mit sicherer Entscheidung schützen; Dashboard und sichtbare Profil-/Generatorfenster nach Erfolg aktualisieren.
+- Zwölf GUI-Regressionen und gesonderte offene Formularmatrix; vorhandenen Geometrietest auf gemeinsame Koordinaten umgestellt, Grenzen unverändert. Kein Katalogimport oder Datenmigration.
+
 ## Gemeinsame Profil-Modul-API (01.11.2026; Prüfkandidat)
 
 - Sortierte Profilnamen und rein lesender Profil-/Kategorie-/Unicode-Teiltextzugriff im bestehenden Store ergänzt; unbekannte Ziele und beschädigte Daten werden nicht durch andere Profile ersetzt.

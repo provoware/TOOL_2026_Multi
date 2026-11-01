@@ -6,7 +6,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from pathlib import Path
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QApplication, QFrame, QLabel, QPushButton, QWidget
 from PySide6.QtTest import QTest
 
@@ -458,7 +458,11 @@ class DashboardReferenceGuiTests(unittest.TestCase):
                         *self.dashboard.db_boxes.values(),
                         self.dashboard.github_project_open_button]
             for first, second in zip(controls, controls[1:]):
-                self.assertLess(first.geometry().bottom(), second.geometry().top())
+                # Die Auswahl liegt jetzt in einem eigenen scrollbaren Inhalt;
+                # deshalb Geometrien im gemeinsamen Dashboard-Bezug vergleichen.
+                bottom = first.mapTo(self.dashboard, QPoint(0, first.height() - 1)).y()
+                top = second.mapTo(self.dashboard, QPoint(0, 0)).y()
+                self.assertLess(bottom, top)
             card = controls[0].parentWidget()
             self.assertGreaterEqual(card.height(), card.minimumSizeHint().height())
             planning = next(frame for frame in self.dashboard.findChildren(QFrame)

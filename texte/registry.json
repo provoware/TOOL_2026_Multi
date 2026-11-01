@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.10",
+  "text_version": "0.2.11",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
@@ -319,7 +319,24 @@
     "profile.input.read_profile": "Bitte einen Profilnamen als Text angeben.",
     "profile.input.read_category": "Bitte eine vorhandene Kategorie auswählen.",
     "profile.input.read_query": "Suchtext muss Text ohne Zeilenumbrüche oder Steuerzeichen sein.",
-    "profile.input.read_missing": "Das ausgewählte Profil wurde nicht gefunden."
+    "profile.input.read_missing": "Das ausgewählte Profil wurde nicht gefunden.",
+    "profile.input.quick.back": "Zurück zur Auswahl",
+    "profile.input.quick.category": "Bereich wählen:",
+    "profile.input.quick.values": "Neue Werte, mit Komma getrennt",
+    "profile.input.quick.placeholder": "Zum Beispiel: ruhig, warm …",
+    "profile.input.quick.preview": "Vorschau: neu, vorhanden und wiederholt",
+    "profile.input.quick.check": "Prüfen",
+    "profile.input.quick.save": "Speichern",
+    "profile.input.quick.start": "Eingeben, prüfen und bewusst speichern.",
+    "profile.input.quick.changed": "Vor dem Speichern erneut prüfen.",
+    "profile.input.quick.checked": "Geprüft. Speichern übernimmt die neuen Werte.",
+    "profile.input.quick.new": "Neu",
+    "profile.input.quick.present": "Vorhanden",
+    "profile.input.quick.repeated": "Wiederholt",
+    "profile.input.quick.store_changed": "Bestand geändert. Vorschau erneuert; bitte erneut Speichern wählen.",
+    "profile.input.quick.target": "Profil: {profile}",
+    "profile.input.quick.invalid": "Nicht gespeichert. Eingabe erhalten. Grund: {error}",
+    "profile.input.quick.open": "Werte ergänzen"
   },
   "modules": {
     "quicklinks": "Link-Schnellstarter",

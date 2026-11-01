@@ -11,6 +11,7 @@ from PySide6.QtGui import QCloseEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit,
     QMessageBox, QPushButton, QSizePolicy, QSplitter, QVBoxLayout, QWidget, QMenu, QToolButton,
+    QScrollArea, QStackedWidget, QLayout,
 )
 
 from app.calendar_reminders import CalendarReminderController
@@ -34,6 +35,7 @@ from app.quicklinks_rail import QuicklinksRail
 from app.module_widgets import t as module_text
 from app.event_log import EventLogger
 from app.profile_editor import ProfileEditor
+from app.profile_quick_entry import ProfileQuickEntry, t as quick_text
 from app.genre_random_window import GenreRandomWindow
 from app.github_projects_window import GitHubProjectsWindow
 from app.profile_store import CATEGORIES, profile_names, read_profile
@@ -594,6 +596,12 @@ class Dashboard(QWidget):
         profile_row.addWidget(edit_profiles)
         d.insertLayout(0, profile_row)
 
+        self.db_pages = QStackedWidget()
+        self.db_selection_page = QWidget()
+        selection = QVBoxLayout(self.db_selection_page)
+        selection.setContentsMargins(0, 0, 0, 0)
+        selection.setSpacing(5)
+        selection.setSizeConstraint(QLayout.SetMinimumSize)
         self.db_boxes: dict[str, QComboBox] = {}
         for label in CATEGORIES:
             row = QHBoxLayout()
@@ -604,15 +612,35 @@ class Dashboard(QWidget):
             combo = QComboBox()
             combo.addItem("Bitte auswählen …")
             row.addWidget(combo, 1)
-            d.addLayout(row)
+            selection.addLayout(row)
             self.db_boxes[label] = combo
         project_open = QPushButton("◈  GitHub-Projekte öffnen")
         self.github_project_open_button = project_open
         project_open.setAccessibleName("GitHub-Projekte öffnen")
         project_open.setToolTip("Lokale Übersicht der offenen und fertigen Projekte öffnen")
         project_open.clicked.connect(self.open_github_projects)
-        d.addWidget(project_open)
-        d.addStretch(1)
+        actions = QHBoxLayout()
+        actions.addWidget(project_open)
+        self.db_quick_button = QPushButton(quick_text('open', 'Werte ergänzen'))
+        self.db_quick_button.clicked.connect(self.open_profile_quick_entry)
+        actions.addWidget(self.db_quick_button)
+        actions.addStretch(1)
+        selection.addLayout(actions)
+        selection.addStretch(1)
+        self.db_selection_scroll = QScrollArea()
+        self.db_selection_scroll.setWidgetResizable(True)
+        self.db_selection_scroll.setWidget(self.db_selection_page)
+        self.db_pages.addWidget(self.db_selection_scroll)
+        self.profile_quick_entry = ProfileQuickEntry(self.project_root)
+        self.db_quick_scroll = QScrollArea()
+        self.db_quick_scroll.setWidgetResizable(True)
+        self.db_quick_scroll.setWidget(self.profile_quick_entry)
+        self.db_pages.addWidget(self.db_quick_scroll)
+        self.profile_quick_entry.back_requested.connect(self.close_profile_quick_entry)
+        self.profile_quick_entry.editing_requested.connect(self.open_profile_quick_entry)
+        self.profile_quick_entry.reveal_requested.connect(self._reveal_profile_control)
+        self.profile_quick_entry.saved.connect(self._profile_values_added)
+        d.addWidget(self.db_pages, 1)
         grid.addWidget(db, 0, 2)
 
         functions, f = self._card("▣  Funktionen · In Planung")
@@ -926,6 +954,7 @@ class Dashboard(QWidget):
 
     def _load_profile_values(self, *_args: object) -> None:
         profile = self.db_profile_combo.currentText()
+        self.profile_quick_entry.set_profile(profile)
         if not profile:
             return
         try:
@@ -941,6 +970,27 @@ class Dashboard(QWidget):
             combo.addItems(data.get(category, []))
             if selected and selected != "Bitte auswählen …" and combo.findText(selected) >= 0:
                 combo.setCurrentText(selected)
+
+    def open_profile_quick_entry(self) -> None:
+        self.profile_quick_entry.set_profile(self.db_profile_combo.currentText())
+        self.db_pages.setCurrentWidget(self.db_quick_scroll)
+        self.profile_quick_entry.value_entry.setFocus()
+
+    def close_profile_quick_entry(self) -> None:
+        self.db_pages.setCurrentWidget(self.db_selection_scroll)
+        self.db_quick_button.setFocus()
+
+    def _reveal_profile_control(self, control) -> None:
+        self.profile_quick_entry.layout().activate()
+        self.db_quick_scroll.verticalScrollBar().setValue(control.y())
+
+    def _profile_values_added(self, profile, category, added) -> None:
+        self.refresh_db_profiles()
+        if added and self.db_profile_combo.currentText() == profile:
+            self.db_boxes[category].setCurrentText(added[-1])
+        for window in (self._profile_editor, self._genre_random_window):
+            if window is not None and window.isVisible():
+                window.refresh()
 
     def open_profile_editor(self, initial_category: str | None = None) -> None:
         def prepare_visible(window: ProfileEditor) -> None:
@@ -1127,7 +1177,8 @@ class Dashboard(QWidget):
                     self._account_window, self._quicklinks_window, self._wiki_window,
                     self._module_controls_window, self._blueprint_window,
                     self._development_pool_window, self._audio_window,
-                    self._pictures_window, self._slideshow_window) if window is not None)
+                    self._pictures_window, self._slideshow_window,
+                    getattr(self, 'profile_quick_entry', None)) if window is not None)
 
     def open_todo(self) -> None:
         self._todo_window = _open_managed_window(
