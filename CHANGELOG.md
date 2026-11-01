@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+<!-- PV_UX26_NAV_SCROLL_20261101 -->
+## Navigation bei kleinen Fensterhöhen scrollbar (01.11.2026; Prüfzweig, noch keine Freigabe)
+
+- Screenshot-Befund #161: Menüeinträge am unteren Rand waren nicht zuverlässig zugänglich, weil die Navigation keinen vertikal scrollenden Inhaltsbereich hatte.
+- Gezielter PySide6-Patch: Menükopf bleibt fest; vorhandene Einträge einschließlich erweiterter Planungsgruppen liegen in einer `QScrollArea`; beim Einklappen verschwindet die Liste vollständig.
+- Bestehende Aktionsverknüpfungen, zentraler Profilbestand und Navigationsbreiten bleiben unverändert. Keine Datenmigration.
+- **Prüfstatus:** Automatisierter GUI-Rückfalltest im Prüfzweig ergänzt; PR-CI und main-CI vor einem Haken in TODO abwarten. Die allgemeine Dashboard-Neugestaltung bleibt als Folgeauftrag in #161.
+
+
 ## Issue #126 – Dashboard-Karten im bestehenden Raster verstellen (31.10.2026; Prüfkandidat)
 
 - Statt der fehlerhaften verschachtelten QSplitter aus PR #124 bleiben die vier Karten im nativen Qt-Raster. Zwei senkrechte und ein waagerechter Griff verändern die Spalten-/Zeilenanteile per Maus oder Pfeiltasten.
