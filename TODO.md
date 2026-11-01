@@ -5,7 +5,7 @@
 
 **Quelle und Akzeptanz:** [Issue #161](https://github.com/provoware/TOOL_2026_Multi/issues/161) · [ausführlicher ausführbarer Auftrag](docs/PROVOWARE_UI_AUFTRAG_2026_11_01.md). **Noch nicht abgenommen:** Ein Entwicklungszweig und vorbereitete Tests zählen nicht als erfolgreiche Integration.
 
-- [ ] 2026-11-01 | P0 Navigation PV-UX26-01 | Untere Links vollständig scrollbar machen, festen Kopf erhalten | prüfen: Regression in tests/test_navigation_scroll_gui.py, alle Zoom- und Kompaktzustände, PR- und main-CI | fertig wenn: kein Menüpunkt bei kleiner Fensterhöhe abgeschnitten und Test auf freigegebenem main erfolgreich.
+- [x] 2026-11-01 | P0 Navigation PV-UX26-01 | Untere Links vollständig scrollbar machen, festen Kopf erhalten | prüfen: Regression in tests/test_navigation_scroll_gui.py, alle Zoom- und Kompaktzustände, PR- und main-CI | fertig wenn: kein Menüpunkt bei kleiner Fensterhöhe abgeschnitten und Test auf freigegebenem main erfolgreich.
 - [ ] 2026-11-01 | P1 Kacheln PV-UX26-02 | Hohe sieben Kacheln kompakter und dynamisch umbrechend auslegen | prüfen: Textbreite und Klickflächen bei 100–200 % | fertig wenn: alle Einstiege ohne Überlagerung erreichbar.
 - [ ] 2026-11-01 | P1 Kopf/Notiz PV-UX26-03 | Projektnotiz aus eigener Hauptzeile in gegliederten Header verlegen | prüfen: sichere Speicherung, lange Notiz, 200 %, Navigation per Tab | fertig wenn: Notizen ohne Datenverlust und übergroße Mindestbreite bearbeitbar.
 - [ ] 2026-11-01 | P1 Bereichsgrößen PV-UX26-04 | Horizontale und vertikale Griffe, Reset und dynamische Mindestgrößen ergänzen | prüfen: 800×600, 1366×768, 1600×900, Tastatur und Zoom | fertig wenn: alle Pflichtfunktionen erreichbar bleiben.
@@ -18,6 +18,8 @@
 - [ ] 2026-11-01 | P1 Ereignisse PV-UX26-11 | Mindestens fünf letzte Ereignisse mit Uhrzeit und Schweregrad anzeigen | prüfen: nur bestehendes EventLogger-API, Datenschutz, leere und sehr lange Meldungen | fertig wenn: letzte fünf Einträge ohne Abdeckung lesbar.
 - [ ] 2026-11-01 | P2 Katalog PV-UX26-12 | Breite fachlich geprüfte Profilstruktur und Ziel 100 eindeutige Werte je Kategorie/Profil | prüfen: Quellen, Taxonomie, Duplikate, Import-Freigabe, atomare Sicherung | fertig wenn: Zielzahl mit echten geprüften Begriffen erfüllt, andernfalls belegter Fehlbestand.
 - [ ] 2026-11-01 | P1 Gesamtqualität PV-UX26-13 | Messbare UI-/Daten-/Recovery-/CI-Nachweise für jede Teilfreigabe sammeln | prüfen: aktueller SHA, PR und main getrennt, CI, Changelog/Manifest | fertig wenn: keine offenen Sicherheits- oder Bedientests vor Freigabe.
+
+**Nachweise 01.11.2026:** PV-UX26-01 via PR #162 auf main `4748363403bbc4f459fb3eca74dc82abbc9e42d1`; PR-CI #41305351643 und separate main-CI #41305861757 erfolgreich, vier neue GUI-Tests; die praktische Kubuntu-Endabnahme bleibt später. PV-UX26-06: Eingabefeldrand-Kontrastkorrektur als eigener Prüfzweig vorbereitet, noch **nicht** als Gesamt-Theme-Überarbeitung erledigt; übrige Farbzustände und Themes folgen.
 
 **Abhängigkeit:** vorhandene PV-UI-01/02, übriger Modulplan und Freeze unverändert gültig; Aufgaben werden pro Iteration priorisiert, nicht in einem unprüfbaren Gesamtpatch zusammengeführt.
 

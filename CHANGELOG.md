@@ -1,5 +1,14 @@
 # Änderungsverlauf
 
+<!-- PV_UX26_INPUT_CONTRAST_20261101 -->
+## Eingabefelder in drei Themes klarer begrenzen (01.11.2026; Prüfzweig)
+
+- Reproduzierbarer Farb-Befund: Eingabefeldrand gegen Eingabehintergrund Amber 2,86:1, Türkis 2,22:1, Lila 2,39:1.
+- Farbwerte gezielt auf Amber `#7291A7`, Türkis `#6FA5AB` und Lila `#AA89BA` erhöht. Erwartete Kontrastverhältnisse mindestens 3,42:1, 3,52:1 und 3,60:1.
+- Neue automatische Prüfung kontrolliert alle Farbthemes auf Eingaberand-Kontrast, Platzhalter-/Textlesbarkeit und die zentrale Styleverwendung.
+- Keine Änderungen an Profilen, Daten, Farben der Nutzereingabe, Fensterlogik oder Bedienfunktionen; **vollständiger Theme-Umbau bleibt eine offene gesonderte Aufgabe PV-UX26-06**.
+- Erste Dashboard-Navigationskorrektur PR #162 wurde nach grüner PR-Prüfung integriert; eigenständiger main-Prüflauf #41305861757 ist ebenfalls erfolgreich.
+
 <!-- PV_UX26_NAV_SCROLL_20261101 -->
 ## Navigation bei kleinen Fensterhöhen scrollbar (01.11.2026; Prüfzweig, noch keine Freigabe)
 

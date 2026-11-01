@@ -22,7 +22,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFD66B", "red": "#FF7180", "red_soft": "#35171E",
         "blocked": "#93A8BA", "border": "#52718C", "border_soft": "#38546B",
         "hover": "#19354B", "active_nav": "#18344A", "header_section": "#173149",
-        "inverse_text": "#07111A", "input_bg": "#263C50", "input_border": "#66839A", "placeholder": "#C7D4DF",
+        "inverse_text": "#07111A", "input_bg": "#263C50", "input_border": "#7291A7", "placeholder": "#C7D4DF",
     },
     "Türkis": {
         "background": "#051419", "surface": "#0A2026", "surface_alt": "#103038",
@@ -32,7 +32,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFE06A", "red": "#FF7A8A", "red_soft": "#3A1B22",
         "blocked": "#9BC2C7", "border": "#3F7C86", "border_soft": "#2F5E66",
         "hover": "#143B43", "active_nav": "#143A42", "header_section": "#153D45",
-        "inverse_text": "#041012", "input_bg": "#244A50", "input_border": "#4E8188", "placeholder": "#C8E5E8",
+        "inverse_text": "#041012", "input_bg": "#244A50", "input_border": "#6FA5AB", "placeholder": "#C8E5E8",
     },
     "Lila": {
         "background": "#120B1B", "surface": "#1B1028", "surface_alt": "#2B1840",
@@ -42,7 +42,7 @@ THEMES: dict[str, dict[str, str]] = {
         "yellow": "#FFD86A", "red": "#FF7C92", "red_soft": "#431C2B",
         "blocked": "#C0A6D0", "border": "#80609B", "border_soft": "#5B4070",
         "hover": "#3B2251", "active_nav": "#38204D", "header_section": "#3D2353",
-        "inverse_text": "#13081A", "input_bg": "#4A3558", "input_border": "#8A6A9F", "placeholder": "#E0D2E8",
+        "inverse_text": "#13081A", "input_bg": "#4A3558", "input_border": "#AA89BA", "placeholder": "#E0D2E8",
     },
     "Kontrast": {
         "background": "#000000", "surface": "#0A0A0A", "surface_alt": "#161616",
