@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import copy
+import csv
+import unicodedata
 import json
 from pathlib import Path
+from functools import lru_cache
 
 from app.atomic_io import atomic_write_json
+from app.texts import TextRegistry
 
 CATEGORIES = ("Genres", "Stimmungen", "Stil", "Stimme", "Besonderheiten")
 
@@ -62,6 +66,29 @@ def _normalize_value(value: str) -> str:
     return cleaned
 
 
+@lru_cache(maxsize=1)
+def _input_registry() -> TextRegistry:
+    return TextRegistry(Path(__file__).resolve().parent.parent / "texte/registry.json")
+
+
+def input_text(key: str, fallback: str) -> str:
+    return _input_registry().get("profile.input." + key, fallback)
+
+
+def comparison_key(value: str) -> str:
+    """Vergleicht kanonisch gleiche Texte, ohne gespeicherte Werte umzuschreiben."""
+    return unicodedata.normalize("NFC", _normalize_value(value).casefold())
+
+
+def normalize_new_value(value: str) -> str:
+    """Nur neue Eingaben normalisieren; Altbestände bleiben im Ladeweg unverändert."""
+    if not isinstance(value, str):
+        raise ValueError(input_text('value_type', "Wert muss Text sein."))
+    if any((ord(char) < 32 and char != "\t") or ord(char) == 127 for char in value):
+        raise ValueError(input_text('controls', "Wert enthält unzulässige Steuerzeichen oder Zeilenumbrüche."))
+    return unicodedata.normalize("NFC", _normalize_value(value))
+
+
 def _validate(data: object) -> dict[str, dict[str, list[str]]]:
     if not isinstance(data, dict):
         raise ValueError("Profildatei muss ein JSON-Objekt enthalten.")
@@ -111,9 +138,9 @@ def save_profiles(root: Path, profiles: dict[str, dict[str, list[str]]]) -> Path
 
 
 def add_profile(root: Path, name: str) -> str:
-    clean_name = _clean_profile_name(name)
+    clean_name = unicodedata.normalize("NFC", _clean_profile_name(name))
     profiles = load_profiles(root)
-    if any(existing.casefold() == clean_name.casefold() for existing in profiles):
+    if any(comparison_key(existing) == comparison_key(clean_name) for existing in profiles):
         raise ValueError("Dieses Profil gibt es bereits.")
     profiles[clean_name] = {category: [] for category in CATEGORIES}
     save_profiles(root, profiles)
@@ -123,11 +150,11 @@ def add_profile(root: Path, name: str) -> str:
 def add_value(root: Path, profile: str, category: str, value: str) -> str:
     if category not in CATEGORIES:
         raise ValueError("Unbekannte Kategorie.")
-    clean_value = _normalize_value(value)
+    clean_value = normalize_new_value(value)
     profiles = load_profiles(root)
     if profile not in profiles:
         raise ValueError("Profil wurde nicht gefunden.")
-    if any(existing.casefold() == clean_value.casefold() for existing in profiles[profile][category]):
+    if any(comparison_key(existing) == comparison_key(clean_value) for existing in profiles[profile][category]):
         raise ValueError("Dieser Wert ist bereits vorhanden.")
     profiles[profile][category].append(clean_value)
     save_profiles(root, profiles)
@@ -136,13 +163,22 @@ def add_value(root: Path, profile: str, category: str, value: str) -> str:
 
 def split_input_values(value: str) -> list[str]:
     """Zerlegt eine Komma-Eingabe in bereinigte, innerhalb der Eingabe eindeutige Werte."""
+    if not isinstance(value, str):
+        raise ValueError(input_text('list_type', "Bitte eine Textliste eingeben."))
+    # Zeilenwechsel nicht als zusätzliche CSV-Zeilen oder unsichtbare Werte annehmen.
+    if any((ord(char) < 32 and char != "\t") or ord(char) == 127 for char in value):
+        raise ValueError(input_text('one_line', "Bitte alle Werte in einer Zeile ohne Steuerzeichen eingeben."))
+    try:
+        fields = next(csv.reader([value.strip()], skipinitialspace=True, strict=True), [])
+    except csv.Error as error:
+        raise ValueError(input_text('quotes', "Anführungszeichen sind unvollständig oder falsch gesetzt.")) from error
     result: list[str] = []
     seen: set[str] = set()
-    for raw in str(value).split(","):
+    for raw in fields:
         if not raw.strip():
             continue
-        cleaned = _normalize_value(raw)
-        key = cleaned.casefold()
+        cleaned = normalize_new_value(raw)
+        key = comparison_key(cleaned)
         if key in seen:
             continue
         seen.add(key)
@@ -160,10 +196,10 @@ def add_values(root: Path, profile: str, category: str, value_text: str) -> list
     profiles = load_profiles(root)
     if profile not in profiles:
         raise ValueError("Profil wurde nicht gefunden.")
-    existing = {value.casefold() for value in profiles[profile][category]}
+    existing = {comparison_key(value) for value in profiles[profile][category]}
     added: list[str] = []
     for candidate in candidates:
-        key = candidate.casefold()
+        key = comparison_key(candidate)
         if key in existing:
             continue
         profiles[profile][category].append(candidate)
@@ -187,3 +223,29 @@ def remove_value(root: Path, profile: str, category: str, value: str) -> None:
             save_profiles(root, profiles)
             return
     raise ValueError("Wert wurde nicht gefunden.")
+
+
+def validate_profile_import(data: object) -> dict[str, dict[str, list[str]]]:
+    """Neue Importdaten prüfen; kanonische Mehrdeutigkeiten nie still zusammenführen."""
+    validated = _validate(data)
+    # Der Alt-Ladevalidator bereinigt Leerraum. Neue Rohwerte vorher prüfen,
+    # damit er verbotene Zeilenumbrüche nicht vor der Importprüfung entfernt.
+    for record in data.values():
+        for category in CATEGORIES:
+            for value in record.get(category, []):
+                normalize_new_value(value)
+    result: dict[str, dict[str, list[str]]] = {}
+    names: set[str] = set()
+    for name, record in validated.items():
+        name = unicodedata.normalize("NFC", name)
+        key = comparison_key(name)
+        if key in names:
+            raise ValueError(input_text('import_profiles', "Import enthält gleichwertige Unicode-Profilnamen."))
+        names.add(key)
+        result[name] = {}
+        for category, values in record.items():
+            normalized = [normalize_new_value(value) for value in values]
+            if len({comparison_key(value) for value in normalized}) != len(normalized):
+                raise ValueError(input_text('import_values', "Import enthält gleichwertige Unicode-Werte in einer Kategorie."))
+            result[name][category] = normalized
+    return result

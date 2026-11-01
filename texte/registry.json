@@ -1,12 +1,21 @@
 {
   "schema_version": 1,
-  "text_version": "0.2.7",
+  "text_version": "0.2.8",
   "language": "de-DE",
   "rules": {
     "source": "Zentrale sichtbare Texte sollen schrittweise hier oder in aufgeteilten Registrierungsdateien verwaltet werden.",
     "fallback": "Wenn ein Schlüssel fehlt, sicherer deutscher Standardtext statt leerer Oberfläche."
   },
   "texts": {
+    "profile.input.value_type": "Wert muss Text sein.",
+    "profile.input.controls": "Wert enthält unzulässige Steuerzeichen oder Zeilenumbrüche.",
+    "profile.input.list_type": "Bitte eine Textliste eingeben.",
+    "profile.input.one_line": "Bitte alle Werte in einer Zeile ohne Steuerzeichen eingeben.",
+    "profile.input.quotes": "Anführungszeichen sind unvollständig oder falsch gesetzt.",
+    "profile.input.import_profiles": "Import enthält gleichwertige Unicode-Profilnamen.",
+    "profile.input.import_values": "Import enthält gleichwertige Unicode-Werte in einer Kategorie.",
+    "profile.input.import_target": "Zielbestand enthält gleichwertige Unicode-Profilnamen; Import abgebrochen.",
+    "profile.input.help": "Mit Komma trennen. Ein Begriff mit Komma steht in doppelten Anführungszeichen: \"warm, dunkel\", ruhig. Ein Anführungszeichen darin verdoppeln. Gleichwertige Umlaute und Groß-/Kleinschreibung erzeugen keine neuen Dubletten.",
     "app.name": "TOOL_2026_Multi",
     "status.ready": "Bereit",
     "status.working": "Vorgang läuft …",

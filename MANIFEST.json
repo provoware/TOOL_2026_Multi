@@ -1887,6 +1887,21 @@
       "path": "docs/PROFIL_BESTAND_2026_11_01.json",
       "release": false,
       "purpose": "Belegter Profil-/Datenbank-Bestandsabgleich ohne Nutzerdaten"
+    },
+    {
+      "path": "docs/PROFIL_EINGABEREGELN.md",
+      "release": false,
+      "purpose": "Technischer Eingabevertrag und Schutz alter Profilbestände"
+    },
+    {
+      "path": "tests/test_profile_input_rules.py",
+      "release": false,
+      "purpose": "Regressionen für Unicode, Zitate, atomare Eingaben und Import"
+    },
+    {
+      "path": "tests/test_profile_input_rules_gui.py",
+      "release": false,
+      "purpose": "Editoraktionen mit Zitat-/Unicode-Eingaben und Fehlererhaltung"
     }
   ],
   "creative_modules": {

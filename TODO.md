@@ -989,6 +989,17 @@ Lokaler gezielter Abschluss PV-UX-04: 57 Tests erfolgreich (echte Dialogaktionen
 - [x] README-Widersprüche zu Dateisuche, Genre-Zufall und Reihenfolge der Kubuntu-Endabnahme bereinigen; bestehende 9 Dokumentationsprüfungen erfolgreich.
 - [x] Paket A für UI-05/UI-13: 27/27 IDs gegen Source, 51 Tests und isolierte Proben abgleichen; [Befundmatrix](docs/PROFIL_BESTANDSABGLEICH_2026_11_01.md). Keine 27 pauschalen Funktionsfreigaben. Übriger Paket-A-Umfang bleibt offen.
 - [ ] P1: Paket B mit fachlicher Profil-/Kategoriestruktur und Unicode-/Eindeutigkeitsvertrag bearbeiten, bevor Katalog oder Parser verändert werden; REQUIRES Bestandsmatrix, BLOCKS belastbare Standardinhalte.
-- [ ] Eigenen main-Lauf zur gebündelten Dokumentationsnachpflege kontrollieren; kein neuer Draft erforderlich.
+- [x] Main-Lauf #41310717203 zu `12a3ad8` erfolgreich: 403 Logiktests (2 übersprungen), 220 GUI-Tests, 60 UI-Fälle/180 Fenster ohne Fehler/Warnungen, Wayland, Restore und ZIP. Kein neuer Draft.
 
 Nutzerentscheidung: zusammengehörige Änderungen bündeln und nach bestandenen Gates möglichst sauber in main übernehmen; keine PRs oder Entwürfe auf Vorrat. Reale Kubuntu-Endabnahme und Veröffentlichung bleiben zurückgestellt.
+
+
+## Profilwerte: Unicode und zitierte Kommas · 01.11.2026
+
+Frozen Scope: bestätigte Parser-/Vergleichsfehler UI-05.08–05.11, bestehende Import-/Umbenennungswege und Benutzerhilfe; keine Katalogerweiterung oder Datenmigration. Ausgangs-main `12a3ad80bd096723573287b15c32b8bc2bed5ccc`, PR-/Draft-Bestand 0/0. [Eingabevertrag und Recovery](docs/PROFIL_EINGABEREGELN.md).
+
+- [x] Technischen Vertrag für bestehende vier Profile/fünf Kategorien, Unicode, Eindeutigkeit und Zitate festlegen. Präzisiert die Parser-Voraussetzung; fachliche Recherche/Erweiterung von Paket B weiterhin offen.
+- [x] UI-05.08: Zitierte Kommas und verdoppelte Anführungszeichen implementiert und lokal geprüft; fehlerhafte Listen ändern keine Bestandsdatei.
+- [x] UI-05.09–05.11 im technischen Eingabeumfang: neue Werte NFC-normalisiert vergleichen, Casefold und Profil-/Kategoriegrenzen erhalten; Altbestände nicht automatisch migriert. 77 gezielte Prüfungen mit isolierten Regressionen und echten Editoraktionen lokal erfolgreich. Kein pauschaler Abschluss semantischer Dubletten oder Katalogimporte.
+- [ ] Vollständige GitHub-Prüfung des endgültigen Kandidaten und eigener main-Lauf vor technischem Integrationsabschluss nachweisen. Nur ein kurzlebiger Prüf-PR, kein Draft-Vorrat; danach wieder 0 offene PRs.
+- [ ] Weiterhin offen: Fachrecherche/Taxonomie aus Paket B; Vorschau und getrennte Speicherzahlen UI-05.12, direkte Dashboard-Eingabe und belegter Standardkatalog. REQUIRES fachliche Definitionen vor neuen Kataloginhalten.

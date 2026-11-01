@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QMessageBox, QPushButton, QVBoxLayout, QWidget,
 )
 
-from app.profile_store import CATEGORIES, add_profile, add_values, load_profiles, remove_value
+from app.profile_store import CATEGORIES, add_profile, add_values, input_text, load_profiles, remove_value
 from app.ui_standards import apply_global_style
 
 
@@ -78,7 +78,7 @@ class ProfileEditor(QDialog):
         value_row = QHBoxLayout()
         self.value_entry = QLineEdit()
         self.value_entry.setPlaceholderText("Einen oder mehrere Werte eingeben · mit Komma trennen …")
-        self.value_entry.setToolTip("Beispiel: düster, treibend, melodisch. Jeder Begriff wird einzeln gespeichert.")
+        self.value_entry.setToolTip(input_text("help", "Mit Komma trennen; Begriffe mit Komma in doppelte Anführungszeichen setzen."))
         self.value_entry.returnPressed.connect(self.create_value)
         value_row.addWidget(self.value_entry, 1)
         add_button = QPushButton("Wert hinzufügen")

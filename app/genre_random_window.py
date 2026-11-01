@@ -18,7 +18,7 @@ from app.genre_random import (
 from app.genre_favorites import (
     favorite_values, set_favorite, monthly_report_text, export_monthly_report,
 )
-from app.profile_store import CATEGORIES, add_profile, add_values, load_profiles, remove_value
+from app.profile_store import CATEGORIES, add_profile, add_values, input_text, load_profiles, remove_value
 from app.ui_standards import SPACING, apply_global_style
 
 
@@ -83,6 +83,7 @@ class GenreRandomWindow(QWidget):
         self.value_entry = QLineEdit()
         self.value_entry.setPlaceholderText("z. B. Hard Techno, Acid Techno, Schranz")
         self.value_entry.setAccessibleName("Einen oder mehrere kommagetrennte Archivbegriffe eingeben")
+        self.value_entry.setToolTip(input_text("help", "Mit Komma trennen; Begriffe mit Komma in doppelte Anführungszeichen setzen."))
         self.value_entry.returnPressed.connect(self.add_entries)
         input_row.addWidget(self.value_entry, 1)
         self._button(input_row, "Hinzufügen", self.add_entries)
