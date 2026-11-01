@@ -161,6 +161,33 @@ def add_value(root: Path, profile: str, category: str, value: str) -> str:
     return clean_value
 
 
+def _csv_boundary_spaces(value: str) -> str:
+    """Leerraum nach einem Schlusszitat erlauben, Inhalt und Escape-Zitate erhalten."""
+    output: list[str] = []
+    quoted, field_start, closed = False, True, False
+    index = 0
+    while index < len(value):
+        char = value[index]
+        if quoted and char == '"':
+            if value[index:index + 2] == '""':
+                output.append('""')
+                index += 2
+                continue
+            quoted, closed = False, True
+        elif not quoted:
+            if closed and char == " ":
+                index += 1
+                continue
+            if char == ",":
+                field_start, closed = True, False
+            elif field_start and char != " ":
+                quoted = char == '"'
+                field_start = False
+        output.append(char)
+        index += 1
+    return "".join(output)
+
+
 def split_input_values(value: str) -> list[str]:
     """Zerlegt eine Komma-Eingabe in bereinigte, innerhalb der Eingabe eindeutige Werte."""
     if not isinstance(value, str):
@@ -169,7 +196,7 @@ def split_input_values(value: str) -> list[str]:
     if any((ord(char) < 32 and char != "\t") or ord(char) == 127 for char in value):
         raise ValueError(input_text('one_line', "Bitte alle Werte in einer Zeile ohne Steuerzeichen eingeben."))
     try:
-        fields = next(csv.reader([value.replace("\t", " ").strip()],
+        fields = next(csv.reader([_csv_boundary_spaces(value.replace("\t", " ").strip())],
                                  skipinitialspace=True, strict=True), [])
     except csv.Error as error:
         raise ValueError(input_text('quotes', "Anführungszeichen sind unvollständig oder falsch gesetzt.")) from error
