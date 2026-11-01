@@ -1,5 +1,45 @@
 # Provoware-Datenbank-Dashboard 2026
 
+<!-- PROVOWARE_3_STUFEN_EINSTIEG_20261101 -->
+## 🚀 Start in drei Schritten
+
+> [!IMPORTANT]
+> **Linux/Kubuntu:** Im gewünschten Arbeitsordner ein Terminal öffnen und **jeden Befehl einzeln** ausführen. Das Programm ist noch in Entwicklung.
+
+1. **Projekt holen**
+   ```bash
+   git clone https://github.com/provoware/TOOL_2026_Multi.git
+   ```
+2. **Ordner öffnen**
+   ```bash
+   cd TOOL_2026_Multi
+   ```
+3. **Programm starten**
+   ```bash
+   bash ./schnellstart.sh
+   ```
+
+## 🧭 Drei Anleitungsstufen
+
+| Stufe | Inhalt | Einstieg |
+|---|---|---|
+| 🟢 **1 · Direkt** | Die drei Befehle kopieren und starten | [Schnellstart](#-start-in-drei-schritten) |
+| 🔵 **2 · Ausführlich** | System, Funktionen, Datenschutz und Datenordner | [Startdetails](#zielsystem-und-schnellstart) · [Datensicherung](docs/DATENSICHERUNG.md) |
+| 🟠 **3 · Für Einsteiger** | Alles ohne Fachwissen, mit Fehlerhilfe | [Ausführliche Einsteigeranleitung](ANLEITUNG_LAIEN.md) |
+
+### 🧩 Falls etwas nicht klappt
+
+- **„git“ fehlt:** Git über die Paketverwaltung installieren oder das ZIP auf GitHub herunterladen und vollständig entpacken. Im ZIP-Ordner nur Schritt 3 verwenden.
+- **„schnellstart.sh“ nicht gefunden:** Das Terminal zeigt auf den falschen Ordner. Schritt 2 wiederholen oder im Dateimanager den entpackten Projektordner öffnen und dort ein Terminal starten.
+- **Startfehler:** Fehlermeldung lesen und das [Hilfezentrum](ANLEITUNG_LAIEN.md) verwenden. Keine persönlichen Projektordner zum Test löschen.
+- **Eigene Daten:** Vor größeren Änderungen eine Sicherung durchführen. Die endgültige praktische Kubuntu-Gesamtabnahme steht noch aus.
+
+> [!TIP]
+> 🟢 = bereits geprüfte Funktionen · 🟠 = Entwicklung oder Nachprüfung · 🔴 = gesperrt. Farbsignale sind zusätzlich ausgeschrieben.
+
+---
+
+
 > **Version:** 0.18.5 (Entwicklungskandidat) · **Dokumentationsstand:** 31.10.2026 · **Status:** nutzbarer Desktop-Kern; kein fertiges Release. Abschließende Kubuntu-Abnahme erst nach Fertigstellung aller Module.
 
 Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorgaben, Aufgaben, Kalender und sichere Projektverwaltung. Die Oberfläche ist auf **einfache Bedienung ohne technisches Vorwissen**, dynamische Größenanpassung und barrierearme Tastatur-/Screenreader-Nutzung ausgelegt.
