@@ -34,3 +34,5 @@ Sicherung vor Änderung: `/workspace/work/profile-rename-before.tar`, SHA-256 `3
 Neun neue Logiktests und acht GUI-Tests prüfen Rohdatenerhalt, Bezüge, Unicode, veraltete/gefälschte Pläne, unsichere/beschädigte Dateien, atomaren Fehlerfall, Enter/Abbrechen, echte Ereignisprotokolle und Modul-Auswahlen. Der neue Dialog wird zusätzlich innerhalb eines Tests in 40 Größen-/Zoom-/Theme-Kombinationen geprüft. Die allgemeine Dashboard-Matrix und vollständige PR-/main-CI bleiben eigenständige Gates.
 
 Offen (REQUIRES diesen Teilumfang): sichere Mehrdateienübertragung verknüpfter Profilnamen und Abhängigkeitsvorschau vor Löschen. UI-05.03 ist damit ausdrücklich nicht insgesamt abgeschlossen. Öffentliche Veröffentlichung, abschließende Kubuntu-Gesamtabnahme und allgemeine 800×600-Dashboard-Freigabe bleiben unverändert offen.
+
+Review-Rückfall: Beim Neuaufbau der Dashboard-Profilliste muss das umbenannte Ziel vor dem ersten Laden der Kategorienwerte ausgewählt sein. Sonst könnte ein Ausweichprofil exklusive aktuelle Werte verwerfen. Der bestehende Modul-/Entwurfstest prüft diesen zunächst reproduzierten Fehlerweg mit.

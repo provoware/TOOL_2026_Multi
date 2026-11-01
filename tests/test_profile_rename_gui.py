@@ -153,6 +153,7 @@ class ProfileRenameGuiTests(unittest.TestCase):
         try:
             dash.show()
             dash.db_profile_combo.setCurrentText('Test')
+            dash.db_boxes['Genres'].setCurrentText('Wert')
             dash.open_genre_random()
             generator = dash._genre_random_window
             generator.profile_combo.setCurrentText('Test')
@@ -176,6 +177,7 @@ class ProfileRenameGuiTests(unittest.TestCase):
             self.events()
             self.assertEqual(editor.profile_combo.currentText(), 'Neu')
             self.assertEqual(dash.db_profile_combo.currentText(), 'Neu')
+            self.assertEqual(dash.db_boxes['Genres'].currentText(), 'Wert')
             self.assertEqual(generator.profile_combo.currentText(), 'Neu')
             self.assertEqual(generator.filter_entry.text(), 'Wert')
             self.assertEqual(quick.value_entry.text(), 'Entwurf')

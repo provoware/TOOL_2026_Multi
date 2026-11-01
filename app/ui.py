@@ -935,8 +935,8 @@ class Dashboard(QWidget):
         if selected:
             self.open_song_path(Path(str(selected)))
 
-    def refresh_db_profiles(self) -> None:
-        current = self.db_profile_combo.currentText()
+    def refresh_db_profiles(self, preferred_profile: str | None = None) -> None:
+        current = preferred_profile if preferred_profile is not None else self.db_profile_combo.currentText()
         try:
             profiles = profile_names(self.project_root)
         except Exception:
@@ -1016,9 +1016,7 @@ class Dashboard(QWidget):
 
     def _profile_renamed(self, old_name, new_name) -> None:
         selected = self.db_profile_combo.currentText()
-        self.refresh_db_profiles()
-        if selected == old_name:
-            self.db_profile_combo.setCurrentText(new_name)
+        self.refresh_db_profiles(new_name if selected == old_name else None)
         window = self._genre_random_window
         if window is not None and window.isVisible():
             selected = window.profile_combo.currentText()
