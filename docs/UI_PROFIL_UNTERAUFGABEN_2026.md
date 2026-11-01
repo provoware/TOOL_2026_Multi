@@ -252,3 +252,7 @@ Unverknüpfte Umbenennung mit Bezugsvorschau und erneutem Lesestandvergleich als
 ### Bezugserweiterung UI-05.03 · 01.11.2026
 
 Exakte alte Favoriten-/Verlaufsbezüge mit ausdrücklicher Freigabe und Wiederherstellungsjournal als Prüfkandidat umgesetzt; Ziel-/Aliasbezüge bleiben gesperrt. [Aktueller Vertrag](PROFIL_UMBENENNEN.md). SUPERSEDES die fehlende verknüpfte Umbenennung nach vollständiger aktueller PR-/main-CI. Geschütztes Löschen weiterhin offen; UI-05.03 insgesamt nicht abgeschlossen.
+
+### Löschabschluss UI-05.03 · 01.11.2026
+
+Vorschau, Bezug-/Lastprofilschutz, explizite Bestätigung und vorhandene Profiltransaktion als Prüfkandidat ergänzt; [Vertrag](PROFIL_LOESCHEN.md). SUPERSEDES die noch fehlende Löschfunktion nach erfolgreicher aktueller PR-/main-CI. Dann UI-05.03 technisch erfüllt (Anlegen/Auswählen/Umbenennen/Löschschutz); weitere Kategorie-, Such-, Katalog- und Layoutaufgaben bleiben unabhängig offen.

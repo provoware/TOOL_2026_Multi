@@ -1992,6 +1992,31 @@
       "path": "tests/test_profile_linked_gui.py",
       "release": false,
       "purpose": "Bewusste Bezugübertragung, ehrliche Fehler und Wiederherstellung vor Dashboardstart"
+    },
+    {
+      "path": "app/profile_deletion.py",
+      "release": true,
+      "purpose": "Schreibfreie Löschvorschau mit Bezug-/Lastprofil-/Lesestandschutz"
+    },
+    {
+      "path": "app/profile_delete_dialog.py",
+      "release": true,
+      "purpose": "Bewusst bestätigter Löschdialog mit Fehlerprotokoll und Recovery-Hinweisen"
+    },
+    {
+      "path": "tests/test_profile_deletion.py",
+      "release": false,
+      "purpose": "Abhängigkeiten, Rohdatenerhalt, Lesestände und Abbruchschutz beim Löschen"
+    },
+    {
+      "path": "tests/test_profile_delete_gui.py",
+      "release": false,
+      "purpose": "Löschfreigabe, Fehlerprotokolle, Entwürfe und erreichbare Dialogaktionen"
+    },
+    {
+      "path": "docs/PROFIL_LOESCHEN.md",
+      "release": false,
+      "purpose": "Bedienung, Daten-/Recoveryvertrag und Prüfplan des geschützten Löschens"
     }
   ],
   "creative_modules": {

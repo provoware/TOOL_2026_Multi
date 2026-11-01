@@ -1009,7 +1009,7 @@ class Dashboard(QWidget):
             lambda: ProfileEditor(
                 self.project_root, self.zoom_percent, initial_category,
                 on_changed=self.refresh_db_profiles, parent=self, logger=self.logger,
-                on_renamed=self._profile_renamed,
+                on_renamed=self._profile_renamed, on_deleted=self._profile_deleted,
             ),
             prepare_visible=prepare_visible,
         )
@@ -1023,6 +1023,12 @@ class Dashboard(QWidget):
             window.refresh()
             if selected == old_name:
                 window.profile_combo.setCurrentText(new_name)
+
+    def _profile_deleted(self, _name) -> None:
+        self.refresh_db_profiles()
+        window = self._genre_random_window
+        if window is not None and window.isVisible():
+            window.refresh()
 
     def open_github_projects(self) -> None:
         self._github_projects_window = _open_managed_window(

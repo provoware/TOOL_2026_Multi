@@ -85,10 +85,10 @@ def main() -> int:
             from app.profile_store import input_text
             logger.record(
                 severity='WARNUNG', area='PROFIL_WIEDERHERSTELLUNG',
-                summary=input_text('transaction.recovered', 'Eine unterbrochene Profilumbenennung wurde zurückgenommen.'),
+                summary=input_text('transaction.recovered', 'Eine unterbrochene Profiländerung wurde zurückgenommen.'),
                 cause=input_text('transaction.recovery_cause', 'Offenes Profiljournal beim Start'),
                 protection=input_text('transaction.recovery_protection', 'Profilbestand, Favoriten und Verlauf auf den gesicherten Vorzustand zurückgesetzt.'),
-                next_step=input_text('transaction.recovery_next', 'Prüfe den Profilnamen. Die Umbenennung kann erneut bewusst gestartet werden.'),
+                next_step=input_text('transaction.recovery_next', 'Prüfe den Profilnamen. Die Änderung kann erneut bewusst gestartet werden.'),
             )
         dashboard = Dashboard(TextRegistry(ROOT / "texte" / "registry.json"), logger, data_root)
         configure_dashboard_presentation(dashboard)

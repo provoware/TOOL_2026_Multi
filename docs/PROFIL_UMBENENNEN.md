@@ -46,3 +46,5 @@ Sicherung vor dieser Erweiterung: `/workspace/work/profile-linked-before.tar`, S
 Historischer Vorgänger: unverknüpfte Umbenennung PR #170, main `34fd6d6`, PR-CI41349637821 und main-CI41350313900 grün. Dessen Review-Rückfall für exklusive Dashboard-Kategorienwerte bleibt erhalten. Vorheriger Sicherungspunkt `/workspace/work/profile-rename-before.tar`, SHA256 `37e6b507c54b55d1856e3a2b727f20ab0eeb983a970886d361a19916465250fc`.
 
 Offen bleibt abhängigkeitssicheres Löschen; UI-05.03 ist insgesamt noch nicht abgeschlossen. Öffentliche Veröffentlichung, abschließende reale Kubuntu-Gesamtabnahme und allgemeine800×600-Dashboard-Freigabe bleiben zurückgestellt.
+
+Erweiterung: Der vorhandene Transaktions-/Recoveryweg wird auch für [geschütztes Löschen](PROFIL_LOESCHEN.md) genutzt. Gemeinsame Startmeldungen sprechen deshalb allgemein von einer Profiländerung. Das bisher offene Löschkriterium wird durch dessen eigene PR-/main-Abnahme abgeschlossen.
