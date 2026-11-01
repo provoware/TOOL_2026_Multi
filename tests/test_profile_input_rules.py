@@ -29,6 +29,7 @@ class ProfileInputRulesTests(unittest.TestCase):
         values = split_input_values(' "warm, dunkel", ruhig, "Stimme ""nah"", weich",, RUHIG')
         self.assertEqual(values, ['warm, dunkel', 'ruhig', 'Stimme "nah", weich'])
         self.assertEqual(split_input_values('Stimme "nah", weich'), ['Stimme "nah"', 'weich'])
+        self.assertEqual(split_input_values('ruhig,\t"warm, dunkel"'), ['ruhig', 'warm, dunkel'])
 
     def test_unicode_casefold_and_whitespace_are_deduplicated(self):
         self.assertEqual(split_input_values(' du\u0308ster, DÜSTER,  sehr\t  ruhig, SEHR RUHIG'),

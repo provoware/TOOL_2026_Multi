@@ -169,7 +169,8 @@ def split_input_values(value: str) -> list[str]:
     if any((ord(char) < 32 and char != "\t") or ord(char) == 127 for char in value):
         raise ValueError(input_text('one_line', "Bitte alle Werte in einer Zeile ohne Steuerzeichen eingeben."))
     try:
-        fields = next(csv.reader([value.strip()], skipinitialspace=True, strict=True), [])
+        fields = next(csv.reader([value.replace("\t", " ").strip()],
+                                 skipinitialspace=True, strict=True), [])
     except csv.Error as error:
         raise ValueError(input_text('quotes', "Anführungszeichen sind unvollständig oder falsch gesetzt.")) from error
     result: list[str] = []
