@@ -15,6 +15,7 @@ concurrency:
 jobs:
   grundpruefung:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       QT_QPA_PLATFORM: offscreen
     steps:
