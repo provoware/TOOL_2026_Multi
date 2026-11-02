@@ -3,6 +3,14 @@
 **Verbindliche Abschlussreihenfolge:** Erst sämtliche vereinbarten Funktionen entwickeln, Fehler beheben, optimieren, erweitern und vollständig technisch prüfen; die **persönliche Nutzer-Endabnahme erfolgt als letzter Schritt**. [Aktive Abschluss-Gates am Dateiende](#verbindliche-abschluss-gates--nutzer-endabnahme-ist-letzter-schritt-01112026). Ältere offene Kästchen nicht als 1:1 fehlende Funktionen zählen; Status am aktuellen `main` gegen Code und Tests verifizieren.
 
 
+<!-- GATE1_PR174_AUDIT_20261102 -->
+## GATE 1 – nachgewiesene Inventarisierung (02.11.2026)
+
+- [x] 2026-11-02 | P1 Bestandsprüfung | Die 120 am Ausgangsstand offenen TODO-Kästchen einmalig klassifizieren und Widersprüche sichtbar machen | prüfen: [PR #174](https://github.com/provoware/TOOL_2026_Multi/pull/174), [Statusmatrix](docs/GATE1_STATUSMATRIX_2026_11_02.md), Merge-Commit `fa2da0c769543a44d445fc97d763145347ac20a3` | fertig wenn: Inventar vollständig zugeordnet und als Dokument in main vorhanden.
+- [ ] 2026-11-02 | P1 GATE-1-Restprüfung | Noch ungeprüfte, teilweise und historisch überholte Matrixeinträge einzeln gegen aktuellen Code und passende Tests abgleichen | prüfen: konkrete Testbelege auf aktuellem SHA, Abhängigkeiten und echte offene Funktionslücken | fertig wenn: alle Matrixeinträge fachlich geklärt und GATE 1 erst dann separat freigegeben.
+
+**Grenze:** Die Inventarisierung ist abgeschlossen; **GATE 1 und die gesamte Produktfreigabe sind weiterhin offen**. Die separate main-CI des Merge-Commits ist unabhängig vom erfolgreichen PR-Test nachzuweisen.
+
 <!-- PV_UX26_SCREENSHOT_AUDIT_20261101 -->
 ## Screenshot-Anforderungen 01.11.2026 – verbindliche nächste Umsetzungspakete
 

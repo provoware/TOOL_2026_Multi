@@ -78,6 +78,8 @@ Provoware ist ein erweiterbares Desktop-Dashboard für Songtexte, kreative Vorga
 | **Was wurde zuletzt verbessert?** | Zusätzliche Schutzmaßnahmen für Dateien, gespeicherte Daten und Diagnoseprotokolle; frühere Modulergänzungen sind im [Änderungsverlauf](CHANGELOG.md) dokumentiert. |
 | **Was ist technisch noch offen?** | Spätere einmalige Kubuntu-Gesamtabnahme, Weiterentwicklung noch fehlender Module und endgültige Veröffentlichung. |
 
+**Aktueller Aufgabenabgleich (02.11.2026):** Die [GATE-1-Statusmatrix](docs/GATE1_STATUSMATRIX_2026_11_02.md) ordnet 120 zuvor offene TODO-Kästchen nach überprüfbarem Status. Die Inventarisierung aus [PR #174](https://github.com/provoware/TOOL_2026_Multi/pull/174) ist integriert; **GATE 1, ausstehende Fachprüfungen und die endgültige Produktfreigabe bleiben offen**. Die verbindlichen Einzelaufgaben stehen in [TODO.md](TODO.md).
+
 **Vollständiger Entwicklungsumfang:** [Verbindlicher Modulplan](docs/MODULPLAN_2026.md). [Medienmodule](docs/MEDIENMODULE.md) · [Entwicklungspool](docs/ENTWICKLUNGSPOOL.md) · [Modulentwürfe](docs/MODULENTWURF.md) · [Update-Slots](docs/UPDATE_SLOTS.md). Nachweis PR #97/#98 (CI #1031/#1033/#1035): [Wikimodul](docs/WIKI.md), [Update-Checkpoint](docs/UPDATE_CHECKPOINT.md), [Modulbaukasten](docs/MODULBAUKASTEN.md). Neu in 0.18.5: [rechte Link-Schnellstarter-Leiste](docs/SCHNELLSTARTER.md) mit lokal gespeicherten Webadressen, Gruppen und bewusstem Browserstart.
 
 **Für die normale Nutzung brauchst du nur diese Übersicht und die [einfache Anleitung](ANLEITUNG_LAIEN.md).** Ausführliche technische Informationen stehen getrennt im [Dokumentenwegweiser](docs/README.md). Der folgende Abschnitt enthält zusätzliche Einzelheiten für Interessierte.
