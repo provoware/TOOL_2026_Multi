@@ -500,3 +500,7 @@ Neu im 0.18.4-Prüfkandidaten: [Ideenarchiv und Kontometadaten](docs/IDEEN_UND_K
 Aktuelle vorbereitete Versionsunterlagen: [0.18.4](docs/FREIGABE_0_18_4.md).
 
 Profil-/Datenbank-Ausbau: [belegter Bestand und offene Lücken](docs/PROFIL_BESTANDSABGLEICH_2026_11_01.md). Der vorhandene Startbestand enthält 78 Kategorieeinträge. Neue Profilwerte unterstützen [zitierte Kommas und gleichwertige Umlautschreibweisen](docs/PROFIL_EINGABEREGELN.md); bestehende Dateien werden beim Laden nicht umgeschrieben.
+
+## ⏱️ Zeitlimits und sichere Wiederaufnahme (NI-20261102-02)
+
+Neue verbindliche Entwicklungsregel: [Zeitlimit- und Stillstandsstandard](docs/PROVOWARE_TIMEOUT_STANDARD.md). Kurze Prüfungen besitzen feste Obergrenzen; lang laufende Arbeiten werden nach echtem Fortschritt beurteilt. Nach Stillstand gilt: prüfen → nur eigenen Auftrag kontrolliert beenden → Originaldaten erhalten → höchstens zweimal sicher wiederholen → sonst als Fehler melden. **Dokumentierter Standard bedeutet nicht automatisch bereits eingebaute Laufzeitüberwachung.** Bestehende Projekt-/Release-Gates bleiben gültig.
