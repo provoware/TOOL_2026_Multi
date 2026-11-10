@@ -29,3 +29,19 @@ release/
 # Private Wiederherstellung einer laufenden Profilumbenennung
 /daten/profile/.profile-rename-journal.json
 /daten/profile/.profile-rename.lock
+
+# Local credentials and private configuration (never commit)
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.credentials
+credentials.json
+secrets.json
+.id_rsa
+.id_ed25519
